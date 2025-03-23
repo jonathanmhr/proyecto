@@ -28,12 +28,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
 
      //Lamada para correo de registro
-    public function sendEmailVerificationNotification()
-    {
-        // Aquí se enviaría la notificación de verificación
-        $this->notify(new VerifyEmail);
-    }
-
 
     protected $fillable = [
         'name',
