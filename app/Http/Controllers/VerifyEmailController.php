@@ -16,13 +16,9 @@ class VerifyEmailController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function sendVerificationEmail(Request $request)
-    
     {
         // Obtén al usuario autenticado
         $user = $request->user();
-
-        // Verificar que el usuario tenga un correo electrónico verificado
-        dd($request->route('id'), $request->route('hash'));
 
         // Enviar la notificación de verificación de correo electrónico
         $user->sendEmailVerificationNotification();
@@ -40,13 +36,13 @@ class VerifyEmailController extends Controller
     public function verify(Request $request)
     {
         $user = $request->user();  // Verificar que el usuario está autenticado
-    
+
         // Verificar que el id de la ruta coincida con el id del usuario
         if (! hash_equals((string) $request->route('id'), (string) $user->getKey())) {
             abort(403, 'Invalid verification link');
         }
     
-        // Verificar que el hash coincida con el correo del usuario
+        // Verificar que el hash coincida con el hash del correo electrónico
         if (! hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
             abort(403, 'Invalid verification link');
         }
@@ -57,5 +53,4 @@ class VerifyEmailController extends Controller
         // Redirigir a donde necesites (por ejemplo, al dashboard)
         return redirect('/dashboard');
     }
-    
 }

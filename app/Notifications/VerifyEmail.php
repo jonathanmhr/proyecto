@@ -41,7 +41,7 @@ class VerifyEmail extends Notification
             ->action(__('notifications.email.verification.button'), route('verification.verify', [
                 'id' => $notifiable->getKey(),
                 'hash' => sha1($notifiable->getEmailForVerification())
-            ], false))  // Aquí se genera el enlace de verificación
+            ], true))  // Cambiar 'false' por 'true' para firmar la URL
             ->line(__('notifications.email.verification.fallback_message'));
     }
 

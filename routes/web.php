@@ -1,34 +1,26 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Http\Controllers\VerifyEmailController;
-use Illuminate\Auth\Notifications\VerifyEmail;
+use App\Http\Controllers\VerifyEmailController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+// Rutas de verificación de correo electrónico
+Route::middleware(['auth'])->group(function () {
+    // Mostrar vista de verificación
+    Route::get('/email/verify', function () {
+        return view('auth.verify');
+    })->name('verification.notice');
+    
+    // Enviar la notificación de verificación
+    Route::post('/email/verification-notification', [VerifyEmailController::class, 'sendVerificationEmail'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+
+    // Ruta para verificar el correo electrónico
+    Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])
+        ->middleware(['signed'])  // Esto valida la firma de la URL
+        ->name('verification.verify');
 });
-
-Route::get('/email/verify', function () {
-    return view('auth.verify');
-})->middleware('auth')->name('verification.notice');
-
-
-
-Route::post('/email/verification-notification', [VerifyEmailController::class, 'sendVerificationEmail'])
-    ->middleware(['auth', 'throttle:6,1'])
-    ->name('verification.send');
-
-// Ruta para verificar el correo electrónico
-Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])
-    ->middleware(['auth', 'signed'])  // Añadir 'signed' aquí para validar la firma
-    ->name('verification.verify');
