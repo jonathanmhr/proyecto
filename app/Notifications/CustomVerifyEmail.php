@@ -17,10 +17,11 @@ class CustomVerifyEmail extends BaseVerifyEmail
 
         return (new MailMessage)
             ->subject(Lang::get('auth.verify_email_subject'))
-            ->greeting(Lang::get('auth.greeting', ['name' => $notifiable->name]))
+            ->greeting(Lang::get('auth.greeting', ['name' => $notifiable->name]))  // Verifica que esta línea esté bien
             ->line(Lang::get('auth.line1'))
             ->action(Lang::get('auth.action'), $verificationUrl)
-            ->line(Lang::get('auth.line2'));
+            ->line(Lang::get('auth.line2'))
+            ->salutation(Lang::get('auth.salutation', ['app_name' => config('app.name')]))  // Asegúrate de que esta línea también esté bien
+        ;
     }
 }
-
