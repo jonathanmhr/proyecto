@@ -38,9 +38,13 @@ class VerifyEmail extends Notification
             ->subject(__('notifications.email.verification.subject'))
             ->greeting(__('notifications.email.verification.greeting'))
             ->line(__('notifications.email.verification.message'))
-            ->action(__('notifications.email.verification.button'), url(route('verification.verify', ['id' => $notifiable->getKey(), 'hash' => sha1($notifiable->getEmailForVerification())], false)))
+            ->action(__('notifications.email.verification.button'), route('verification.verify', [
+                'id' => $notifiable->getKey(), 
+                'hash' => sha1($notifiable->getEmailForVerification())
+            ], false))
             ->line(__('notifications.email.verification.fallback_message'));
-    }    
+    }
+     
     
 
     /**

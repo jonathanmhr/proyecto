@@ -132,6 +132,7 @@ return [
 
     'views' => true,
 
+    'email_verification' => true,
     'email_verification_time' => 60,
 
     /*

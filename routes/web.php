@@ -28,5 +28,5 @@ Route::post('/email/verification-notification', [VerifyEmailController::class, '
 
 // Ruta para verificar el correo electrónico
 Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])
-    ->middleware(['auth', 'signed'])
+    ->middleware(['auth', 'signed'])  // Añadir 'signed' aquí para validar la firma
     ->name('verification.verify');

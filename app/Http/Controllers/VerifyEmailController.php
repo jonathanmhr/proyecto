@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\URL;
 
 class VerifyEmailController extends Controller
 {
@@ -17,17 +18,20 @@ class VerifyEmailController extends Controller
      */
     public function sendVerificationEmail(Request $request)
     {
-        // Obtén al usuario autenticado
         $user = $request->user();
-
-        dd($user);
-
-        // Enviar la notificación de verificación de correo electrónico
-        $user->sendEmailVerificationNotification();
-
-        // Responder con un mensaje
+        
+        // Generar la URL de verificación firmada
+        $url = URL::signedRoute('verification.verify', [
+            'id' => $user->getKey(),
+            'hash' => sha1($user->getEmailForVerification()),
+        ]);
+    
+        // Enviar el enlace de verificación por correo electrónico
+        $user->notify(new \App\Notifications\VerifyEmail($url));
+    
         return back()->with('status', 'Verification link sent!');
     }
+    
 
     /**
      * Handle the email verification.
