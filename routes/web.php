@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\VerifyEmailController;
+use Illuminate\Auth\Notifications\VerifyEmail;
 
 Route::get('/', function () {
     return view('welcome');
