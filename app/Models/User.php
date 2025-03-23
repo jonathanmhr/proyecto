@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\CustomVerifyEmail;
+use Illuminate\Auth\Notifications\VerifyEmail as DefaultVerifyEmail;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -64,4 +66,9 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+
+    public function sendEmailVerificationNotification()
+{
+    $this->notify(new CustomVerifyEmail());
+}
 }
