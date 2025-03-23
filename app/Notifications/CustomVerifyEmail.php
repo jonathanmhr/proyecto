@@ -14,14 +14,13 @@ class CustomVerifyEmail extends BaseVerifyEmail
     public function toMail($notifiable): MailMessage
     {
         $verificationUrl = $this->verificationUrl($notifiable);
-        // Cuerpo y mensaje que se envia al usuario
         return (new MailMessage)
-            ->subject(Lang::get('Correo de verificacion en Power Core'))
-            ->greeting(Lang::get('Hola :name!', ['name' => $notifiable->name]))
-            ->line(Lang::get('Gracias por registrarte en Power Core. Para continuar, verifica tu dirección de correo haciendo clic en el botón de abajo.'))
-            ->action(Lang::get('Verificar Correo'), $verificationUrl)
-            ->line(Lang::get('Si no creaste una cuenta, no necesitas hacer nada.'))
-            ->salutation(Lang::get('Saludos, El equipo de Power Core'))
-            ->line('Si tienes problemas para hacer clic en el botón "Verificar Correo", copia y pega la URL siguiente en tu navegador: ' . $this->verificationUrl($notifiable));
+            ->subject(Lang::get('auth.verify_email_subject'))
+            ->greeting(Lang::get('auth.greeting', ['name' => $notifiable->name]))
+            ->line(Lang::get('auth.line1'))
+            ->action(Lang::get('auth.action'), $verificationUrl)
+            ->line(Lang::get('auth.line2'))
+            ->line(Lang::get('auth.verification_trouble') . ' ' . $verificationUrl)
+            ->salutation(Lang::get('auth.salutation', ['app_name' => config('app.name')]));
     }
 }
