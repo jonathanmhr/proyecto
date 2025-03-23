@@ -22,6 +22,5 @@ class CustomVerifyEmail extends BaseVerifyEmail
             ->action(Lang::get('auth.action'), $verificationUrl)
             ->line(Lang::get('auth.line2'))
             ->line(Lang::get('auth.verification_trouble') . ' ' . $verificationUrl)
-            ->salutation(Lang::get('auth.salutation', ['app_name' => config('app.name')]));
     }
 }
