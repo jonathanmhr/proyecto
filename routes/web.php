@@ -21,6 +21,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Ruta para verificar el correo electrónico
     Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])
-        ->middleware(['signed'])  // Esto valida la firma de la URL
-        ->name('verification.verify');
+    ->middleware(['auth', 'signed'])  // Middleware para validar la firma
+    ->name('verification.verify');
 });
