@@ -15,8 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Crear usuarios de ejemplo
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
@@ -34,7 +33,5 @@ class DatabaseSeeder extends Seeder
         // Asignar permisos a roles
         $adminRole->givePermissionTo($manageUsers);
         $trainerRole->givePermissionTo($manageClasses);
-
-        // Puedes asignar permisos a más roles según sea necesario
     }
 }
