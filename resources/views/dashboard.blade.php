@@ -9,32 +9,54 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <!-- Contenido del dashboard basado en el rol -->
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold">
-                        Bienvenido, {{ $user->name }}! 
-                    </h3>
-                    <p>Tu rol es: {{ $user->roles->pluck('name')->join(', ') }}</p>
-
-                    <div class="mt-6">
-                        @if($user->isAdmin())
-                            <h4 class="font-medium">Eres Administrador</h4>
-                            <p>Aquí puedes gestionar usuarios, clases y configuraciones del sistema.</p>
-                            <!-- Agregar más funcionalidades administrativas -->
-                        @elseif($user->isTrainer())
-                            <h4 class="font-medium">Eres Entrenador</h4>
-                            <p>Aquí puedes gestionar las clases y entrenamientos.</p>
-                            <!-- Agregar más funcionalidades de entrenamiento -->
-                        @elseif($user->isClient())
-                            <h4 class="font-medium">Eres Cliente</h4>
-                            <p>Aquí puedes ver tu progreso y tus entrenamientos.</p>
-                            <!-- Agregar más funcionalidades para clientes -->
-                        @else
-                            <h4 class="font-medium">Bienvenido</h4>
-                            <p>No tienes un rol asignado aún.</p>
-                        @endif
+                @if(session('success'))
+                    <div class="bg-green-500 text-white p-4 rounded-md mb-4">
+                        {{ session('success') }}
                     </div>
-                </div>
+                @endif
+
+                <table class="table-auto w-full">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2">Nombre</th>
+                            <th class="px-4 py-2">Correo</th>
+                            <th class="px-4 py-2">Roles</th>
+                            <th class="px-4 py-2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($users as $user)
+                            <tr>
+                                <td class="px-4 py-2">{{ $user->name }}</td>
+                                <td class="px-4 py-2">{{ $user->email }}</td>
+                                <td class="px-4 py-2">
+                                    @foreach($user->roles as $role)
+                                        {{ $role->name }}<br>
+                                    @endforeach
+                                </td>
+                                <td class="px-4 py-2">
+                                    <!-- Asignar rol -->
+                                    <form action="{{ route('admin.assignRole', $user->id) }}" method="POST">
+                                        @csrf
+                                        <select name="role" class="border border-gray-300 rounded">
+                                            @foreach(\Spatie\Permission\Models\Role::all() as $role)
+                                                <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Asignar Rol</button>
+                                    </form>
+
+                                    <!-- Eliminar usuario -->
+                                    <form action="{{ route('admin.deleteUser', $user->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Eliminar Usuario</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
