@@ -14,6 +14,7 @@ class CustomVerifyEmail extends BaseVerifyEmail
     public function toMail($notifiable): MailMessage
     {
         $verificationUrl = $this->verificationUrl($notifiable);
+
         return (new MailMessage)
             ->subject(Lang::get('auth.verify_email_subject'))
             ->greeting(Lang::get('auth.greeting', ['name' => $notifiable->name]))
