@@ -44,7 +44,6 @@ class VerifyEmailController extends Controller
             abort(403, 'Invalid verification link');
         }
     
-        // Verificar que el hash coincida con el correo del usuario
         if (! hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
             abort(403, 'Invalid verification link');
         }
@@ -52,10 +51,8 @@ class VerifyEmailController extends Controller
         // Marcar el correo como verificado
         $user->markEmailAsVerified();
     
-        // Disparar el evento de verificación
-        event(new Verified($user));
-    
         // Redirigir a donde necesites (por ejemplo, al dashboard)
         return redirect('/dashboard');
+
     }
 }
