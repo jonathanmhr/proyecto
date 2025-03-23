@@ -35,9 +35,11 @@ class VerifyEmail extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-        ->line('Por favor, haz clic en el botón de abajo para verificar tu dirección de correo electrónico.')
-        ->action('Verificar correo electrónico', url(route('verification.verify', ['id' => $notifiable->getKey(), 'hash' => sha1($notifiable->getEmailForVerification())], false)))
-        ->line('Si no creaste una cuenta, no se requiere ninguna acción adicional.');
+        ->subject(__('notifications.email.verification.subject')) // Asunto en español
+        ->greeting(__('notifications.email.verification.greeting')) // Saludo en español
+        ->line(__('notifications.email.verification.message')) // Mensaje en español
+        ->action(__('notifications.email.verification.button'), url(route('verification.verify', ['id' => $notifiable->getKey(), 'hash' => sha1($notifiable->getEmailForVerification())], false)))
+        ->line(__('notifications.email.verification.fallback_message')); // Mensaje adicional en español
     }
 
     /**
