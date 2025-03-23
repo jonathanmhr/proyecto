@@ -13,3 +13,7 @@ Route::middleware([
 ])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+
+Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
