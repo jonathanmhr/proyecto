@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Laravel\Fortify\Http\Controllers\VerificationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,8 +22,11 @@ Route::get('/email/verify', function () {
 })->middleware('auth')->name('verification.notice');
 
 // Ruta para verificar el correo electrónico
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+    ->middleware(['auth', 'signed'])
+    ->name('verification.verify');
 
-    return redirect('/dashboard');  // Cambia /home por /dashboard
-})->middleware(['auth', 'signed'])->name('verification.verify');
+// Ruta para reenviar el correo de verificación
+Route::post('/email/verification-notification', [VerificationController::class, 'sendVerificationEmail'])
+    ->middleware(['auth', 'throttle:6,1'])
+    ->name('verification.send');
