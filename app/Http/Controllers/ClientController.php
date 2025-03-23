@@ -8,6 +8,7 @@ class ClientController extends Controller
 {
     public function index()
     {
-        return view('dashboard', ['role' => 'client']);
+        return view('client.dashboard'); // Vista para el cliente
     }
 }
+

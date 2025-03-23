@@ -73,5 +73,21 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->notify(new CustomVerifyEmail());
     }
+
+        // Si usas roles, asegúrate de tener un campo role
+        public function isAdmin()
+        {
+            return $this->role === 'admin';
+        }
+    
+        public function isTrainer()
+        {
+            return $this->role === 'trainer';
+        }
+    
+        public function isClient()
+        {
+            return $this->role === 'client';
+        }
     
 }

@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 // Verificacion de correo
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -25,11 +25,17 @@ Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
 
 //Permisos de roles
 
-// Solo usuarios con el rol 'admin' pueden acceder
-Route::middleware(['role:admin'])->get('/dashboard', [AdminController::class, 'index']);
+Route::middleware(['auth', 'verified'])->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-// Solo usuarios con el rol 'trainer' pueden acceder
-Route::middleware(['role:trainer'])->get('/trainer-dashboard', [TrainerController::class, 'index']);
 
-// Solo usuarios con el rol 'client' pueden acceder
-Route::middleware(['role:client'])->get('/client-dashboard', [ClientController::class, 'index']);
+Route::middleware(['role:admin'])->group(function() {
+    Route::get('/admin', [AdminController::class, 'index']);
+});
+
+Route::middleware(['role:trainer'])->group(function() {
+    Route::get('/trainer', [TrainerController::class, 'index']);
+});
+
+Route::middleware(['role:client'])->group(function() {
+    Route::get('/client', [ClientController::class, 'index']);
+});

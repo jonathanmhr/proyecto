@@ -8,6 +8,6 @@ class AdminController extends Controller
 {
     public function index()
     {
-        return view('dashboard', ['role' => 'admin']);
+        return view('admin.dashboard'); // Aquí muestra el dashboard o la vista que desees para el admin
     }
 }

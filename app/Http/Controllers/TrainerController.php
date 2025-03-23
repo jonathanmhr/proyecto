@@ -8,6 +8,6 @@ class TrainerController extends Controller
 {
     public function index()
     {
-        return view('dashboard', ['role' => 'trainer']);
+        return view('trainer.dashboard'); // Vista para el trainer
     }
 }
