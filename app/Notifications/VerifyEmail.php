@@ -39,13 +39,11 @@ class VerifyEmail extends Notification
             ->greeting(__('notifications.email.verification.greeting'))
             ->line(__('notifications.email.verification.message'))
             ->action(__('notifications.email.verification.button'), route('verification.verify', [
-                'id' => $notifiable->getKey(), 
+                'id' => $notifiable->getKey(),
                 'hash' => sha1($notifiable->getEmailForVerification())
-            ], false))
+            ], false))  // Aquí se genera el enlace de verificación
             ->line(__('notifications.email.verification.fallback_message'));
     }
-     
-    
 
     /**
      * Get the array representation of the notification.
