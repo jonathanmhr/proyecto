@@ -21,6 +21,7 @@ class CustomVerifyEmail extends BaseVerifyEmail
             ->line(Lang::get('auth.line1'))
             ->action(Lang::get('auth.action'), $verificationUrl)
             ->line(Lang::get('auth.line2'))
-            ->line(Lang::get('auth.verification_trouble') . ' ' . $verificationUrl)
+            ->line(Lang::get('auth.verification_trouble') . ' ' . $verificationUrl);
     }
 }
+
