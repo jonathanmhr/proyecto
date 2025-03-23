@@ -10,33 +10,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Verificacion de correo
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
-
-Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
-
-//Permisos de roles
-
+// Rutas para el Dashboard (ya autenticadas)
 Route::middleware(['auth', 'verified'])->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-
+// Rutas para el admin
 Route::middleware(['auth', 'role:admin'])->group(function() {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::post('/admin/assign-role/{userId}', [AdminController::class, 'assignRole'])->name('admin.assignRole');
 });
 
-Route::middleware(['role:trainer'])->group(function() {
+// Rutas para el trainer
+Route::middleware(['auth', 'role:trainer'])->group(function() {
     Route::get('/trainer', [TrainerController::class, 'index']);
 });
 
-Route::middleware(['role:client'])->group(function() {
+// Rutas para el client
+Route::middleware(['auth', 'role:client'])->group(function() {
     Route::get('/client', [ClientController::class, 'index']);
 });
