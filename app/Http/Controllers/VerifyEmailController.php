@@ -36,6 +36,8 @@ class VerifyEmailController extends Controller
     public function verify(Request $request)
     {
         $user = $request->user();  // Verificar que el usuario está autenticado
+
+        dd($request->route('id'), $request->route('hash'));
     
         // Verificar que el id de la ruta coincida con el id del usuario
         if (! hash_equals((string) $request->route('id'), (string) $user->getKey())) {
