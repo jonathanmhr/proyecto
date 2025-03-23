@@ -34,9 +34,6 @@ class VerifyEmail extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        // Añade esta línea para verificar si la traducción se carga correctamente
-        dd(__('notifications.email.verification.subject'));  // Esto mostrará el valor de la traducción
-    
         return (new MailMessage)
             ->subject(__('notifications.email.verification.subject')) // Asunto en español
             ->greeting(__('notifications.email.verification.greeting')) // Saludo en español
