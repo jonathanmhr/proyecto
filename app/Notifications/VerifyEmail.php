@@ -38,7 +38,7 @@ class VerifyEmail extends Notification
             ->subject(__('notifications.email.verification.subject')) // Asunto en español
             ->greeting(__('notifications.email.verification.greeting')) // Saludo en español
             ->line(__('notifications.email.verification.message')) // Mensaje en español
-            ->action(__('notifications.email.verification.button'), url(route('verification.verify', ['id' => $notifiable->getKey(), 'hash' => sha1($notifiable->getEmailForVerification())], false)))
+            ->action('Verificar correo electrónico', url(route('verification.verify', ['id' => $notifiable->getKey(), 'hash' => sha1($notifiable->getEmailForVerification())], false)))
             ->line(__('notifications.email.verification.fallback_message')); // Mensaje adicional en español
     }
     

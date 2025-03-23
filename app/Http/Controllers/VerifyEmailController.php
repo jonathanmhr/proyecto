@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Notifications\VerifyEmail;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Routing\Controller;
 
 class VerifyEmailController extends Controller
 {
@@ -24,5 +25,33 @@ class VerifyEmailController extends Controller
 
         // Responder con un mensaje
         return back()->with('status', 'Verification link sent!');
+    }
+
+    /**
+     * Handle the email verification.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function verify(Request $request)
+    {
+        // Verificar que el id de la ruta coincida con el id del usuario
+        if (! hash_equals((string) $request->route('id'), (string) $request->user()->getKey())) {
+            abort(403, 'Invalid verification link');
+        }
+
+        // Verificar que el hash coincida con el correo del usuario
+        if (! hash_equals((string) $request->route('hash'), sha1($request->user()->getEmailForVerification()))) {
+            abort(403, 'Invalid verification link');
+        }
+
+        // Marcar el correo como verificado
+        $request->user()->markEmailAsVerified();
+
+        // Disparar el evento de verificación
+        event(new Verified($request->user()));
+
+        // Redirigir a donde necesites (por ejemplo, al dashboard)
+        return redirect('/dashboard');
     }
 }
