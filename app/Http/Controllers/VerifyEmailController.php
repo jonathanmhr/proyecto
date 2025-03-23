@@ -20,6 +20,8 @@ class VerifyEmailController extends Controller
         // Obtén al usuario autenticado
         $user = $request->user();
 
+        dd($user);
+
         // Enviar la notificación de verificación de correo electrónico
         $user->sendEmailVerificationNotification();
 
