@@ -37,23 +37,26 @@ class VerifyEmailController extends Controller
      */
     public function verify(Request $request)
     {
+        $user = $request->user();  // Verificar que el usuario está autenticado
+    
         // Verificar que el id de la ruta coincida con el id del usuario
-        if (! hash_equals((string) $request->route('id'), (string) $request->user()->getKey())) {
+        if (! hash_equals((string) $request->route('id'), (string) $user->getKey())) {
             abort(403, 'Invalid verification link');
         }
-
+    
         // Verificar que el hash coincida con el correo del usuario
-        if (! hash_equals((string) $request->route('hash'), sha1($request->user()->getEmailForVerification()))) {
+        if (! hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
             abort(403, 'Invalid verification link');
         }
-
+    
         // Marcar el correo como verificado
-        $request->user()->markEmailAsVerified();
-
+        $user->markEmailAsVerified();
+    
         // Disparar el evento de verificación
-        event(new Verified($request->user()));
-
+        event(new Verified($user));
+    
         // Redirigir a donde necesites (por ejemplo, al dashboard)
         return redirect('/dashboard');
     }
+    
 }

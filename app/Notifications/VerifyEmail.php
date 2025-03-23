@@ -35,12 +35,12 @@ class VerifyEmail extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject(__('notifications.email.verification.subject')) // Asunto en español
-            ->greeting(__('notifications.email.verification.greeting')) // Saludo en español
-            ->line(__('notifications.email.verification.message')) // Mensaje en español
-            ->action('Verificar correo electrónico', url(route('verification.verify', ['id' => $notifiable->getKey(), 'hash' => sha1($notifiable->getEmailForVerification())], false)))
-            ->line(__('notifications.email.verification.fallback_message')); // Mensaje adicional en español
-    }
+            ->subject(__('notifications.email.verification.subject'))
+            ->greeting(__('notifications.email.verification.greeting'))
+            ->line(__('notifications.email.verification.message'))
+            ->action(__('notifications.email.verification.button'), url(route('verification.verify', ['id' => $notifiable->getKey(), 'hash' => sha1($notifiable->getEmailForVerification())], false)))
+            ->line(__('notifications.email.verification.fallback_message'));
+    }    
     
 
     /**
