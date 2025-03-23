@@ -10,25 +10,31 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <!-- Contenido del dashboard basado en el rol -->
-                @if($user->isAdmin())
-                    <h3>Bienvenido, Administrador</h3>
-                    <p>Aquí puedes gestionar usuarios, clases y configuraciones del sistema.</p>
-                    <!-- Agrega más contenido para admin aquí -->
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold">
+                        Bienvenido, {{ $user->name }}! 
+                    </h3>
+                    <p>Tu rol es: {{ $user->roles->pluck('name')->join(', ') }}</p>
 
-                @elseif($user->isTrainer())
-                    <h3>Bienvenido, Entrenador</h3>
-                    <p>Aquí puedes gestionar las clases y entrenamientos.</p>
-                    <!-- Agrega más contenido para trainer aquí -->
-
-                @elseif($user->isClient())
-                    <h3>Bienvenido, Cliente</h3>
-                    <p>Aquí puedes ver tu progreso y tus entrenamientos.</p>
-                    <!-- Agrega más contenido para client aquí -->
-
-                @else
-                    <h3>Bienvenido a PowerCore</h3>
-                    <p>No tienes un rol asignado aún.</p>
-                @endif
+                    <div class="mt-6">
+                        @if($user->isAdmin())
+                            <h4 class="font-medium">Eres Administrador</h4>
+                            <p>Aquí puedes gestionar usuarios, clases y configuraciones del sistema.</p>
+                            <!-- Agregar más funcionalidades administrativas -->
+                        @elseif($user->isTrainer())
+                            <h4 class="font-medium">Eres Entrenador</h4>
+                            <p>Aquí puedes gestionar las clases y entrenamientos.</p>
+                            <!-- Agregar más funcionalidades de entrenamiento -->
+                        @elseif($user->isClient())
+                            <h4 class="font-medium">Eres Cliente</h4>
+                            <p>Aquí puedes ver tu progreso y tus entrenamientos.</p>
+                            <!-- Agregar más funcionalidades para clientes -->
+                        @else
+                            <h4 class="font-medium">Bienvenido</h4>
+                            <p>No tienes un rol asignado aún.</p>
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
     </div>

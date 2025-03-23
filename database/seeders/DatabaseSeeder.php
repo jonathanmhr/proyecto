@@ -1,37 +1,31 @@
 <?php
 
+// database/seeders/RolesSeeder.php
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-class DatabaseSeeder extends Seeder
+class RolesSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
+    public function run()
     {
-        // Crear usuarios de ejemplo
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-
         // Crear roles
-        $adminRole = Role::create(['name' => 'admin']);
-        $trainerRole = Role::create(['name' => 'trainer']);
-        $clientRole = Role::create(['name' => 'client']);
+        $admin = Role::create(['name' => 'admin']);
+        $trainer = Role::create(['name' => 'trainer']);
+        $client = Role::create(['name' => 'client']);
 
-        // Crear permisos
-        $manageUsers = Permission::create(['name' => 'manage users']);
-        $manageClasses = Permission::create(['name' => 'manage classes']);
+        // Crear permisos (si deseas)
+        $permission1 = Permission::create(['name' => 'manage users']);
+        $permission2 = Permission::create(['name' => 'manage classes']);
+        
+        // Asignar permisos a roles (ejemplo)
+        $admin->givePermissionTo($permission1);
+        $trainer->givePermissionTo($permission2);
 
-        // Asignar permisos a roles
-        $adminRole->givePermissionTo($manageUsers);
-        $trainerRole->givePermissionTo($manageClasses);
+        // Asignar roles a usuarios
+        $user = \App\Models\User::find(1); // El ID de tu usuario administrador
+        $user->assignRole('admin');
     }
 }

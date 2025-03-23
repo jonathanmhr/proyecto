@@ -28,8 +28,9 @@ Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
 Route::middleware(['auth', 'verified'])->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 
-Route::middleware(['role:admin'])->group(function() {
-    Route::get('/admin', [AdminController::class, 'index']);
+Route::middleware(['auth', 'role:admin'])->group(function() {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::post('/admin/assign-role/{userId}', [AdminController::class, 'assignRole'])->name('admin.assignRole');
 });
 
 Route::middleware(['role:trainer'])->group(function() {
