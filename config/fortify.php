@@ -132,9 +132,6 @@ return [
 
     'views' => true,
 
-    //'email_verification' => true,
-    //'email_verification_time' => 60,
-
     /*
     |--------------------------------------------------------------------------
     | Features
@@ -149,7 +146,7 @@ return [
     'features' => [
         Features::registration(),
         Features::resetPasswords(),
-        Features::emailVerification(),
+        // Features::emailVerification(),
         Features::updateProfileInformation(),
         Features::updatePasswords(),
         Features::twoFactorAuthentication([
