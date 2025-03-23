@@ -45,7 +45,7 @@
                 @endif
 
                 <div class="flex items-center">
-                    <x-button class="ms-4">
+                    <x-button class="ms-2">
                         {{ __('Log in') }}
                     </x-button>
                 </div>
