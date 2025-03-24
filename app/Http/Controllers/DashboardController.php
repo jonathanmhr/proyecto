@@ -6,12 +6,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $user = Auth::user(); // Obtener el usuario autenticado
-        return view('dashboard', compact('user')); // Pasamos el usuario a la vista
+        $users = User::with('roles')->paginate(10);
+
+        dd($users); // Depuración: Verifica si los usuarios están llegando
+
+        return view('dashboard', compact('users'));
     }
 }
