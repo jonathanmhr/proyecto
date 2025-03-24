@@ -77,14 +77,19 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasRole('admin');
     }
-    
+
     public function isTrainer()
     {
         return $this->hasRole('trainer');
     }
-    
+
     public function isClient()
     {
         return $this->hasRole('client');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(\Spatie\Permission\Models\Role::class);
     }
 }
