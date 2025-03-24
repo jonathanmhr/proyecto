@@ -1,3 +1,4 @@
+<!-- resources/views/dashboard.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -8,58 +9,27 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                @if(session('success'))
-                    <div class="bg-green-500 text-white p-4 rounded-md mb-4">
-                        {{ session('success') }}
+                <!-- Información del usuario -->
+                <div class="mb-6">
+                    <h3 class="text-2xl font-bold">Bienvenido, {{ auth()->user()->name }}!</h3>
+                    <p>Correo electrónico: {{ auth()->user()->email }}</p>
+                </div>
+
+                <!-- Widget de estadísticas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Ejemplo de un widget de estadísticas -->
+                    <div class="bg-gray-100 p-4 rounded-lg shadow">
+                        <h4 class="text-xl font-semibold">Estadísticas</h4>
+                        <p>Total de Usuarios: 120</p>
                     </div>
-                @endif
-
-                <table class="table-auto w-full border-collapse border border-gray-300">
-                    <thead>
-                        <tr class="bg-gray-200">
-                            <th class="px-4 py-2 border">Nombre</th>
-                            <th class="px-4 py-2 border">Correo</th>
-                            <th class="px-4 py-2 border">Roles</th>
-                            <th class="px-4 py-2 border">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($users as $user)
-                            <tr class="hover:bg-gray-100">
-                                <td class="px-4 py-2 border">{{ $user->name }}</td>
-                                <td class="px-4 py-2 border">{{ $user->email }}</td>
-                                <td class="px-4 py-2 border">
-                                    @foreach($user->roles as $role)
-                                        {{ $role->name }}<br>
-                                    @endforeach
-                                </td>
-                                <td class="px-4 py-2 border">
-                                    <!-- Asignar rol -->
-                                    <form action="{{ route('admin.assignRole', $user->id) }}" method="POST" class="inline-block">
-                                        @csrf
-                                        <select name="role" class="border border-gray-300 rounded">
-                                            @foreach(\Spatie\Permission\Models\Role::all() as $role)
-                                                <option value="{{ $role->name }}">{{ $role->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Asignar</button>
-                                    </form>
-
-                                    <!-- Eliminar usuario -->
-                                    <form action="{{ route('admin.deleteUser', $user->id) }}" method="POST" class="inline-block">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Eliminar</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-                <!-- Paginación -->
-                <div class="mt-4">
-                    {{ $users->links() }}
+                    <div class="bg-gray-100 p-4 rounded-lg shadow">
+                        <h4 class="text-xl font-semibold">Actividad Reciente</h4>
+                        <p>Última actividad: 5 minutos atrás</p>
+                    </div>
+                    <div class="bg-gray-100 p-4 rounded-lg shadow">
+                        <h4 class="text-xl font-semibold">Notificaciones</h4>
+                        <p>No hay nuevas notificaciones.</p>
+                    </div>
                 </div>
             </div>
         </div>
