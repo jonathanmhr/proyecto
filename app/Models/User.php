@@ -11,7 +11,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\CustomVerifyEmail;
 use Illuminate\Auth\Notifications\VerifyEmail as DefaultVerifyEmail;
-use Spatie\Permission\Traits\HasRoles;
+//use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -20,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
-    use HasRoles; // Correctamente implementado como un trait
+    //use HasRoles; // Correctamente implementado como un trait
 
     /**
      * The attributes that are mass assignable.
