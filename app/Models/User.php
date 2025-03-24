@@ -12,19 +12,15 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\CustomVerifyEmail;
 use Illuminate\Auth\Notifications\VerifyEmail as DefaultVerifyEmail;
 use Spatie\Permission\Traits\HasRoles;
-use Spatie\Permission\Models\Role;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
-
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
-    use HasRoles;
-    use Role;
+    use HasRoles; // Correctamente implementado como un trait
 
     /**
      * The attributes that are mass assignable.
@@ -91,5 +87,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasRole('client');
     }
-    
 }
