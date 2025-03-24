@@ -6,7 +6,7 @@
     <title>PowerCore - Gimnasio</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex items-center justify-center min-h-screen">
+<body>
 
     <!-- Container -->
     <div class="w-full h-full flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-12 px-6 sm:px-8 lg:px-16">
