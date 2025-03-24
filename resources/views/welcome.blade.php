@@ -4,64 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PowerCore - Gimnasio</title>
-    
-    <!-- Estilos y scripts -->
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-        <script src="{{ mix('js/app.js') }}"></script>
-    @endif
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+<body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex items-center justify-center min-h-screen">
 
-<body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
-    <!-- Header de la página -->
-    <header class="w-full lg:max-w-4xl max-w-[335px] text-sm mb-6">
-        @if (Route::has('login'))
-            <nav class="flex items-center justify-end gap-4">
-                @auth
-                    <a
-                        href="{{ url('/dashboard') }}"
-                        class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
-                        Dashboard
-                    </a>
-                @else
-                    <a
-                        href="{{ route('login') }}"
-                        class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] text-[#1b1b18] border border-transparent hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal">
-                        Log in
-                    </a>
+    <!-- Container -->
+    <div class="w-full h-full flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-12 px-6 sm:px-8 lg:px-16">
+        
+        <!-- Main Content -->
+        <div class="flex flex-col items-center justify-center text-center max-w-lg">
+            <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight mb-4">
+                Bienvenido a <span class="text-yellow-400">PowerCore</span>
+            </h1>
+            <p class="text-lg sm:text-xl mb-8">
+                El gimnasio que te lleva al siguiente nivel. Potencia tu entrenamiento con nosotros.
+            </p>
+            
+            <!-- Buttons -->
+            <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+                <!-- Log in Button -->
+                <a href="{{ route('login') }}" class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105">
+                    Iniciar sesión
+                </a>
 
-                    @if (Route::has('register'))
-                        <a
-                            href="{{ route('register') }}"
-                            class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
-                            Register
-                        </a>
-                    @endif
-                @endauth
-            </nav>
-        @endif
-    </header>
-
-    <!-- Sección principal del gimnasio -->
-    <div class="flex flex-col items-center justify-center w-full max-w-4xl mx-auto text-center">
-        <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-6">
-            Bienvenido a PowerCore
-        </h1>
-        <p class="text-lg text-gray-600 dark:text-gray-300 mb-6">
-            El gimnasio que te lleva al siguiente nivel. Potencia tu entrenamiento con nosotros.
-        </p>
-
-        <div class="flex gap-6">
-            <!-- Card o botón para más información -->
-            <a href="{{ route('register') }}" class="inline-block px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                Únete hoy
-            </a>
-            <a href="{{ route('login') }}" class="inline-block px-6 py-3 border-2 border-blue-500 text-blue-500 rounded-lg hover:bg-blue-500 hover:text-white">
-                Iniciar sesión
-            </a>
+                <!-- Register Button -->
+                <a href="{{ route('register') }}" class="bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-bold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105">
+                    Únete hoy
+                </a>
+            </div>
         </div>
+
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#1b1b18] text-white py-6 mt-8">
+        <div class="text-center">
+            <p>&copy; {{ date('Y') }} PowerCore. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
 </body>
 </html>
