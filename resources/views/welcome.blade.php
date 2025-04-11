@@ -14,10 +14,6 @@
             <h1 class="text-3xl font-bold">PowerCore</h1>
             <nav>
                 <a href="{{ route('login') }}" class="mr-4 text-white hover:text-blue-300">Login</a>
-                <a href="{{ route('register') }}" class="mr-4 text-white hover:text-blue-300">Registrar</a>
-                <a href="#servicios" class="text-white hover:text-blue-300">Servicios</a>
-                <a href="#nosotros" class="text-white hover:text-blue-300">Nosotros</a>
-                <a href="#contacto" class="text-white hover:text-blue-300">Contacto</a>
             </nav>
         </div>
     </header>
