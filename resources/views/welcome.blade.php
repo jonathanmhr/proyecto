@@ -4,206 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienvenido al Gimnasio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        /* Reset de estilos */
-        body, h1, h2, h3, p, ul, li {
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            overflow-x: hidden;
-        }
-
-        /* Hero Section (imagen de fondo y texto centrado) */
-        .hero {
-            background-image: url('https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-            background-size: cover;
-            background-position: center;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            position: relative;
-        }
-
-        /* Fondo oscuro para el texto */
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4); /* Sombra oscura para el texto */
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            z-index: 1;
-        }
-
-        .hero p {
-            font-size: 1.5rem;
-            margin-bottom: 30px;
-            z-index: 1;
-        }
-
-        .cta-button {
-            background-color: #ff6f61;
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            font-size: 1.2rem;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            z-index: 1;
-        }
-
-        .cta-button:hover {
-            background-color: #e65c4b;
-        }
-
-        /* Servicios */
-        .services {
-            display: flex;
-            justify-content: space-around;
-            padding: 50px 0;
-            background-color: #fff;
-            flex-wrap: wrap;
-        }
-
-        .services div {
-            text-align: center;
-            width: 30%;
-            margin-bottom: 30px;
-        }
-
-        .services div i {
-            font-size: 3rem;
-            color: #ff6f61;
-            margin-bottom: 20px;
-        }
-
-        .services div h3 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        .services div p {
-            font-size: 1rem;
-            color: #555;
-        }
-
-        /* Footer */
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-
-        /* Media Queries para adaptabilidad */
-        @media (max-width: 1024px) {
-            .hero h1 {
-                font-size: 3rem;
-            }
-
-            .hero p {
-                font-size: 1.2rem;
-            }
-
-            .services div {
-                width: 45%;
-            }
-
-            .cta-button {
-                font-size: 1rem;
-                padding: 12px 25px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
-            }
-
-            .services div {
-                width: 100%;
-                margin-bottom: 20px;
-            }
-
-            .cta-button {
-                font-size: 1rem;
-                padding: 10px 20px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero p {
-                font-size: 1rem;
-            }
-
-            .cta-button {
-                font-size: 0.9rem;
-                padding: 8px 15px;
-            }
-        }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js']) <!-- Asegúrate de tener el Vite integrado correctamente -->
 </head>
-<body>
+<body class="bg-gray-100 font-sans">
 
     <!-- Hero Section -->
-    <section class="hero">
-        <div>
-            <h1>¡Bienvenido al Gimnasio!</h1>
-            <p>Alcanza tus metas y transforma tu vida</p>
-            <a href="#contact" class="cta-button">Únete Ahora</a>
-            <!-- <a href="{{ route('login') }}" class="text-white hover:text-gray-200"> Iniciar sesión</a> -->
+    <section class="relative bg-cover bg-center h-screen" style="background-image: url('https://images.unsplash.com/photo-1506354639039-7b2d6d071121?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjUyOXwwfDF8c2VhY2h8NXx8Z2ltfGVufDB8fHx8fDE2Nzc0OTI2ODc&ixlib=rb-1.2.1&q=80&w=1080');">
+        <div class="absolute inset-0 bg-black opacity-40"></div> <!-- Filtro oscuro para mejor legibilidad -->
+        <div class="flex justify-center items-center h-full relative z-10 text-center text-white px-4">
+            <div>
+                <h1 class="text-5xl md:text-6xl font-extrabold mb-4">¡Bienvenido al Gimnasio!</h1>
+                <p class="text-lg md:text-xl mb-6">Alcanza tus metas y transforma tu vida</p>
+                <a href="#contacto" class="inline-block bg-red-600 text-white py-3 px-8 rounded-lg text-lg hover:bg-red-700 transition">Únete Ahora</a>
+                <a href="{{ route('login') }}" class="inline-block bg-red-600 text-white py-3 px-8 rounded-lg text-lg hover:bg-red-700 transition">Iniciar sesion</a>
+            </div>
         </div>
     </section>
 
     <!-- Servicios -->
-    <section class="services">
-        <div>
-            <i class="fas fa-dumbbell"></i>
-            <h3>Entrenamiento Personalizado</h3>
-            <p>Planes de entrenamiento diseñados específicamente para ti.</p>
-        </div>
-        <div>
-            <i class="fas fa-heartbeat"></i>
-            <h3>Clases Grupales</h3>
-            <p>Disfruta de clases dinámicas para todos los niveles.</p>
-        </div>
-        <div>
-            <i class="fas fa-calendar"></i>
-            <h3>Flexibilidad Horaria</h3>
-            <p>Horarios adaptados a tu ritmo de vida.</p>
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-6 sm:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="text-center">
+                    <i class="fas fa-dumbbell text-5xl text-red-600 mb-6"></i>
+                    <h3 class="text-2xl font-semibold mb-3">Entrenamiento Personalizado</h3>
+                    <p class="text-gray-600">Planes de entrenamiento diseñados específicamente para ti.</p>
+                </div>
+                <div class="text-center">
+                    <i class="fas fa-heartbeat text-5xl text-red-600 mb-6"></i>
+                    <h3 class="text-2xl font-semibold mb-3">Clases Grupales</h3>
+                    <p class="text-gray-600">Disfruta de clases dinámicas para todos los niveles.</p>
+                </div>
+                <div class="text-center">
+                    <i class="fas fa-calendar text-5xl text-red-600 mb-6"></i>
+                    <h3 class="text-2xl font-semibold mb-3">Flexibilidad Horaria</h3>
+                    <p class="text-gray-600">Horarios adaptados a tu ritmo de vida.</p>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Contacto -->
-    <footer>
-        <p>¿Listo para empezar? Contáctanos y da el primer paso</p>
-        <p>Email: contacto@gimnasio.com | Teléfono: +34 123 456 789</p>
+    <footer id="contacto" class="bg-gray-800 text-white text-center py-8">
+        <p class="text-xl mb-2">¿Listo para empezar? Contáctanos y da el primer paso</p>
+        <p class="text-lg">Email: contacto@gimnasio.com | Teléfono: +34 123 456 789</p>
     </footer>
 
 </body>
