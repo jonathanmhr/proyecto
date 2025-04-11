@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienvenido al Gimnasio</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js']) <!-- Asegúrate de tener el Vite integrado correctamente -->
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <script type="module" src="{{ mix('js/app.js') }}"></script>
 </head>
 <body class="bg-gray-100 font-sans">
 
