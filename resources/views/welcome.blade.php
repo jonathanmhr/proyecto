@@ -22,7 +22,7 @@
 
         /* Hero Section (imagen de fondo y texto centrado) */
         .hero {
-            background-image: url('https://images.unsplash.com/photo-1506354639039-7b2d6d071121?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjUyOXwwfDF8c2VhY2h8NXx8Z2ltfGVufDB8fHx8fDE2Nzc0OTI2ODc&ixlib=rb-1.2.1&q=80&w=1080');
+            background-image: url('https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
             background-size: cover;
             background-position: center;
             height: 100vh;
@@ -177,7 +177,7 @@
             <h1>¡Bienvenido al Gimnasio!</h1>
             <p>Alcanza tus metas y transforma tu vida</p>
             <a href="#contact" class="cta-button">Únete Ahora</a>
-            <a href="{{ route('login') }}" class="text-white hover:text-gray-200"> Iniciar sesión</a>
+            <!-- <a href="{{ route('login') }}" class="text-white hover:text-gray-200"> Iniciar sesión</a> -->
         </div>
     </section>
 
