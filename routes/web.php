@@ -7,5 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Rutas para el Dashboard (ya autenticadas)
-Route::middleware(['auth'])->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+// Rutas para el Dashboard (ya autenticadas y con verificación de email)
+Route::middleware(['auth', 'verified'])->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
