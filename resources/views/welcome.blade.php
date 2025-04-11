@@ -3,60 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenida a PowerCore</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <title>Bienvenido al Gimnasio</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js']) <!-- Asegúrate de tener este archivo de vite -->
 </head>
-<body class="bg-gray-100 text-gray-900">
+<body class="bg-gray-100 font-sans text-gray-900 min-h-screen">
 
-    <!-- Navbar -->
-    <nav class="bg-black text-white p-4">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white p-6 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="/" class="text-xl font-bold">PowerCore</a>
-            <div class="space-x-4">
-                <a href="/" class="hover:text-yellow-400">Inicio</a>
-                <a href="#features" class="hover:text-yellow-400">Servicios</a>
-                <a href="#contact" class="hover:text-yellow-400">Contacto</a>
-                <a href="{{ route('login') }}" class="hover:text-yellow-400">Iniciar sesión</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header class="relative bg-cover bg-center h-screen" style="background-image: url('/images/hero-bg.jpg');">
-        <div class="absolute inset-0 bg-black opacity-50"></div>
-        <div class="relative z-10 text-center text-white py-40">
-            <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-4">Bienvenido a PowerCore</h1>
-            <p class="text-xl mb-8">Transforma tu cuerpo y tu mente con nuestros entrenamientos personalizados</p>
-            <a href="#features" class="bg-yellow-400 text-black px-6 py-3 rounded-lg text-lg hover:bg-yellow-500 transition">Descubre nuestros servicios</a>
+            <h1 class="text-3xl font-bold">PowerCore</h1>
+            <nav>
+                <a href="{{ route('login') }}" class="mr-4 hover:text-yellow-400">Login</a> <!-- Ruta de login -->
+                <a href="{{ route('register') }}" class="mr-4 hover:text-yellow-400">Registrar</a> <!-- Ruta de registro -->
+                <a href="#services" class="hover:text-yellow-400">Servicios</a>
+            </nav>
         </div>
     </header>
 
-    <!-- Features Section -->
-    <section id="features" class="py-20 bg-gray-200">
-        <div class="container mx-auto text-center">
-            <h2 class="text-3xl font-semibold mb-8">Nuestros Servicios</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-                <!-- Servicio 1 -->
-                <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300">
-                    <h3 class="text-2xl font-semibold mb-4">Entrenamientos Personalizados</h3>
-                    <p>Sesiones adaptadas a tus objetivos personales y nivel físico.</p>
-                </div>
-                <!-- Servicio 2 -->
-                <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300">
-                    <h3 class="text-2xl font-semibold mb-4">Clases Grupales</h3>
-                    <p>Disfruta de nuestras clases grupales energizantes y motivadoras.</p>
-                </div>
-                <!-- Servicio 3 -->
-                <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition duration-300">
-                    <h3 class="text-2xl font-semibold mb-4">Plan de Nutrición</h3>
-                    <p>Recibe planes de nutrición personalizados para complementar tu entrenamiento.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Main Content -->
+    <main class="container mx-auto p-8 min-h-screen">
+        <section class="text-center mb-12">
+            <h2 class="text-4xl font-semibold mb-4 text-gray-800">Únete a PowerCore</h2>
+            <p class="text-lg text-gray-600">Un gimnasio para alcanzar tus objetivos, con entrenamientos, nutrición y clases grupales personalizadas.</p>
+        </section>
 
-    <!-- Footer Section -->
-    <footer class="bg-black text-white text-center py-8">
+        <!-- Servicios -->
+        <section id="services" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out">
+                <h3 class="text-xl font-semibold mb-4 text-blue-600">Entrenamiento Personalizado</h3>
+                <p>Programa de entrenamiento adaptado a tus necesidades, con seguimiento de progreso.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out">
+                <h3 class="text-xl font-semibold mb-4 text-blue-600">Clases Grupales</h3>
+                <p>Entrena junto a otros y comparte la motivación en nuestras clases grupales.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 ease-in-out">
+                <h3 class="text-xl font-semibold mb-4 text-blue-600">Nutrición</h3>
+                <p>Recibe asesoramiento nutricional para maximizar tus resultados de entrenamiento.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white p-6 text-center">
         <p>&copy; 2025 PowerCore Gym. Todos los derechos reservados.</p>
     </footer>
 
