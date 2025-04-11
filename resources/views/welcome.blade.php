@@ -9,13 +9,13 @@
 <body class="bg-gray-100 font-sans">
 
     <!-- Hero Section -->
-    <section class="relative bg-cover bg-center h-screen" style="background-image: url('https://images.unsplash.com/photo-1506354639039-7b2d6d071121?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjUyOXwwfDF8c2VhY2h8NXx8Z2ltfGVufDB8fHx8fDE2Nzc0OTI2ODc&ixlib=rb-1.2.1&q=80&w=1080'); background-color: #333;">
+    <section class="relative bg-cover bg-center h-screen" style="background-image: url('https://images.unsplash.com/photo-1506354639039-7b2d6d071121?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjUyOXwwfDF8c2VhY2h8NXx8Z2ltfGVufDB8fHx8fDE2Nzc0OTI2ODc&ixlib=rb-1.2.1&q=80&w=1080');">
         <div class="absolute inset-0 bg-black opacity-40"></div> <!-- Filtro oscuro para mejor legibilidad -->
         <div class="flex justify-center items-center h-full relative z-10 text-center text-white px-4">
             <div>
                 <h1 class="text-5xl md:text-6xl font-extrabold mb-4">¡Bienvenido al Gimnasio!</h1>
                 <p class="text-lg md:text-xl mb-6">Alcanza tus metas y transforma tu vida</p>
-                <a href="{{ route('login') }}" class="inline-block bg-red-600 text-white py-3 px-8 rounded-lg text-lg hover:bg-red-700 transition">Iniciar sesion</a>
+                <a href="{{ route('login') }}" class="inline-block bg-red-600 text-white py-3 px-8 rounded-lg text-lg hover:bg-red-700 transition">Iniciar sesión</a>
             </div>
         </div>
     </section>
