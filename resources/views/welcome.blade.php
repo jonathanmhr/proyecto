@@ -6,22 +6,21 @@
     <title>Bienvenido al Gimnasio</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 font-sans text-gray-900">
-
+<body class="bg-gray-100 font-sans text-gray-900 min-h-screen">
     <!-- Header -->
     <header class="bg-blue-600 text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-3xl font-bold">PowerCore Gym</h1>
+            <h1 class="text-3xl font-bold">PowerCore</h1>
             <nav>
-                <a href="#" class="mr-4">Inicio</a>
-                <a href="#" class="mr-4">Servicios</a>
-                <a href="#">Contactos</a>
+                <a href="{{ route('login') }}" class="mr-4">Login</a> <!-- Ruta de login -->
+                <a href="{{ route('register') }}" class="mr-4">Registrar</a> <!-- Ruta de registro -->
+                <a href="#">Servicios</a>
             </nav>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto p-8">
+    <main class="container mx-auto p-8 min-h-screen">
         <section class="text-center mb-8">
             <h2 class="text-4xl font-semibold mb-4">Únete a PowerCore</h2>
             <p class="text-lg text-gray-700">Un gimnasio para alcanzar tus objetivos</p>
@@ -49,4 +48,5 @@
     </footer>
 
 </body>
+
 </html>
