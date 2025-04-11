@@ -6,47 +6,46 @@
     <title>Bienvenido al Gimnasio</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-100 font-sans text-gray-900">
 
-    <!-- Hero Section -->
-    <section class="relative bg-cover bg-center h-screen" style="background-image: url('https://images.unsplash.com/photo-1506354639039-7b2d6d071121?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjUyOXwwfDF8c2VhY2h8NXx8Z2ltfGVufDB8fHx8fDE2Nzc0OTI2ODc&ixlib=rb-1.2.1&q=80&w=1080');">
-        <div class="absolute inset-0 bg-black opacity-40"></div> <!-- Filtro oscuro para mejor legibilidad -->
-        <div class="flex justify-center items-center h-full relative z-10 text-center text-white px-4">
-            <div>
-                <h1 class="text-5xl md:text-6xl font-extrabold mb-4">¡Bienvenido al Gimnasio!</h1>
-                <p class="text-lg md:text-xl mb-6">Alcanza tus metas y transforma tu vida</p>
-                <a href="{{ route('login') }}" class="inline-block bg-red-600 text-white py-3 px-8 rounded-lg text-lg hover:bg-red-700 transition">Iniciar sesión</a>
-            </div>
+    <!-- Header -->
+    <header class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold">PowerCore Gym</h1>
+            <nav>
+                <a href="#" class="mr-4">Inicio</a>
+                <a href="#" class="mr-4">Servicios</a>
+                <a href="#">Contactos</a>
+            </nav>
         </div>
-    </section>
+    </header>
 
-    <!-- Servicios -->
-    <section class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-6 sm:px-12">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div class="text-center">
-                    <i class="fas fa-dumbbell text-5xl text-red-600 mb-6"></i>
-                    <h3 class="text-2xl font-semibold mb-3">Entrenamiento Personalizado</h3>
-                    <p class="text-gray-600">Planes de entrenamiento diseñados específicamente para ti.</p>
-                </div>
-                <div class="text-center">
-                    <i class="fas fa-heartbeat text-5xl text-red-600 mb-6"></i>
-                    <h3 class="text-2xl font-semibold mb-3">Clases Grupales</h3>
-                    <p class="text-gray-600">Disfruta de clases dinámicas para todos los niveles.</p>
-                </div>
-                <div class="text-center">
-                    <i class="fas fa-calendar text-5xl text-red-600 mb-6"></i>
-                    <h3 class="text-2xl font-semibold mb-3">Flexibilidad Horaria</h3>
-                    <p class="text-gray-600">Horarios adaptados a tu ritmo de vida.</p>
-                </div>
+    <!-- Main Content -->
+    <main class="container mx-auto p-8">
+        <section class="text-center mb-8">
+            <h2 class="text-4xl font-semibold mb-4">Únete a PowerCore</h2>
+            <p class="text-lg text-gray-700">Un gimnasio para alcanzar tus objetivos</p>
+        </section>
+
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold mb-4">Entrenamiento Personalizado</h3>
+                <p>Programa de entrenamiento adaptado a tus necesidades.</p>
             </div>
-        </div>
-    </section>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold mb-4">Clases Grupales</h3>
+                <p>Entrena junto a otros y comparte la motivación.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold mb-4">Nutrición</h3>
+                <p>Asesoramiento nutricional para un rendimiento óptimo.</p>
+            </div>
+        </section>
+    </main>
 
-    <!-- Contacto -->
-    <footer id="contacto" class="bg-gray-800 text-white text-center py-8">
-        <p class="text-xl mb-2">¿Listo para empezar? Contáctanos y da el primer paso</p>
-        <p class="text-lg">Email: contacto@gimnasio.com | Teléfono: +34 123 456 789</p>
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white p-4 text-center">
+        <p>&copy; 2025 PowerCore Gym</p>
     </footer>
 
 </body>
