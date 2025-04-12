@@ -11,12 +11,10 @@ Route::get('/', function () {
 // Ruta para el Dashboard
 Route::middleware(['auth', 'verified'])->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-// Ruta para ver el perfil (detalles del perfil)
-Route::middleware(['auth', 'verified'])->get('/perfil', [ProfileController::class, 'show'])->name('perfil.show');
-
-// Ruta para la edición del perfil (muestra el formulario de edición)
-Route::middleware(['auth', 'verified'])->get('/perfil/edit', [ProfileController::class, 'edit'])->name('perfil.edit');
-
-// Ruta para almacenar o actualizar el perfil
+// Ruta para la creación del perfil (solo si el perfil no existe)
+Route::middleware(['auth', 'verified'])->get('/perfil/create', [ProfileController::class, 'create'])->name('perfil.create');
 Route::middleware(['auth', 'verified'])->post('/perfil/store', [ProfileController::class, 'store'])->name('perfil.store');
+
+// Ruta para la edición del perfil (actualizar los datos)
+Route::middleware(['auth', 'verified'])->get('/perfil/update', [ProfileController::class, 'edit'])->name('perfil.update');
 Route::middleware(['auth', 'verified'])->put('/perfil/update', [ProfileController::class, 'update'])->name('perfil.update');
