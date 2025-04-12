@@ -19,4 +19,4 @@ Route::middleware(['auth', 'verified'])->post('/perfil/store', [ProfileControlle
 Route::middleware(['auth', 'verified'])->get('/perfil/edit', [ProfileController::class, 'edit'])->name('perfil.edit');
 
 // Ruta para actualizar el perfil (guardar los cambios)
-Route::middleware(['auth', 'verified'])->put('/perfil/update', [ProfileController::class, 'update'])->name('perfil.update')
+Route::middleware(['auth', 'verified'])->put('/perfil/update', [ProfileController::class, 'update'])->name('perfil.update');
