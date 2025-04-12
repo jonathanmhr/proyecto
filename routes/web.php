@@ -11,7 +11,11 @@ Route::get('/', function () {
 // Ruta para el Dashboard
 Route::middleware(['auth', 'verified'])->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-// Añadir rutas para el perfil (opcional)
+// Mostrar el perfil (ver detalles)
 Route::middleware(['auth', 'verified'])->get('/perfil', [ProfileController::class, 'show'])->name('perfil.show');
-Route::middleware(['auth', 'verified'])->get('/perfil/create', [ProfileController::class, 'create'])->name('perfil.create');
-Route::middleware(['auth', 'verified'])->post('/perfil/store', [ProfileController::class, 'store'])->name('perfil.store');
+
+// Mostrar el formulario para crear o editar el perfil
+Route::middleware(['auth', 'verified'])->get('/perfil/edit', [ProfileController::class, 'edit'])->name('perfil.edit');
+
+// Guardar o actualizar el perfil
+Route::middleware(['auth', 'verified'])->post('/perfil/save', [ProfileController::class, 'save'])->name('perfil.save');
