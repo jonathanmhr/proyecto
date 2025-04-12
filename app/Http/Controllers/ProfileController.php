@@ -11,10 +11,13 @@ class ProfileController extends Controller
     // Mostrar el perfil
     public function show()
     {
-        $perfil = Auth::user()->perfil; // Obtener el perfil del usuario autenticado
-        return view('profile.show', compact('perfil'));
+        // Obtener el perfil del usuario autenticado
+        $perfil = Auth::user()->perfil;
+    
+        // Pasar el perfil a la vista
+        return view('dashboard', compact('perfil'));
     }
-
+    
     // Mostrar el formulario para crear o editar el perfil
     public function edit()
     {
