@@ -14,5 +14,7 @@ Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 // Añadir aquí las rutas para el perfil
+Route::middleware(['auth', 'verified'])->get('/perfil', [ProfileController::class, 'show'])->name('perfil.show');
 Route::middleware(['auth', 'verified'])->get('/perfil/create', [ProfileController::class, 'create'])->name('perfil.create');
 Route::middleware(['auth', 'verified'])->post('/perfil/store', [ProfileController::class, 'store'])->name('perfil.store');
+
