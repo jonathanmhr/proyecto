@@ -4,7 +4,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // Asegúrate de incluir esta línea
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -26,6 +26,7 @@ class DashboardController extends Controller
             return redirect()->route('perfil.create');
         }
 
-        return view('dashboard', compact('perfil')); // Pasa el perfil a la vista
+        // Pasa el perfil a la vista
+        return view('dashboard', compact('perfil'));
     }
 }
