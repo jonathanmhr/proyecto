@@ -20,7 +20,6 @@
                         <a href="{{ route('perfil.edit') }}" class="text-blue-500 font-bold hover:underline">Haz clic aquí para completarlo.</a>
                     </p>
                 </div>
-                
         </div>
     </div>
 </x-app-layout>
