@@ -9,8 +9,9 @@ export default defineConfig({
         }),
     ],
     server: {
+        port: 5173, // Asegúrate de que el puerto es el correcto
         proxy: {
-            '/': 'http://localhost', // Proxy para redirigir a Laravel
+            '/': 'http://localhost', // Redirige todas las solicitudes a Laravel
         },
     },
 });
