@@ -12,6 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\CustomVerifyEmail;
 use Illuminate\Auth\Notifications\VerifyEmail as DefaultVerifyEmail;
 use App\Notifications\CustomResetPassword;
+use App\Models\PerfilUsuario;
 //use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -77,5 +78,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->notify(new CustomResetPassword($token));
     }
-    
+
+    public function perfil()
+    {
+        return $this->hasOne(PerfilUsuario::class, 'id_usuario');
+    }
 }

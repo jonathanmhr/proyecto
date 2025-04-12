@@ -15,6 +15,21 @@
                     <p>Correo electrónico: {{ auth()->user()->email }}</p>
                 </div>
 
+                <!-- Información del perfil -->
+                @if($perfil)
+                    <div class="mb-6">
+                        <h4 class="text-xl font-semibold">Perfil</h4>
+                        <p>Fecha de nacimiento: {{ $perfil->fecha_nacimiento }}</p>
+                        <p>Peso: {{ $perfil->peso }} kg</p>
+                        <p>Altura: {{ $perfil->altura }} cm</p>
+                        <p>Objetivo: {{ $perfil->objetivo }}</p>
+                    </div>
+                @else
+                    <div class="mb-6">
+                        <p>¡Por favor, completa tu perfil!</p>
+                    </div>
+                @endif
+
                 <!-- Widget de estadísticas -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Ejemplo de un widget de estadísticas -->
