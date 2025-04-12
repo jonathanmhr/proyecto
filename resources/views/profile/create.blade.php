@@ -14,17 +14,17 @@
                     <!-- Campos del formulario -->
                     <div class="mb-4">
                         <label for="fecha_nacimiento" class="block text-sm font-medium text-gray-700">Fecha de nacimiento</label>
-                        <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="mt-1 block w-full" required>
+                        <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="mt-1 block w-full" required min="1900-01-01" max="{{ date('Y-m-d') }}">
                     </div>
 
                     <div class="mb-4">
                         <label for="peso" class="block text-sm font-medium text-gray-700">Peso (kg)</label>
-                        <input type="number" step="0.1" name="peso" id="peso" class="mt-1 block w-full" required>
+                        <input type="number" name="peso" id="peso" class="mt-1 block w-full" required min="1" max="300" step="0.1" oninput="validity.valid||(value='');">
                     </div>
 
                     <div class="mb-4">
                         <label for="altura" class="block text-sm font-medium text-gray-700">Altura (cm)</label>
-                        <input type="number" step="0.1" name="altura" id="altura" class="mt-1 block w-full" required>
+                        <input type="number" name="altura" id="altura" class="mt-1 block w-full" required min="1" max="220" step="0.1" oninput="validity.valid||(value='');">
                     </div>
 
                     <div class="mb-4">
