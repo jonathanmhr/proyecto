@@ -11,6 +11,7 @@ class PerfilUsuario extends Model
 
     // Definir la tabla para el modelo
     protected $table = 'perfil_usuario';
+    public $timestamps = false;
 
     // Definir los campos que se pueden asignar masivamente
     protected $fillable = [
