@@ -83,4 +83,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(PerfilUsuario::class, 'id_usuario');
     }
+    
+    public function getProfilePhotoUrlAttribute()
+    {
+        if ($this->profile_photo_path && \Storage::disk(config('jetstream.profile_photo_disk'))->exists($this->profile_photo_path)) {
+            return \Storage::url($this->profile_photo_path);
+        }
+
+        return asset('images/profile.jpg'); // Tu imagen por defecto
+    }
 }
