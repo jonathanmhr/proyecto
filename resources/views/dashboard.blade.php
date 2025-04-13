@@ -11,7 +11,7 @@
             @if ($perfil)
                 <!-- Si el perfil existe, mostrar los datos y opción de editar -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <h3 class="text-xl font-semibold">Tu Perfil</h3>
+                    <h3 class="text-xl font-semibold">Perfil</h3>
                     <p><strong>Fecha de nacimiento:</strong> {{ $perfil->fecha_nacimiento }}</p>
                     <p><strong>Peso:</strong> {{ $perfil->peso }} kg</p>
                     <p><strong>Altura:</strong> {{ $perfil->altura }} cm</p>
