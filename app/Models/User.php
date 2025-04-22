@@ -2,27 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
+use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
-use App\Notifications\CustomVerifyEmail;
-use Illuminate\Auth\Notifications\VerifyEmail as DefaultVerifyEmail;
-use App\Notifications\CustomResetPassword;
-use App\Models\PerfilUsuario;
-//use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use HasApiTokens;
+
+    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
     use HasProfilePhoto;
+    use HasTeams;
     use Notifiable;
     use TwoFactorAuthenticatable;
-    //use HasRoles; // Correctamente implementado como un trait
 
     /**
      * The attributes that are mass assignable.
@@ -67,20 +65,5 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function sendEmailVerificationNotification()
-    {
-        $this->notify(new CustomVerifyEmail());
-    }
-
-    public function sendPasswordResetNotification($token)
-    {
-        $this->notify(new CustomResetPassword($token));
-    }
-
-    public function perfil()
-    {
-        return $this->hasOne(PerfilUsuario::class, 'id_usuario');
     }
 }

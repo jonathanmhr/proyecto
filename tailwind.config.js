@@ -8,10 +8,9 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './vendor/laravel/jetstream/**/*.blade.php',
         './storage/framework/views/*.php',
-        './resources/views/**/*.blade.php', // Esto incluye todas las vistas de Blade
-        './resources/js/**/*.js', // Si tienes JS con clases de Tailwind
-        './resources/css/**/*.css', // Si usas archivos CSS adicionales
-    ],    
+        './resources/views/**/*.blade.php',
+    ],
+
     theme: {
         extend: {
             fontFamily: {

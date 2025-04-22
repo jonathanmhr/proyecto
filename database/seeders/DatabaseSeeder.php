@@ -1,31 +1,23 @@
 <?php
 
-// database/seeders/RolesSeeder.php
 namespace Database\Seeders;
 
+use App\Models\User;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
-class RolesSeeder extends Seeder
+class DatabaseSeeder extends Seeder
 {
-    public function run()
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
     {
-        // Crear roles
-        $admin = Role::create(['name' => 'admin']);
-        $trainer = Role::create(['name' => 'trainer']);
-        $client = Role::create(['name' => 'client']);
+        // User::factory(10)->withPersonalTeam()->create();
 
-        // Crear permisos (si deseas)
-        $permission1 = Permission::create(['name' => 'manage users']);
-        $permission2 = Permission::create(['name' => 'manage classes']);
-        
-        // Asignar permisos a roles (ejemplo)
-        $admin->givePermissionTo($permission1);
-        $trainer->givePermissionTo($permission2);
-
-        // Asignar roles a usuarios
-        $user = \App\Models\User::find(1); // El ID de tu usuario administrador
-        $user->assignRole('admin');
+        User::factory()->withPersonalTeam()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
     }
 }

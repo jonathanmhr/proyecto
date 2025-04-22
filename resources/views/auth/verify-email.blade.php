@@ -5,12 +5,12 @@
         </x-slot>
 
         <div class="mb-4 text-sm text-gray-600">
-            {{ __('Antes de continuar, ¿podrías verificar tu dirección de correo electrónico haciendo clic en el enlace que te acabamos de enviar por correo? Si no recibiste el correo, con gusto te enviaremos otro.') }}
+            {{ __('Before continuing, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
         </div>
 
         @if (session('status') == 'verification-link-sent')
             <div class="mb-4 font-medium text-sm text-green-600">
-                {{ __('Un nuevo enlace de verificación ha sido enviado a la dirección de correo electrónico que proporcionaste en la configuración de tu perfil.') }}
+                {{ __('A new verification link has been sent to the email address you provided in your profile settings.') }}
             </div>
         @endif
 
@@ -20,7 +20,7 @@
 
                 <div>
                     <x-button type="submit">
-                        {{ __('Reenviar correo') }}
+                        {{ __('Resend Verification Email') }}
                     </x-button>
                 </div>
             </form>
@@ -30,13 +30,13 @@
                     href="{{ route('profile.show') }}"
                     class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                    {{ __('Editar Perfil') }}</a>
+                    {{ __('Edit Profile') }}</a>
 
                 <form method="POST" action="{{ route('logout') }}" class="inline">
                     @csrf
 
                     <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ms-2">
-                        {{ __('Desconectar') }}
+                        {{ __('Log Out') }}
                     </button>
                 </form>
             </div>
