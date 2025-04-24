@@ -7,6 +7,7 @@ use App\Http\Controllers\Entrenador\EntrenadorController;
 use App\Http\Controllers\Perfil\PerfilController;
 use App\Http\Controllers\ClaseGrupal\ClaseGrupalController;
 
+// Ruta de bienvenida
 Route::get('/', function () {
     return view('welcome');
 });
@@ -38,11 +39,10 @@ Route::middleware([
     Route::delete('users/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 });
 
-
 // Rutas para los paneles del entrenador
 Route::middleware([
     'auth', 
-    'verified', 
+    'verified',  // Asegura que solo usuarios verificados accedan al panel
     'can:entrenador-access',  // El entrenador tiene acceso a su propio panel
 ])->prefix('entrenador')->group(function () {
     Route::get('/dashboard', [EntrenadorController::class, 'index'])->name('entrenador.dashboard');
@@ -51,8 +51,14 @@ Route::middleware([
 // Ruta para el dashboard del perfil
 Route::middleware(['auth'])->get('/dashboard', [PerfilController::class, 'index'])->name('dashboard');
 
-//  Ruta para clase grupales
+// Rutas para las clases grupales
 Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
 Route::get('clases/create', [ClaseGrupalController::class, 'create'])->name('clases.create');
 Route::post('clases', [ClaseGrupalController::class, 'store'])->name('clases.store');
 Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
+
+// Rutas de verificación de correo electrónico (para usuarios no verificados)
+Route::get('/email/verify', [EmailVerificationController::class, 'show'])->middleware('auth')->name('verification.notice');
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware(['auth', 'signed'])
+    ->name('verification.verify');
