@@ -131,11 +131,12 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
     
-        // Evitar eliminar usuarios con el rol 'admin'
-        if ($user->hasRole('admin')) {
-            return redirect()->route('admin.users.index')->with('error', 'No puedes eliminar a un administrador.');
+        // Evitar eliminar usuarios con el rol 'admin' (suponiendo que tienes un campo 'role')
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.users.index')->with('error', 'No puedes eliminar un usuario con rol de admin.');
         }
     
+        // Eliminar el usuario
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'Usuario eliminado correctamente.');
     }
