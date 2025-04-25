@@ -24,9 +24,9 @@ class ClaseGrupal extends Model
         return $this->belongsToMany(User::class, 'suscripciones', 'id_clase', 'id_usuario')
             ->withPivot('estado', 'fecha_inicio', 'fecha_fin');  // Para manejar los datos adicionales de la suscripción
     }
-    
+
     public function entrenador()
     {
-        return $this->belongsTo(User::class, 'id_entrenador');  // Suponiendo que tienes un campo 'id_entrenador' en tu tabla 'clases_grupales'
+        return $this->belongsTo(User::class, 'entrenador_id');  // Suponiendo que tienes un campo 'id_entrenador' en tu tabla 'clases_grupales'
     }
 }
