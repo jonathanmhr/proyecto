@@ -10,6 +10,15 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <h1 class="text-3xl font-semibold text-gray-900 mb-6">Clases Disponibles</h1>
 
+                <!-- Mostrar el botón para crear clases solo si el usuario es entrenador o admin_entrenador -->
+                @canany(['crear_clases', 'admin_entrenador', 'entrenador'])
+                    <div class="mb-6 text-right">
+                        <a href="{{ route('clases.create') }}" class="inline-block bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 transition duration-200">
+                            Crear Clase
+                        </a>
+                    </div>
+                @endcanany
+
                 @if ($clases->isEmpty())
                     <p class="text-center text-gray-500">No hay clases disponibles en este momento.</p>
                 @else
