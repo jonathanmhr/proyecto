@@ -51,6 +51,15 @@ Route::middleware([
     Route::delete('users/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 });
 
+// Rutas para los paneles de admin entrenador
+Route::middleware(['auth', 'can:admin_entrenador'])->prefix('admin')->group(function () {
+    Route::resource('clases', 'ClaseGrupal\ClaseGrupalController');
+});
+
+Route::middleware(['auth', 'can:entrenador'])->prefix('entrenador')->group(function () {
+    Route::resource('clases', 'ClaseGrupal\ClaseGrupalController');
+});
+
 // Rutas para los paneles del entrenador
 Route::middleware([
     'auth',
