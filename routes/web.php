@@ -53,7 +53,7 @@ Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->
 
 // Rutas de verificación de correo electrónico
 Route::get('/email/verify', function () {
-    return view('auth.verify'); // Jetstream incluye esta vista
+    return view('auth.verify-email'); // Jetstream incluye esta vista
 })->middleware('auth')->name('verification.notice');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
