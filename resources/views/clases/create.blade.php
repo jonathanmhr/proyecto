@@ -10,19 +10,29 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <form action="{{ route('clases.store') }}" method="POST">
                     @csrf
+
                     <div class="form-group">
                         <label for="nombre">Nombre de la Clase</label>
-                        <input type="text" id="nombre" name="nombre" class="form-control" required>
+                        <input type="text" id="nombre" name="nombre" class="form-control @error('nombre') is-invalid @enderror" required>
+                        @error('nombre')
+                            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="form-group">
                         <label for="descripcion">Descripción</label>
-                        <textarea id="descripcion" name="descripcion" class="form-control" required></textarea>
+                        <textarea id="descripcion" name="descripcion" class="form-control @error('descripcion') is-invalid @enderror" required></textarea>
+                        @error('descripcion')
+                            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="form-group">
                         <label for="cupos_maximos">Cupos Máximos</label>
-                        <input type="number" id="cupos_maximos" name="cupos_maximos" class="form-control" required>
+                        <input type="number" id="cupos_maximos" name="cupos_maximos" class="form-control @error('cupos_maximos') is-invalid @enderror" required>
+                        @error('cupos_maximos')
+                            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <button type="submit" class="btn btn-primary">Crear Clase</button>
