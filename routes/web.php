@@ -51,13 +51,16 @@ Route::middleware([
     Route::delete('users/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 });
 
-// Rutas para los paneles de admin entrenador
+// Rutas para el panel de admin entrenador
 Route::middleware(['auth', 'can:admin_entrenador'])->prefix('admin')->group(function () {
-    Route::resource('clases', 'ClaseGrupal\ClaseGrupalController');
-});
-
-Route::middleware(['auth', 'can:entrenador'])->prefix('entrenador')->group(function () {
-    Route::resource('clases', 'ClaseGrupal\ClaseGrupalController');
+    Route::resource('clases', ClaseGrupalController::class)->names([
+        'index' => 'admin.entrenador.clases.index',
+        'create' => 'admin.entrenador.clases.create',
+        'store' => 'admin.entrenador.clases.store',
+        'edit' => 'admin.entrenador.clases.edit',
+        'update' => 'admin.entrenador.clases.update',
+        'destroy' => 'admin.entrenador.clases.destroy',
+    ]);
 });
 
 // Rutas para los paneles del entrenador
