@@ -10,26 +10,38 @@
                     </a>
                 </div>
 
-                <!-- Panel de navegadio-->
+                <!-- Panel de navegación -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
                     <!-- Panel de administrador -->
                     @can('admin-access')
                         <x-nav-link href="{{ route('admin.users.index') }}" :active="request()->routeIs('admin.users.*')">
-                            {{ __('Administracion') }}
+                            {{ __('Administración') }}
                         </x-nav-link>
                     @endcan
+
                     @can('entrenador-access')
                         <x-nav-link href="{{ route('entrenador.dashboard') }}" :active="request()->routeIs('entrenador.*')">
                             {{ __('Panel Entrenador') }}
                         </x-nav-link>
                     @endcan
+
+                    <!-- Enlace de clases -->
                     <x-nav-link href="{{ route('clases.index') }}" :active="request()->routeIs('clases.*')">
                         {{ __('Clases') }}
                     </x-nav-link>
+
+                    <!-- Enlace para crear clases, visible para admin_entrenador y entrenador -->
+                    @canany(['admin_entrenador', 'entrenador-access'])
+                        <x-nav-link href="{{ route('entrenador.clases.create') }}" :active="request()->routeIs('entrenador.clases.create')">
+                            {{ __('Crear Clase') }}
+                        </x-nav-link>
+                    @endcanany
                 </div>
+
 
             </div>
 
