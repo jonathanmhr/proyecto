@@ -18,7 +18,7 @@ class ClaseGrupalController extends Controller
             $clases = ClaseGrupal::all(); // Todos los clases
         } else {
             // Si el usuario es un entrenador, mostrar solo las clases asignadas a él
-            $clases = ClaseGrupal::where('id_entrenador', auth()->user()->id)->get();
+            $clases = ClaseGrupal::where('entrenador_id', auth()->user()->id)->get();
         }
 
         return view('clases.index', compact('clases'));
@@ -43,7 +43,7 @@ class ClaseGrupalController extends Controller
         $clase = ClaseGrupal::create([
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
-            'id_entrenador' => auth()->user()->id, // El entrenador crea las clases que le corresponden
+            'entrenador_id' => auth()->user()->id, // El entrenador crea las clases que le corresponden
         ]);
 
         return redirect()->route('clases.index')->with('success', 'Clase creada exitosamente.');
@@ -75,7 +75,7 @@ class ClaseGrupalController extends Controller
     public function edit(ClaseGrupal $clase)
     {
         // Verificar si el usuario es el entrenador asignado o el admin_entrenador
-        if ($clase->id_entrenador !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
+        if ($clase->entrenador_id !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
             return redirect()->route('clases.index')->with('error', 'No tienes permiso para editar esta clase.');
         }
 
@@ -94,7 +94,7 @@ class ClaseGrupalController extends Controller
         ]);
 
         // Solo el entrenador o el admin_entrenador puede actualizar la clase
-        if ($clase->id_entrenador !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
+        if ($clase->entrenador_id !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
             return redirect()->route('clases.index')->with('error', 'No tienes permiso para editar esta clase.');
         }
 
@@ -110,7 +110,7 @@ class ClaseGrupalController extends Controller
     public function destroy(ClaseGrupal $clase)
     {
         // Solo el entrenador que creó la clase o un admin_entrenador puede eliminar la clase
-        if ($clase->id_entrenador !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
+        if ($clase->entrenador_id !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
             return redirect()->route('clases.index')->with('error', 'No tienes permiso para eliminar esta clase.');
         }
 
@@ -127,7 +127,7 @@ class ClaseGrupalController extends Controller
         ]);
 
         // Solo el entrenador o admin_entrenador puede agregar usuarios
-        if ($clase->id_entrenador !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
+        if ($clase->entrenador_id !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
             return back()->with('error', 'No tienes permiso para agregar usuarios a esta clase.');
         }
 
@@ -150,7 +150,7 @@ class ClaseGrupalController extends Controller
     public function eliminarUsuario(ClaseGrupal $clase, User $user)
     {
         // Solo el entrenador o admin_entrenador puede eliminar usuarios
-        if ($clase->id_entrenador !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
+        if ($clase->entrenador_id !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
             return back()->with('error', 'No tienes permiso para eliminar usuarios de esta clase.');
         }
 
