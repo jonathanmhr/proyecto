@@ -22,6 +22,21 @@ Route::middleware([
     Route::get('/dashboard', [PerfilController::class, 'index'])->name('dashboard');
 });
 
+// Rutas de verificación de correo electrónico
+Route::get('/email/verify', function () {
+    return view('auth.verify-email'); // Jetstream incluye esta vista
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/dashboard');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', 'Correo de verificación reenviado.');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
 // Rutas del panel de administración
 Route::middleware([
     'auth',
@@ -45,23 +60,26 @@ Route::middleware([
     Route::get('/dashboard', [EntrenadorController::class, 'index'])->name('entrenador.dashboard');
 });
 
+// Rutas para las clases grupales en el panel de entrenadores
+Route::prefix('entrenador')->middleware(['auth', 'verified', 'can:entrenador-access'])->group(function () {
+
+    // Rutas para gestionar las clases grupales
+    Route::get('clases', [ClaseGrupalController::class, 'index'])->name('entrenador.clases.index');  // Listar clases
+    Route::get('clases/create', [ClaseGrupalController::class, 'create'])->name('entrenador.clases.create');  // Crear nueva clase
+    Route::post('clases', [ClaseGrupalController::class, 'store'])->name('entrenador.clases.store');  // Almacenar nueva clase
+    Route::get('clases/{clase}/edit', [ClaseGrupalController::class, 'edit'])->name('entrenador.clases.edit');  // Editar clase
+    Route::put('clases/{clase}', [ClaseGrupalController::class, 'update'])->name('entrenador.clases.update');  // Actualizar clase
+    Route::delete('clases/{clase}', [ClaseGrupalController::class, 'destroy'])->name('entrenador.clases.destroy');  // Eliminar clase
+
+    // Rutas para gestionar usuarios en las clases
+    Route::post('clases/{clase}/agregar-usuario', [ClaseGrupalController::class, 'agregarUsuario'])->name('entrenador.clases.agregarUsuario');  // Agregar usuario a clase
+    Route::post('clases/{clase}/{user}/eliminar-usuario', [ClaseGrupalController::class, 'eliminarUsuario'])->name('entrenador.clases.eliminarUsuario');  // Eliminar usuario de clase
+});
+
 // Rutas para las clases grupales
 Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
 Route::get('clases/create', [ClaseGrupalController::class, 'create'])->name('clases.create');
 Route::post('clases', [ClaseGrupalController::class, 'store'])->name('clases.store');
 Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
 
-// Rutas de verificación de correo electrónico
-Route::get('/email/verify', function () {
-    return view('auth.verify-email'); // Jetstream incluye esta vista
-})->middleware('auth')->name('verification.notice');
 
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
-    return redirect('/dashboard');
-})->middleware(['auth', 'signed'])->name('verification.verify');
-
-Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
-    return back()->with('message', 'Correo de verificación reenviado.');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
