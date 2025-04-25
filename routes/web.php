@@ -37,7 +37,8 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('message', 'Correo de verificación reenviado.');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-// Rutas del panel de administración (admin global)
+
+// Rutas del panel de administración
 Route::middleware([
     'auth',
     config('jetstream.auth_session'),
@@ -73,7 +74,8 @@ Route::middleware([
 });
 
 // Rutas para las clases grupales en el panel de entrenadores
-Route::middleware(['auth', 'verified', 'can:entrenador-access'])->prefix('entrenador')->group(function () {
+Route::prefix('entrenador')->middleware(['auth', 'verified', 'can:entrenador-access'])->group(function () {
+
     // Rutas para gestionar las clases grupales
     Route::get('clases', [ClaseGrupalController::class, 'index'])->name('entrenador.clases.index');  // Listar clases
     Route::get('clases/create', [ClaseGrupalController::class, 'create'])->name('entrenador.clases.create');  // Crear nueva clase
@@ -87,8 +89,35 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access'])->prefix('entren
     Route::post('clases/{clase}/{user}/eliminar-usuario', [ClaseGrupalController::class, 'eliminarUsuario'])->name('entrenador.clases.eliminarUsuario');  // Eliminar usuario de clase
 });
 
-// Rutas para las clases grupales (públicas)
+// Rutas para las clases grupales
 Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
 Route::get('clases/create', [ClaseGrupalController::class, 'create'])->name('clases.create');
 Route::post('clases', [ClaseGrupalController::class, 'store'])->name('clases.store');
 Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
+
+
+// Rutas del panel del entrenador
+Route::middleware(['auth', 'verified', 'can:entrenador-access'])->prefix('entrenador')->group(function () {
+    // Rutas de clases grupales
+    Route::get('/clases', [ClaseGrupalController::class, 'index'])->name('entrenador.clases.index');
+    Route::get('/clases/{clase}/edit', [ClaseGrupalController::class, 'edit'])->name('entrenador.clases.edit');
+    Route::put('/clases/{clase}', [ClaseGrupalController::class, 'update'])->name('entrenador.clases.update');
+    Route::post('/clases', [ClaseGrupalController::class, 'store'])->name('entrenador.clases.store');
+    
+    // Rutas de usuarios
+    Route::get('/usuarios', [UserController::class, 'index'])->name('entrenador.usuarios.index');
+    Route::put('/usuarios/{user}', [UserController::class, 'update'])->name('entrenador.usuarios.update');
+    
+    // Rutas de notificaciones
+    Route::get('/notificaciones', [NotificacionesController::class, 'index'])->name('entrenador.notificaciones.index');
+    Route::post('/notificaciones', [NotificacionesController::class, 'store'])->name('entrenador.notificaciones.store');
+    
+    // Rutas de estadísticas
+    Route::get('/estadisticas', [EstadisticasController::class, 'index'])->name('entrenador.estadisticas.index');
+    
+    // Rutas de suscripciones
+    Route::get('/suscripciones', [SuscripcionesController::class, 'index'])->name('entrenador.suscripciones.index');
+    
+    // Rutas de reportes
+    Route::get('/reportes', [ReportesController::class, 'index'])->name('entrenador.reportes.index');
+});
