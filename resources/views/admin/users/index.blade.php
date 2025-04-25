@@ -75,6 +75,7 @@
                                             class="border border-gray-300 rounded-md px-4 py-2 text-sm text-gray-700">
                                             <option value="" disabled selected>Seleccionar</option>
                                             <option value="admin">Administrador</option>
+                                            <option value="admin_entrenador">Admin Entrenador</option>
                                             <option value="entrenador">Entrenador</option>
                                             <option value="cliente">Cliente</option>
                                         </select>
