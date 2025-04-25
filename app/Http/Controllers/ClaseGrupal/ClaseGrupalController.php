@@ -27,7 +27,11 @@ class ClaseGrupalController extends Controller
     // Mostrar el formulario para crear una nueva clase
     public function create()
     {
-        // Solo los admins y entrenadores pueden crear clases
+        // Verificar si el usuario tiene el permiso de admin_entrenador o entrenador-access
+        if (!auth()->user()->can('admin_entrenador') && !auth()->user()->can('entrenador-access')) {
+            return redirect()->route('clases.index')->with('error', 'No tienes permiso para crear clases.');
+        }
+    
         return view('clases.create');
     }
 
