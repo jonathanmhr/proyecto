@@ -16,22 +16,22 @@ class UserController extends Controller
         if (!auth()->check()) {
             return redirect()->route('login');
         }
-    
+
         // Recuperar los usuarios de la base de datos con paginación
-        $users = User::when($request->search, function($query) use ($request) {
+        $users = User::when($request->search, function ($query) use ($request) {
             // Validación de longitud de búsqueda: mínimo 3 caracteres, máximo 8
             if (strlen($request->search) >= 3 && strlen($request->search) <= 8) {
                 return $query->where('name', 'like', '%' . $request->search . '%')
-                             ->orWhere('email', 'like', '%' . $request->search . '%');
+                    ->orWhere('email', 'like', '%' . $request->search . '%');
             }
             return $query; // Si no cumple la longitud, no filtra
         })
-        ->paginate(10); // 10 usuarios por página
-    
+            ->paginate(10); // 10 usuarios por página
+
         // Retornar la vista con la lista de usuarios
         return view('admin.users.index', compact('users'));
     }
-    
+
 
     // Método para asignar un rol a un usuario
     public function assignRole(Request $request, $id)
@@ -58,6 +58,7 @@ class UserController extends Controller
             // Asignar permisos de administrador
             $perms = [
                 ['name' => 'admin-access', 'title' => 'Acceso al panel de administración'],
+                ['name' => 'admin_entrenador', 'title' => 'Acceso al panel de administracion de entrenadores'],
                 ['name' => 'entrenador-access', 'title' => 'Acceso al panel de entrenador'],
                 ['name' => 'cliente-access', 'title' => 'Acceso para clientes'],
             ];
@@ -81,7 +82,20 @@ class UserController extends Controller
                 'title' => 'Acceso para clientes',
             ]);
             Bouncer::allow($role)->to($perm);
+        } elseif ($role->name === 'admin_entrenador') {
+            // Si el rol es 'admin_entrenador'
+            $perms = [
+                ['name' => 'admin_entrenador', 'title' => 'Acceso al panel de administración de entrenadores'],
+                // Otros permisos relacionados con la gestión de entrenadores
+            ];
+
+            // Crear habilidades y asignarlas al rol
+            foreach ($perms as $perm) {
+                $ability = Bouncer::ability()->firstOrCreate($perm);
+                Bouncer::allow($role)->to($ability);
+            }
         }
+
 
         // Refrescar los permisos asignados al usuario
         $user->load('roles');
@@ -130,12 +144,12 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-    
+
         // Evitar eliminar usuarios con el rol 'admin' (suponiendo que tienes un campo 'role')
         if ($user->role === 'admin') {
             return redirect()->route('admin.users.index')->with('error', 'No puedes eliminar un usuario con rol de admin.');
         }
-    
+
         // Eliminar el usuario
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'Usuario eliminado correctamente.');
