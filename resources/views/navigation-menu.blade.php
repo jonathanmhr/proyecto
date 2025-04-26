@@ -30,7 +30,7 @@
                     @endcan
 
                     <!-- Enlace de clases -->
-                    <x-nav-link href="{{ route('clases.index') }}" :active="request()->routeIs('clases.*')">
+                    <x-nav-link href="{{ route('entrenador.clases.index') }}" :active="request()->routeIs('entrenador.clases.*')">
                         {{ __('Clases') }}
                     </x-nav-link>
 
