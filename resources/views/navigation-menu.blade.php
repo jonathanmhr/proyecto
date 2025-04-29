@@ -255,49 +255,48 @@
             </div>
         </div>
     </div>
-
-    <!-- Botón hamburguesa -->
-    <div class="md:hidden flex items-center">
-        <button @click="open = !open" class="text-gray-500 focus:outline-none">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-        </button>
-    </div>
-
-    <!-- Menú responsive -->
-    <div x-show="open" class="md:hidden mt-2 space-y-1">
-        @can('admin-access')
-            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700">Panel Admin</a>
-            <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 text-sm text-gray-700">Usuarios</a>
-        @endcan
-
-        @can('admin_entrenador')
-            <a href="{{ route('admin-entrenador.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700">Panel Admin
-                Entrenador</a>
-            <a href="{{ route('admin-entrenador.clases.index') }}"
-                class="block px-4 py-2 text-sm text-gray-700">Clases</a>
-        @endcan
-
-        @can('entrenador-access')
-            <a href="{{ route('entrenador.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700">Mis Clases</a>
-            <a href="{{ route('entrenador.usuarios.index') }}" class="block px-4 py-2 text-sm text-gray-700">Usuarios</a>
-            <a href="{{ route('entrenador.suscripciones.index') }}"
-                class="block px-4 py-2 text-sm text-gray-700">Suscripciones</a>
-        @endcan
-
-        @can('cliente-access')
-            <a href="{{ route('cliente.clases.index') }}" class="block px-4 py-2 text-sm text-gray-700">Ver Clases</a>
-        @endcan
-
-        <!-- Opciones comunes -->
-        <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm text-gray-700">Perfil</a>
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700">
-                Cerrar sesión
-            </button>
-        </form>
-    </div>
-
 </nav>
+
+ <!-- Botón hamburguesa -->
+ <div class="md:hidden flex items-center">
+    <button @click="open = !open" class="text-gray-500 focus:outline-none">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+    </button>
+</div>
+
+<!-- Menú responsive -->
+<div x-show="open" class="md:hidden mt-2 space-y-1">
+    @can('admin-access')
+        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700">Panel Admin</a>
+        <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 text-sm text-gray-700">Usuarios</a>
+    @endcan
+
+    @can('admin_entrenador')
+        <a href="{{ route('admin-entrenador.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700">Panel Admin
+            Entrenador</a>
+        <a href="{{ route('admin-entrenador.clases.index') }}"
+            class="block px-4 py-2 text-sm text-gray-700">Clases</a>
+    @endcan
+
+    @can('entrenador-access')
+        <a href="{{ route('entrenador.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700">Mis Clases</a>
+        <a href="{{ route('entrenador.usuarios.index') }}" class="block px-4 py-2 text-sm text-gray-700">Usuarios</a>
+        <a href="{{ route('entrenador.suscripciones.index') }}"
+            class="block px-4 py-2 text-sm text-gray-700">Suscripciones</a>
+    @endcan
+
+    @can('cliente-access')
+        <a href="{{ route('cliente.clases.index') }}" class="block px-4 py-2 text-sm text-gray-700">Ver Clases</a>
+    @endcan
+
+    <!-- Opciones comunes -->
+    <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm text-gray-700">Perfil</a>
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700">
+            Cerrar sesión
+        </button>
+    </form>
+</div>
