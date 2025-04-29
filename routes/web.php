@@ -73,7 +73,7 @@ Route::middleware([
     'can:entrenador-access',
 ])->prefix('entrenador')->name('entrenador.')->group(function () {
     // Dashboard del entrenador
-    Route::get('/dashboard', [ClaseGrupalController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [EntrenadorController::class, 'index'])->name('dashboard');
 
     // Clases
     Route::resource('clases', ClaseGrupalController::class)->except(['show']);
