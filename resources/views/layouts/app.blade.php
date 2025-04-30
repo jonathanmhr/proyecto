@@ -1,35 +1,43 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        @livewireStyles
-    </head>
-    <body class="font-sans antialiased">
-        <x-banner />
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-        <div class="min-h-screen bg-gray-100">
-            @livewire('navigation-menu')
+    @livewireStyles
+</head>
 
-            <!-- Contenido de la página -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
+<body class="font-sans antialiased">
+    <x-banner />
 
-        @stack('modals')
+    <div class="min-h-screen bg-gray-100">
+        @livewire('navigation-menu')
+        <x-sidebar />
 
-        @livewireScripts
-    </body>
+        <!-- Contenido de la página -->
+        <main class="ml-20 group-hover:ml-64 transition-all duration-300">
+            {{ $slot }}
+        </main>
+    </div>
+
+    @stack('modals')
+    @livewireScripts
+
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        feather.replace();
+    </script>
+</body>
+
 </html>
