@@ -1,6 +1,9 @@
-<aside x-data="{ open: false }" x-bind="$el"
+<aside x-data="{ open: false }"
+    x-bind="$el"
     class="fixed top-4 left-4 h-[calc(100vh-2rem)] transition-all duration-300 bg-white rounded-xl shadow-md flex flex-col items-center py-4 z-50"
-    :class="open ? 'w-64 items-start' : 'w-20 items-center'" @mouseenter="open = true" @mouseleave="open = false"
+    :class="open ? 'w-64 items-start' : 'w-20 items-center'"
+    @mouseenter="open = true"
+    @mouseleave="open = false"
     x-init="$watch('open', () => feather.replace())">
 
     <!-- Logo -->
