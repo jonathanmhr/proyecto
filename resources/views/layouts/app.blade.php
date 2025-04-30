@@ -35,7 +35,11 @@
     @livewireScripts
 
     <script src="https://unpkg.com/feather-icons"></script>
-    <script> feather.replace(); </script>
+    <script>
+        document.addEventListener('alpine:initialized', () => feather.replace());
+        document.addEventListener('alpine:reinitialized', () => feather.replace());
+    </script>
+    
 </body>
 
 
