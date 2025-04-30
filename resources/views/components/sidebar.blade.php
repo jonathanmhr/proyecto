@@ -1,5 +1,4 @@
 <!-- resources/views/components/sidebar.blade.php -->
-
 <aside 
     x-data="{ expanded: false }"
     @mouseenter="expanded = true" 
@@ -16,34 +15,34 @@
     <!-- Menú Cliente -->
     <nav class="flex flex-col mt-4 space-y-2 px-2">
 
-        <x-sidebar-link href="{{ route('dashboard') }}" icon="home" label="Panel" :expanded="$expanded" />
-        <x-sidebar-link href="{{ route('clases.index') }}" icon="calendar" label="Clases" :expanded="$expanded" />
-        <x-sidebar-link href="{{ route('entrenamientos.index') }}" icon="dumbbell" label="Entrenamientos" :expanded="$expanded" />
-        <x-sidebar-link href="{{ route('suscripciones.index') }}" icon="credit-card" label="Suscripciones" :expanded="$expanded" />
+        <x-sidebar-link href="{{ route('dashboard') }}" icon="home" label="Panel" :expanded="expanded" />
+        <x-sidebar-link href="{{ route('clases.index') }}" icon="calendar" label="Clases" :expanded="expanded" />
+        <x-sidebar-link href="{{ route('entrenamientos.index') }}" icon="dumbbell" label="Entrenamientos" :expanded="expanded" />
+        <x-sidebar-link href="{{ route('suscripciones.index') }}" icon="credit-card" label="Suscripciones" :expanded="expanded" />
 
     </nav>
 
     <!-- Entrenador -->
     @can('gestionar-clases')
     <div class="mt-6 border-t border-gray-200 pt-4 px-2">
-        <x-sidebar-link href="{{ route('entrenador.alumnos') }}" icon="users" label="Mis alumnos" :expanded="$expanded" />
-        <x-sidebar-link href="{{ route('clases.create') }}" icon="plus-circle" label="Crear clase" :expanded="$expanded" />
+        <x-sidebar-link href="{{ route('entrenador.alumnos') }}" icon="users" label="Mis alumnos" :expanded="expanded" />
+        <x-sidebar-link href="{{ route('clases.create') }}" icon="plus-circle" label="Crear clase" :expanded="expanded" />
     </div>
     @endcan
 
     <!-- Entrenador Admin -->
     @role('entrenador_admin')
     <div class="mt-6 border-t border-gray-200 pt-4 px-2">
-        <x-sidebar-link href="{{ route('entrenadores.index') }}" icon="user-cog" label="Gestionar entrenadores" :expanded="$expanded" />
+        <x-sidebar-link href="{{ route('entrenadores.index') }}" icon="user-cog" label="Gestionar entrenadores" :expanded="expanded" />
     </div>
     @endrole
 
     <!-- Admin -->
     @role('admin')
     <div class="mt-6 border-t border-gray-200 pt-4 px-2">
-        <x-sidebar-link href="{{ route('admin.panel') }}" icon="settings" label="Panel Admin" :expanded="$expanded" />
-        <x-sidebar-link href="{{ route('usuarios.index') }}" icon="users" label="Usuarios" :expanded="$expanded" />
-        <x-sidebar-link href="{{ route('pagos.index') }}" icon="dollar-sign" label="Pagos" :expanded="$expanded" />
+        <x-sidebar-link href="{{ route('admin.panel') }}" icon="settings" label="Panel Admin" :expanded="expanded" />
+        <x-sidebar-link href="{{ route('usuarios.index') }}" icon="users" label="Usuarios" :expanded="expanded" />
+        <x-sidebar-link href="{{ route('pagos.index') }}" icon="dollar-sign" label="Pagos" :expanded="expanded" />
     </div>
     @endrole
 
