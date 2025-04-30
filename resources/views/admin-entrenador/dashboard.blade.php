@@ -45,7 +45,7 @@
                 </a>
 
                 <!-- Ver Alumnos -->
-                <a href="{{ route('admin.users.index') }}?role=alumno"
+                <a href="{{ route('admin.users.index') }}?role=cliente"
                     class="bg-purple-100 hover:bg-purple-200 text-purple-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                     <i data-feather="user-plus" class="w-5 h-5"></i> Ver Alumnos
                 </a>
