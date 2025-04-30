@@ -31,7 +31,7 @@
 
     <!-- Ajustes de perfil -->
     <div class="w-full px-2">
-        <a href="{{ route('profile.edit') }}"
+        <a href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')"
             class="flex items-center gap-3 w-full text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg text-sm transition-all">
             <i data-feather="settings" class="w-5 h-5"></i>
             <span class="hidden sm:inline">Ajustes</span>
