@@ -29,7 +29,7 @@
                             <td class="px-4 py-2">{{ $clase->fecha }}</td>
                             <td class="px-4 py-2">
                                 <a href="{{ route('admin-entrenador.clases.edit', $clase) }}" class="text-yellow-500 hover:text-yellow-600">Editar</a>
-                                <form action="{{ route('admin-entrenador.clases.destroy', $clase->id) }}" method="POST" class="inline-block ml-4">
+                                <form action="{{ route('admin-entrenador.clases.destroy', $clase) }}" method="POST" class="inline-block ml-4">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-500 hover:text-red-600">Eliminar</button>
