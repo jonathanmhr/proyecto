@@ -43,7 +43,9 @@
                 <ul class="space-y-4">
                     @foreach ($suscripciones as $suscripcion)
                         <li class="flex justify-between items-center border-b border-gray-200 pb-2">
-                            <span class="text-gray-700">{{ $suscripcion->clase->nombre }}</span>
+                            <span class="text-gray-700">
+                                {{ $suscripcion->clase ? $suscripcion->clase->nombre : 'Clase eliminada' }}
+                            </span>
                             <span class="text-sm text-gray-500">{{ $suscripcion->created_at->format('d/m/Y') }}</span>
                         </li>
                     @endforeach
