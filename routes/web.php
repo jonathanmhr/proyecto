@@ -66,8 +66,8 @@ Route::middleware([
     
     // Rutas para la gestión de clases
     Route::get('clases', [AdminEntrenadorController::class, 'verClases'])->name('clases.index');
-    Route::get('clases/create', [AdminEntrenadorController::class, 'crearClase'])->name('clases.create'); // Esta ruta es la que falta
-    Route::post('clases', [AdminEntrenadorController::class, 'guardarClase'])->name('clases.store');
+    Route::get('clases/create', [AdminEntrenadorController::class, 'crearClase'])->name('admin-entrenador.clases.create');
+    Route::post('clases', [AdminEntrenadorController::class, 'guardarClase'])->name('admin-entrenador.clases.store');
     Route::get('clases/{clase}/edit', [AdminEntrenadorController::class, 'editarClase'])->name('clases.edit');
     Route::put('clases/{clase}', [AdminEntrenadorController::class, 'actualizarClase'])->name('clases.update');
     Route::delete('clases/{clase}', [AdminEntrenadorController::class, 'eliminarClase'])->name('clases.destroy');
