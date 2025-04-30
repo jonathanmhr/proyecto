@@ -29,7 +29,11 @@
         @endcan
 
         @can('cliente-access')
-            <x-sidebar-link icon="shopping-bag" route="admin.users.index" label="Mis compras" />
+            <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Mis clases" />
+        @endcan
+
+        @can('cliente-access')
+            <x-sidebar-link icon="shopping-bag" route="admin.users.index" label="Mis suscripciones" />
         @endcan
 
         @can('cliente-access')
