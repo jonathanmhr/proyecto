@@ -29,11 +29,11 @@
         @endcan
 
         @can('cliente-access')
-            <x-sidebar-link icon="shopping-bag" route="" label="Mis compras" />
+            <x-sidebar-link icon="shopping-bag" route="admin.users.index" label="Mis compras" />
         @endcan
 
         @can('cliente-access')
-            <x-sidebar-link icon="message-circle" route="" label="Comunidad" />
+            <x-sidebar-link icon="message-circle" route="admin.users.index" label="Comunidad" />
         @endcan
 
     </nav>
