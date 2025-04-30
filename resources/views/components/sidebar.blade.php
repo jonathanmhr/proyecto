@@ -68,9 +68,19 @@
             <i data-feather="settings" class="w-5 h-5"></i>
             <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Ajustes</span>
         </a>
+
+        <form method="POST" action="{{ route('logout') }}" x-data>
+            @csrf
+            <button type="submit"
+                class="flex items-center gap-3 w-full text-gray-600 hover:bg-red-100 hover:text-red-600 px-3 py-2 rounded-lg text-sm transition-all"
+                :class="open ? 'justify-start' : 'justify-center'">
+                <i data-feather="log-out" class="w-5 h-5"></i>
+                <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Cerrar sesión</span>
+            </button>
+        </form>
     </div>
 
-    <!-- Logout -->
+    <!--
     <div class="mt-auto w-full px-2 sm:block hidden">
         <form method="POST" action="{{ route('logout') }}" x-data>
             @csrf
@@ -82,4 +92,5 @@
             </button>
         </form>
     </div>
+-->
 </aside>
