@@ -29,7 +29,7 @@
                 <!-- Gestionar Clases -->
                 <a href="{{ route('admin-entrenador.clases.index') }}"
                     class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
-                    <i data-feather="clipboard-list" class="w-5 h-5"></i> Gestionar Clases
+                    <i data-feather="server" class="w-5 h-5"></i> Gestionar Clases
                 </a>
 
                 <!-- Gestionar Usuarios (Admin Total) -->
