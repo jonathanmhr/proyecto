@@ -19,7 +19,7 @@ class AdminEntrenadorClaseController extends Controller
     // Mostrar formulario de creación
     public function create()
     {
-        $entrenadores = User::role('entrenador')->get(); // Trae solo los entrenadores
+        $entrenadores = User::whereIs('entrenador')->get(); // Trae solo los entrenadores
         return view('admin-entrenador.clases.create', compact('entrenadores'));
     }
 
