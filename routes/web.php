@@ -63,7 +63,13 @@ Route::middleware([
     'can:admin_entrenador',
 ])->prefix('admin-entrenador')->name('admin-entrenador.')->group(function () {
     Route::get('dashboard', [AdminEntrenadorController::class, 'dashboard'])->name('admin-entrenador.dashboard');
+    
+    // Ruta para gestionar clases
     Route::resource('clases', AdminEntrenadorClaseController::class)->except(['show']);
+    
+    // Rutas para gestionar entrenadores y alumnos
+    Route::get('entrenadores', [AdminEntrenadorController::class, 'verEntrenadores'])->name('admin-entrenador.entrenadores');
+    Route::get('alumnos', [AdminEntrenadorController::class, 'verAlumnos'])->name('admin-entrenador.alumnos');
 });
 
 // ----------------------

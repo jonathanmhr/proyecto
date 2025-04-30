@@ -15,17 +15,23 @@ class AdminEntrenadorController extends Controller
         $totalClases = ClaseGrupal::count();
         $totalEntrenadores = Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
         $totalAlumnos = Bouncer::role()->where('name', 'cliente')->first()->users()->count();
-    
+
         return view('admin-entrenador.dashboard', compact('totalClases', 'totalEntrenadores', 'totalAlumnos'));
     }
-    
 
-    // --------- NUEVOS MÉTODOS ---------
+
+    // --------- MÉTODOS ---------
+
+    public function verAlumnos()
+    {
+        $alumnos = User::whereIs('cliente')->get(); // 'cliente' es el rol de alumno
+        return view('admin-entrenador.alumnos.index', compact('alumnos'));
+    }
 
     public function verEntrenadores()
     {
         $entrenadores = User::whereIs('entrenador')->get();
-        return view('admin-entrenador.usuarios.entrenadores', compact('entrenadores'));
+        return view('admin-entrenador.entrenadores.index', compact('entrenadores'));
     }
 
     public function eliminarEntrenador(User $user)
@@ -35,11 +41,6 @@ class AdminEntrenadorController extends Controller
             return redirect()->back()->with('success', 'Entrenador eliminado correctamente.');
         }
         return redirect()->back()->with('error', 'No se puede eliminar a este usuario.');
-    }
-    public function verAlumnos()
-    {
-        $alumnos = User::whereIs('cliente')->get(); // 'cliente' es el rol de alumno
-        return view('admin-entrenador.usuarios.alumnos', compact('alumnos'));
     }
 
     public function editarAlumno(User $user)
