@@ -1,9 +1,22 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
+        @if (session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <h1 class="text-2xl font-bold mb-6">Listado de Clases</h1>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-            <a href="{{ route('admin-entrenador.clases.create') }}" class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
+            <a href="{{ route('admin-entrenador.clases.create') }}"
+                class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                 <i data-feather="plus-circle" class="w-5 h-5"></i> Crear Clase
             </a>
         </div>
@@ -28,8 +41,10 @@
                             </td>
                             <td class="px-4 py-2">{{ $clase->fecha }}</td>
                             <td class="px-4 py-2">
-                                <a href="{{ route('admin-entrenador.clases.edit', $clase) }}" class="text-yellow-500 hover:text-yellow-600">Editar</a>
-                                <form action="{{ route('admin-entrenador.clases.destroy', $clase) }}" method="POST" class="inline-block ml-4">
+                                <a href="{{ route('admin-entrenador.clases.edit', $clase) }}"
+                                    class="text-yellow-500 hover:text-yellow-600">Editar</a>
+                                <form action="{{ route('admin-entrenador.clases.destroy', $clase) }}" method="POST"
+                                    class="inline-block ml-4">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-500 hover:text-red-600">Eliminar</button>
