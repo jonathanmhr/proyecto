@@ -10,13 +10,6 @@
         </a>
     </div>
 
-    <!-- Menú móvil -->
-    <div class="sm:hidden mb-6">
-        <button @click="open = !open" class="text-gray-600">
-            <i class="w-6 h-6" data-feather="menu"></i>
-        </button>
-    </div>
-
     <!-- Navegación principal -->
     <nav class="flex-1 w-full space-y-2 px-2">
 
