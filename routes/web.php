@@ -62,8 +62,15 @@ Route::middleware([
     'verified',
     'can:admin_entrenador',
 ])->prefix('admin-entrenador')->name('admin-entrenador.')->group(function () {
-    Route::get('/dashboard', [AdminEntrenadorController::class, 'index'])->name('dashboard');
-    Route::resource('clases', AdminEntrenadorClaseController::class)->except(['show']);
+    Route::get('/', [AdminEntrenadorController::class, 'index'])->name('admin-entrenador.index');
+    // Gestión de usuarios
+    Route::get('entrenadores', [AdminEntrenadorController::class, 'verEntrenadores'])->name('admin-entrenador.entrenadores');
+    Route::post('entrenadores/{user}/eliminar', [AdminEntrenadorController::class, 'eliminarEntrenador'])->name('admin-entrenador.entrenadores.eliminar');
+
+    Route::get('alumnos', [AdminEntrenadorController::class, 'verAlumnos'])->name('admin-entrenador.alumnos');
+    Route::get('alumnos/{user}/editar', [AdminEntrenadorController::class, 'editarAlumno'])->name('admin-entrenador.alumnos.editar');
+    Route::put('alumnos/{user}', [AdminEntrenadorController::class, 'actualizarAlumno'])->name('admin-entrenador.alumnos.actualizar');
+    Route::post('alumnos/{user}/eliminar', [AdminEntrenadorController::class, 'eliminarAlumno'])->name('admin-entrenador.alumnos.eliminar');
 });
 
 // ----------------------
