@@ -39,7 +39,8 @@
             <button type="submit"
                 class="flex items-center gap-3 w-full text-gray-600 hover:bg-red-100 hover:text-red-600 px-3 py-2 rounded-lg text-sm transition-all">
                 <i data-feather="log-out" class="w-5 h-5"></i>
-                <span class="hidden sm:inline group-hover:inline">Cerrar sesión</span>
+                <!-- Texto oculto en estado colapsado -->
+                <span :class="open ? 'inline' : 'hidden'" class="group-hover:inline">Cerrar sesión</span>
             </button>
         </form>
     </div>
