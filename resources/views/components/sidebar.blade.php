@@ -29,7 +29,7 @@
         @endcan
 
         @canany(['cliente-access', 'entrenador-access', 'admin_entrenador'])
-            <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Mis clases" />
+            <x-sidebar-link icon="calendar" route="clases.index" label="Mis clases" />
         @endcan
 
         @canany(['cliente-access', 'entrenador-access', 'admin_entrenador'])
