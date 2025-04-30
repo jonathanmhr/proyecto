@@ -1,5 +1,6 @@
 <aside x-data="{ open: false }" class="fixed top-4 left-4 h-[calc(100vh-2rem)] w-20 sm:w-64 transition-all duration-300 bg-white rounded-xl shadow-md flex flex-col items-center py-4 z-50"
-    :class="open ? 'w-64' : 'w-20'">
+    :class="open ? 'w-64' : 'w-20'"
+    @mouseenter="open = true" @mouseleave="open = false">
     
     <!-- Logo -->
     <div class="mb-6">
