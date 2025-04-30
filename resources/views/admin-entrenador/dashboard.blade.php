@@ -26,24 +26,32 @@
         <div class="mt-10">
             <h2 class="text-xl font-semibold mb-4">Accesos rápidos</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <a href="{{ route('admin.users.index') }}"
-                   class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
+                <!-- Gestionar Clases -->
+                <a href="{{ route('admin-entrenador.clases.index') }}"
+                    class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                     <i data-feather="clipboard-list" class="w-5 h-5"></i> Gestionar Clases
                 </a>
+
+                <!-- Gestionar Usuarios (Admin Total) -->
                 <a href="{{ route('admin.users.index') }}"
-                   class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
+                    class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                     <i data-feather="users" class="w-5 h-5"></i> Gestionar Usuarios
                 </a>
-                <a href="{{ route('admin.users.index') }}"
-                   class="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
+
+                <!-- Ver Entrenadores -->
+                <a href="{{ route('admin.users.index') }}?role=entrenador"
+                    class="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                     <i data-feather="user-check" class="w-5 h-5"></i> Ver Entrenadores
                 </a>
-                <a href="{{ route('admin.users.index') }}"
-                   class="bg-purple-100 hover:bg-purple-200 text-purple-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
+
+                <!-- Ver Alumnos -->
+                <a href="{{ route('admin.users.index') }}?role=alumno"
+                    class="bg-purple-100 hover:bg-purple-200 text-purple-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                     <i data-feather="user-plus" class="w-5 h-5"></i> Ver Alumnos
                 </a>
             </div>
         </div>
+
 
         <!-- Gráficos de desempeño (si es necesario) -->
         <div class="mt-10">
