@@ -1,9 +1,9 @@
 <aside x-data="{ open: false }" class="fixed top-4 left-4 h-[calc(100vh-2rem)] transition-all duration-300 bg-white rounded-xl shadow-md flex flex-col items-center py-4 z-50"
     :class="open ? 'w-64' : 'w-20'"
     @mouseenter="open = true" @mouseleave="open = false">
-    
+
     <!-- Logo -->
-    <div class="mb-6">
+    <div class="mb-6 flex justify-center w-full">
         <a href="{{ route('dashboard') }}">
             <x-application-mark class="h-8 w-auto" />
         </a>
@@ -17,15 +17,21 @@
     </div>
 
     <!-- Navegación principal -->
-    <nav class="flex-1 w-full space-y-2 px-2">
-        <x-sidebar-link icon="home" route="dashboard" label="Dashboard" />
+    <nav class="flex-1 w-full space-y-4 px-2">
+        <div class="flex justify-center">
+            <x-sidebar-link icon="home" route="dashboard" label="Dashboard" />
+        </div>
 
         @can('cliente-access')
-        <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Mis Clases" />
+        <div class="flex justify-center">
+            <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Mis Clases" />
+        </div>
         @endcan
 
         @can('admin-access')
-        <x-sidebar-link icon="users" route="admin.users.index" label="Usuarios" />
+        <div class="flex justify-center">
+            <x-sidebar-link icon="users" route="admin.users.index" label="Usuarios" />
+        </div>
         @endcan
     </nav>
 
