@@ -1,16 +1,16 @@
 <aside x-data="{ open: false }"
     class="fixed top-4 left-4 h-[calc(100vh-2rem)] transition-all duration-300 bg-white rounded-xl shadow-md flex flex-col items-center py-4 z-50"
-    :class="open ? 'w-64' : 'w-20'" @mouseenter="open = true" @mouseleave="open = false">
+    :class="open ? 'w-64 items-start' : 'w-20 items-center'" @mouseenter="open = true" @mouseleave="open = false">
 
     <!-- Logo -->
-    <div class="mb-6">
+    <div class="mb-6 px-3">
         <a href="{{ route('dashboard') }}">
             <x-application-mark class="h-8 w-auto" />
         </a>
     </div>
 
     <!-- Menú móvil -->
-    <div class="sm:hidden mb-6">
+    <div class="sm:hidden mb-6 px-3">
         <button @click="open = !open" class="text-gray-600">
             <i class="w-6 h-6" data-feather="menu"></i>
         </button>
@@ -18,22 +18,23 @@
 
     <!-- Navegación principal -->
     <nav class="flex-1 w-full space-y-2 px-2">
-        <x-sidebar-link icon="home" route="dashboard" label="Dashboard" />
+        <x-sidebar-link icon="home" route="dashboard" label="Dashboard" :open="open" />
 
         @can('cliente-access')
-            <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Mis Clases" />
+            <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Mis Clases" :open="open" />
         @endcan
 
         @can('admin-access')
-            <x-sidebar-link icon="users" route="admin.users.index" label="Usuarios" />
+            <x-sidebar-link icon="users" route="admin.users.index" label="Usuarios" :open="open" />
         @endcan
     </nav>
 
     <!-- Ajustes de perfil -->
     <div class="w-full px-2">
-        <a href="{{ route('profile.show') }}" class="flex items-center gap-3 w-full text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg text-sm transition-all group">
+        <a href="{{ route('profile.show') }}"
+            class="flex items-center gap-3 w-full text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg text-sm transition-all">
             <i data-feather="settings" class="w-5 h-5"></i>
-            <span class="hidden group-hover:inline sm:inline">Ajustes</span>
+            <span x-show="open" class="ml-2" x-cloak>Ajustes</span>
         </a>
     </div>
 
@@ -44,7 +45,7 @@
             <button type="submit"
                 class="flex items-center gap-3 w-full text-gray-600 hover:bg-red-100 hover:text-red-600 px-3 py-2 rounded-lg text-sm transition-all">
                 <i data-feather="log-out" class="w-5 h-5"></i>
-                <span class="hidden group-hover:inline">Cerrar sesión</span>
+                <span x-show="open" class="ml-2" x-cloak>Cerrar sesión</span>
             </button>
         </form>
     </div>
