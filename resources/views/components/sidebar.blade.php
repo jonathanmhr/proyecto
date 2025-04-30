@@ -22,26 +22,26 @@
 
         {{-- ADMIN ENTRENADOR --}}
         @can('admin_entrenador')
-        <div x-data="{ openAdminEntrenador: false }" class="w-full">
-            <button @click="openAdminEntrenador = !openAdminEntrenador"
-                class="flex items-center gap-3 w-full text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg text-sm transition-all"
-                :class="open ? 'justify-start' : 'justify-center'">
-                <i data-feather="shield" class="w-5 h-5"></i>
-                <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Admin Entrenador</span>
-                <i data-feather="chevron-down" class="ml-auto" x-show="open"></i>
-            </button>
-        
-            <div x-show="open && openAdminEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1">
-                <x-sidebar-link icon="layout" route="admin-entrenador.dashboard" label="Panel General" />
-                <x-sidebar-link icon="monitor" route="admin-entrenador.clases.index" label="Gestionar Clases" />
+            <div x-data="{ openAdminEntrenador: false }" class="w-full">
+                <button @click="openAdminEntrenador = !openAdminEntrenador"
+                    class="flex items-center gap-3 w-full text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg text-sm transition-all"
+                    :class="open ? 'justify-start' : 'justify-center'">
+                    <i data-feather="shield" class="w-5 h-5"></i>
+                    <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Admin Entrenador</span>
+                    <i data-feather="chevron-down" class="ml-auto" x-show="open"></i>
+                </button>
+
+                <div x-show="open && openAdminEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1">
+                    <x-sidebar-link icon="layout" route="admin-entrenador.dashboard" label="Panel General" />
+                    {{-- Puedes agregar accesos rápidos aquí si quieres --}}
+                </div>
             </div>
-        </div>
         @endcan
 
-        <!-- ENTRENADOR (agrupado en submenú) -->
+        {{-- ENTRENADOR --}}
         @can('entrenador-access')
-            <div x-data="{ openSubmenu: false }" class="w-full">
-                <button @click="openSubmenu = !openSubmenu"
+            <div x-data="{ openEntrenador: false }" class="w-full">
+                <button @click="openEntrenador = !openEntrenador"
                     class="flex items-center gap-3 w-full text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg text-sm transition-all"
                     :class="open ? 'justify-start' : 'justify-center'">
                     <i data-feather="briefcase" class="w-5 h-5"></i>
@@ -49,13 +49,18 @@
                     <i data-feather="chevron-down" class="ml-auto" x-show="open"></i>
                 </button>
 
-                <div x-show="open && openSubmenu" x-cloak x-transition class="ml-6 mt-1 space-y-1">
+                <div x-show="open && openEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1">
+                    <x-sidebar-link icon="layout" route="entrenador.dashboard" label="Panel General" />
+                    <x-sidebar-link icon="file-text" route="entrenador.reportes.index" label="Reportes" />
+
+                    {{--
                     <x-sidebar-link icon="calendar" route="entrenador.clases.index" label="Mis Clases" />
                     <x-sidebar-link icon="users" route="entrenador.usuarios.index" label="Alumnos" />
                     <x-sidebar-link icon="bar-chart" route="entrenador.estadisticas.index" label="Estadísticas" />
                     <x-sidebar-link icon="bell" route="entrenador.notificaciones.index" label="Notificaciones" />
                     <x-sidebar-link icon="dollar-sign" route="entrenador.suscripciones.index" label="Suscripciones" />
                     <x-sidebar-link icon="file-text" route="entrenador.reportes.index" label="Reportes" />
+                    --}}
                 </div>
             </div>
         @endcan
