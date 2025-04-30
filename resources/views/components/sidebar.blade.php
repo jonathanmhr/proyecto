@@ -67,13 +67,13 @@
 
         {{-- CLIENTE --}}
         @can('cliente-access')
-            <x-sidebar-link icon="calendar" route="clases.index" label="Clases Disponibles" />
             <x-sidebar-link icon="shopping-bag" route="entrenador.clases.index" label="Mis Suscripciones" />
         @endcan
 
         {{-- COMÚN A VARIOS ROLES --}}
         @canany(['cliente-access', 'entrenador-access', 'admin_entrenador'])
             <x-sidebar-link icon="message-circle" route="clases.index" label="Comunidad" />
+            <x-sidebar-link icon="calendar" route="clases.index" label="Clases Disponibles" />
         @endcan
     </nav>
 
