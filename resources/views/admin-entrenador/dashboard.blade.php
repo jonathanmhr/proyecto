@@ -8,20 +8,20 @@
 
         <!-- Total de clases -->
         <div class="bg-white shadow rounded-xl p-4">
-            <h2 class="text-lg font-semibold text-gray-700 mb-2">Clases activas</h2>
-            <p class="text-3xl font-bold text-blue-500">12</p>
+            <h2 class="text-lg font-semibold text-gray-700 mb-2">Clases</h2>
+            <p class="text-3xl font-bold text-blue-500">{{ $totalClases }}</p>
         </div>
 
         <!-- Total de entrenadores -->
         <div class="bg-white shadow rounded-xl p-4">
-            <h2 class="text-lg font-semibold text-gray-700 mb-2">Entrenadores asignados</h2>
-            <p class="text-3xl font-bold text-green-500">4</p>
+            <h2 class="text-lg font-semibold text-gray-700 mb-2">Entrenadores</h2>
+            <p class="text-3xl font-bold text-green-500">{{ $totalEntrenadores }}</p>
         </div>
 
-        <!-- Total de usuarios en clases -->
+        <!-- Total de alumnos -->
         <div class="bg-white shadow rounded-xl p-4">
-            <h2 class="text-lg font-semibold text-gray-700 mb-2">Alumnos en clases</h2>
-            <p class="text-3xl font-bold text-purple-500">48</p>
+            <h2 class="text-lg font-semibold text-gray-700 mb-2">Alumnos</h2>
+            <p class="text-3xl font-bold text-purple-500">{{ $totalAlumnos }}</p>
         </div>
     </div>
 
@@ -37,7 +37,6 @@
                class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                 <i data-feather="users" class="w-5 h-5"></i> Gestionar Usuarios
             </a>
-            <!-- Agrega más -->
         </div>
     </div>
 </div>
