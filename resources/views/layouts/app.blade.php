@@ -23,8 +23,7 @@
 
     <div class="min-h-screen bg-gray-100">
         @livewire('navigation-menu')
-        <x-sidebar-link />
-
+        <x-sidebar />
         <!-- Contenido de la página -->
         <main class="ml-20 group-hover:ml-64 transition-all duration-300">
             {{ $slot }}
