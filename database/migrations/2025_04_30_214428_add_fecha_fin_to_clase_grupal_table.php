@@ -15,7 +15,6 @@ return new class extends Migration
             $table->date('fecha_fin')->after('fecha_inicio'); // Agrega el campo después de fecha_inicio
         });
     }
-
     /**
      * Reverse the migrations.
      *

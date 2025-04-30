@@ -50,21 +50,23 @@ class ClaseGrupalController extends Controller
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string|max:500',
             'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date|after:fecha_inicio',  // Validación de fecha_fin
             'cupos_maximos' => 'required|integer|min:1',
         ]);
-        
-
+    
         // Solo el admin entrenador o el entrenador asignado puede crear la clase
         ClaseGrupal::create([
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
             'fecha_inicio' => $request->fecha_inicio,
+            'fecha_fin' => $request->fecha_fin,  // Guardar fecha_fin
             'cupos_maximos' => $request->cupos_maximos,
             'entrenador_id' => auth()->user()->id,
         ]);
-
+    
         return redirect()->route('clases.index')->with('success', 'Clase creada exitosamente.');
     }
+    
 
     // Permitir que un usuario se una a una clase
     public function unirse(ClaseGrupal $clase)
