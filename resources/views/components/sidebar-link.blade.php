@@ -6,3 +6,6 @@
     <i data-feather="{{ $icon }}" class="w-5 h-5"></i>
     <span x-show="open" x-cloak class="text-sm ml-2 transition-opacity duration-200">{{ $label }}</span>
 </a>
+
+<!-- Debugging the route name -->
+{{ dd($route) }}
