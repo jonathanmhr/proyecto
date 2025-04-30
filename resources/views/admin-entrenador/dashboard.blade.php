@@ -33,19 +33,19 @@
                 </a>
 
                 <!-- Gestionar Usuarios (Admin Total) -->
-                <a href="{{ route('admin-entrenador.entrenadores') }}"
+                <a href="{{ route('admin.users.index') }}"
                     class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                     <i data-feather="users" class="w-5 h-5"></i> Gestionar Usuarios
                 </a>
 
                 <!-- Ver Entrenadores -->
-                <a href="{{ route('admin.users.index') }}?role=entrenador"
+                <a href="{{ route('admin-entrenador.entrenadores') }}?role=entrenador"
                     class="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                     <i data-feather="user-check" class="w-5 h-5"></i> Ver Entrenadores
                 </a>
 
                 <!-- Ver Alumnos -->
-                <a href="{{ route('admin.users.index') }}?role=cliente"
+                <a href="{{ route('admin-entrenador.alumnos') }}?role=cliente"
                     class="bg-purple-100 hover:bg-purple-200 text-purple-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                     <i data-feather="user-plus" class="w-5 h-5"></i> Ver Alumnos
                 </a>
