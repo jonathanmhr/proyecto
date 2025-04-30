@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::table('clase_grupal', function (Blueprint $table) {
+        Schema::table('clases_grupales', function (Blueprint $table) {
             $table->date('fecha_inicio')->after('cupos_maximos');
         });
     }
 
     public function down(): void
     {
-        Schema::table('clase_grupal', function (Blueprint $table) {
+        Schema::table('clases_grupales', function (Blueprint $table) {
             $table->dropColumn('fecha_inicio');
         });
     }
