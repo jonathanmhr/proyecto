@@ -17,7 +17,7 @@
 
         {{-- ADMIN --}}
         @can('admin-access')
-            <x-sidebar-link icon="users" route="admin.users.index" label="Gestión de Usuarios" />
+            <x-sidebar-link icon="shield" route="admin.users.index" label="Gestión de Usuarios" />
         @endcan
 
         {{-- ADMIN ENTRENADOR --}}
@@ -26,7 +26,7 @@
                 <button @click="openAdminEntrenador = !openAdminEntrenador"
                     class="flex items-center gap-3 w-full text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg text-sm transition-all"
                     :class="open ? 'justify-start' : 'justify-center'">
-                    <i data-feather="shield" class="w-5 h-5"></i>
+                    <i data-feather="users" class="w-5 h-5"></i>
                     <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Admin Entrenador</span>
                     <i data-feather="chevron-down" class="ml-auto" x-show="open"></i>
                 </button>
