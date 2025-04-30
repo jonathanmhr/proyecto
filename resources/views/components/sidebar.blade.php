@@ -1,60 +1,63 @@
 <!-- resources/views/components/sidebar.blade.php -->
-<aside 
-    x-data="{ expanded: false }"
-    @mouseenter="expanded = true" 
-    @mouseleave="expanded = false"
-    class="bg-white shadow-md fixed top-0 left-0 h-screen transition-all duration-300 z-50"
-    :class="expanded ? 'w-64' : 'w-16'"
->
-
+<aside class="fixed top-4 left-4 h-[calc(100vh-2rem)] w-20 hover:w-64 transition-all duration-300 bg-white rounded-xl shadow-md flex flex-col items-center py-4 group z-50">
     <!-- Logo -->
-    <div class="flex items-center justify-center h-16 border-b">
-        <img src="/icon.svg" class="w-8 h-8" alt="Logo" />
+    <div class="mb-6">
+        <a href="{{ route('dashboard') }}">
+            <x-application-mark class="h-8 w-auto" />
+        </a>
     </div>
 
-    <!-- Menú Cliente -->
-    <nav class="flex flex-col mt-4 space-y-2 px-2">
+    <nav class="flex-1 w-full space-y-2 px-2">
+        <!-- Dashboard -->
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg transition-all group-hover:justify-start">
+            <i data-feather="home" class="w-5 h-5"></i>
+            <span class="hidden group-hover:inline text-sm">Dashboard</span>
+        </a>
 
-        <x-sidebar-link href="{{ route('dashboard') }}" icon="home" label="Panel" :expanded="expanded" />
-        <x-sidebar-link href="{{ route('clases.index') }}" icon="calendar" label="Clases" :expanded="expanded" />
-        <x-sidebar-link href="{{ route('entrenamientos.index') }}" icon="dumbbell" label="Entrenamientos" :expanded="expanded" />
-        <x-sidebar-link href="{{ route('suscripciones.index') }}" icon="credit-card" label="Suscripciones" :expanded="expanded" />
+        <!-- ADMIN -->
+        @can('admin-access')
+        <div x-data="{ open: false }">
+            <button @click="open = !open" class="flex items-center w-full gap-3 text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg transition-all">
+                <i data-feather="settings" class="w-5 h-5"></i>
+                <span class="hidden group-hover:inline text-sm">Administración</span>
+            </button>
+            <div x-show="open" class="mt-1 ml-8 space-y-1">
+                <a href="{{ route('admin.users.index') }}" class="block text-gray-500 hover:text-blue-600 text-sm">Usuarios</a>
+            </div>
+        </div>
+        @endcan
 
+        <!-- ENTRENADOR -->
+        @can('entrenador-access')
+        <div x-data="{ open: false }">
+            <button @click="open = !open" class="flex items-center w-full gap-3 text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg transition-all">
+                <i data-feather="users" class="w-5 h-5"></i>
+                <span class="hidden group-hover:inline text-sm">Clases</span>
+            </button>
+            <div x-show="open" class="mt-1 ml-8 space-y-1">
+                <a href="{{ route('entrenador.clases.index') }}" class="block text-gray-500 hover:text-blue-600 text-sm">Ver Clases</a>
+                <a href="{{ route('entrenador.clases.create') }}" class="block text-gray-500 hover:text-blue-600 text-sm">Crear Clase</a>
+            </div>
+        </div>
+        @endcan
+
+        <!-- CLIENTE -->
+        @can('cliente-access')
+        <a href="{{ route('cliente.clases.index') }}" class="flex items-center gap-3 text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg transition-all">
+            <i data-feather="calendar" class="w-5 h-5"></i>
+            <span class="hidden group-hover:inline text-sm">Mis Clases</span>
+        </a>
+        @endcan
     </nav>
 
-    <!-- Entrenador -->
-    @can('gestionar-clases')
-    <div class="mt-6 border-t border-gray-200 pt-4 px-2">
-        <x-sidebar-link href="{{ route('entrenador.alumnos') }}" icon="users" label="Mis alumnos" :expanded="expanded" />
-        <x-sidebar-link href="{{ route('clases.create') }}" icon="plus-circle" label="Crear clase" :expanded="expanded" />
+    <!-- Perfil / Logout -->
+    <div class="mt-auto w-full px-2">
+        <form method="POST" action="{{ route('logout') }}" x-data>
+            @csrf
+            <button type="submit" class="flex items-center gap-3 w-full text-gray-600 hover:bg-red-100 hover:text-red-600 px-3 py-2 rounded-lg text-sm transition-all">
+                <i data-feather="log-out" class="w-5 h-5"></i>
+                <span class="hidden group-hover:inline">Cerrar sesión</span>
+            </button>
+        </form>
     </div>
-    @endcan
-
-    <!-- Entrenador Admin -->
-    @role('entrenador_admin')
-    <div class="mt-6 border-t border-gray-200 pt-4 px-2">
-        <x-sidebar-link href="{{ route('entrenadores.index') }}" icon="user-cog" label="Gestionar entrenadores" :expanded="expanded" />
-    </div>
-    @endrole
-
-    <!-- Admin -->
-    @role('admin')
-    <div class="mt-6 border-t border-gray-200 pt-4 px-2">
-        <x-sidebar-link href="{{ route('admin.panel') }}" icon="settings" label="Panel Admin" :expanded="expanded" />
-        <x-sidebar-link href="{{ route('usuarios.index') }}" icon="users" label="Usuarios" :expanded="expanded" />
-        <x-sidebar-link href="{{ route('pagos.index') }}" icon="dollar-sign" label="Pagos" :expanded="expanded" />
-    </div>
-    @endrole
-
-    <!-- Cierre de sesión -->
-    <form method="POST" action="{{ route('logout') }}" class="absolute bottom-0 w-full">
-        @csrf
-        <button class="w-full flex items-center px-4 py-3 hover:bg-gray-100">
-            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-            </svg>
-            <span x-show="expanded" class="ml-3">Cerrar sesión</span>
-        </button>
-    </form>
-
 </aside>
