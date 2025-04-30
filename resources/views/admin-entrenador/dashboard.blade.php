@@ -44,7 +44,7 @@
                     <i data-feather="user-check" class="w-5 h-5"></i> Ver Entrenadores
                 </a>
 
-                <!-- Ver Alumnos -->
+                <!-- Ver alumnos -->
                 <a href="{{ route('admin-entrenador.alumnos') }}"
                     class="bg-purple-100 hover:bg-purple-200 text-purple-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                     <i data-feather="user-plus" class="w-5 h-5"></i> Ver Alumnos
