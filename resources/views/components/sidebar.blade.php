@@ -26,14 +26,17 @@
 
         @can('admin-access')
             <x-sidebar-link icon="users" route="admin.users.index" label="Usuarios" />
+            <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Usuarios</span>
         @endcan
 
         @can('cliente-access')
             <x-sidebar-link icon="shopping-bag" route="admin.users.index" label="Mis compras" />
+            <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Mis compras</span>
         @endcan
 
         @can('cliente-access')
             <x-sidebar-link icon="message-circle" route="admin.users.index" label="Comunidad" />
+            <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Comunidad</span>
         @endcan
 
     </nav>
