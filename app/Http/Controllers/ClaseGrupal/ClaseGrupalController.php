@@ -13,14 +13,22 @@ class ClaseGrupalController extends Controller
     // Mostrar todas las clases disponibles
     public function index()
     {
-        // Si el usuario es un administrador de entrenadores, mostrar todas las clases
-        if (auth()->user()->can('admin_entrenador')) {
-            $clases = ClaseGrupal::all(); // Todos los clases
+        $user = auth()->user();
+    
+        if ($user->can('admin_entrenador')) {
+            $clases = ClaseGrupal::all();
+        } elseif ($user->can('entrenador')) {
+            $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
         } else {
-            // Si el usuario es un entrenador, mostrar solo las clases asignadas a él
-            $clases = ClaseGrupal::where('entrenador_id', auth()->user()->id)->get();
+            // Mostrar solo clases con cupo disponible, fecha de inicio futura o actual
+            $clases = ClaseGrupal::withCount('cliente')
+                ->whereDate('fecha_inicio', '>=', now())
+                ->get()
+                ->filter(function ($clase) {
+                    return $clase->usuarios_count < $clase->cupos_maximos;
+                });
         }
-
+    
         return view('clases.index', compact('clases'));
     }
 
@@ -41,13 +49,18 @@ class ClaseGrupalController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string|max:500',
+            'fecha_inicio' => 'required|date',
+            'cupos_maximos' => 'required|integer|min:1',
         ]);
+        
 
         // Solo el admin entrenador o el entrenador asignado puede crear la clase
-        $clase = ClaseGrupal::create([
+        ClaseGrupal::create([
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
-            'entrenador_id' => auth()->user()->id, // El entrenador crea las clases que le corresponden
+            'fecha_inicio' => $request->fecha_inicio,
+            'cupos_maximos' => $request->cupos_maximos,
+            'entrenador_id' => auth()->user()->id,
         ]);
 
         return redirect()->route('clases.index')->with('success', 'Clase creada exitosamente.');
@@ -57,12 +70,22 @@ class ClaseGrupalController extends Controller
     public function unirse(ClaseGrupal $clase)
     {
         $usuario = auth()->user();
-
-        // Verificar si el usuario ya está inscrito
+    
+        // Verificar si ya está inscrito
         if ($clase->usuarios()->where('id_usuario', $usuario->id)->exists()) {
             return redirect()->route('dashboard')->with('info', 'Ya estás inscrito en esta clase.');
         }
-
+    
+        // Validar cupo disponible
+        if ($clase->usuarios()->count() >= $clase->cupos_maximos) {
+            return redirect()->route('clases.index')->with('error', 'Esta clase ya está completa.');
+        }
+    
+        // Validar fecha
+        if ($clase->fecha_inicio < now()) {
+            return redirect()->route('clases.index')->with('error', 'No puedes inscribirte en una clase ya iniciada.');
+        }
+    
         // Crear la suscripción
         Suscripcion::create([
             'id_usuario' => $usuario->id,
@@ -71,9 +94,10 @@ class ClaseGrupalController extends Controller
             'fecha_inicio' => now(),
             'fecha_fin' => now()->addMonths(1),
         ]);
-
+    
         return redirect()->route('dashboard')->with('success', 'Te has unido a la clase con éxito.');
     }
+    
 
     // Editar clase (solo para el entrenador que creó la clase o el admin entrenador)
     public function edit(ClaseGrupal $clase)
