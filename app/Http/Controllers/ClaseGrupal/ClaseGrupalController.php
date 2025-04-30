@@ -21,7 +21,7 @@ class ClaseGrupalController extends Controller
             $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
         } else {
             // Mostrar solo clases con cupo disponible, fecha de inicio futura o actual
-            $clases = ClaseGrupal::withCount('cliente')
+            $clases = ClaseGrupal::withCount('usuarios')
                 ->whereDate('fecha_inicio', '>=', now())
                 ->get()
                 ->filter(function ($clase) {
