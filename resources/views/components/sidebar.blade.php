@@ -18,16 +18,13 @@
 
     <!-- Navegación principal -->
     <nav class="flex-1 w-full space-y-2 px-2">
-        <!-- Dashboard -->
         <x-sidebar-link icon="home" route="dashboard" label="Dashboard" />
 
         @can('cliente-access')
-        <!-- Mis Clases -->
         <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Mis Clases" />
         @endcan
 
         @can('admin-access')
-        <!-- Usuarios -->
         <x-sidebar-link icon="users" route="admin.users.index" label="Usuarios" />
         @endcan
     </nav>
@@ -39,7 +36,6 @@
             <button type="submit"
                 class="flex items-center gap-3 w-full text-gray-600 hover:bg-red-100 hover:text-red-600 px-3 py-2 rounded-lg text-sm transition-all">
                 <i data-feather="log-out" class="w-5 h-5"></i>
-                <!-- Texto oculto en estado colapsado -->
                 <span :class="open ? 'inline' : 'hidden'" class="group-hover:inline">Cerrar sesión</span>
             </button>
         </form>
