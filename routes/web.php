@@ -102,8 +102,7 @@ Route::middleware([
 // ----------------------
 // RUTAS CLIENTE (ver clases y unirse)
 // ----------------------
-// Estas rutas no tienen middleware especial (aparte del auth) porque son para todos los usuarios autenticados (rol cliente)
-Route::middleware(['auth', 'verified', 'can:cliente-access'])->group(function () {
-    Route::get('clases', [ClienteClaseController::class, 'index'])->name('cliente.clases.index');
-    Route::post('clases/{clase}/unirse', [ClienteClaseController::class, 'unirse'])->name('cliente.clases.unirse');
-});
+// Rutas para las clases grupales
+Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
+Route::post('clases', [ClaseGrupalController::class, 'store'])->name('clases.store');
+Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
