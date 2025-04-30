@@ -33,7 +33,7 @@
         
             <div x-show="open && openAdminEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1">
                 <x-sidebar-link icon="layout" route="admin-entrenador.dashboard" label="Panel General" />
-                <x-sidebar-link icon="clipboard-list" route="admin-entrenador.clases.index" label="Gestionar Clases" />
+                <x-sidebar-link icon="monitor" route="admin-entrenador.clases.index" label="Gestionar Clases" />
             </div>
         </div>
         @endcan
