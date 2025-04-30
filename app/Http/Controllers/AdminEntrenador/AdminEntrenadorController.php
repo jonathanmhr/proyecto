@@ -69,4 +69,10 @@ class AdminEntrenadorController extends Controller
         }
         return redirect()->back()->with('error', 'No se puede eliminar a este usuario.');
     }
+
+    public function verClases()
+    {
+        $clases = ClaseGrupal::all(); // O el código necesario para obtener las clases
+        return view('admin-entrenador.clases.index', compact('clases'));
+    }
 }

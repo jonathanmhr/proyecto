@@ -63,6 +63,8 @@ Route::middleware([
     'can:admin_entrenador',
 ])->prefix('admin-entrenador')->name('admin-entrenador.')->group(function () {
     Route::get('/', [AdminEntrenadorController::class, 'dashboard'])->name('dashboard');
+
+    Route::get('clases', [AdminEntrenadorController::class, 'verClases'])->name('clases.index');
     // Gestión de usuarios
     Route::get('entrenadores', [AdminEntrenadorController::class, 'verEntrenadores'])->name('entrenadores');
     Route::post('entrenadores/{user}/eliminar', [AdminEntrenadorController::class, 'eliminarEntrenador'])->name('entrenadores.eliminar');
