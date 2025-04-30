@@ -91,20 +91,6 @@
             </div>
         </header>
 
-        <!-- Hero -->
-        <section id="inicio" class="h-screen flex items-center justify-center bg-cover bg-center relative"
-            style="background-image: url('https://images.unsplash.com/photo-1583454110550-4f66f6b0d79e');">
-            <div class="absolute inset-0 bg-black bg-opacity-50"></div>
-            <div class="relative text-center p-10">
-                <h2 class="text-5xl font-extrabold mb-4">Supera tus límites, alcanza tus metas</h2>
-                <p class="text-xl mb-6">Únete a PowerCore y transforma tu cuerpo con los mejores entrenadores y clases.
-                </p>
-                <a href="#clases"
-                    class="bg-red-500 hover:bg-red-600 text-white py-3 px-8 rounded-full text-lg transition">Descubre
-                    más</a>
-            </div>
-        </section>
-
         <!-- Beneficios -->
         <section id="beneficios" class="py-20 bg-gray-800 text-center">
             <h3 class="text-4xl font-bold mb-10">¿Por qué elegir PowerCore?</h3>
