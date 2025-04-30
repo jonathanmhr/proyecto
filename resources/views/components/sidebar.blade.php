@@ -1,5 +1,5 @@
 <aside class="fixed top-4 left-4 h-[calc(100vh-2rem)] transition-all duration-300 bg-white rounded-xl shadow-md flex flex-col items-center py-4 z-50"
-    :class="$store.sidebarOpen ? 'w-64' : 'w-20'">
+    :class="sidebarOpen ? 'w-64' : 'w-20'">
 
     <!-- Logo -->
     <div class="mb-6">
@@ -10,7 +10,7 @@
 
     <!-- Menú móvil -->
     <div class="sm:hidden mb-6">
-        <button @click="$store.sidebarOpen = !$store.sidebarOpen" class="text-gray-600">
+        <button @click="sidebarOpen = !sidebarOpen" class="text-gray-600">
             <i class="w-6 h-6" data-feather="menu"></i>
         </button>
     </div>
@@ -18,10 +18,10 @@
     <!-- Navegación principal -->
     <nav class="flex-1 w-full space-y-2 px-2">
         <!-- Enlace de Dashboard -->
-        <x-sidebar-link icon="home" route="dashboard" label="Dashboard" class="group flex items-center justify-center sm:justify-start" />
+        <x-sidebar-link icon="home" route="dashboard" label="Dashboard" />
 
         @can('cliente-access')
-        <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Mis Clases" class="group flex items-center justify-center sm:justify-start" />
+        <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Mis Clases" />
         @endcan
 
         @can('admin-access')
