@@ -14,7 +14,7 @@ class ClaseGrupalController extends Controller
     public function index()
     {
         $user = auth()->user();
-    
+
         if ($user->can('admin_entrenador')) {
             $clases = ClaseGrupal::all();
         } elseif ($user->can('entrenador')) {
@@ -28,16 +28,16 @@ class ClaseGrupalController extends Controller
                     return $clase->usuarios_count < $clase->cupos_maximos;
                 });
         }
-    
+
         return view('clases.index', compact('clases'));
     }
 
     // Mostrar el formulario para crear una nueva clase
     public function create()
     {
-        // Verificar si el usuario tiene el permiso de admin_entrenador o entrenador-access
-        if (!auth()->user()->can('admin_entrenador') && !auth()->user()->can('entrenador-access')) {
-            return redirect()->route('clases.index')->with('error', 'No tienes permiso para crear clases.');
+        // Verificar si el usuario tiene el permiso de admin_entrenador
+        if (!auth()->user()->can('admin_entrenador')) {
+            return redirect()->route('clases.index')->with('error', 'Solo los administradores pueden crear clases.');
         }
 
         return view('clases.create');
@@ -46,6 +46,10 @@ class ClaseGrupalController extends Controller
     // Guardar una nueva clase en la base de datos
     public function store(Request $request)
     {
+        if (!auth()->user()->can('admin_entrenador')) {
+            abort(403, 'No tienes permiso para crear clases.');
+        }
+
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string|max:500',
@@ -53,8 +57,8 @@ class ClaseGrupalController extends Controller
             'fecha_fin' => 'required|date|after:fecha_inicio',  // Validación de fecha_fin
             'cupos_maximos' => 'required|integer|min:1',
         ]);
-    
-        // Solo el admin entrenador o el entrenador asignado puede crear la clase
+
+        // Solo el admin entrenador puede crear la clase
         ClaseGrupal::create([
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
@@ -63,31 +67,31 @@ class ClaseGrupalController extends Controller
             'cupos_maximos' => $request->cupos_maximos,
             'entrenador_id' => auth()->user()->id,
         ]);
-    
+
         return redirect()->route('clases.index')->with('success', 'Clase creada exitosamente.');
     }
-    
+
 
     // Permitir que un usuario se una a una clase
     public function unirse(ClaseGrupal $clase)
     {
         $usuario = auth()->user();
-    
+
         // Verificar si ya está inscrito
         if ($clase->usuarios()->where('id_usuario', $usuario->id)->exists()) {
             return redirect()->route('dashboard')->with('info', 'Ya estás inscrito en esta clase.');
         }
-    
+
         // Validar cupo disponible
         if ($clase->usuarios()->count() >= $clase->cupos_maximos) {
             return redirect()->route('clases.index')->with('error', 'Esta clase ya está completa.');
         }
-    
+
         // Validar fecha
         if ($clase->fecha_inicio < now()) {
             return redirect()->route('clases.index')->with('error', 'No puedes inscribirte en una clase ya iniciada.');
         }
-    
+
         // Crear la suscripción
         Suscripcion::create([
             'id_usuario' => $usuario->id,
@@ -96,10 +100,9 @@ class ClaseGrupalController extends Controller
             'fecha_inicio' => now(),
             'fecha_fin' => now()->addMonths(1),
         ]);
-    
+
         return redirect()->route('dashboard')->with('success', 'Te has unido a la clase con éxito.');
     }
-    
 
     // Editar clase (solo para el entrenador que creó la clase o el admin entrenador)
     public function edit(ClaseGrupal $clase)
@@ -118,23 +121,35 @@ class ClaseGrupalController extends Controller
     // Actualizar clase
     public function update(Request $request, ClaseGrupal $clase)
     {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string|max:500',
-        ]);
-
-        // Solo el entrenador o el admin_entrenador puede actualizar la clase
-        if ($clase->entrenador_id !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
-            return redirect()->route('clases.index')->with('error', 'No tienes permiso para editar esta clase.');
+        if ($clase->entrenador_id !== auth()->id() && !auth()->user()->can('admin_entrenador')) {
+            return redirect()->route('clases.index')->with('error', 'No tienes permiso para actualizar esta clase.');
         }
 
-        $clase->update([
-            'nombre' => $request->nombre,
-            'descripcion' => $request->descripcion,
+        // Validaciones comunes
+        $request->validate([
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date|after:fecha_inicio',
+            'cupos_maximos' => 'required|integer|min:1',
         ]);
 
-        return redirect()->route('clases.index')->with('success', 'Clase actualizada.');
+        $data = $request->only(['fecha_inicio', 'fecha_fin', 'cupos_maximos']);
+
+        // Solo el admin-entrenador puede editar nombre y descripción
+        if (auth()->user()->can('admin_entrenador')) {
+            $request->validate([
+                'nombre' => 'required|string|max:255',
+                'descripcion' => 'required|string|max:500',
+            ]);
+
+            $data['nombre'] = $request->nombre;
+            $data['descripcion'] = $request->descripcion;
+        }
+
+        $clase->update($data);
+
+        return redirect()->route('clases.index')->with('success', 'Clase actualizada correctamente.');
     }
+
 
     // Eliminar clase
     public function destroy(ClaseGrupal $clase)

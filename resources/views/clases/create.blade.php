@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <form action="{{ route(auth()->user()->hasRole('admin-entrenador') ? 'admin-entrenador.clases.store' : 'entrenador.clases.store') }}" method="POST">
+                <form action="{{ route('admin-entrenador.clases.store') }}" method="POST">
                     @csrf
 
                     <div class="form-group">
