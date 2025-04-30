@@ -1,7 +1,7 @@
-@props(['icon', 'route', 'label'])
+<!-- resources/views/components/sidebar-link.blade.php -->
+@props(['href', 'icon', 'label', 'expanded'])
 
-<a href="{{ route($route) }}"
-   class="group flex items-center justify-center sm:justify-start text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg transition-all">
-    <i data-feather="{{ $icon }}" class="w-5 h-5"></i>
-    <span class="hidden sm:inline group-hover:inline text-sm">{{ $label }}</span>
+<a href="{{ $href }}" class="flex items-center p-3 rounded-md hover:bg-gray-100 transition-all">
+    <x-lucide-icon :name="$icon" class="w-5 h-5 text-gray-700" />
+    <span x-show="{{ $expanded ?? 'true' }}" class="ml-3 whitespace-nowrap">{{ $label }}</span>
 </a>
