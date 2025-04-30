@@ -14,7 +14,7 @@
                 <div class="bg-white p-6 rounded-lg shadow-lg">
                     <h3 class="text-xl font-semibold">Clases Grupales</h3>
                     <p class="text-gray-600">Administra las clases grupales.</p>
-                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver clases</a>
+                    <a href="{{ route('admin-entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver clases</a>
                 </div>
 
                 <!-- Panel de Usuarios -->
