@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitCore - Tu gimnasio definitivo</title>
+    <title>PowerCore - Tu gimnasio definitivo</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white font-sans">
@@ -11,7 +11,7 @@
     <!-- Header -->
     <header class="bg-gray-950 fixed w-full z-10 shadow-md">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-3xl font-extrabold text-red-500">FitCore</h1>
+            <h1 class="text-3xl font-extrabold text-red-500">PowerCore</h1>
             <nav class="space-x-6 text-lg">
                 <a href="#inicio" class="hover:text-red-400 transition">Inicio</a>
                 <a href="#clases" class="hover:text-red-400 transition">Clases</a>
@@ -20,7 +20,7 @@
             </nav>
             <!-- Login -->
             <div class="flex items-center space-x-4">
-                <a href="#" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg text-sm transition">Iniciar sesión</a>
+                <a href="/login" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg text-sm transition">Iniciar sesión</a>
             </div>
         </div>
     </header>
@@ -30,7 +30,7 @@
         <div class="absolute inset-0 bg-black bg-opacity-50"></div>
         <div class="relative text-center p-10">
             <h2 class="text-5xl font-extrabold mb-4">Supera tus límites, alcanza tus metas</h2>
-            <p class="text-xl mb-6">Únete a FitCore y transforma tu cuerpo con los mejores entrenadores y clases.</p>
+            <p class="text-xl mb-6">Únete a PowerCore y transforma tu cuerpo con los mejores entrenadores y clases.</p>
             <a href="#clases" class="bg-red-500 hover:bg-red-600 text-white py-3 px-8 rounded-full text-lg transition">Descubre más</a>
         </div>
     </section>
@@ -58,12 +58,12 @@
     <section id="contacto" class="py-20 text-center bg-gray-800">
         <h3 class="text-4xl font-bold mb-6">¿Listo para comenzar?</h3>
         <p class="text-xl mb-6">Contáctanos y empieza tu transformación hoy.</p>
-        <a href="mailto:info@fitcore.com" class="bg-red-500 hover:bg-red-600 text-white py-3 px-8 rounded-full text-lg transition">Contáctanos</a>
+        <a href="mailto:info@PowerCore.com" class="bg-red-500 hover:bg-red-600 text-white py-3 px-8 rounded-full text-lg transition">Contáctanos</a>
     </section>
 
     <!-- Footer -->
     <footer class="bg-gray-950 py-6 text-center text-gray-400">
-        <p>&copy; 2025 FitCore. Todos los derechos reservados.</p>
+        <p>&copy; 2025 PowerCore. Todos los derechos reservados.</p>
     </footer>
 
 </body>
