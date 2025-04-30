@@ -62,7 +62,7 @@ Route::middleware([
     'verified',
     'can:admin_entrenador',
 ])->prefix('admin-entrenador')->name('admin-entrenador.')->group(function () {
-    Route::get('/dashboard', [AdminEntrenadorController::class, 'dashboard'])->name('admin-entrenador.dashboard');
+    Route::get('dashboard', [AdminEntrenadorController::class, 'dashboard'])->name('admin-entrenador.dashboard');
     // Gestión de entrenadores
     Route::get('entrenadores', [AdminEntrenadorController::class, 'verEntrenadores'])->name('admin-entrenador.entrenadores');
     Route::post('entrenadores/{user}/eliminar', [AdminEntrenadorController::class, 'eliminarEntrenador'])->name('admin-entrenador.entrenadores.eliminar');
