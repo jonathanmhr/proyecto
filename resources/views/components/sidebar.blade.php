@@ -18,14 +18,17 @@
 
     <!-- Navegación principal -->
     <nav class="flex-1 w-full space-y-2 px-2">
+        <!-- Dashboard -->
         <x-sidebar-link icon="home" route="dashboard" label="Dashboard" />
 
         @can('cliente-access')
+        <!-- Mis Clases -->
         <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Mis Clases" />
         @endcan
 
         @can('admin-access')
-        <x-sidebar-link icon="settings" route="admin.users.index" label="Usuarios" />
+        <!-- Usuarios -->
+        <x-sidebar-link icon="users" route="admin.users.index" label="Usuarios" />
         @endcan
     </nav>
 
