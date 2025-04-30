@@ -24,9 +24,7 @@
         @endcan
 
         @can('admin-access')
-        <x-sidebar-dropdown icon="settings" label="Administración">
-            <x-sidebar-sublink route="admin.users.index" label="Usuarios" />
-        </x-sidebar-dropdown>
+        <x-sidebar-link icon="settings" route="admin.users.index" label="Usuarios" />
         @endcan
     </nav>
 
