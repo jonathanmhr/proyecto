@@ -20,26 +20,34 @@
         </button>
     </div>
 
-    <!-- Navegación principal -->
-    <nav class="flex-1 w-full space-y-2 px-2">
-        <x-sidebar-link icon="home" route="dashboard" label="Dashboard" />
-        
-        @can('admin-access')
-            <x-sidebar-link icon="users" route="admin.users.index" label="Usuarios" />
-        @endcan
+<!-- Navegación principal -->
+<nav class="flex-1 w-full space-y-2 px-2">
 
-        @canany(['cliente-access', 'entrenador-access', 'admin_entrenador'])
-            <x-sidebar-link icon="calendar" route="clases.index" label="Mis clases" />
-        @endcan
+    <x-sidebar-link icon="home" route="dashboard" label="Dashboard" />
 
-        @canany(['cliente-access', 'entrenador-access', 'admin_entrenador'])
-            <x-sidebar-link icon="shopping-bag" route="admin.users.index" label="Mis suscripciones" />
-        @endcan
+    {{-- ADMIN --}}
+    @can('admin-access')
+        <x-sidebar-link icon="users" route="admin.users.index" label="Gestión de Usuarios" />
+    @endcan
 
-        @canany(['cliente-access', 'entrenador-access', 'admin_entrenador'])
-            <x-sidebar-link icon="message-circle" route="admin.users.index" label="Comunidad" />
-        @endcan
-    </nav>
+    {{-- ENTRENADOR --}}
+    @canany(['entrenador-access', 'admin_entrenador'])
+        <x-sidebar-link icon="activity" route="entrenador.clases.index" label="Mis Clases" />
+        <x-sidebar-link icon="bar-chart" route="entrenador.estadisticas.index" label="Estadísticas" />
+        <x-sidebar-link icon="bell" route="entrenador.notificaciones.index" label="Notificaciones" />
+    @endcan
+
+    {{-- CLIENTE --}}
+    @can('cliente-access')
+        <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Clases Disponibles" />
+        <x-sidebar-link icon="shopping-bag" route="cliente.suscripciones.index" label="Mis Suscripciones" />
+    @endcan
+
+    {{-- GENERAL (varios roles) --}}
+    @canany(['cliente-access', 'entrenador-access', 'admin_entrenador'])
+        <x-sidebar-link icon="message-circle" route="comunidad.index" label="Comunidad" />
+    @endcan
+</nav>
 
     <!-- Ajustes de perfil -->
     <div class="w-full px-2">
