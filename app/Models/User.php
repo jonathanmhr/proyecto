@@ -10,7 +10,6 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
-use Silber\Bouncer\Database\Role;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -71,10 +70,5 @@ class User extends Authenticatable implements MustVerifyEmail
     public function clases()
     {
         return $this->belongsToMany(ClaseGrupal::class, 'suscripciones', 'id_usuario', 'id_clase');
-    }
-
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'assigned_roles');
     }
 }
