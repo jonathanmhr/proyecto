@@ -1,6 +1,4 @@
 <x-app-layout>
-
-@section('content')
 <div class="container mx-auto px-4 py-6">
     <h1 class="text-2xl font-bold mb-6">Panel General - Admin Entrenador</h1>
 
@@ -40,6 +38,5 @@
         </div>
     </div>
 </div>
-@endsection
 
 </x-app-layout>
