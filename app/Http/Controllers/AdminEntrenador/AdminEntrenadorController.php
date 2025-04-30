@@ -10,14 +10,15 @@ use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class AdminEntrenadorController extends Controller
 {
-    public function index()
+    public function dashboard()
     {
         $totalClases = ClaseGrupal::count();
         $totalEntrenadores = Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
         $totalAlumnos = Bouncer::role()->where('name', 'cliente')->first()->users()->count();
-
+    
         return view('admin-entrenador.dashboard', compact('totalClases', 'totalEntrenadores', 'totalAlumnos'));
     }
+    
 
     // --------- NUEVOS MÉTODOS ---------
 

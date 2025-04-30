@@ -62,7 +62,7 @@ Route::middleware([
     'verified',
     'can:admin_entrenador',
 ])->prefix('admin-entrenador')->name('admin-entrenador.')->group(function () {
-    Route::get('/dashboard', [AdminEntrenadorController::class, 'index'])->name('dashboard');
+    Route::get('dashboard', [AdminEntrenadorController::class, 'dashboard'])->name('admin-entrenador.dashboard');
     Route::resource('clases', AdminEntrenadorClaseController::class)->except(['show']);
 });
 
