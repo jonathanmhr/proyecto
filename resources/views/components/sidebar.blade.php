@@ -1,5 +1,5 @@
-<aside class="fixed top-4 left-4 h-[calc(100vh-2rem)] transition-all duration-300 bg-white rounded-xl shadow-md flex flex-col items-center py-4 z-50"
-    :class="$store.sidebarOpen ? 'w-64' : 'w-20'">
+<aside x-data="{ open: false }" class="fixed top-4 left-4 h-[calc(100vh-2rem)] w-20 sm:w-64 transition-all duration-300 bg-white rounded-xl shadow-md flex flex-col items-center py-4 z-50"
+    :class="open ? 'w-64' : 'w-20'">
     
     <!-- Logo -->
     <div class="mb-6">
@@ -10,7 +10,7 @@
 
     <!-- Menú móvil -->
     <div class="sm:hidden mb-6">
-        <button @click="$store.sidebarOpen = !$store.sidebarOpen" class="text-gray-600">
+        <button @click="open = !open" class="text-gray-600">
             <i class="w-6 h-6" data-feather="menu"></i>
         </button>
     </div>
