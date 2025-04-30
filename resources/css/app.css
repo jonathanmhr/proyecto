@@ -6,3 +6,8 @@
     display: none;
 }
 
+/* Centrar los íconos vertical y horizontalmente */
+.sidebar-link i {
+    display: block;
+    margin: 0 auto;  /* Asegura que los íconos se centren en su contenedor */
+}
