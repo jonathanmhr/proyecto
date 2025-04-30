@@ -31,7 +31,7 @@ class ClaseGrupalController extends Controller
         if (!auth()->user()->can('admin_entrenador') && !auth()->user()->can('entrenador-access')) {
             return redirect()->route('clases.index')->with('error', 'No tienes permiso para crear clases.');
         }
-    
+
         return view('clases.create');
     }
 
@@ -160,5 +160,10 @@ class ClaseGrupalController extends Controller
 
         $clase->usuarios()->detach($user->id);
         return back()->with('success', 'Usuario eliminado de la clase.');
+    }
+
+    public function entrenador()
+    {
+        return $this->belongsTo(User::class, 'entrenador_id');
     }
 }
