@@ -18,7 +18,7 @@ class AdminEntrenadorController extends Controller
         $totalEntrenadores = Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
 
         // Contar los alumnos usando Bouncer
-        $totalAlumnos = Bouncer::role()->where('name', 'alumno')->first()->users()->count();
+        $totalAlumnos = Bouncer::role()->where('name', 'cliente')->first()->users()->count();
 
         return view('admin-entrenador.dashboard', compact('totalClases', 'totalEntrenadores', 'totalAlumnos'));
     }
