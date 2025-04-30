@@ -39,5 +39,8 @@
                 <span :class="open ? 'inline' : 'hidden'" class="group-hover:inline">Cerrar sesión</span>
             </button>
         </form>
+        <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
+            {{ __('Profile') }}
+        </x-responsive-nav-link>
     </div>
 </aside>
