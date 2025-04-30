@@ -28,15 +28,15 @@
             <x-sidebar-link icon="users" route="admin.users.index" label="Usuarios" />
         @endcan
 
-        @can[('cliente-access'),('entrenador-access'),('admin_entrenador')]
+        @canany(['cliente-access', 'entrenador-access', 'admin_entrenador'])
             <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Mis clases" />
         @endcan
 
-        @can[('cliente-access'),('entrenador-access'),('admin_entrenador')]
+        @canany(['cliente-access', 'entrenador-access', 'admin_entrenador'])
             <x-sidebar-link icon="shopping-bag" route="admin.users.index" label="Mis suscripciones" />
         @endcan
 
-        @can[('cliente-access'),('entrenador-access'),('admin_entrenador')]
+        @canany(['cliente-access', 'entrenador-access', 'admin_entrenador'])
             <x-sidebar-link icon="message-circle" route="admin.users.index" label="Comunidad" />
         @endcan
     </nav>
