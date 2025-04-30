@@ -51,7 +51,7 @@
 
                 <div x-show="open && openEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1">
                     <x-sidebar-link icon="layout" route="entrenador.dashboard" label="Panel General" />
-                    <x-sidebar-link icon="file-text" route="entrenador.reportes.index" label="Reportes" />
+                    <x-sidebar-link icon="file-text" route="entrenador.dashboard" label="Reportes" />
                     {{--
                     <x-sidebar-link icon="calendar" route="entrenador.clases.index" label="Mis Clases" />
                     <x-sidebar-link icon="users" route="entrenador.usuarios.index" label="Alumnos" />
