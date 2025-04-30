@@ -28,28 +28,28 @@
                 <div class="bg-white p-6 rounded-lg shadow-lg">
                     <h3 class="text-xl font-semibold">Notificaciones</h3>
                     <p class="text-gray-600">Envía notificaciones a los usuarios.</p>
-                    <a href="{{ route('entrenador.notificaciones.index') }}" class="text-blue-500 hover:underline">Ver notificaciones</a>
+                    <a href="{{ route('entrenador.usuarios.index') }}" class="text-blue-500 hover:underline">Ver notificaciones</a>
                 </div>
 
                 <!-- Panel de Estadísticas -->
                 <div class="bg-white p-6 rounded-lg shadow-lg">
                     <h3 class="text-xl font-semibold">Estadísticas</h3>
                     <p class="text-gray-600">Revisa las estadísticas de las clases.</p>
-                    <a href="{{ route('entrenador.estadisticas.index') }}" class="text-blue-500 hover:underline">Ver estadísticas</a>
+                    <a href="{{ route('entrenador.usuarios.index') }}" class="text-blue-500 hover:underline">Ver estadísticas</a>
                 </div>
 
                 <!-- Panel de Suscripciones -->
                 <div class="bg-white p-6 rounded-lg shadow-lg">
                     <h3 class="text-xl font-semibold">Suscripciones</h3>
                     <p class="text-gray-600">Gestiona las suscripciones de los usuarios.</p>
-                    <a href="{{ route('entrenador.suscripciones.index') }}" class="text-blue-500 hover:underline">Ver suscripciones</a>
+                    <a href="{{ route('entrenador.usuarios.index') }}" class="text-blue-500 hover:underline">Ver suscripciones</a>
                 </div>
 
                 <!-- Panel de Reportes -->
                 <div class="bg-white p-6 rounded-lg shadow-lg">
                     <h3 class="text-xl font-semibold">Reportes</h3>
                     <p class="text-gray-600">Genera reportes sobre las clases y usuarios.</p>
-                    <a href="{{ route('entrenador.reportes.index') }}" class="text-blue-500 hover:underline">Ver reportes</a>
+                    <a href="{{ route('entrenador.usuarios.index') }}" class="text-blue-500 hover:underline">Ver reportes</a>
                 </div>
 
             </div>
