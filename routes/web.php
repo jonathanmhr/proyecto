@@ -95,16 +95,16 @@ Route::middleware([
     Route::put('/usuarios/{user}', [UserController::class, 'update'])->name('usuarios.update');
 
     // Notificaciones
-    Route::resource('notificaciones', NotificacionesController::class)->only(['index', 'store']);
+    //Route::resource('notificaciones', NotificacionesController::class)->only(['index', 'store']);
 
     // Estadísticas
-    Route::get('/estadisticas', [EstadisticasController::class, 'index'])->name('estadisticas.index');
+    //Route::get('/estadisticas', [EstadisticasController::class, 'index'])->name('estadisticas.index');
 
     // Suscripciones
-    Route::get('/suscripciones', [SuscripcionesController::class, 'index'])->name('suscripciones.index');
+    //Route::get('/suscripciones', [SuscripcionesController::class, 'index'])->name('suscripciones.index');
 
     // Reportes
-    Route::get('/reportes', [ReportesController::class, 'index'])->name('reportes.index');
+    //Route::get('/reportes', [ReportesController::class, 'index'])->name('reportes.index');
 });
 
 // ----------------------
