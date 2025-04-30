@@ -69,7 +69,19 @@ class AdminEntrenadorClaseController extends Controller
     // Eliminar clase
     public function destroy(ClaseGrupal $clase)
     {
+        // Verificar si el usuario tiene el rol de admin-entrenador
+        if (!auth()->user()->can('admin_entrenador')) {
+            return redirect()->route('admin-entrenador.clases.index')->with('error', 'No tienes permiso para eliminar esta clase.');
+        }
+    
+        // Verificar si la clase tiene usuarios inscritos
+        if ($clase->usuarios()->count() > 0) {
+            return redirect()->route('admin-entrenador.clases.index')->with('error', 'No puedes eliminar la clase porque tiene usuarios inscritos.');
+        }
+    
+        // Eliminar la clase
         $clase->delete();
+    
         return redirect()->route('admin-entrenador.clases.index')->with('success', 'Clase eliminada con éxito.');
     }
 }

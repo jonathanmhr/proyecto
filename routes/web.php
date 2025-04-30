@@ -63,18 +63,25 @@ Route::middleware([
     'can:admin_entrenador',
 ])->prefix('admin-entrenador')->name('admin-entrenador.')->group(function () {
     Route::get('/', [AdminEntrenadorController::class, 'dashboard'])->name('dashboard');
-
+    
+    // Rutas para la gestión de clases
     Route::get('clases', [AdminEntrenadorController::class, 'verClases'])->name('clases.index');
-    // Gestión de usuarios
+    Route::get('clases/create', [AdminEntrenadorController::class, 'crearClase'])->name('clases.create'); // Esta ruta es la que falta
+    Route::post('clases', [AdminEntrenadorController::class, 'guardarClase'])->name('clases.store');
+    Route::get('clases/{clase}/edit', [AdminEntrenadorController::class, 'editarClase'])->name('clases.edit');
+    Route::put('clases/{clase}', [AdminEntrenadorController::class, 'actualizarClase'])->name('clases.update');
+    Route::delete('clases/{clase}', [AdminEntrenadorController::class, 'eliminarClase'])->name('clases.destroy');
+    
+    // Gestión de entrenadores
     Route::get('entrenadores', [AdminEntrenadorController::class, 'verEntrenadores'])->name('entrenadores');
     Route::post('entrenadores/{user}/eliminar', [AdminEntrenadorController::class, 'eliminarEntrenador'])->name('entrenadores.eliminar');
-
+    
+    // Gestión de alumnos
     Route::get('alumnos', [AdminEntrenadorController::class, 'verAlumnos'])->name('alumnos');
     Route::get('alumnos/{user}/editar', [AdminEntrenadorController::class, 'editarAlumno'])->name('alumnos.editar');
     Route::put('alumnos/{user}', [AdminEntrenadorController::class, 'actualizarAlumno'])->name('alumnos.actualizar');
     Route::post('alumnos/{user}/eliminar', [AdminEntrenadorController::class, 'eliminarAlumno'])->name('alumnos.eliminar');
 });
-
 // ----------------------
 // RUTAS ENTRENADOR (gestionar sus propias clases y usuarios)
 // ----------------------
