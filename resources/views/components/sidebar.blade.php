@@ -10,35 +10,21 @@
         </a>
     </div>
 
-    <!-- Menú móvil -->
-    <!--
-    <div class="sm:hidden mb-6">
-        <button @click="open = !open" class="text-gray-600">
-            <i class="w-6 h-6" data-feather="menu"></i>
-        </button>
-    </div>
-
-    -->
-
     <!-- Navegación principal -->
     <nav class="flex-1 w-full space-y-2 px-2">
-        <x-sidebar-link icon="home" route="dashboard" label="Dashboard" />
+        <x-sidebar-link icon="home" route="dashboard" label="Dashboard" :open="open" />
 
         @can('admin-access')
-            <x-sidebar-link icon="users" route="admin.users.index" label="Usuarios" />
-            <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Usuarios</span>
+            <x-sidebar-link icon="users" route="admin.users.index" label="Usuarios" :open="open" />
         @endcan
 
         @can('cliente-access')
-            <x-sidebar-link icon="shopping-bag" route="admin.users.index" label="Mis compras" />
-            <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Mis compras</span>
+            <x-sidebar-link icon="shopping-bag" route="admin.users.index" label="Mis compras" :open="open" />
         @endcan
 
         @can('cliente-access')
-            <x-sidebar-link icon="message-circle" route="admin.users.index" label="Comunidad" />
-            <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Comunidad</span>
+            <x-sidebar-link icon="message-circle" route="admin.users.index" label="Comunidad" :open="open" />
         @endcan
-
     </nav>
 
     <!-- Ajustes de perfil -->
