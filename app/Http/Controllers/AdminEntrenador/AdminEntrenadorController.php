@@ -10,12 +10,19 @@ class AdminEntrenadorController extends Controller
 {
     public function index()
     {
-        // Datos para el dashboard
-        $totalClases = ClaseGrupal::count(); // Contar todas las clases
-        $totalEntrenadores = User::where('role', 'entrenador')->count(); // Contar los entrenadores
-        $totalAlumnos = User::where('role', 'alumno')->count(); // Contar los alumnos
+        // Contar todas las clases
+        $totalClases = ClaseGrupal::count();
 
-        // Pasar estos datos a la vista
+        // Contar los usuarios con rol 'entrenador'
+        $totalEntrenadores = User::whereHas('roles', function ($query) {
+            $query->where('name', 'entrenador');
+        })->count();
+
+        // Contar los usuarios con rol 'alumno'
+        $totalAlumnos = User::whereHas('roles', function ($query) {
+            $query->where('name', 'alumno');
+        })->count();
+
         return view('admin-entrenador.dashboard', compact('totalClases', 'totalEntrenadores', 'totalAlumnos'));
     }
 }

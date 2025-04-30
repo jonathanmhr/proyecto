@@ -66,9 +66,14 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
-
+    // QUERYS
     public function clases()
     {
         return $this->belongsToMany(ClaseGrupal::class, 'suscripciones', 'id_usuario', 'id_clase');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(\Silber\Bouncer\Database\Role::class);
     }
 }
