@@ -6,6 +6,7 @@ use App\Http\Controllers\Entrenador\EntrenadorController;
 use App\Http\Controllers\Perfil\PerfilController;
 use App\Http\Controllers\ClaseGrupal\ClaseGrupalController;
 use app\Http\Controllers\AdminEntrenador\AdminEntrenadorController;
+use  app\Http\Controllers\AdminEntrenador\AdminEntrenadorClaseController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
