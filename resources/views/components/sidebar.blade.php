@@ -32,9 +32,7 @@
                 </button>
 
                 <div x-show="open && openAdminEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1">
-                    <x-sidebar-link icon="layout" route="admin-entrenador.dashboard" label="Panel General" />
-                    @dump(route('admin-entrenador.dashboard'))
-                    
+                    <x-sidebar-link icon="layout" route="admin.users.index" label="Panel General" />
                     {{-- Puedes agregar accesos rápidos aquí si quieres --}}
                 </div>
             </div>
