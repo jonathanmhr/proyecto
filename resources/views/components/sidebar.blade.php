@@ -30,20 +30,29 @@
         <x-sidebar-link icon="users" route="admin.users.index" label="Gestión de Usuarios" />
     @endcan
 
+    {{-- ADMIN ENTRENADOR --}}
+    @can('admin_entrenador')
+        <x-sidebar-link icon="layers" route="admin-entrenador.dashboard" label="Panel Admin-Entrenador" />
+        <x-sidebar-link icon="clipboard-list" route="admin-entrenador.clases.index" label="Gestionar Clases" />
+    @endcan
+
     {{-- ENTRENADOR --}}
-    @canany(['entrenador-access', 'admin_entrenador'])
-        <x-sidebar-link icon="activity" route="entrenador.clases.index" label="Mis Clases" />
+    @can('entrenador-access')
+        <x-sidebar-link icon="calendar" route="entrenador.clases.index" label="Mis Clases" />
+        <x-sidebar-link icon="users" route="entrenador.usuarios.index" label="Alumnos" />
         <x-sidebar-link icon="bar-chart" route="entrenador.estadisticas.index" label="Estadísticas" />
         <x-sidebar-link icon="bell" route="entrenador.notificaciones.index" label="Notificaciones" />
+        <x-sidebar-link icon="dollar-sign" route="entrenador.suscripciones.index" label="Suscripciones" />
+        <x-sidebar-link icon="file-text" route="entrenador.reportes.index" label="Reportes" />
     @endcan
 
     {{-- CLIENTE --}}
     @can('cliente-access')
-        <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Clases Disponibles" />
+        <x-sidebar-link icon="calendar" route="clases.index" label="Clases Disponibles" />
         <x-sidebar-link icon="shopping-bag" route="cliente.suscripciones.index" label="Mis Suscripciones" />
     @endcan
 
-    {{-- GENERAL (varios roles) --}}
+    {{-- COMÚN A VARIOS ROLES (si decides añadir) --}}
     @canany(['cliente-access', 'entrenador-access', 'admin_entrenador'])
         <x-sidebar-link icon="message-circle" route="comunidad.index" label="Comunidad" />
     @endcan
