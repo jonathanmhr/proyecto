@@ -9,20 +9,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::table('clase_grupal', function (Blueprint $table) {
-            //
+        Schema::table('clases_grupales', function (Blueprint $table) {
+            $table->date('fecha_fin')->after('fecha_inicio'); // Agrega el campo después de fecha_inicio
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::table('clase_grupal', function (Blueprint $table) {
-            //
+        Schema::table('clases_grupales', function (Blueprint $table) {
+            $table->dropColumn('fecha_fin'); // Eliminar el campo en el rollback
         });
     }
 };
