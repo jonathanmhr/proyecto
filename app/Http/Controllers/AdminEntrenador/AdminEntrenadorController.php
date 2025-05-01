@@ -93,8 +93,6 @@ class AdminEntrenadorController extends Controller
         }
     }
 
-
-
     // ---------- Gestión de Entrenadores ----------
     public function verEntrenadores()
     {
@@ -102,21 +100,49 @@ class AdminEntrenadorController extends Controller
         return view('admin-entrenador.entrenadores.index', compact('entrenadores'));
     }
 
-    public function eliminarEntrenador(User $user)
+    public function darBajaEntrenador(User $user)
     {
-        // No permitir eliminar un admin-entrenador
-        if ($user->isAn('admin_entrenador')) {
-            return redirect()->back()->with('error', 'No puedes eliminar a un admin-entrenador.');
+        // Verificamos si el usuario tiene el rol de entrenador
+        if ($user->isAn('entrenador')) {
+            // Eliminamos el rol de 'entrenador' sin eliminar al usuario
+            $user->removeRole('entrenador');
+
+            // Aseguramos que el entrenador ya no esté asignado a ninguna clase
+            $user->clasesGrupales()->detach();
+
+            return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Entrenador dado de baja correctamente.');
         }
 
-        // Solo eliminamos entrenadores, no admins
-        if ($user->isAn('entrenador') && !$user->isAn('admin_entrenador')) {
-            $user->delete();
-            return redirect()->back()->with('success', 'Entrenador eliminado correctamente.');
-        }
-
-        return redirect()->back()->with('error', 'No se puede eliminar a este usuario.');
+        return redirect()->route('admin-entrenador.entrenadores')->with('error', 'Este usuario no tiene el rol de entrenador.');
     }
+
+    public function actualizarEntrenador(Request $request, User $entrenador)
+    {
+        // Validar que las clases seleccionadas existen
+        $request->validate([
+            'clases' => 'nullable|array|exists:clase_grupales,id',
+        ]);
+    
+        // Obtener las clases seleccionadas
+        $clasesSeleccionadas = $request->clases;
+    
+        // Verificar que al menos una clase tenga un entrenador
+        foreach ($clasesSeleccionadas as $claseId) {
+            $clase = ClaseGrupal::findOrFail($claseId);
+            
+            // Verificar si se está quitando el único entrenador de la clase
+            if ($clase->entrenador && $clase->entrenador->id == $entrenador->id && $clase->entrenadores->count() == 1) {
+                return redirect()->back()->with('error', 'Cada clase debe tener al menos un entrenador.');
+            }
+        }
+    
+        // Sincronizar las clases del entrenador
+        $entrenador->clasesGrupales()->sync($clasesSeleccionadas);
+    
+        return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases del entrenador actualizadas.');
+    }
+    
+
 
     // ---------- Gestión de Alumnos ----------
     public function verAlumnos()
@@ -137,10 +163,10 @@ class AdminEntrenadorController extends Controller
             'clases' => 'nullable|array',
             'clases.*' => 'exists:clases_grupales,id_clase',
         ]);
-    
+
         // Actualizamos las clases del alumno (como cliente)
         $user->clases()->sync($request->clases ?? []);
-    
+
         return redirect()->route('admin-entrenador.alumnos')->with('success', 'Clases del alumno actualizadas.');
     }
 
