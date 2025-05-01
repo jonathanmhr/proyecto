@@ -7,52 +7,47 @@
             @method('PUT')
 
             <div class="bg-white shadow-md rounded-lg p-6 space-y-6">
-
-                <!-- Sección de Clases Asignadas -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Gestión de Clases</label>
-                    
+
                     <div class="grid grid-cols-3 gap-4 items-center">
                         <!-- Clases Disponibles -->
                         <div>
-                            <h3 class="text-sm font-semibold mb-2">Disponibles</h3>
-                            <select id="clases_disponibles" class="w-full border rounded p-2 h-64" multiple>
+                            <h3 class="font-semibold mb-2">Clases Disponibles</h3>
+                            <select id="disponibles" class="w-full h-64 border rounded p-2" multiple>
                                 @foreach($clases as $clase)
-                                    @if(!$entrenador->clasesGrupales->contains($clase->id))
+                                    @unless($entrenador->clasesGrupales->contains($clase->id))
                                         <option value="{{ $clase->id }}">{{ $clase->nombre }}</option>
-                                    @endif
+                                    @endunless
                                 @endforeach
                             </select>
                         </div>
 
                         <!-- Botones -->
                         <div class="flex flex-col items-center justify-center gap-4">
-                            <button type="button" onclick="moverSeleccion('clases_disponibles', 'clases_asignadas')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">&gt;&gt;</button>
-                            <button type="button" onclick="moverSeleccion('clases_asignadas', 'clases_disponibles')" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">&lt;&lt;</button>
+                            <button type="button" id="asignar" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">&rarr;</button>
+                            <button type="button" id="quitar" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">&larr;</button>
                         </div>
 
                         <!-- Clases Asignadas -->
                         <div>
-                            <h3 class="text-sm font-semibold mb-2">Asignadas</h3>
-                            <select id="clases_asignadas" name="clases[]" class="w-full border rounded p-2 h-64" multiple>
+                            <h3 class="font-semibold mb-2">Clases Asignadas</h3>
+                            <select name="clases[]" id="asignadas" class="w-full h-64 border rounded p-2" multiple>
                                 @foreach($entrenador->clasesGrupales as $clase)
                                     <option value="{{ $clase->id }}">{{ $clase->nombre }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
-
-                    <p class="text-sm text-gray-500 mt-2">
-                        Mueve clases entre listas para asignarlas o quitarlas al entrenador. Recuerda que cada clase debe mantener al menos un entrenador.
-                    </p>
+                    <p class="text-sm text-gray-500 mt-2">Usa los botones para mover clases entre listas.</p>
                 </div>
 
                 <!-- Botones -->
-                <div class="flex items-center gap-4">
-                    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+                <div class="flex gap-4">
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
                         Guardar Cambios
                     </button>
-                    <a href="{{ route('admin-entrenador.entrenadores') }}" class="text-gray-600 hover:text-gray-800">
+                    <a href="{{ route('admin-entrenador.entrenadores') }}" class="text-gray-500 hover:text-gray-700 py-2 px-4">
                         Cancelar
                     </a>
                 </div>
@@ -61,12 +56,22 @@
     </div>
 
     <script>
-        function moverSeleccion(origenId, destinoId) {
+        document.getElementById('asignar').addEventListener('click', function () {
+            moverSeleccionados('disponibles', 'asignadas');
+        });
+
+        document.getElementById('quitar').addEventListener('click', function () {
+            moverSeleccionados('asignadas', 'disponibles');
+        });
+
+        function moverSeleccionados(origenId, destinoId) {
             const origen = document.getElementById(origenId);
             const destino = document.getElementById(destinoId);
+            const seleccionados = Array.from(origen.selectedOptions);
 
-            Array.from(origen.selectedOptions).forEach(option => {
-                destino.appendChild(option);
+            seleccionados.forEach(op => {
+                origen.removeChild(op);
+                destino.appendChild(op);
             });
         }
     </script>
