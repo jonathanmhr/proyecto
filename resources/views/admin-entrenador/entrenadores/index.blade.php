@@ -40,9 +40,9 @@
                                     Editar
                                 </a>
 
-                                <form action="{{ route('admin-entrenador.entrenadores.eliminar', $entrenador) }}"
-                                    method="POST" class="inline">
+                                <form action="{{ route('entrenadores.eliminar', $entrenador->id) }}" method="POST" class="inline">
                                     @csrf
+                                    @method('POST')
                                     <button type="submit" class="text-red-500 hover:text-red-700">
                                         Eliminar
                                     </button>
