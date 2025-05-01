@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AdminEntrenador;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClaseGrupal;
+use App\Http\Controllers\ClaseGrupalController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Silber\Bouncer\BouncerFacade as Bouncer;
@@ -49,14 +50,13 @@ class AdminEntrenadorController extends Controller
 
 
     public function store(Request $request)
-{
-    if (!auth()->user()->can('admin_entrenador')) {
-        abort(403, 'No tienes permiso para crear clases.');
+    {
+        if (!auth()->user()->can('admin_entrenador')) {
+            abort(403, 'No tienes permiso para crear clases.');
+        }
+    
+        return app(ClaseGrupalController::class)->store($request);
     }
-
-    // Delegamos la creación de la clase al `ClaseGrupalController`
-    return app(ClaseGrupalController::class)->store($request);
-}
 
 
     // ---------- Gestión de Entrenadores ----------
