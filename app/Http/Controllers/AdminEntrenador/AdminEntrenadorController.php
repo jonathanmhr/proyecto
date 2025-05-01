@@ -81,7 +81,7 @@ class AdminEntrenadorController extends Controller
             ]);
 
             $clase = ClaseGrupal::where('nombre', $request->nombre)->first();
-            dd($clase->entrenador_id);
+            dd($request->all());
 
             return redirect()->route('admin-entrenador.dashboard')
                 ->with('success', 'Clase creada exitosamente.');
