@@ -27,10 +27,10 @@
                     <label for="clases" class="block text-sm font-medium text-gray-700">Clases Asignadas</label>
                     <select name="clases[]" id="clases" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" multiple>
                         @foreach($clases as $clase)
-                        <option value="{{ $clase->id }}" 
-                            @if($entrenador->clasesGrupales->contains($clase->id)) selected @endif
-                            {{ $clase->nombre }}
-                        </option>
+                            <option value="{{ $clase->id }}" 
+                                @if($entrenador->clasesGrupales->contains($clase->id)) selected @endif>
+                                {{ $clase->nombre }}
+                            </option>
                         @endforeach
                     </select>
                     <p class="text-sm text-gray-500 mt-1">Selecciona las clases a las que se asignará el entrenador.</p>
