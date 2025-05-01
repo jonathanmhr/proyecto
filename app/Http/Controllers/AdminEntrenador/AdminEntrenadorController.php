@@ -138,36 +138,42 @@ class AdminEntrenadorController extends Controller
 
     public function actualizarEntrenador(Request $request, User $entrenador)
     {
+        // Log para verificar los datos que se reciben
+        Log::info('Datos recibidos para actualizar las clases:', $request->all());
+    
         // Validar que las clases seleccionadas existen
         $request->validate([
-            'clases' => 'nullable|array|exists:clases_grupales,id_clase',  // Revisa la tabla y columna correcta
+            'clases' => 'nullable|array|exists:clases_grupales,id',
         ]);
-    
+        
         // Obtener las clases seleccionadas
         $clasesSeleccionadas = $request->clases;
-    
+        
+        // Log para verificar las clases seleccionadas
+        Log::info('Clases seleccionadas:', $clasesSeleccionadas);
+        
         // Verificar que al menos una clase tenga un entrenador
         foreach ($clasesSeleccionadas as $claseId) {
             $clase = ClaseGrupal::findOrFail($claseId);
-    
+        
             // Verificar si se está quitando el único entrenador de la clase
             if ($clase->entrenador && $clase->entrenador->id == $entrenador->id && $clase->entrenadores->count() == 1) {
                 return redirect()->back()->with('error', 'Cada clase debe tener al menos un entrenador.');
             }
         }
-    
+        
         // Sincronizar clases del entrenador si hay clases seleccionadas
         if (!empty($clasesSeleccionadas)) {
             $entrenador->clasesGrupales()->sync($clasesSeleccionadas);
             return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases asignadas correctamente.');
         }
-    
+        
         // Si no hay clases seleccionadas, eliminar las asignaciones
         if (empty($clasesSeleccionadas)) {
             $entrenador->clasesGrupales()->detach();
             return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases desasignadas correctamente.');
         }
-    
+        
         // Si no se pudo realizar la acción
         return redirect()->route('admin-entrenador.entrenadores')->with('error', 'Hubo un problema al actualizar las clases.');
     }
