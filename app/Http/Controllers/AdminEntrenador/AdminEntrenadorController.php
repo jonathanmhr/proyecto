@@ -29,6 +29,23 @@ class AdminEntrenadorController extends Controller
         return view('admin-entrenador.clases.index', compact('clases'));
     }
 
+    public function create()
+    {
+        // Obtener los entrenadores disponibles
+        $entrenadores = User::whereHas('roles', function ($query) {
+            $query->where('name', 'entrenador');
+        })->get();
+
+        // Verificar si hay entrenadores disponibles
+        if ($entrenadores->isEmpty()) {
+            return redirect()->route('admin-entrenador.clases.index')
+                ->with('error', 'No hay entrenadores disponibles para asignar a la clase.');
+        }
+
+        // Retornar la vista para crear una clase y pasar la lista de entrenadores
+        return view('admin-entrenador.clases.create', compact('entrenadores'));
+    }
+
     // ---------- Gestión de Entrenadores ----------
     public function verEntrenadores()
     {
