@@ -22,29 +22,32 @@
                 </thead>
                 <tbody>
                     @foreach ($entrenadores as $entrenador)
-                        <tr class="border-b">
-                            <td class="px-4 py-2">{{ $entrenador->name }}</td>
-                            <td class="px-4 py-2">{{ $entrenador->email }}</td>
-                            <td class="px-4 py-2 space-x-2">
-                                <!-- Editar Entrenador -->
-                                <a href="{{ route('admin-entrenador.entrenadores.edit', $entrenador->id) }}"
-                                    class="text-blue-500 hover:text-blue-700">
-                                    Editar
-                                </a>
-
-
-                                <!-- Eliminar Entrenador -->
-                                <form action="{{ route('admin-entrenador.entrenadores.eliminar', $entrenador->id) }}"
-                                    method="POST" class="inline">
-                                    @csrf
-                                    @method('POST')
-                                    <button type="submit" class="text-red-500 hover:text-red-700">
-                                        Eliminar
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
+                    <tr class="border-b">
+                        <td class="px-4 py-2">{{ $entrenador->name }}</td>
+                        <td class="px-4 py-2">{{ $entrenador->email }}</td>
+                        <td class="px-4 py-2 space-x-2">
+                            <!-- Debugging: Verificar id del entrenador -->
+                            @dd($entrenador->id)
+                
+                            <!-- Editar Entrenador -->
+                            <a href="{{ route('admin-entrenador.entrenadores.edit', $entrenador->id) }}"
+                                class="text-blue-500 hover:text-blue-700">
+                                Editar
+                            </a>
+                
+                            <!-- Eliminar Entrenador -->
+                            <form action="{{ route('admin-entrenador.entrenadores.eliminar', $entrenador->id) }}"
+                                method="POST" class="inline">
+                                @csrf
+                                @method('POST')
+                                <button type="submit" class="text-red-500 hover:text-red-700">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+                
                 </tbody>
             </table>
         </div>
