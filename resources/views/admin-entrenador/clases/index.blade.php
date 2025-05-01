@@ -21,14 +21,14 @@
                 class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
                 <i data-feather="plus-circle" class="w-5 h-5"></i> Crear Clase
             </a>
-        
+
             <!-- Botón Volver (derecha) -->
             <a href="{{ route('admin-entrenador.dashboard') }}"
-                class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
+                class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
                 <i data-feather="arrow-left" class="w-4 h-4"></i> Volver
             </a>
         </div>
-        
+
 
         <div class="overflow-x-auto bg-white shadow rounded-xl p-4">
             <table class="min-w-full table-auto">
