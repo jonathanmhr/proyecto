@@ -150,7 +150,7 @@ class AdminEntrenadorController extends Controller
         $clasesSeleccionadas = $request->clases;
     
         // Log para verificar las clases seleccionadas
-        Log::info('Clases seleccionadas:', $clasesSeleccionadas);
+        Log::info('Clases seleccionadas:', ['clases' => $clasesSeleccionadas]);
     
         // Si hay clases seleccionadas, desasignarlas
         if (!empty($clasesSeleccionadas)) {
