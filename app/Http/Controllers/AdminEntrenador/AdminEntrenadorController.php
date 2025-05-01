@@ -53,7 +53,7 @@ class AdminEntrenadorController extends Controller
         if (!auth()->user()->can('admin_entrenador')) {
             return redirect()->route('admin-entrenador.clases.index')->with('error', 'No tienes permiso para crear clases.');
         }
-
+    
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string|max:500',
@@ -65,21 +65,16 @@ class AdminEntrenadorController extends Controller
             'cupos_maximos' => 'required|integer|min:5|max:20',
             'entrenador_id' => 'required|exists:users,id',
         ]);
-
+    
         $fechaInicio = Carbon::parse($request->fecha_inicio)->format('Y-m-d');
         $fechaFin = Carbon::parse($request->fecha_fin)->format('Y-m-d');
-
-        //Log::info('Fecha inicio: ' . $request->fecha_inicio);
-        //Log::info('Fecha fin: ' . $request->fecha_fin);
-
-        //dd($fechaInicio, $fechaFin);
-
+    
         try {
             ClaseGrupal::create([
                 'nombre' => $request->nombre,
                 'descripcion' => $request->descripcion,
-                'fecha_inicio' => $fechaInicio,   // Usa la fecha formateada
-                'fecha_fin' => $fechaFin,        // Usa la fecha formateada
+                'fecha_inicio' => $fechaInicio,
+                'fecha_fin' => $fechaFin,
                 'fecha' => now(),
                 'duracion' => $request->duracion,
                 'ubicacion' => $request->ubicacion,
@@ -87,7 +82,7 @@ class AdminEntrenadorController extends Controller
                 'cupos_maximos' => $request->cupos_maximos,
                 'entrenador_id' => $request->entrenador_id,
             ]);
-
+    
             return redirect()->route('admin-entrenador.dashboard')
                 ->with('success', 'Clase creada exitosamente.');
         } catch (\Exception $e) {
@@ -96,6 +91,7 @@ class AdminEntrenadorController extends Controller
                 ->with('error', 'Hubo un error al crear la clase. Intenta nuevamente.');
         }
     }
+    
 
 
     // ---------- Gestión de Entrenadores ----------
