@@ -79,6 +79,7 @@ Route::middleware([
     Route::post('entrenadores', [AdminEntrenadorController::class, 'storeEntrenador'])->name('entrenadores.store');
     Route::post('entrenadores/{entrenador}/dar-baja', [AdminEntrenadorController::class, 'darBajaEntrenador'])->name('entrenadores.darBaja');
 
+
     // Gestión de alumnos
     Route::get('alumnos', [AdminEntrenadorController::class, 'verAlumnos'])->name('alumnos');
     Route::get('alumnos/{user}/editar', [AdminEntrenadorController::class, 'editarAlumno'])->name('alumnos.editar');

@@ -2,16 +2,6 @@
     <div class="container mx-auto mt-6">
         <h2 class="text-2xl font-bold mb-4">Editar Clases de {{ $entrenador->name }}</h2>
 
-        @if(session('success'))
-            <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
-                {{ session('success') }}
-            </div>
-        @elseif(session('error'))
-            <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
-                {{ session('error') }}
-            </div>
-        @endif
-
         <form action="{{ route('admin-entrenador.entrenadores.update', $entrenador) }}" method="POST">
             @csrf
             @method('PUT')
@@ -66,6 +56,7 @@
     </div>
 
     <script>
+        // Función para mover clases entre las listas
         document.getElementById('asignar').addEventListener('click', function () {
             moverSeleccionados('disponibles', 'asignadas');
         });
@@ -74,6 +65,7 @@
             moverSeleccionados('asignadas', 'disponibles');
         });
 
+        // Función para mover las opciones seleccionadas
         function moverSeleccionados(origenId, destinoId) {
             const origen = document.getElementById(origenId);
             const destino = document.getElementById(destinoId);
@@ -84,5 +76,18 @@
                 destino.appendChild(op);
             });
         }
+
+        // Antes de enviar el formulario, aseguramos que las clases asignadas estén en el formulario
+        document.querySelector("form").addEventListener("submit", function () {
+            // Transferimos las opciones seleccionadas de 'asignadas' al campo de clases que se enviará
+            const clasesAsignadas = Array.from(document.getElementById("asignadas").options).map(option => option.value);
+
+            // Añadimos las clases asignadas al formulario como un campo oculto
+            let inputClases = document.createElement("input");
+            inputClases.setAttribute("type", "hidden");
+            inputClases.setAttribute("name", "clases[]");
+            inputClases.setAttribute("value", clasesAsignadas.join(","));
+            this.appendChild(inputClases);
+        });
     </script>
 </x-app-layout>
