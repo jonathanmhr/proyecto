@@ -20,6 +20,15 @@ class AdminEntrenadorController extends Controller
         return view('admin-entrenador.dashboard', compact('totalClases', 'totalEntrenadores', 'totalAlumnos'));
     }
 
+    public function verClases()
+    {
+        // Obtener todas las clases
+        $clases = ClaseGrupal::all();
+
+        // Retornar la vista con las clases
+        return view('admin-entrenador.clases.index', compact('clases'));
+    }
+
     // ---------- Gestión de Entrenadores ----------
     public function verEntrenadores()
     {
