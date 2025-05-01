@@ -79,6 +79,7 @@
                 destino.appendChild(op);
             });
         }
+
         // Verifica los datos antes de enviar el formulario
         document.querySelector("form").addEventListener("submit", function(event) {
             // Primero eliminamos cualquier clase anterior en el formulario (si existiera)
