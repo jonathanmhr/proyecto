@@ -34,7 +34,7 @@
                             <h3 class="font-semibold mb-2">Clases Asignadas</h3>
                             <select name="clases[]" id="asignadas" class="w-full h-64 border rounded p-2" multiple>
                                 @foreach($entrenador->clasesGrupales as $clase)
-                                    <option value="{{ $clase->id }}">{{ $clase->nombre }}</option>
+                                    <option value="{{ $clase->id }}" selected>{{ $clase->nombre }}</option>
                                 @endforeach
                             </select>
                         </div>
