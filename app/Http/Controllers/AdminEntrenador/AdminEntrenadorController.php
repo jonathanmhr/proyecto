@@ -62,7 +62,7 @@ class AdminEntrenadorController extends Controller
             'duracion' => 'nullable|integer|min:1',
             'ubicacion' => 'nullable|string|max:100',
             'nivel' => 'nullable|in:principiante,intermedio,avanzado',
-            'cupos_maximos' => 'required|integer|min:1',
+            'cupos_maximos' => 'required|integer|min:5|max:20'
         ]);
     
         try {

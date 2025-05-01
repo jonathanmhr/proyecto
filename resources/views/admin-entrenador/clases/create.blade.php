@@ -69,9 +69,9 @@
 
                 <!-- Capacidad máxima -->
                 <div class="mb-4">
-                    <label for="capacidad_maxima" class="block text-gray-700">Capacidad Máxima</label>
-                    <input type="number" name="capacidad_maxima" id="capacidad_maxima"
-                        class="w-full p-3 border border-gray-300 rounded" required>
+                    <label for="cupos_maximos" class="block text-gray-700">Capacidad Máxima</label>
+                    <input type="number" name="cupos_maximos" id="cupos_maximos"
+                        class="w-full p-3 border border-gray-300 rounded" required min="5" max="20">
                 </div>
 
                 <!-- Sala o ubicación -->
@@ -100,7 +100,7 @@
                     </button>
                 </div>
             </div>
-            
+
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
                     const fechaInicio = document.getElementById('fecha_inicio');
