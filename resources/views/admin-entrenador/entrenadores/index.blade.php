@@ -26,9 +26,6 @@
                         <td class="px-4 py-2">{{ $entrenador->name }}</td>
                         <td class="px-4 py-2">{{ $entrenador->email }}</td>
                         <td class="px-4 py-2 space-x-2">
-                            <!-- Debugging: Verificar id del entrenador -->
-                            @dd($entrenador->id)
-                
                             <!-- Editar Entrenador -->
                             <a href="{{ route('admin-entrenador.entrenadores.edit', $entrenador->id) }}"
                                 class="text-blue-500 hover:text-blue-700">
