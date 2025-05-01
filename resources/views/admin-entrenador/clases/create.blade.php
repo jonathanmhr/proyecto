@@ -41,14 +41,6 @@
                     </select>
                 </div>
 
-                <!-- Fecha de la clase -->
-                <div class="mb-4">
-                    <label for="fecha" class="block text-gray-700">Fecha</label>
-                    <input type="datetime-local" name="fecha" id="fecha"
-                        class="w-full p-3 border border-gray-300 rounded" required>
-                </div>
-
-
                 <!-- Duración en minutos -->
                 <div class="mb-4">
                     <label for="duracion" class="block text-gray-700">Duración (minutos)</label>
@@ -56,25 +48,23 @@
                         class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
 
+                @php
+                    $hoy = now()->format('Y-m-d');
+                    $maxFecha = now()->addMonths(3)->format('Y-m-d');
+                @endphp
+
                 <!-- Fecha de inicio -->
                 <div class="mb-4">
                     <label for="fecha_inicio" class="block text-gray-700">Fecha de Inicio</label>
-                    <input type="date" name="fecha_inicio" id="fecha_inicio"
-                        class="w-full p-3 border border-gray-300 rounded" required>
+                    <input type="date" name="fecha_inicio" id="fecha_inicio" min="{{ $hoy }}"
+                        max="{{ $maxFecha }}" class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
 
                 <!-- Fecha de fin -->
                 <div class="mb-4">
                     <label for="fecha_fin" class="block text-gray-700">Fecha de Fin</label>
-                    <input type="date" name="fecha_fin" id="fecha_fin"
-                        class="w-full p-3 border border-gray-300 rounded" required>
-                </div>
-
-                <!-- Capacidad máxima -->
-                <div class="mb-4">
-                    <label for="cupos_maximos" class="block text-gray-700">Capacidad Máxima</label>
-                    <input type="number" name="cupos_maximos" id="cupos_maximos"
-                        class="w-full p-3 border border-gray-300 rounded" required>
+                    <input type="date" name="fecha_fin" id="fecha_fin" min="{{ $hoy }}"
+                        max="{{ $maxFecha }}" class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
 
                 <!-- Capacidad máxima -->
@@ -110,6 +100,36 @@
                     </button>
                 </div>
             </div>
+            
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const fechaInicio = document.getElementById('fecha_inicio');
+                    const fechaFin = document.getElementById('fecha_fin');
+
+                    const hoy = new Date();
+                    const maxFecha = new Date();
+                    maxFecha.setMonth(hoy.getMonth() + 3);
+
+                    const formatDate = (date) => {
+                        return date.toISOString().split('T')[0];
+                    };
+
+                    fechaInicio.min = formatDate(hoy);
+                    fechaInicio.max = formatDate(maxFecha);
+                    fechaFin.min = formatDate(hoy);
+                    fechaFin.max = formatDate(maxFecha);
+
+                    // Cuando cambia la fecha de inicio, actualiza el mínimo permitido para fecha_fin
+                    fechaInicio.addEventListener('change', () => {
+                        if (fechaInicio.value) {
+                            fechaFin.min = fechaInicio.value;
+                        } else {
+                            fechaFin.min = formatDate(hoy);
+                        }
+                    });
+                });
+            </script>
+
         </form>
     </div>
 </x-app-layout>
