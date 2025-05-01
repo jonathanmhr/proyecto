@@ -45,10 +45,6 @@ class ClaseGrupalController extends Controller
 
     public function store(Request $request)
     {
-        if (!auth()->user()->can('admin_entrenador')) {
-            abort(403, 'No tienes permiso para crear clases.');
-        }
-    
         // Validación de los datos de entrada
         $request->validate([
             'nombre' => 'required|string|max:255',
@@ -82,7 +78,7 @@ class ClaseGrupalController extends Controller
         return redirect()->route('admin-entrenador.dashboard')->with('success', 'Clase creada exitosamente.');
     }
     
-    
+
 
 
     // Permitir que un usuario se una a una clase
