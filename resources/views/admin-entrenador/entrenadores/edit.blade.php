@@ -4,7 +4,7 @@
 
         
         <!-- Formulario de edición del entrenador -->
-        <form action="{{ route('admin-entrenador.entrenadores.update', $entrenador->id) }}" method="POST">
+        <form action="{{ route('admin-entrenador.entrenadores.update', $entrenador) }}" method="POST">
             @csrf
             @method('PUT')
 
