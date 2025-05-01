@@ -49,48 +49,49 @@ class AdminEntrenadorController extends Controller
 
 
     public function store(Request $request)
-    {
-
-        if (!auth()->user()->can('admin_entrenador')) {
-            abort(403, 'No tienes permiso para crear clases.');
-        }
-    
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string|max:500',
-            'fecha_inicio' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
-            'fecha_fin' => ['required', 'date', 'after:' . $request->fecha_inicio, 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
-            'duracion' => 'nullable|integer|min:1',
-            'ubicacion' => 'nullable|string|max:100',
-            'nivel' => 'nullable|in:principiante,intermedio,avanzado',
-            'cupos_maximos' => 'required|integer|min:5|max:20'
-        ]);
-    
-        dd($request->all());
-
-        try {
-            ClaseGrupal::create([
-                'nombre' => $request->nombre,
-                'descripcion' => $request->descripcion,
-                'fecha_inicio' => $request->fecha_inicio,  // Asegúrate de que esto esté presente
-                'fecha_fin' => $request->fecha_fin,
-                'fecha' => now(),
-                'duracion' => $request->duracion,
-                'ubicacion' => $request->ubicacion,
-                'nivel' => $request->nivel,
-                'cupos_maximos' => $request->cupos_maximos,
-                'entrenador_id' => auth()->user()->id,
-            ]);
-    
-            return redirect()->route('admin-entrenador.dashboard')
-                ->with('success', 'Clase creada exitosamente.');
-    
-        } catch (\Exception $e) {
-            Log::error('Error al crear la clase grupal: ' . $e->getMessage());
-            return redirect()->route('admin-entrenador.dashboard')
-                ->with('error', 'Hubo un error al crear la clase. Intenta nuevamente.');
-        }
+{
+    if (!auth()->user()->can('admin_entrenador')) {
+        abort(403, 'No tienes permiso para crear clases.');
     }
+
+    $request->validate([
+        'nombre' => 'required|string|max:255',
+        'descripcion' => 'nullable|string|max:500',
+        'fecha_inicio' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
+        'fecha_fin' => ['required', 'date', 'after:' . $request->fecha_inicio, 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
+        'duracion' => 'nullable|integer|min:1',
+        'ubicacion' => 'nullable|string|max:100',
+        'nivel' => 'nullable|in:principiante,intermedio,avanzado',
+        'cupos_maximos' => 'required|integer|min:5|max:20',
+        'entrenador_id' => 'required|exists:users,id',
+    ]);
+
+    dd($request->all());
+
+    try {
+        ClaseGrupal::create([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'fecha_inicio' => $request->fecha_inicio,  // Asegúrate de que esto esté presente
+            'fecha_fin' => $request->fecha_fin,
+            'fecha' => now(),
+            'duracion' => $request->duracion,
+            'ubicacion' => $request->ubicacion,
+            'nivel' => $request->nivel,
+            'cupos_maximos' => $request->cupos_maximos,
+            'entrenador_id' => $request->entrenador_id,
+        ]);
+
+        return redirect()->route('admin-entrenador.dashboard')
+            ->with('success', 'Clase creada exitosamente.');
+
+    } catch (\Exception $e) {
+        Log::error('Error al crear la clase grupal: ' . $e->getMessage());
+        return redirect()->route('admin-entrenador.dashboard')
+            ->with('error', 'Hubo un error al crear la clase. Intenta nuevamente.');
+    }
+}
+
 
     // ---------- Gestión de Entrenadores ----------
     public function verEntrenadores()
