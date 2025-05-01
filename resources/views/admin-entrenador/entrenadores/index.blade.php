@@ -2,27 +2,17 @@
     <div class="container mx-auto mt-6">
         <h2 class="text-2xl font-bold mb-4">Gestión de Entrenadores</h2>
 
-        <!--
+
         <div class="mb-4">
             <a href="{{ route('admin-entrenador.entrenadores.create') }}"
                 class="inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700">
                 Agregar Entrenador
             </a>
-        </div>
-        -->
 
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-            <!-- Botón Crear Clase (izquierda) -->
-            <a href="{{ route('admin-entrenador.entrenadores.create') }}"
-                class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
-                <i data-feather="plus-circle" class="w-5 h-5"></i> Agregar Entrenador
-            </a>
-
-            <!-- Botón Volver (derecha) -->
             <a href="{{ route('admin-entrenador.dashboard') }}"
-                class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
-                <i data-feather="arrow-left" class="w-4 h-4"></i> Volver
-            </a>
+            class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
+            <i data-feather="arrow-left" class="w-4 h-4"></i> Volver
+        </a>
         </div>
 
         <!-- Tabla de Entrenadores -->
