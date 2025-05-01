@@ -69,7 +69,8 @@ class AdminEntrenadorController extends Controller
     
         $clase->save();
     
-        return redirect()->route('admin-entrenador.dashboard')->with('success', 'Clase creada correctamente.');
+        dd('Clase creada y redirigiendo...');
+        return redirect()->route('admin-entrenador.clases.index')->with('success', 'Clase creada correctamente.');
     }
 
     // ---------- Gestión de Entrenadores ----------
