@@ -45,24 +45,23 @@
                     <i data-feather="server" class="w-5 h-5"></i> Gestionar Clases
                 </a>
 
-                <!-- Gestionar Usuarios (Admin Total) -->
+                <!-- Gestionar Alumnos -->
                 <a href="{{ route('admin.users.index') }}"
                     class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
-                    <i data-feather="users" class="w-5 h-5"></i> Gestionar Usuarios
+                    <i data-feather="users" class="w-5 h-5"></i> Gestionar Alumnos
                 </a>
 
-                <!-- Ver Entrenadores -->
+                <!-- Gestionar Entrenadores -->
                 <a href="{{ route('admin-entrenador.entrenadores') }}"
                     class="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
-                    <i data-feather="user-check" class="w-5 h-5"></i> Ver Entrenadores
+                    <i data-feather="user-check" class="w-5 h-5"></i> Gestionar Entrenadores
                 </a>
 
-                <!-- Ver alumnos -->
+                <!-- Gestionar pagos -->
                 <a href="{{ route('admin-entrenador.alumnos') }}"
                     class="bg-purple-100 hover:bg-purple-200 text-purple-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
-                    <i data-feather="user-plus" class="w-5 h-5"></i> Ver Alumnos
+                    <i data-feather="credit-card" class="w-5 h-5"></i> Gestionar pagos
                 </a>
-            </div>
         </div>
 
 
