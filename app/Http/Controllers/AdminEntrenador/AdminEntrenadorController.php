@@ -65,9 +65,7 @@ class AdminEntrenadorController extends Controller
             'cupos_maximos' => 'required|integer|min:5|max:20',
             'entrenador_id' => 'required|exists:users,id',
         ]);
-
-        dd($request->all());
-
+        
         try {
             ClaseGrupal::create([
                 'nombre' => $request->nombre,
