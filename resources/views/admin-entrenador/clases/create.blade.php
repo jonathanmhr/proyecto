@@ -2,6 +2,11 @@
     <div class="container mx-auto px-4 py-6">
         <h1 class="text-2xl font-bold mb-6">Crear Nueva Clase</h1>
 
+        <a href="{{ route('admin-entrenador.dashboard') }}"
+        class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold rounded-lg transition">
+         <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
+     </a>
+
         <form action="{{ route('admin-entrenador.clases.store') }}" method="POST">
             @if ($errors->any())
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
