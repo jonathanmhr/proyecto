@@ -10,34 +10,39 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <form action="{{ route('admin-entrenador.clases.store') }}" method="POST">
                     @csrf
-
                     <div class="form-group">
-                        <label for="nombre">Nombre de la Clase</label>
-                        <input type="text" id="nombre" name="nombre" class="form-control @error('nombre') is-invalid @enderror" required>
-                        @error('nombre')
-                            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
-                        @enderror
+                        <label for="nombre">Nombre de la clase</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" value="{{ old('nombre') }}" required>
                     </div>
-
+                    
                     <div class="form-group">
                         <label for="descripcion">Descripción</label>
-                        <textarea id="descripcion" name="descripcion" class="form-control @error('descripcion') is-invalid @enderror" required></textarea>
-                        @error('descripcion')
-                            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
-                        @enderror
+                        <textarea class="form-control" id="descripcion" name="descripcion">{{ old('descripcion') }}</textarea>
                     </div>
-
+                
                     <div class="form-group">
-                        <label for="cupos_maximos">Cupos Máximos</label>
-                        <input type="number" id="cupos_maximos" name="cupos_maximos" class="form-control @error('cupos_maximos') is-invalid @enderror" required>
-                        @error('cupos_maximos')
-                            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
-                        @enderror
+                        <label for="cupos_maximos">Cupos máximos</label>
+                        <input type="number" class="form-control" id="cupos_maximos" name="cupos_maximos" value="{{ old('cupos_maximos') }}" required min="1">
                     </div>
-
-                    <button type="submit" class="btn btn-primary">Crear Clase</button>
+                
+                    <div class="form-group">
+                        <label for="fecha_inicio">Fecha de inicio</label>
+                        <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" value="{{ old('fecha_inicio') }}" required>
+                    </div>
+                
+                    <div class="form-group">
+                        <label for="entrenador_id">Entrenador</label>
+                        <select class="form-control" id="entrenador_id" name="entrenador_id" required>
+                            @foreach ($entrenadores as $entrenador)
+                                <option value="{{ $entrenador->id }}" {{ old('entrenador_id') == $entrenador->id ? 'selected' : '' }}>
+                                    {{ $entrenador->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                
+                    <button type="submit" class="btn btn-primary">Crear clase</button>
                 </form>
-
             </div>
         </div>
     </div>
