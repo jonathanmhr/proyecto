@@ -7,6 +7,7 @@ use App\Models\ClaseGrupal;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Silber\Bouncer\BouncerFacade as Bouncer;
+use Carbon\Carbon;
 
 class AdminEntrenadorController extends Controller
 {
@@ -25,7 +26,7 @@ class AdminEntrenadorController extends Controller
         $clases = ClaseGrupal::with('entrenador')->get(); // O ajusta según lo necesites
         return view('admin-entrenador.clases.index', compact('clases'));
     }
-    
+
 
     public function create()
     {
@@ -44,13 +45,13 @@ class AdminEntrenadorController extends Controller
         return view('admin-entrenador.clases.create', compact('entrenadores'));
     }
 
+
     public function store(Request $request)
     {
         if (!auth()->user()->can('admin_entrenador')) {
             abort(403, 'No tienes permiso para crear clases.');
         }
-    
-        dd($request->all()); // Verifica los datos que llegaron
+
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
@@ -59,20 +60,20 @@ class AdminEntrenadorController extends Controller
             'fecha_fin' => 'required|date',
             'entrenador_id' => 'required|exists:users,id',
         ]);
-    
+
         $clase = new ClaseGrupal();
         $clase->nombre = $request->nombre;
         $clase->descripcion = $request->descripcion;
-        $clase->cupos_maximos = $request->cupos_maximos; // Agregar el campo cupos_maximos
-        $clase->fecha_inicio = $request->fecha_inicio;
-        $clase->fecha_fin = $request->fecha_fin; // Asegúrate de incluir fecha_fin
+        $clase->cupos_maximos = $request->cupos_maximos;
+        $clase->fecha_inicio = Carbon::parse($request->fecha_inicio);
+        $clase->fecha_fin = Carbon::parse($request->fecha_fin);
         $clase->entrenador_id = $request->entrenador_id;
-    
+
         $clase->save();
-    
-        dd('Clase creada y redirigiendo...');
+
         return redirect()->route('admin-entrenador.clases.index')->with('success', 'Clase creada correctamente.');
     }
+
 
     // ---------- Gestión de Entrenadores ----------
     public function verEntrenadores()
