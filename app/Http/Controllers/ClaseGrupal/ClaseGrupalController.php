@@ -78,7 +78,7 @@ class ClaseGrupalController extends Controller
         return redirect()->route('admin-entrenador.dashboard')->with('success', 'Clase creada exitosamente.');
     }
     
-*
+*/
 
 
     // Permitir que un usuario se una a una clase
