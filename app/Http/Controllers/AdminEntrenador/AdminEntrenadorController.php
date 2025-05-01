@@ -73,14 +73,14 @@ class AdminEntrenadorController extends Controller
             ClaseGrupal::create([
                 'nombre' => $request->nombre,
                 'descripcion' => $request->descripcion,
-                'fecha_inicio' => $fechaInicio,
-                'fecha_fin' => $fechaFin,
+                'fecha_inicio' => $fechaInicio,   // Usa la fecha formateada
+                'fecha_fin' => $fechaFin,        // Usa la fecha formateada
                 'fecha' => now(),
                 'duracion' => $request->duracion,
                 'ubicacion' => $request->ubicacion,
                 'nivel' => $request->nivel,
                 'cupos_maximos' => $request->cupos_maximos,
-                'entrenador_id' => $request->entrenador_id,
+                'entrenador_id' => $request->entrenador_id, // Asegúrate de que esto esté bien
             ]);
     
             return redirect()->route('admin-entrenador.dashboard')

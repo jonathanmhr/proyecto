@@ -30,16 +30,12 @@
                 </div>
 
                 <!-- Selección de Entrenador -->
-                <div class="mb-4">
-                    <label for="entrenador_id" class="block text-gray-700">Entrenador</label>
-                    <select name="entrenador_id" id="entrenador_id" class="w-full p-3 border border-gray-300 rounded"
-                        required>
-                        <option value="">Seleccionar Entrenador</option>
-                        @foreach ($entrenadores as $entrenador)
-                            <option value="{{ $entrenador->id }}">{{ $entrenador->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <select name="entrenador_id" id="entrenador_id" class="w-full p-3 border border-gray-300 rounded" required>
+                    <option value="">Seleccionar Entrenador</option>
+                    @foreach ($entrenadores as $entrenador)
+                        <option value="{{ $entrenador->id }}">{{ $entrenador->name }}</option>
+                    @endforeach
+                </select>
 
                 <!-- Duración en minutos -->
                 <div class="mb-4">
