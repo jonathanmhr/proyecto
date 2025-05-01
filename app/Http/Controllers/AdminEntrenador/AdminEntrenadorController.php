@@ -36,13 +36,13 @@ class AdminEntrenadorController extends Controller
         $entrenadores = User::whereHas('roles', function ($query) {
             $query->where('name', 'entrenador');
         })->get();
-
+    
         // Verificar si hay entrenadores disponibles
         if ($entrenadores->isEmpty()) {
             return redirect()->route('admin-entrenador.clases.index')
                 ->with('error', 'No hay entrenadores disponibles para asignar a la clase.');
         }
-
+    
         // Retornar la vista para crear una clase y pasar la lista de entrenadores
         return view('admin-entrenador.clases.create', compact('entrenadores'));
     }
@@ -51,7 +51,7 @@ class AdminEntrenadorController extends Controller
     public function store(Request $request)
     {
         if (!auth()->user()->can('admin_entrenador')) {
-            abort(403, 'No tienes permiso para crear clases.');
+            return redirect()->route('admin-entrenador.clases.index')->with('error', 'No tienes permiso para crear clases.');
         }
 
         $request->validate([

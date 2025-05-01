@@ -48,6 +48,11 @@
                         class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
 
+                @php
+                    $hoy = now()->format('Y-m-d');
+                    $maxFecha = now()->addMonths(3)->format('Y-m-d');
+                @endphp
+
                 <!-- Fecha de inicio -->
                 <div class="mb-4">
                     <input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ old('fecha_inicio', $hoy) }}"
