@@ -51,28 +51,28 @@ class AdminEntrenadorController extends Controller
         if (!auth()->user()->can('admin_entrenador')) {
             abort(403, 'No tienes permiso para crear clases.');
         }
-
+    
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
+            'cupos_maximos' => 'required|integer|min:1',
             'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date',
             'entrenador_id' => 'required|exists:users,id',
         ]);
-
-        // Verificar si la validación pasó
-        dd($request->all());  // Esto imprimirá los datos recibidos y detendrá la ejecución
-
+    
         $clase = new ClaseGrupal();
         $clase->nombre = $request->nombre;
         $clase->descripcion = $request->descripcion;
+        $clase->cupos_maximos = $request->cupos_maximos; // Agregar el campo cupos_maximos
         $clase->fecha_inicio = $request->fecha_inicio;
+        $clase->fecha_fin = $request->fecha_fin; // Asegúrate de incluir fecha_fin
         $clase->entrenador_id = $request->entrenador_id;
-
+    
         $clase->save();
-
+    
         return redirect()->route('admin-entrenador.clases.index')->with('success', 'Clase creada correctamente.');
     }
-
 
     // ---------- Gestión de Entrenadores ----------
     public function verEntrenadores()
