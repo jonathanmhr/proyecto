@@ -4,15 +4,15 @@
 
         <form action="{{ route('admin-entrenador.clases.store') }}" method="POST">
             @if ($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                <ul class="list-disc pl-5">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    <ul class="list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             @csrf
             <div class="bg-white shadow rounded-xl p-6">
 
@@ -48,10 +48,32 @@
                         class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
 
+
                 <!-- Duración en minutos -->
                 <div class="mb-4">
                     <label for="duracion" class="block text-gray-700">Duración (minutos)</label>
                     <input type="number" name="duracion" id="duracion"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+
+                <!-- Fecha de inicio -->
+                <div class="mb-4">
+                    <label for="fecha_inicio" class="block text-gray-700">Fecha de Inicio</label>
+                    <input type="date" name="fecha_inicio" id="fecha_inicio"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+
+                <!-- Fecha de fin -->
+                <div class="mb-4">
+                    <label for="fecha_fin" class="block text-gray-700">Fecha de Fin</label>
+                    <input type="date" name="fecha_fin" id="fecha_fin"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+
+                <!-- Capacidad máxima -->
+                <div class="mb-4">
+                    <label for="cupos_maximos" class="block text-gray-700">Capacidad Máxima</label>
+                    <input type="number" name="cupos_maximos" id="cupos_maximos"
                         class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
 
