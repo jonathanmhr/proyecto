@@ -4,23 +4,24 @@
 
         <form action="{{ route('admin-entrenador.clases.store') }}" method="POST">
             @if (session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6">
-                {{ session('success') }}
-            </div>
-        @endif
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-        @if (session('error'))
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
-                {{ session('error') }}
-            </div>
-        @endif
+            @if (session('error'))
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
+                    {{ session('error') }}
+                </div>
+            @endif
             @csrf
             <div class="bg-white shadow rounded-xl p-6">
-                
+
                 <!-- Nombre de la clase -->
                 <div class="mb-4">
                     <label for="nombre" class="block text-gray-700">Nombre de la Clase</label>
-                    <input type="text" name="nombre" id="nombre" class="w-full p-3 border border-gray-300 rounded" required>
+                    <input type="text" name="nombre" id="nombre"
+                        class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
 
                 <!-- Descripción -->
@@ -32,7 +33,8 @@
                 <!-- Selección de Entrenador -->
                 <div class="mb-4">
                     <label for="entrenador_id" class="block text-gray-700">Entrenador</label>
-                    <select name="entrenador_id" id="entrenador_id" class="w-full p-3 border border-gray-300 rounded" required>
+                    <select name="entrenador_id" id="entrenador_id" class="w-full p-3 border border-gray-300 rounded"
+                        required>
                         <option value="">Seleccionar Entrenador</option>
                         @foreach ($entrenadores as $entrenador)
                             <option value="{{ $entrenador->id }}">{{ $entrenador->name }}</option>
@@ -43,25 +45,29 @@
                 <!-- Fecha de la clase -->
                 <div class="mb-4">
                     <label for="fecha" class="block text-gray-700">Fecha</label>
-                    <input type="datetime-local" name="fecha" id="fecha" class="w-full p-3 border border-gray-300 rounded" required>
+                    <input type="datetime-local" name="fecha" id="fecha"
+                        class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
 
                 <!-- Duración en minutos -->
                 <div class="mb-4">
                     <label for="duracion" class="block text-gray-700">Duración (minutos)</label>
-                    <input type="number" name="duracion" id="duracion" class="w-full p-3 border border-gray-300 rounded" required>
+                    <input type="number" name="duracion" id="duracion"
+                        class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
 
                 <!-- Capacidad máxima -->
                 <div class="mb-4">
                     <label for="capacidad_maxima" class="block text-gray-700">Capacidad Máxima</label>
-                    <input type="number" name="capacidad_maxima" id="capacidad_maxima" class="w-full p-3 border border-gray-300 rounded" required>
+                    <input type="number" name="capacidad_maxima" id="capacidad_maxima"
+                        class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
 
                 <!-- Sala o ubicación -->
                 <div class="mb-4">
                     <label for="ubicacion" class="block text-gray-700">Sala / Ubicación</label>
-                    <input type="text" name="ubicacion" id="ubicacion" class="w-full p-3 border border-gray-300 rounded">
+                    <input type="text" name="ubicacion" id="ubicacion"
+                        class="w-full p-3 border border-gray-300 rounded">
                 </div>
 
                 <!-- Nivel (opcional) -->
@@ -77,7 +83,8 @@
 
                 <!-- Botón de Crear Clase -->
                 <div class="mt-6">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg">
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg">
                         Crear Clase
                     </button>
                 </div>
