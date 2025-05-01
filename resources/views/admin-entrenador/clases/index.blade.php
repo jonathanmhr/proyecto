@@ -40,9 +40,7 @@
                                 {{-- Verificar si el entrenador está asignado antes de acceder a su nombre --}}
                                 {{ $clase->entrenador ? $clase->entrenador->name : 'No asignado' }}
                             </td>
-                            <td class="px-4 py-2">
-                                {{ $clase->fecha_inicio->format('d/m/Y') }} - {{ $clase->fecha_fin->format('d/m/Y') }}
-                            </td>
+                            <td class="px-4 py-2">{{ $clase->fecha }}</td>
                             <td class="px-4 py-2">
                                 <a href="{{ route('admin-entrenador.clases.edit', $clase) }}"
                                     class="text-yellow-500 hover:text-yellow-600">Editar</a>
