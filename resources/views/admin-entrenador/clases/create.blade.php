@@ -74,6 +74,7 @@
                         class="w-full p-3 border border-gray-300 rounded" required min="5" max="20">
                 </div>
 
+
                 <!-- Sala o ubicación -->
                 <div class="mb-4">
                     <label for="ubicacion" class="block text-gray-700">Sala / Ubicación</label>

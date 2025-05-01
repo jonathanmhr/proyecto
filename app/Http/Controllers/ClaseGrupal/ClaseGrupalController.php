@@ -43,23 +43,23 @@ class ClaseGrupalController extends Controller
         return view('clases.create');
     }
 
-    // Guardar una nueva clase en la base de datos
     public function store(Request $request)
     {
         if (!auth()->user()->can('admin_entrenador')) {
             abort(403, 'No tienes permiso para crear clases.');
         }
     
+        // Validación de los datos de entrada
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string|max:500',
-            'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date|after:fecha_inicio',
+            'fecha_inicio' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
+            'fecha_fin' => ['required', 'date', 'after:' . $request->fecha_inicio, 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
             'fecha' => 'nullable|date',
             'duracion' => 'nullable|integer|min:1',
             'ubicacion' => 'nullable|string|max:100',
             'nivel' => 'nullable|in:principiante,intermedio,avanzado',
-            'cupos_maximos' => 'required|integer|min:1',
+            'cupos_maximos' => 'required|integer|min:5|max:20'
         ]);
     
         // Asegúrate de que el entrenador esté relacionado con el usuario autenticado
@@ -71,7 +71,7 @@ class ClaseGrupalController extends Controller
             'descripcion' => $request->descripcion,
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_fin' => $request->fecha_fin,
-            'fecha' => $request->fecha,
+            'fecha' => now(), // Establece la fecha actual para la clase
             'duracion' => $request->duracion,
             'ubicacion' => $request->ubicacion,
             'nivel' => $request->nivel,
@@ -79,8 +79,9 @@ class ClaseGrupalController extends Controller
             'entrenador_id' => $entrenador->id,  // Relacionar con el ID del usuario autenticado
         ]);
     
-        return redirect()->route('clases.index')->with('success', 'Clase creada exitosamente.');
+        return redirect()->route('admin-entrenador.dashboard')->with('success', 'Clase creada exitosamente.');
     }
+    
     
 
 
