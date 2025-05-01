@@ -15,8 +15,8 @@
                         <div>
                             <h3 class="font-semibold mb-2">Clases Disponibles</h3>
                             <select id="disponibles" class="w-full h-64 border rounded p-2" multiple>
-                                @foreach($clases as $clase)
-                                    @unless($entrenador->clasesGrupales->contains($clase->id_clase))
+                                @foreach ($clases as $clase)
+                                    @unless ($entrenador->clasesGrupales->contains($clase->id_clase))
                                         <option value="{{ $clase->id_clase }}">{{ $clase->nombre }}</option>
                                     @endunless
                                 @endforeach
@@ -25,15 +25,17 @@
 
                         <!-- Botones -->
                         <div class="flex flex-col items-center justify-center gap-4">
-                            <button type="button" id="asignar" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">&rarr;</button>
-                            <button type="button" id="quitar" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">&larr;</button>
+                            <button type="button" id="asignar"
+                                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">&rarr;</button>
+                            <button type="button" id="quitar"
+                                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">&larr;</button>
                         </div>
 
                         <!-- Clases Asignadas -->
                         <div>
                             <h3 class="font-semibold mb-2">Clases Asignadas</h3>
                             <select name="clases[]" id="asignadas" class="w-full h-64 border rounded p-2" multiple>
-                                @foreach($entrenador->clasesGrupales as $clase)
+                                @foreach ($entrenador->clasesGrupales as $clase)
                                     <option value="{{ $clase->id_clase }}" selected>{{ $clase->nombre }}</option>
                                 @endforeach
                             </select>
@@ -47,7 +49,8 @@
                     <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
                         Guardar Cambios
                     </button>
-                    <a href="{{ route('admin-entrenador.entrenadores') }}" class="text-gray-500 hover:text-gray-700 py-2 px-4">
+                    <a href="{{ route('admin-entrenador.entrenadores') }}"
+                        class="text-gray-500 hover:text-gray-700 py-2 px-4">
                         Cancelar
                     </a>
                 </div>
@@ -57,11 +60,11 @@
 
     <script>
         // Funciones para mover clases entre las listas
-        document.getElementById('asignar').addEventListener('click', function () {
+        document.getElementById('asignar').addEventListener('click', function() {
             moverSeleccionados('disponibles', 'asignadas');
         });
 
-        document.getElementById('quitar').addEventListener('click', function () {
+        document.getElementById('quitar').addEventListener('click', function() {
             moverSeleccionados('asignadas', 'disponibles');
         });
 
@@ -76,9 +79,8 @@
                 destino.appendChild(op);
             });
         }
-
         // Verifica los datos antes de enviar el formulario
-        document.querySelector("form").addEventListener("submit", function (event) {
+        document.querySelector("form").addEventListener("submit", function(event) {
             // Primero eliminamos cualquier clase anterior en el formulario (si existiera)
             let inputClases = document.querySelector('input[name="clases[]"]');
             if (inputClases) {
@@ -86,14 +88,15 @@
             }
 
             // Obtener las clases asignadas
-            const clasesAsignadas = Array.from(document.getElementById("asignadas").options).map(option => option.value);
+            const clasesAsignadas = Array.from(document.getElementById("asignadas").options).map(option => option
+                .value);
 
             // Depurar los datos de las clases antes de enviar el formulario
             console.log("Clases asignadas:", clasesAsignadas);
 
-            // Si hay clases asignadas, añadimos el campo oculto
+            // Si no hay clases asignadas, no enviamos el campo
             if (clasesAsignadas.length > 0) {
-                // Añadir las clases asignadas al formulario como un campo oculto
+                // Añadimos las clases asignadas al formulario como un campo oculto
                 inputClases = document.createElement("input");
                 inputClases.setAttribute("type", "hidden");
                 inputClases.setAttribute("name", "clases[]");

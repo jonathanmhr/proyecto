@@ -139,7 +139,7 @@ class AdminEntrenadorController extends Controller
     public function actualizarEntrenador(Request $request, User $entrenador)
     {
         // Log para verificar los datos que se reciben
-        Log::info('Datos recibidos para actualizar las clases:', $request->all());
+        Log::info('Datos recibidos para actualizar las clases:', ['request_data' => $request->all()]);
     
         // Validar que las clases seleccionadas existen
         $request->validate([
@@ -150,13 +150,12 @@ class AdminEntrenadorController extends Controller
         $clasesSeleccionadas = $request->clases;
     
         // Log para verificar las clases seleccionadas
-        Log::info('Clases seleccionadas:', ['clases' => $clasesSeleccionadas]);
+        Log::info('Clases seleccionadas:', ['clases' => $clasesSeleccionadas ?? []]);
     
-        // Si hay clases seleccionadas, desasignarlas
         if (!empty($clasesSeleccionadas)) {
             // Desasignar el entrenador de las clases seleccionadas
             ClaseGrupal::whereIn('id_clase', $clasesSeleccionadas)
-                ->where('entrenador_id', $entrenador->id) // Asegurarnos que sólo se desasignan clases del entrenador actual
+                ->where('entrenador_id', $entrenador->id)
                 ->update(['entrenador_id' => null]);
     
             return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases desasignadas correctamente.');
@@ -165,6 +164,7 @@ class AdminEntrenadorController extends Controller
         // Si no hay clases seleccionadas, devolver mensaje de error
         return redirect()->route('admin-entrenador.entrenadores')->with('error', 'No se seleccionaron clases para desasignar.');
     }
+    
     
     
    
