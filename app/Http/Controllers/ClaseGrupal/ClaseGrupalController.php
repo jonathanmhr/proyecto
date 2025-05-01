@@ -36,7 +36,7 @@ class ClaseGrupalController extends Controller
     public function create()
     {
         // Verificar si el usuario tiene el permiso de admin_entrenador
-        if (!auth()->user()->can('admin_entrenador')) {
+        if (!auth()->user()->can('admin-entrenador')) {
             return redirect()->route('clases.index')->with('error', 'Solo los administradores pueden crear clases.');
         }
 
@@ -46,7 +46,7 @@ class ClaseGrupalController extends Controller
     // Guardar una nueva clase en la base de datos
     public function store(Request $request)
     {
-        if (!auth()->user()->can('entrenador-access')) {
+        if (!auth()->user()->can('admin-entrenador')) {
             abort(403, 'No tienes permiso para crear clases.');
         }
     
