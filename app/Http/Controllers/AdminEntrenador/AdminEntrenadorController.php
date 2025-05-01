@@ -139,18 +139,13 @@ class AdminEntrenadorController extends Controller
     public function actualizarEntrenador(Request $request, User $entrenador)
     {
         // Log para verificar los datos que se reciben
-        Log::info('Datos recibidos para actualizar las clases:', $request->all());
+        $clasesSeleccionadas = $request->clases ?? [];
+        Log::info('Datos recibidos para actualizar las clases:', $clasesSeleccionadas);
     
         // Validar que las clases seleccionadas existen
         $request->validate([
             'clases' => 'nullable|array|exists:clases_grupales,id_clase',
         ]);
-        
-        // Obtener las clases seleccionadas
-        $clasesSeleccionadas = $request->clases;
-        
-        // Log para verificar las clases seleccionadas
-        Log::info('Clases seleccionadas:', $clasesSeleccionadas);
         
         // Verificar que al menos una clase tenga un entrenador
         foreach ($clasesSeleccionadas as $claseId) {
@@ -162,19 +157,15 @@ class AdminEntrenadorController extends Controller
             }
         }
         
-        // Asignar las clases seleccionadas al entrenador
+        // Sincronizar clases del entrenador si hay clases seleccionadas
         if (!empty($clasesSeleccionadas)) {
-            foreach ($clasesSeleccionadas as $claseId) {
-                $clase = ClaseGrupal::findOrFail($claseId);
-                $clase->entrenador_id = $entrenador->id;  // Asignar el entrenador
-                $clase->save();  // Guardar la clase con el nuevo entrenador
-            }
+            $entrenador->clasesGrupales()->sync($clasesSeleccionadas);
             return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases asignadas correctamente.');
         }
         
         // Si no hay clases seleccionadas, eliminar las asignaciones
         if (empty($clasesSeleccionadas)) {
-            $entrenador->clasesGrupales()->update(['entrenador_id' => null]); // Eliminar la asignación de todas las clases
+            $entrenador->clasesGrupales()->detach();
             return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases desasignadas correctamente.');
         }
         
