@@ -50,8 +50,6 @@ class AdminEntrenadorController extends Controller
     public function store(Request $request)
     {
 
-        dd(auth()->user()->roles, auth()->user()->abilities);
-
         if (!auth()->user()->can('admin_entrenador')) {
             abort(403, 'No tienes permiso para crear clases.');
         }
