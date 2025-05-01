@@ -54,17 +54,19 @@ class AdminEntrenadorController extends Controller
             abort(403, 'No tienes permiso para crear clases.');
         }
 
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string|max:500',
-            'fecha_inicio' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
-            'fecha_fin' => ['required', 'date', 'after:' . $request->fecha_inicio, 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
-            'duracion' => 'nullable|integer|min:1',
-            'ubicacion' => 'nullable|string|max:100',
-            'nivel' => 'nullable|in:principiante,intermedio,avanzado',
-            'cupos_maximos' => 'required|integer|min:5|max:20',
-            'entrenador_id' => 'required|exists:users,id',
-        ]);
+        //$request->validate([
+        //    'nombre' => 'required|string|max:255',
+        //    'descripcion' => 'nullable|string|max:500',
+        //    'fecha_inicio' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
+        //    'fecha_fin' => ['required', 'date', 'after:' . $request->fecha_inicio, 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
+        //    'duracion' => 'nullable|integer|min:1',
+        //    'ubicacion' => 'nullable|string|max:100',
+        //    'nivel' => 'nullable|in:principiante,intermedio,avanzado',
+        //    'cupos_maximos' => 'required|integer|min:5|max:20',
+        //    'entrenador_id' => 'required|exists:users,id',
+        //]);
+
+        dd($request->all());
 
         try {
             ClaseGrupal::create([
@@ -80,7 +82,6 @@ class AdminEntrenadorController extends Controller
                 'entrenador_id' => $request->entrenador_id,
             ]);
 
-            $clase = ClaseGrupal::where('nombre', $request->nombre)->first();
             dd($request->all());
 
             return redirect()->route('admin-entrenador.dashboard')
