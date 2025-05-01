@@ -36,13 +36,13 @@ class AdminEntrenadorController extends Controller
         $entrenadores = User::whereHas('roles', function ($query) {
             $query->where('name', 'entrenador');
         })->get();
-    
+
         // Verificar si hay entrenadores disponibles
         if ($entrenadores->isEmpty()) {
             return redirect()->route('admin-entrenador.clases.index')
                 ->with('error', 'No hay entrenadores disponibles para asignar a la clase.');
         }
-    
+
         // Retornar la vista para crear una clase y pasar la lista de entrenadores
         return view('admin-entrenador.clases.create', compact('entrenadores'));
     }
@@ -53,7 +53,7 @@ class AdminEntrenadorController extends Controller
         if (!auth()->user()->can('admin_entrenador')) {
             return redirect()->route('admin-entrenador.clases.index')->with('error', 'No tienes permiso para crear clases.');
         }
-    
+
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string|max:500',
@@ -63,12 +63,20 @@ class AdminEntrenadorController extends Controller
             'ubicacion' => 'nullable|string|max:100',
             'nivel' => 'nullable|in:principiante,intermedio,avanzado',
             'cupos_maximos' => 'required|integer|min:5|max:20',
-            'entrenador_id' => 'required|exists:users,id|role:entrenador',
+            'entrenador_id' => 'required|exists:users,id',
         ]);
-    
+
         $fechaInicio = Carbon::parse($request->fecha_inicio)->format('Y-m-d');
         $fechaFin = Carbon::parse($request->fecha_fin)->format('Y-m-d');
-    
+        // Verificar que el usuario seleccionado tiene el rol de 'entrenador' usando Bouncer
+        $entrenador = User::find($request->entrenador_id);
+
+        // Si el usuario no tiene el rol de 'entrenador', devolver error
+        if (!$entrenador || !$entrenador->is('entrenador')) {
+            return redirect()->route('admin-entrenador.clases.create')
+                ->with('error', 'El usuario seleccionado no tiene el rol de entrenador.');
+        }
+
         try {
             ClaseGrupal::create([
                 'nombre' => $request->nombre,
@@ -82,7 +90,7 @@ class AdminEntrenadorController extends Controller
                 'cupos_maximos' => $request->cupos_maximos,
                 'entrenador_id' => $request->entrenador_id, // Asegúrate de que esto esté bien
             ]);
-    
+
             return redirect()->route('admin-entrenador.dashboard')
                 ->with('success', 'Clase creada exitosamente.');
         } catch (\Exception $e) {
@@ -91,7 +99,7 @@ class AdminEntrenadorController extends Controller
                 ->with('error', 'Hubo un error al crear la clase. Intenta nuevamente.');
         }
     }
-    
+
 
 
     // ---------- Gestión de Entrenadores ----------
