@@ -46,7 +46,7 @@
                                     <button type="submit" class="text-red-500 hover:text-red-700">
                                         Dar Baja
                                     </button>
-                                </form>
+                                </form>                                
                             </td>
                         </tr>
                     @endforeach
