@@ -56,8 +56,8 @@
                 <!-- Fecha de inicio -->
                 <div class="mb-4">
                     <label for="fecha_inicio" class="block text-gray-700">Fecha de Inicio</label>
-                    <input type="date" name="fecha_inicio" id="fecha_inicio" min="{{ $hoy }}"
-                        max="{{ $maxFecha }}" class="w-full p-3 border border-gray-300 rounded" required>
+                    <input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ old('fecha_inicio', $hoy) }}"
+                    min="{{ $hoy }}" max="{{ $maxFecha }}" class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
 
                 <!-- Fecha de fin -->
