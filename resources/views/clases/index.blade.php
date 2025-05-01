@@ -1,50 +1,42 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Clases Grupales') }}
-        </h2>
-    </x-slot>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    @foreach ($clases as $clase)
+        <div x-data="{ showModal: false }" class="bg-white border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl transition duration-300">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $clase->nombre }}</h3>
+            <p class="text-gray-600 mb-3">{{ Str::limit($clase->descripcion, 100) }}</p>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <h1 class="text-3xl font-semibold text-gray-900 mb-6">Clases Disponibles</h1>
+            <span class="inline-block bg-blue-100 text-blue-800 text-sm font-medium py-1 px-3 rounded-full mb-4">
+                Cupos disponibles: {{ $clase->cupos_maximos - $clase->usuarios->count() }}
+            </span>
 
-                @can('admin_entrenador')
-                <div class="mb-6 text-right">
-                    <a href="{{ route('admin-entrenador.clases.create') }}" class="...">
-                        Crear Clase
-                    </a>
-                </div>
-            @endcan
+            <!-- Botón que abre el modal -->
+            <button @click="showModal = true"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
+                Unirse
+            </button>
 
-                @if ($clases->isEmpty())
-                    <p class="text-center text-gray-500">No hay clases disponibles en este momento.</p>
-                @else
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                        @foreach ($clases as $clase)
-                            <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
-                                <h3 class="text-xl font-semibold text-gray-800">{{ $clase->nombre }}</h3>
-                                <p class="mt-2 text-gray-600">{{ Str::limit($clase->descripcion, 100) }}</p>
-                                <div class="mt-4">
-                                    <span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium py-1 px-2 rounded-full">
-                                        Cupos disponibles: {{ $clase->cupos_maximos - $clase->usuarios->count() }}
-                                    </span>
-                                </div>
+            <!-- Modal -->
+            <div x-show="showModal" style="display: none;"
+                class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">¿Deseas unirte a esta clase?</h2>
+                    <p class="text-gray-600 mb-6">Confirmarás tu participación en <strong>{{ $clase->nombre }}</strong>.</p>
 
-                                <div class="mt-4">
-                                    <form action="{{ route('clases.unirse', $clase->id_clase) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200">
-                                            Unirse
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        @endforeach
+                    <div class="flex justify-end space-x-4">
+                        <button @click="showModal = false"
+                            class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md">
+                            Cancelar
+                        </button>
+
+                        <form action="{{ route('clases.unirse', $clase->id_clase) }}" method="POST">
+                            @csrf
+                            <button type="submit"
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">
+                                Confirmar
+                            </button>
+                        </form>
                     </div>
-                @endif
+                </div>
             </div>
         </div>
-    </div>
-</x-app-layout>
+    @endforeach
+</div>
