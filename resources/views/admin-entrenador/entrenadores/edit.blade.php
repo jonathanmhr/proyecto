@@ -12,7 +12,7 @@
             </div>
         @endif
 
-        <form action="{{ route('entrenadores.update', $entrenador) }}" method="POST">
+        <form action="{{ route('admin-entrenador.entrenadores.update', $entrenador) }}" method="POST">
             @csrf
             @method('PUT')
 
