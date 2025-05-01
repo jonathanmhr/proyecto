@@ -50,6 +50,7 @@ class AdminEntrenadorController extends Controller
             abort(403, 'No tienes permiso para crear clases.');
         }
     
+        dd($request->all()); // Verifica los datos que llegaron
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
