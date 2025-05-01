@@ -49,7 +49,6 @@ class AdminEntrenadorController extends Controller
 
     public function store(Request $request)
     {
-
         if (!auth()->user()->can('admin_entrenador')) {
             abort(403, 'No tienes permiso para crear clases.');
         }
@@ -66,23 +65,31 @@ class AdminEntrenadorController extends Controller
             'cupos_maximos' => 'required|integer|min:1',
         ]);
     
-        ClaseGrupal::create([
-            'nombre' => $request->nombre,
-            'descripcion' => $request->descripcion,
-            'fecha_inicio' => $request->fecha_inicio,
-            'fecha_fin' => $request->fecha_fin,
-            'fecha' => $request->fecha,
-            'duracion' => $request->duracion,
-            'ubicacion' => $request->ubicacion,
-            'nivel' => $request->nivel,
-            'cupos_maximos' => $request->cupos_maximos,
-            'entrenador_id' => auth()->user()->id,
-        ]);
+        try {
+            ClaseGrupal::create([
+                'nombre' => $request->nombre,
+                'descripcion' => $request->descripcion,
+                'fecha_inicio' => $request->fecha_inicio,
+                'fecha_fin' => $request->fecha_fin,
+                'fecha' => $request->fecha,
+                'duracion' => $request->duracion,
+                'ubicacion' => $request->ubicacion,
+                'nivel' => $request->nivel,
+                'cupos_maximos' => $request->cupos_maximos,
+                'entrenador_id' => auth()->user()->id,
+            ]);
     
-        return redirect()->route('clases.index')->with('success', 'Clase creada exitosamente.');
+            return redirect()->route('admin-entrenador.dashboard')
+                ->with('success', 'Clase creada exitosamente.');
+    
+        } catch (\Exception $e) {
+            // Opcional: log del error
+            Log::error('Error al crear la clase grupal: ' . $e->getMessage());
+    
+            return redirect()->route('admin-entrenador.dashboard')
+                ->with('error', 'Hubo un error al crear la clase. Intenta nuevamente.');
+        }
     }
-    
-
 
     // ---------- Gestión de Entrenadores ----------
     public function verEntrenadores()
