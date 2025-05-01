@@ -46,30 +46,42 @@ class ClaseGrupalController extends Controller
     // Guardar una nueva clase en la base de datos
     public function store(Request $request)
     {
-        if (!auth()->user()->can('admin_entrenador')) {
+        if (!auth()->user()->can('entrenador-access')) {
             abort(403, 'No tienes permiso para crear clases.');
         }
-
+    
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string|max:500',
+            'descripcion' => 'nullable|string|max:500',
             'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date|after:fecha_inicio',  // Validación de fecha_fin
+            'fecha_fin' => 'required|date|after:fecha_inicio',
+            'fecha' => 'nullable|date',
+            'duracion' => 'nullable|integer|min:1',
+            'ubicacion' => 'nullable|string|max:100',
+            'nivel' => 'nullable|in:principiante,intermedio,avanzado',
             'cupos_maximos' => 'required|integer|min:1',
         ]);
-
-        // Solo el admin entrenador puede crear la clase
+    
+        // Asegúrate de que el entrenador esté relacionado con el usuario autenticado
+        $entrenador = auth()->user();
+    
+        // Crear la clase grupal, asociando al entrenador con el ID del usuario autenticado
         ClaseGrupal::create([
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
             'fecha_inicio' => $request->fecha_inicio,
-            'fecha_fin' => $request->fecha_fin,  // Guardar fecha_fin
+            'fecha_fin' => $request->fecha_fin,
+            'fecha' => $request->fecha,
+            'duracion' => $request->duracion,
+            'ubicacion' => $request->ubicacion,
+            'nivel' => $request->nivel,
             'cupos_maximos' => $request->cupos_maximos,
-            'entrenador_id' => auth()->user()->id,
+            'entrenador_id' => $entrenador->id,  // Relacionar con el ID del usuario autenticado
         ]);
-
+    
         return redirect()->route('clases.index')->with('success', 'Clase creada exitosamente.');
     }
+    
 
 
     // Permitir que un usuario se una a una clase

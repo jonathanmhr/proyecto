@@ -49,33 +49,38 @@ class AdminEntrenadorController extends Controller
 
     public function store(Request $request)
     {
-        Log::info('Formulario recibido', $request->all()); // Esto registrará la información en el archivo de logs
-
-        if (!auth()->user()->can('admin_entrenador')) {
+        if (!auth()->user()->can('entrenador-access')) {
             abort(403, 'No tienes permiso para crear clases.');
         }
-
+    
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string',
-            'cupos_maximos' => 'required|integer|min:1',
+            'descripcion' => 'nullable|string|max:500',
             'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date',
-            'entrenador_id' => 'required|exists:users,id',
+            'fecha_fin' => 'required|date|after:fecha_inicio',
+            'fecha' => 'nullable|date',
+            'duracion' => 'nullable|integer|min:1',
+            'ubicacion' => 'nullable|string|max:100',
+            'nivel' => 'nullable|in:principiante,intermedio,avanzado',
+            'cupos_maximos' => 'required|integer|min:1',
         ]);
-
-        $clase = new ClaseGrupal();
-        $clase->nombre = $request->nombre;
-        $clase->descripcion = $request->descripcion;
-        $clase->cupos_maximos = $request->cupos_maximos;
-        $clase->fecha_inicio = Carbon::parse($request->fecha_inicio);
-        $clase->fecha_fin = Carbon::parse($request->fecha_fin);
-        $clase->entrenador_id = $request->entrenador_id;
-
-        $clase->save();
-
-        return redirect()->route('admin-entrenador.clases.index')->with('success', 'Clase creada correctamente.');
+    
+        ClaseGrupal::create([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'fecha_inicio' => $request->fecha_inicio,
+            'fecha_fin' => $request->fecha_fin,
+            'fecha' => $request->fecha,
+            'duracion' => $request->duracion,
+            'ubicacion' => $request->ubicacion,
+            'nivel' => $request->nivel,
+            'cupos_maximos' => $request->cupos_maximos,
+            'entrenador_id' => auth()->user()->id,
+        ]);
+    
+        return redirect()->route('clases.index')->with('success', 'Clase creada exitosamente.');
     }
+    
 
 
     // ---------- Gestión de Entrenadores ----------
