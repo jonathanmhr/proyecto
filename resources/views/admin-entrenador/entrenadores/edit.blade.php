@@ -80,7 +80,6 @@
             });
         }
 
-        // Verifica los datos antes de enviar el formulario
         document.querySelector("form").addEventListener("submit", function(event) {
             // Primero eliminamos cualquier clase anterior en el formulario (si existiera)
             let inputClases = document.querySelector('input[name="clases[]"]');
@@ -88,16 +87,15 @@
                 inputClases.remove();
             }
 
-            // Obtener las clases asignadas
+            // Obtener las clases asignadas (IDs de las clases seleccionadas)
             const clasesAsignadas = Array.from(document.getElementById("asignadas").options).map(option => option
                 .value);
 
-            // Depurar los datos de las clases antes de enviar el formulario
+            // Depuración de los datos de las clases antes de enviar el formulario
             console.log("Clases asignadas:", clasesAsignadas);
 
-            // Si no hay clases asignadas, no enviamos el campo
+            // Si hay clases seleccionadas, agregar las al formulario
             if (clasesAsignadas.length > 0) {
-                // Añadimos las clases asignadas al formulario como un campo oculto
                 inputClases = document.createElement("input");
                 inputClases.setAttribute("type", "hidden");
                 inputClases.setAttribute("name", "clases[]");

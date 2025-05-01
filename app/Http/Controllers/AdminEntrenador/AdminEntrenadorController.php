@@ -107,67 +107,61 @@ class AdminEntrenadorController extends Controller
             // Verificar si el usuario que intenta dar de baja es un admin_entrenador
             if ($user->hasRole('admin_entrenador')) {
                 return redirect()->route('admin-entrenador.entrenadores')
-                                 ->with('error', 'No puedes dar de baja a otro admin_entrenador.');
+                    ->with('error', 'No puedes dar de baja a otro admin_entrenador.');
             }
         }
-    
+
         // Verificamos si el usuario tiene el rol de entrenador
         if ($user->isAn('entrenador')) {
             // Eliminamos el rol de 'entrenador' y le asignamos el rol de 'cliente'
             $user->removeRole('entrenador');
             $user->assignRole('cliente');  // Asignamos el rol 'cliente'
-    
+
             // Aseguramos que el entrenador ya no esté asignado a ninguna clase
             $user->clasesGrupales()->detach();
-    
+
             return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Entrenador dado de baja correctamente, ahora es un cliente.');
         }
-    
+
         return redirect()->route('admin-entrenador.entrenadores')->with('error', 'Este usuario no tiene el rol de entrenador.');
     }
-    
+
 
     public function editarEntrenador(User $entrenador)
     {
         // Cargar todas las clases disponibles
-        $clases = ClaseGrupal::all(); 
-    
+        $clases = ClaseGrupal::all();
+
         // Pasar el entrenador y las clases a la vista
         return view('admin-entrenador.entrenadores.edit', compact('entrenador', 'clases'));
     }
 
     public function actualizarEntrenador(Request $request, User $entrenador)
     {
-        // Log para verificar los datos que se reciben
-        Log::info('Datos recibidos para actualizar las clases:', ['request_data' => $request->all()]);
-    
-        // Validar que las clases seleccionadas existen
+        Log::info('Datos recibidos para actualizar las clases:', $request->all());
+
+        // Validar las clases seleccionadas
         $request->validate([
             'clases' => 'nullable|array|exists:clases_grupales,id_clase',
         ]);
-    
+
         // Obtener las clases seleccionadas
-        $clasesSeleccionadas = $request->clases;
-    
-        // Log para verificar las clases seleccionadas
-        Log::info('Clases seleccionadas:', ['clases' => $clasesSeleccionadas ?? []]);
-    
+        $clasesSeleccionadas = $request->input('clases', []);
+
+        Log::info('Clases seleccionadas:', $clasesSeleccionadas);
+
+        // Sincronizar clases del entrenador si hay clases seleccionadas
         if (!empty($clasesSeleccionadas)) {
-            // Desasignar el entrenador de las clases seleccionadas
-            ClaseGrupal::whereIn('id_clase', $clasesSeleccionadas)
-                ->where('entrenador_id', $entrenador->id)
-                ->update(['entrenador_id' => null]);
-    
-            return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases desasignadas correctamente.');
+            // Asignar o re-asignar las clases seleccionadas
+            $entrenador->clasesGrupales()->sync($clasesSeleccionadas);
+            return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases asignadas correctamente.');
         }
-    
-        // Si no hay clases seleccionadas, devolver mensaje de error
-        return redirect()->route('admin-entrenador.entrenadores')->with('error', 'No se seleccionaron clases para desasignar.');
+
+        // Si no se seleccionaron clases, desasignar todas las clases
+        $entrenador->clasesGrupales()->detach();
+        return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases desasignadas correctamente.');
     }
-    
-    
-    
-   
+
     // ---------- Gestión de Alumnos ----------
     public function verAlumnos()
     {
