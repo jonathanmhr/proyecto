@@ -65,7 +65,13 @@ class AdminEntrenadorController extends Controller
             'cupos_maximos' => 'required|integer|min:5|max:20',
             'entrenador_id' => 'required|exists:users,id',
         ]);
-        
+
+        $fechaInicio = Carbon::parse($request->fecha_inicio)->format('Y-m-d');
+        $fechaFin = Carbon::parse($request->fecha_fin)->format('Y-m-d');
+
+        Log::info('Fecha inicio: ' . $request->fecha_inicio);
+        Log::info('Fecha fin: ' . $request->fecha_fin);
+
         try {
             ClaseGrupal::create([
                 'nombre' => $request->nombre,
