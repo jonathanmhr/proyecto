@@ -162,21 +162,26 @@ class AdminEntrenadorController extends Controller
             }
         }
         
-        // Sincronizar clases del entrenador si hay clases seleccionadas
+        // Asignar las clases seleccionadas al entrenador
         if (!empty($clasesSeleccionadas)) {
-            $entrenador->clasesGrupales()->sync($clasesSeleccionadas);
+            foreach ($clasesSeleccionadas as $claseId) {
+                $clase = ClaseGrupal::findOrFail($claseId);
+                $clase->entrenador_id = $entrenador->id;  // Asignar el entrenador
+                $clase->save();  // Guardar la clase con el nuevo entrenador
+            }
             return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases asignadas correctamente.');
         }
         
         // Si no hay clases seleccionadas, eliminar las asignaciones
         if (empty($clasesSeleccionadas)) {
-            $entrenador->clasesGrupales()->detach();
+            $entrenador->clasesGrupales()->update(['entrenador_id' => null]); // Eliminar la asignación de todas las clases
             return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases desasignadas correctamente.');
         }
         
         // Si no se pudo realizar la acción
         return redirect()->route('admin-entrenador.entrenadores')->with('error', 'Hubo un problema al actualizar las clases.');
     }
+    
     
    
     // ---------- Gestión de Alumnos ----------

@@ -16,8 +16,8 @@
                             <h3 class="font-semibold mb-2">Clases Disponibles</h3>
                             <select id="disponibles" class="w-full h-64 border rounded p-2" multiple>
                                 @foreach($clases as $clase)
-                                    @unless($entrenador->clasesGrupales->contains($clase->id))
-                                        <option value="{{ $clase->id }}">{{ $clase->nombre }}</option>
+                                    @unless($entrenador->clasesGrupales->contains($clase->id_clase))
+                                        <option value="{{ $clase->id_clase }}">{{ $clase->nombre }}</option>
                                     @endunless
                                 @endforeach
                             </select>
@@ -34,7 +34,7 @@
                             <h3 class="font-semibold mb-2">Clases Asignadas</h3>
                             <select name="clases[]" id="asignadas" class="w-full h-64 border rounded p-2" multiple>
                                 @foreach($entrenador->clasesGrupales as $clase)
-                                    <option value="{{ $clase->id }}" selected>{{ $clase->nombre }}</option>
+                                    <option value="{{ $clase->id_clase }}" selected>{{ $clase->nombre }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -56,25 +56,27 @@
     </div>
 
     <script>
+        // Funciones para mover clases entre las listas
         document.getElementById('asignar').addEventListener('click', function () {
             moverSeleccionados('disponibles', 'asignadas');
         });
-    
+
         document.getElementById('quitar').addEventListener('click', function () {
             moverSeleccionados('asignadas', 'disponibles');
         });
-    
+
+        // Mover las opciones seleccionadas entre listas
         function moverSeleccionados(origenId, destinoId) {
             const origen = document.getElementById(origenId);
             const destino = document.getElementById(destinoId);
             const seleccionados = Array.from(origen.selectedOptions);
-    
+
             seleccionados.forEach(op => {
                 origen.removeChild(op);
                 destino.appendChild(op);
             });
         }
-    
+
         // Verifica los datos antes de enviar el formulario
         document.querySelector("form").addEventListener("submit", function (event) {
             // Primero eliminamos cualquier clase anterior en el formulario (si existiera)
@@ -82,16 +84,16 @@
             if (inputClases) {
                 inputClases.remove();
             }
-    
+
             // Obtener las clases asignadas
             const clasesAsignadas = Array.from(document.getElementById("asignadas").options).map(option => option.value);
-            
+
             // Depurar los datos de las clases antes de enviar el formulario
             console.log("Clases asignadas:", clasesAsignadas);
-    
-            // Si no hay clases asignadas, no enviamos el campo
+
+            // Si hay clases asignadas, añadimos el campo oculto
             if (clasesAsignadas.length > 0) {
-                // Añadimos las clases asignadas al formulario como un campo oculto
+                // Añadir las clases asignadas al formulario como un campo oculto
                 inputClases = document.createElement("input");
                 inputClases.setAttribute("type", "hidden");
                 inputClases.setAttribute("name", "clases[]");
@@ -100,6 +102,4 @@
             }
         });
     </script>
-    
-    
 </x-app-layout>
