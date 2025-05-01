@@ -116,12 +116,14 @@ class AdminEntrenadorController extends Controller
         return redirect()->route('admin-entrenador.entrenadores')->with('error', 'Este usuario no tiene el rol de entrenador.');
     }
 
-    public function editarEntrenador(User $user)
-{
-    // Puedes cargar más datos si es necesario
-    $clases = ClaseGrupal::all(); // Cargar todas las clases disponibles
-    return view('admin-entrenador.entrenadores.edit', compact('user', 'clases'));
-}
+    public function editarEntrenador(User $entrenador)
+    {
+        // Cargar todas las clases disponibles
+        $clases = ClaseGrupal::all(); 
+    
+        // Pasar el entrenador y las clases a la vista
+        return view('admin-entrenador.entrenadores.edit', compact('entrenador', 'clases'));
+    }
 
     public function actualizarEntrenador(Request $request, User $entrenador)
     {
