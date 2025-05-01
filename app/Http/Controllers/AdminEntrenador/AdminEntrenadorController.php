@@ -63,7 +63,7 @@ class AdminEntrenadorController extends Controller
             'ubicacion' => 'nullable|string|max:100',
             'nivel' => 'nullable|in:principiante,intermedio,avanzado',
             'cupos_maximos' => 'required|integer|min:5|max:20',
-            'entrenador_id' => 'required|exists:entrenadores,id',
+            'entrenador_id' => 'required|exists:users,id|role:entrenador',
         ]);
     
         $fechaInicio = Carbon::parse($request->fecha_inicio)->format('Y-m-d');
@@ -80,7 +80,7 @@ class AdminEntrenadorController extends Controller
                 'ubicacion' => $request->ubicacion,
                 'nivel' => $request->nivel,
                 'cupos_maximos' => $request->cupos_maximos,
-                'entrenador_id' => $request['entrenador_id'], // Asegúrate de que esto esté bien
+                'entrenador_id' => $request->entrenador_id, // Asegúrate de que esto esté bien
             ]);
     
             return redirect()->route('admin-entrenador.dashboard')
