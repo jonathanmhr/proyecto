@@ -127,31 +127,25 @@ class AdminEntrenadorController extends Controller
 
     public function actualizarEntrenador(Request $request, User $entrenador)
     {
-        // Validar que las clases seleccionadas existen
         $request->validate([
             'clases' => 'nullable|array|exists:clase_grupales,id',
         ]);
     
-        // Obtener las clases seleccionadas
-        $clasesSeleccionadas = $request->clases;
+        $clasesSeleccionadas = $request->clases ?? [];
     
-        // Verificar que al menos una clase tenga un entrenador
         foreach ($clasesSeleccionadas as $claseId) {
             $clase = ClaseGrupal::findOrFail($claseId);
-            
-            // Verificar si se está quitando el único entrenador de la clase
+    
             if ($clase->entrenador && $clase->entrenador->id == $entrenador->id && $clase->entrenadores->count() == 1) {
                 return redirect()->back()->with('error', 'Cada clase debe tener al menos un entrenador.');
             }
         }
     
-        // Sincronizar las clases del entrenador
         $entrenador->clasesGrupales()->sync($clasesSeleccionadas);
     
         return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases del entrenador actualizadas.');
     }
     
-
 
     // ---------- Gestión de Alumnos ----------
     public function verAlumnos()

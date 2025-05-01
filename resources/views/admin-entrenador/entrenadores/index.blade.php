@@ -9,14 +9,14 @@
                 class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
                 <i data-feather="user-plus" class="w-4 h-4"></i> Agregar
             </a>
-        
+
             <!-- Botón Volver -->
             <a href="{{ route('admin-entrenador.dashboard') }}"
                 class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
                 <i data-feather="arrow-left" class="w-4 h-4"></i> Volver
             </a>
         </div>
-        
+
 
         <!-- Tabla de Entrenadores -->
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
@@ -30,29 +30,27 @@
                 </thead>
                 <tbody>
                     @foreach ($entrenadores as $entrenador)
-                    <tr class="border-b">
-                        <td class="px-4 py-2">{{ $entrenador->name }}</td>
-                        <td class="px-4 py-2">{{ $entrenador->email }}</td>
-                        <td class="px-4 py-2 space-x-2">
-                            <!-- Editar Entrenador -->
-                            <a href="{{ route('admin-entrenador.entrenadores.edit', $entrenador->id) }}"
-                                class="text-blue-500 hover:text-blue-700">
-                                Editar
-                            </a>
-                
-                            <!-- Eliminar Entrenador -->
-                            <form action="{{ route('admin-entrenador.entrenadores.eliminar', $entrenador->id) }}"
-                                method="POST" class="inline">
-                                @csrf
-                                @method('POST')
-                                <button type="submit" class="text-red-500 hover:text-red-700">
-                                    Eliminar
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-                
+                        <tr class="border-b">
+                            <td class="px-4 py-2">{{ $entrenador->name }}</td>
+                            <td class="px-4 py-2">{{ $entrenador->email }}</td>
+                            <td class="px-4 py-2 space-x-2">
+                                <!-- Editar Entrenador -->
+                                <a href="{{ route('admin-entrenador.entrenadores.edit', $entrenador) }}"
+                                    class="text-blue-500 hover:text-blue-700">
+                                    Editar
+                                </a>
+
+                                <form action="{{ route('admin-entrenador.entrenadores.eliminar', $entrenador) }}"
+                                    method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" class="text-red-500 hover:text-red-700">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+
                 </tbody>
             </table>
         </div>
