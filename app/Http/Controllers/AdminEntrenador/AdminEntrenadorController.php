@@ -68,14 +68,7 @@ class AdminEntrenadorController extends Controller
 
         $fechaInicio = Carbon::parse($request->fecha_inicio)->format('Y-m-d');
         $fechaFin = Carbon::parse($request->fecha_fin)->format('Y-m-d');
-        // Verificar que el usuario seleccionado tiene el rol de 'entrenador' usando Bouncer
         $entrenador = User::find($request->entrenador_id);
-
-        // Si el usuario no tiene el rol de 'entrenador', devolver error
-        if (!$entrenador || !$entrenador->is('entrenador')) {
-            return redirect()->route('admin-entrenador.clases.create')
-                ->with('error', 'El usuario seleccionado no tiene el rol de entrenador.');
-        }
 
         try {
             ClaseGrupal::create([
