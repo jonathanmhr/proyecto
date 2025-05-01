@@ -77,7 +77,7 @@ Route::middleware([
     Route::get('entrenadores/create', [AdminEntrenadorController::class, 'crearEntrenador'])->name('entrenadores.create');
     Route::put('entrenadores/{entrenador}', [AdminEntrenadorController::class, 'actualizarEntrenador'])->name('entrenadores.update');
     Route::post('entrenadores', [AdminEntrenadorController::class, 'storeEntrenador'])->name('entrenadores.store');
-    Route::post('entrenadores/{user}/dar-baja', [AdminEntrenadorController::class, 'darBajaEntrenador'])->name('entrenadores.darBaja');
+    Route::post('entrenadores/{entrenador}/dar-baja', [AdminEntrenadorController::class, 'darBajaEntrenador'])->name('entrenadores.darBaja');
 
     // Gestión de alumnos
     Route::get('alumnos', [AdminEntrenadorController::class, 'verAlumnos'])->name('alumnos');
