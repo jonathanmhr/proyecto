@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use tidy;
 
 class AdminEntrenadorController extends Controller
 {
@@ -49,6 +50,8 @@ class AdminEntrenadorController extends Controller
 
     public function store(Request $request)
     {
+
+        dd($request->all()); // Muestra los datos enviados en la solicitud
         if (!auth()->user()->can('admin_entrenador')) {
             abort(403, 'No tienes permiso para crear clases.');
         }
@@ -68,7 +71,7 @@ class AdminEntrenadorController extends Controller
             ClaseGrupal::create([
                 'nombre' => $request->nombre,
                 'descripcion' => $request->descripcion,
-                'fecha_inicio' => $request->fecha_inicio,
+                'fecha_inicio' => $request->fecha_inicio,  // Asegúrate de que esto esté presente
                 'fecha_fin' => $request->fecha_fin,
                 'fecha' => now(),
                 'duracion' => $request->duracion,
@@ -82,9 +85,7 @@ class AdminEntrenadorController extends Controller
                 ->with('success', 'Clase creada exitosamente.');
     
         } catch (\Exception $e) {
-            // Opcional: log del error
             Log::error('Error al crear la clase grupal: ' . $e->getMessage());
-    
             return redirect()->route('admin-entrenador.dashboard')
                 ->with('error', 'Hubo un error al crear la clase. Intenta nuevamente.');
         }
