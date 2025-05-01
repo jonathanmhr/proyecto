@@ -128,7 +128,7 @@ class AdminEntrenadorController extends Controller
     public function editarAlumno(User $user)
     {
         $clases = ClaseGrupal::all();
-        return view('admin-entrenador.usuarios.editar-alumno', compact('user', 'clases'));
+        return view('admin-entrenador.alumnos.edit', compact('user', 'clases'));
     }
 
     public function actualizarAlumno(Request $request, User $user)
