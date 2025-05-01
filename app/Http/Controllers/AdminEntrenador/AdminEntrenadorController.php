@@ -48,7 +48,10 @@ class AdminEntrenadorController extends Controller
 
     public function store(Request $request)
     {
-        // Validar los datos del formulario
+        if (!auth()->user()->can('admin_entrenador')) {
+            abort(403, 'No tienes permiso para crear clases.');
+        }
+
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
@@ -56,19 +59,20 @@ class AdminEntrenadorController extends Controller
             'entrenador_id' => 'required|exists:users,id',
         ]);
 
-        // Crear una nueva instancia de ClaseGrupal
+        // Verificar si la validación pasó
+        dd($request->all());  // Esto imprimirá los datos recibidos y detendrá la ejecución
+
         $clase = new ClaseGrupal();
         $clase->nombre = $request->nombre;
         $clase->descripcion = $request->descripcion;
         $clase->fecha_inicio = $request->fecha_inicio;
         $clase->entrenador_id = $request->entrenador_id;
 
-        // Guardar la clase en la base de datos
         $clase->save();
 
-        // Redirigir a la página de clases con un mensaje de éxito
         return redirect()->route('admin-entrenador.clases.index')->with('success', 'Clase creada correctamente.');
     }
+
 
     // ---------- Gestión de Entrenadores ----------
     public function verEntrenadores()
