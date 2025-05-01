@@ -63,7 +63,7 @@ class AdminEntrenadorController extends Controller
             'ubicacion' => 'nullable|string|max:100',
             'nivel' => 'nullable|in:principiante,intermedio,avanzado',
             'cupos_maximos' => 'required|integer|min:5|max:20',
-            'entrenador_id' => 'required|exists:users,id|role:entrenador',
+            'entrenador_id' => 'required|exists:users,id',
         ]);
     
         $fechaInicio = Carbon::parse($request->fecha_inicio)->format('Y-m-d');
