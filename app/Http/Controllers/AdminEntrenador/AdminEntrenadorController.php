@@ -22,12 +22,10 @@ class AdminEntrenadorController extends Controller
 
     public function verClases()
     {
-        // Obtener todas las clases
-        $clases = ClaseGrupal::all();
-
-        // Retornar la vista con las clases
+        $clases = ClaseGrupal::with('entrenador')->get(); // O ajusta según lo necesites
         return view('admin-entrenador.clases.index', compact('clases'));
     }
+    
 
     public function create()
     {
@@ -71,7 +69,7 @@ class AdminEntrenadorController extends Controller
     
         $clase->save();
     
-        return redirect()->route('admin-entrenador.clases.index')->with('success', 'Clase creada correctamente.');
+        return redirect()->route('admin-entrenador.dashboard')->with('success', 'Clase creada correctamente.');
     }
 
     // ---------- Gestión de Entrenadores ----------
