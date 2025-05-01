@@ -67,8 +67,8 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
     // QUERYS
-    public function clasesGrupales()
+    public function clases()
     {
-        return $this->hasMany(ClaseGrupal::class, 'entrenador_id');
+        return $this->belongsToMany(ClaseGrupal::class, 'suscripciones', 'id_usuario', 'id_clase');
     }
 }
