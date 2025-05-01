@@ -134,14 +134,14 @@ class AdminEntrenadorController extends Controller
     public function actualizarAlumno(Request $request, User $user)
     {
         $request->validate([
-            'clase_id' => 'nullable|exists:clase_grupals,id',
+            'clases' => 'nullable|array',
+            'clases.*' => 'exists:clases_grupales,id_clase',
         ]);
-
-        // Actualizamos la clase del alumno
-        $user->clase_id = $request->clase_id;
-        $user->save();
-
-        return redirect()->route('admin-entrenador.alumnos')->with('success', 'Clase del alumno actualizada.');
+    
+        // Actualizamos las clases del alumno (como cliente)
+        $user->clases()->sync($request->clases ?? []);
+    
+        return redirect()->route('admin-entrenador.alumnos')->with('success', 'Clases del alumno actualizadas.');
     }
 
     public function eliminarAlumno(User $user)
