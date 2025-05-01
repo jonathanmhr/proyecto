@@ -1,53 +1,73 @@
 <x-app-layout>
     <div class="container mx-auto mt-6">
-        <h2 class="text-2xl font-bold mb-4">Editar Entrenador: {{ $entrenador->name }}</h2>
+        <h2 class="text-2xl font-bold mb-4">Editar Clases de {{ $entrenador->name }}</h2>
 
-        <!-- Formulario de edición del entrenador -->
         <form action="{{ route('admin-entrenador.entrenadores.update', $entrenador) }}" method="POST">
             @csrf
             @method('PUT')
 
-            <div class="bg-white shadow-md rounded-lg p-6 space-y-4">
-                <!-- Nombre (si es necesario editar) -->
-                <div class="space-y-2">
-                    <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-                    <input type="text" name="name" id="name" value="{{ old('name', $entrenador->name) }}"
-                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
+            <div class="bg-white shadow-md rounded-lg p-6 space-y-6">
+
+                <!-- Sección de Clases Asignadas -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Gestión de Clases</label>
+                    
+                    <div class="grid grid-cols-3 gap-4 items-center">
+                        <!-- Clases Disponibles -->
+                        <div>
+                            <h3 class="text-sm font-semibold mb-2">Disponibles</h3>
+                            <select id="clases_disponibles" class="w-full border rounded p-2 h-64" multiple>
+                                @foreach($clases as $clase)
+                                    @if(!$entrenador->clasesGrupales->contains($clase->id))
+                                        <option value="{{ $clase->id }}">{{ $clase->nombre }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="flex flex-col items-center justify-center gap-4">
+                            <button type="button" onclick="moverSeleccion('clases_disponibles', 'clases_asignadas')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">&gt;&gt;</button>
+                            <button type="button" onclick="moverSeleccion('clases_asignadas', 'clases_disponibles')" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">&lt;&lt;</button>
+                        </div>
+
+                        <!-- Clases Asignadas -->
+                        <div>
+                            <h3 class="text-sm font-semibold mb-2">Asignadas</h3>
+                            <select id="clases_asignadas" name="clases[]" class="w-full border rounded p-2 h-64" multiple>
+                                @foreach($entrenador->clasesGrupales as $clase)
+                                    <option value="{{ $clase->id }}">{{ $clase->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-gray-500 mt-2">
+                        Mueve clases entre listas para asignarlas o quitarlas al entrenador. Recuerda que cada clase debe mantener al menos un entrenador.
+                    </p>
                 </div>
 
-                <!-- Correo (si es necesario editar) -->
-                <div class="space-y-2">
-                    <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-                    <input type="email" name="email" id="email" value="{{ old('email', $entrenador->email) }}"
-                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
-                </div>
-
-                <!-- Clases Asignadas -->
-                <div class="space-y-2">
-                    <label for="clases" class="block text-sm font-medium text-gray-700">Clases Asignadas</label>
-                    <select name="clases[]" id="clases" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" multiple>
-                        @foreach($clases as $clase)
-                            <option value="{{ $clase->id }}" 
-                                @if($entrenador->clasesGrupales->contains($clase->id)) selected @endif>
-                                {{ $clase->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <p class="text-sm text-gray-500 mt-1">Selecciona las clases a las que se asignará el entrenador.</p>
-                </div>
-
-                <!-- Botón de Guardar Cambios -->
-                <div class="space-x-4">
-                    <button type="submit" 
-                        class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
+                <!-- Botones -->
+                <div class="flex items-center gap-4">
+                    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
                         Guardar Cambios
                     </button>
-                    <a href="{{ route('admin-entrenador.entrenadores') }}" 
-                        class="text-gray-500 hover:text-gray-700 py-2 px-4 rounded-lg">
+                    <a href="{{ route('admin-entrenador.entrenadores') }}" class="text-gray-600 hover:text-gray-800">
                         Cancelar
                     </a>
                 </div>
             </div>
         </form>
     </div>
+
+    <script>
+        function moverSeleccion(origenId, destinoId) {
+            const origen = document.getElementById(origenId);
+            const destino = document.getElementById(destinoId);
+
+            Array.from(origen.selectedOptions).forEach(option => {
+                destino.appendChild(option);
+            });
+        }
+    </script>
 </x-app-layout>
