@@ -143,7 +143,7 @@ class AdminEntrenadorController extends Controller
     
         // Validar que las clases seleccionadas existen
         $request->validate([
-            'clases' => 'nullable|array|exists:clases_grupales,id',
+            'clases' => 'nullable|array|exists:clases_grupales,id_clase',
         ]);
         
         // Obtener las clases seleccionadas
