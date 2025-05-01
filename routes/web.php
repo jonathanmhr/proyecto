@@ -75,6 +75,7 @@ Route::middleware([
     Route::get('entrenadores', [AdminEntrenadorController::class, 'verEntrenadores'])->name('entrenadores');
     Route::get('entrenadores/{user}/edit', [AdminEntrenadorController::class, 'editarEntrenador'])->name('entrenadores.edit');
     Route::get('entrenadores/create', [AdminEntrenadorController::class, 'crearEntrenador'])->name('entrenadores.create');
+    Route::put('entrenadores/{entrenador}', [AdminEntrenadorController::class, 'actualizarEntrenador'])->name('entrenadores.update');
     Route::post('entrenadores', [AdminEntrenadorController::class, 'storeEntrenador'])->name('entrenadores.store');
     Route::post('entrenadores/{user}/eliminar', [AdminEntrenadorController::class, 'eliminarEntrenador'])->name('entrenadores.eliminar');
 
