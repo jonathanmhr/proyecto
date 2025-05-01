@@ -138,39 +138,35 @@ class AdminEntrenadorController extends Controller
 
     public function actualizarEntrenador(Request $request, User $entrenador)
     {
-        // Validar que las clases seleccionadas existen en clases_grupales.id_clase
         $request->validate([
             'clases' => 'nullable|array',
-            'clases.*' => 'integer|exists:clases_grupales,id_clase',
+            'clases.*' => 'exists:clases_grupales,id_clase',
         ]);
     
-        $clasesSeleccionadas = $request->input('clases', []);
+        $clasesSeleccionadas = $request->clases ?? [];
     
-        // Verificar que no se intente quitar el único entrenador de alguna clase
-        $clasesActuales = $entrenador->clasesGrupales()->pluck('id_clase')->toArray();
-        $clasesAEliminar = array_diff($clasesActuales, $clasesSeleccionadas);
-    
-        foreach ($clasesAEliminar as $claseId) {
-            $clase = ClaseGrupal::where('id_clase', $claseId)->firstOrFail();
-    
-            // Si este entrenador es el único de la clase, no se puede quitar
-            $otrosEntrenadores = User::whereHas('clasesGrupales', function ($query) use ($claseId, $entrenador) {
-                $query->where('id_clase', $claseId)->where('users.id', '!=', $entrenador->id);
-            })->count();
-    
-            if ($otrosEntrenadores === 0) {
-                return redirect()->back()->with('error', "No puedes quitar al entrenador de la clase '{$clase->nombre}' porque es el único asignado.");
+        try {
+            // Comprobar si está quitando el único entrenador de alguna clase
+            foreach ($entrenador->clasesGrupales as $claseActual) {
+                if (!in_array($claseActual->id_clase, $clasesSeleccionadas)) {
+                    // Está intentando quitarse
+                    if ($claseActual->entrenador_id === $entrenador->id) {
+                        return back()->with('error', 'Cada clase debe tener al menos un entrenador.');
+                    }
+                }
             }
+    
+            // Asignar nuevas clases (o vaciar si es un array vacío)
+            $entrenador->clasesGrupales()->sync($clasesSeleccionadas);
+    
+            return redirect()->route('admin-entrenador.entrenadores')
+                             ->with('success', 'Clases del entrenador actualizadas correctamente.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin-entrenador.entrenadores')
+                             ->with('error', 'Error al asignar o desasignar clases.');
         }
-    
-        // Sincronizar las clases asignadas
-        $entrenador->clasesGrupales()->sync($clasesSeleccionadas);
-    
-        return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases del entrenador actualizadas correctamente.');
     }
-    
-    
-    
+   
     // ---------- Gestión de Alumnos ----------
     public function verAlumnos()
     {

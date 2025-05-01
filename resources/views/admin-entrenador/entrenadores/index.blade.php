@@ -1,5 +1,16 @@
 <x-app-layout>
     <div class="container mx-auto mt-6">
+        @if (session('success'))
+            <div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="bg-red-100 text-red-800 px-4 py-2 rounded mb-4">
+                {{ session('error') }}
+            </div>
+        @endif
         <h2 class="text-2xl font-bold mb-4">Gestión de Entrenadores</h2>
 
 
@@ -40,13 +51,14 @@
                                     Editar
                                 </a>
 
-                                <form action="{{ route('admin-entrenador.entrenadores.darBaja', $entrenador->id) }}" method="POST" class="inline">
+                                <form action="{{ route('admin-entrenador.entrenadores.darBaja', $entrenador->id) }}"
+                                    method="POST" class="inline">
                                     @csrf
                                     @method('POST')
                                     <button type="submit" class="text-red-500 hover:text-red-700">
                                         Dar Baja
                                     </button>
-                                </form>                                
+                                </form>
                             </td>
                         </tr>
                     @endforeach

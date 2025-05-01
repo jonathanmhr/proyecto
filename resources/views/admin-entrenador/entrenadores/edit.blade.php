@@ -56,6 +56,7 @@
     </div>
 
     <script>
+        // Función para mover clases entre las listas
         document.getElementById('asignar').addEventListener('click', function () {
             moverSeleccionados('disponibles', 'asignadas');
         });
@@ -64,6 +65,7 @@
             moverSeleccionados('asignadas', 'disponibles');
         });
 
+        // Función para mover las opciones seleccionadas
         function moverSeleccionados(origenId, destinoId) {
             const origen = document.getElementById(origenId);
             const destino = document.getElementById(destinoId);
@@ -74,5 +76,18 @@
                 destino.appendChild(op);
             });
         }
+
+        // Antes de enviar el formulario, aseguramos que las clases asignadas estén en el formulario
+        document.querySelector("form").addEventListener("submit", function () {
+            // Transferimos las opciones seleccionadas de 'asignadas' al campo de clases que se enviará
+            const clasesAsignadas = Array.from(document.getElementById("asignadas").options).map(option => option.value);
+
+            // Añadimos las clases asignadas al formulario como un campo oculto
+            let inputClases = document.createElement("input");
+            inputClases.setAttribute("type", "hidden");
+            inputClases.setAttribute("name", "clases[]");
+            inputClases.setAttribute("value", clasesAsignadas.join(","));
+            this.appendChild(inputClases);
+        });
     </script>
 </x-app-layout>
