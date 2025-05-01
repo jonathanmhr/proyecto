@@ -139,28 +139,29 @@ class AdminEntrenadorController extends Controller
     public function actualizarEntrenador(Request $request, User $entrenador)
     {
         Log::info('Datos recibidos para actualizar las clases:', $request->all());
-
+    
         // Validar las clases seleccionadas
         $request->validate([
             'clases' => 'nullable|array|exists:clases_grupales,id_clase',
         ]);
-
+        
         // Obtener las clases seleccionadas
         $clasesSeleccionadas = $request->input('clases', []);
-
+    
         Log::info('Clases seleccionadas:', $clasesSeleccionadas);
-
-        // Sincronizar clases del entrenador si hay clases seleccionadas
+    
+        // Si hay clases seleccionadas, las asignamos
         if (!empty($clasesSeleccionadas)) {
-            // Asignar o re-asignar las clases seleccionadas
-            $entrenador->clasesGrupales()->sync($clasesSeleccionadas);
+            // Asignar las clases seleccionadas (usamos 'clases()' que es 'belongsToMany')
+            $entrenador->clases()->sync($clasesSeleccionadas);
             return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases asignadas correctamente.');
         }
-
-        // Si no se seleccionaron clases, desasignar todas las clases
-        $entrenador->clasesGrupales()->detach();
+    
+        // Si no se seleccionaron clases, desasignar todas las clases (usamos 'clases()' que es 'belongsToMany')
+        $entrenador->clases()->detach();
         return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases desasignadas correctamente.');
     }
+    
 
     // ---------- Gestión de Alumnos ----------
     public function verAlumnos()
