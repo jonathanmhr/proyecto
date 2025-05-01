@@ -15,18 +15,20 @@
 
         <h1 class="text-2xl font-bold mb-6">Listado de Clases</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <!-- Botón Crear Clase (izquierda) -->
             <a href="{{ route('admin-entrenador.clases.create') }}"
-                class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
+                class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
                 <i data-feather="plus-circle" class="w-5 h-5"></i> Crear Clase
             </a>
-        </div>
-        <div class="flex justify-end">
+        
+            <!-- Botón Volver (derecha) -->
             <a href="{{ route('admin-entrenador.dashboard') }}"
-                class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold rounded-lg transition w-[150px]">
-                <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
+                class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
+                <i data-feather="arrow-left" class="w-4 h-4"></i> Volver
             </a>
         </div>
+        
 
         <div class="overflow-x-auto bg-white shadow rounded-xl p-4">
             <table class="min-w-full table-auto">
