@@ -14,17 +14,16 @@
 
 
         <h1 class="text-2xl font-bold mb-6">Listado de Clases</h1>
-
-        <a href="{{ route('admin-entrenador.dashboard') }}"
-            class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold rounded-lg transition">
-            <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
-        </a>
-
+        
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
             <a href="{{ route('admin-entrenador.clases.create') }}"
                 class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                 <i data-feather="plus-circle" class="w-5 h-5"></i> Crear Clase
             </a>
+            <a href="{{ route('admin-entrenador.dashboard') }}"
+            class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold rounded-lg transition">
+            <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
+        </a>
         </div>
 
         <div class="overflow-x-auto bg-white shadow rounded-xl p-4">
