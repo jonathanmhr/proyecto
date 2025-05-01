@@ -16,8 +16,18 @@ class ClaseGrupal extends Model
     protected $table = 'clases_grupales';
 
     // Atributos asignables masivamente
-    protected $fillable = ['nombre', 'descripcion', 'cupos_maximos'];
-
+    protected $fillable = [
+        'nombre',
+        'descripcion',
+        'cupos_maximos',
+        'fecha_inicio',
+        'fecha_fin',
+        'fecha',
+        'duracion',
+        'ubicacion',
+        'nivel',
+        'entrenador_id',
+    ];
     // Si la relación existe, se define aquí
     public function usuarios()
     {
