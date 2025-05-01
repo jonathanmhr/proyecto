@@ -3,17 +3,20 @@
         <h2 class="text-2xl font-bold mb-4">Gestión de Entrenadores</h2>
 
 
-        <div class="mb-4">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <!-- Botón Agregar Entrenador -->
             <a href="{{ route('admin-entrenador.entrenadores.create') }}"
-                class="inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700">
-                Agregar Entrenador
+                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
+                <i data-feather="user-plus" class="w-4 h-4"></i> Agregar
             </a>
-
+        
+            <!-- Botón Volver -->
             <a href="{{ route('admin-entrenador.dashboard') }}"
-            class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
-            <i data-feather="arrow-left" class="w-4 h-4"></i> Volver
-        </a>
+                class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
+                <i data-feather="arrow-left" class="w-4 h-4"></i> Volver
+            </a>
         </div>
+        
 
         <!-- Tabla de Entrenadores -->
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
