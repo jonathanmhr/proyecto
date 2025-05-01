@@ -48,10 +48,12 @@ class AdminEntrenadorController extends Controller
 
     public function store(Request $request)
     {
+        dd($request->all()); // Esto nos ayudará a ver qué datos llegan al servidor
+    
         if (!auth()->user()->can('admin_entrenador')) {
             abort(403, 'No tienes permiso para crear clases.');
         }
-
+    
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
@@ -60,7 +62,7 @@ class AdminEntrenadorController extends Controller
             'fecha_fin' => 'required|date',
             'entrenador_id' => 'required|exists:users,id',
         ]);
-
+    
         $clase = new ClaseGrupal();
         $clase->nombre = $request->nombre;
         $clase->descripcion = $request->descripcion;
@@ -68,12 +70,12 @@ class AdminEntrenadorController extends Controller
         $clase->fecha_inicio = Carbon::parse($request->fecha_inicio);
         $clase->fecha_fin = Carbon::parse($request->fecha_fin);
         $clase->entrenador_id = $request->entrenador_id;
-
+    
         $clase->save();
-
+    
         return redirect()->route('admin-entrenador.clases.index')->with('success', 'Clase creada correctamente.');
     }
-
+    
 
     // ---------- Gestión de Entrenadores ----------
     public function verEntrenadores()
