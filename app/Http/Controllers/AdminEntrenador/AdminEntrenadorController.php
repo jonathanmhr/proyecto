@@ -69,14 +69,16 @@ class AdminEntrenadorController extends Controller
         $fechaInicio = Carbon::parse($request->fecha_inicio)->format('Y-m-d');
         $fechaFin = Carbon::parse($request->fecha_fin)->format('Y-m-d');
 
-        Log::info('Fecha inicio: ' . $request->fecha_inicio);
-        Log::info('Fecha fin: ' . $request->fecha_fin);
+        //Log::info('Fecha inicio: ' . $request->fecha_inicio);
+        //Log::info('Fecha fin: ' . $request->fecha_fin);
+
+        //dd($fechaInicio, $fechaFin);
 
         try {
             ClaseGrupal::create([
                 'nombre' => $request->nombre,
                 'descripcion' => $request->descripcion,
-                'fecha_inicio' => $fechaInicio,  // Usa la fecha formateada
+                'fecha_inicio' => $fechaInicio,   // Usa la fecha formateada
                 'fecha_fin' => $fechaFin,        // Usa la fecha formateada
                 'fecha' => now(),
                 'duracion' => $request->duracion,

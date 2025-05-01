@@ -48,14 +48,8 @@
                         class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
 
-                @php
-                    $hoy = now()->format('Y-m-d');
-                    $maxFecha = now()->addMonths(3)->format('Y-m-d');
-                @endphp
-
                 <!-- Fecha de inicio -->
                 <div class="mb-4">
-                    <label for="fecha_inicio" class="block text-gray-700">Fecha de Inicio</label>
                     <input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ old('fecha_inicio', $hoy) }}"
                     min="{{ $hoy }}" max="{{ $maxFecha }}" class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
@@ -64,7 +58,7 @@
                 <div class="mb-4">
                     <label for="fecha_fin" class="block text-gray-700">Fecha de Fin</label>
                     <input type="date" name="fecha_fin" id="fecha_fin" min="{{ $hoy }}"
-                        max="{{ $maxFecha }}" class="w-full p-3 border border-gray-300 rounded" required>
+                    max="{{ $maxFecha }}" class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
 
                 <!-- Capacidad máxima -->
