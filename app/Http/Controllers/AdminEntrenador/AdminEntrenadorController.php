@@ -52,7 +52,7 @@ class AdminEntrenadorController extends Controller
 
         dd(auth()->user()->roles, auth()->user()->abilities);
 
-        if (!auth()->user()->can('admin-entrenador')) {
+        if (!auth()->user()->can('admin_entrenador')) {
             abort(403, 'No tienes permiso para crear clases.');
         }
     
