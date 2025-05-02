@@ -120,5 +120,5 @@ Route::middleware([
 // ----------------------
 Route::prefix('cliente')->name('cliente.')->group(function () {
     Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
-    Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
+    Route::post('clases/{id}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
 });
