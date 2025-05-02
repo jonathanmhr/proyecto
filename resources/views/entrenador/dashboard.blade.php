@@ -48,7 +48,7 @@
                         <div class="text-sm text-green-700">{{ $entrenamiento->descripcion }}</div>
                         <div class="text-sm text-green-700">Fecha: {{ $entrenamiento->fecha->format('d/m/Y') }}</div>
                         <!-- Botón de acción para ver detalles del entrenamiento -->
-                        <a href="{{ route('entrenador.entrenamiento.show', $entrenamiento->id) }}"
+                        <a href="{{ route('entrenador.dashboard') }}"
                             class="text-green-500 hover:underline">Ver Detalles</a>
                     </div>
                 @empty
