@@ -89,8 +89,6 @@ Route::middleware([
     Route::post('clases/{clase}/aceptar/{user}', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('clases.aceptar');
     Route::post('clases/{clase}/rechazar/{user}', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('clases.rechazar');
     
-
-
     // Gestión de suscripciones
     Route::get('users/{id}/suscripciones', [UserController::class, 'suscripciones'])->name('users.suscripciones');
 });
@@ -115,7 +113,6 @@ Route::middleware([
     // Gestión de alumnos en clases
     Route::post('clases/{clase}/{usuario}/aceptar', [ClaseGrupalController::class, 'aceptarSolicitud'])->name('entrenador.suscripcion.aceptar');
     Route::post('clases/{clase}/{usuario}/rechazar', [ClaseGrupalController::class, 'rechazarSolicitud'])->name('entrenador.suscripcion.rechazar');
-
 
 });
 
