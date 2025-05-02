@@ -60,8 +60,7 @@
 
                                             <form action="{{ route('cliente.clases.unirse', $clase->id) }}" method="POST">
                                                 @csrf
-                                                <button type="submit"
-                                                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">
+                                                <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">
                                                     Confirmar
                                                 </button>
                                             </form>
