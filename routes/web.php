@@ -62,37 +62,36 @@ Route::middleware([
 ])->prefix('admin-entrenador')->name('admin-entrenador.')->group(function () {
     Route::get('/', [AdminEntrenadorController::class, 'dashboard'])->name('dashboard');
     
-    // Rutas para la gestión de clases
+    // Gestión de clases
     Route::get('clases', [AdminEntrenadorController::class, 'verClases'])->name('clases.index');
     Route::get('clases/create', [AdminEntrenadorController::class, 'create'])->name('clases.create');
     Route::post('clases', [AdminEntrenadorController::class, 'store'])->name('clases.store');
     Route::get('clases/{clase}/edit', [AdminEntrenadorController::class, 'edit'])->name('clases.edit');
     Route::put('clases/{clase}', [AdminEntrenadorController::class, 'update'])->name('clases.update');
     Route::delete('clases/{clase}', [AdminEntrenadorController::class, 'destroy'])->name('clases.destroy');
+    Route::put('clase/{id}/aprobar', [AdminEntrenadorController::class, 'aprobarCambios'])->name('clases.aprobar');
 
-    // Aprobar cambios pendientes en clase
-    Route::put('/admin/clase/{id}/aprobar', [AdminEntrenadorController::class, 'aprobarCambios'])->name('admin.clase.aprobar');
-    
     // Gestión de entrenadores
-    Route::get('entrenadores', [AdminEntrenadorController::class, 'verEntrenadores'])->name('entrenadores');
-    Route::get('entrenadores/{entrenador}/edit', [AdminEntrenadorController::class, 'editarEntrenador'])->name('entrenadores.edit');
+    Route::get('entrenadores', [AdminEntrenadorController::class, 'verEntrenadores'])->name('entrenadores.index');
     Route::get('entrenadores/create', [AdminEntrenadorController::class, 'crearEntrenador'])->name('entrenadores.create');
-    Route::put('entrenadores/{entrenador}', [AdminEntrenadorController::class, 'actualizarEntrenador'])->name('entrenadores.update');
     Route::post('entrenadores', [AdminEntrenadorController::class, 'storeEntrenador'])->name('entrenadores.store');
+    Route::get('entrenadores/{entrenador}/edit', [AdminEntrenadorController::class, 'editarEntrenador'])->name('entrenadores.edit');
+    Route::put('entrenadores/{entrenador}', [AdminEntrenadorController::class, 'actualizarEntrenador'])->name('entrenadores.update');
     Route::post('entrenadores/{entrenador}/dar-baja', [AdminEntrenadorController::class, 'darBajaEntrenador'])->name('entrenadores.darBaja');
 
     // Gestión de alumnos
-    Route::get('alumnos', [AdminEntrenadorController::class, 'verAlumnos'])->name('alumnos');
-    Route::get('alumnos/{user}/editar', [AdminEntrenadorController::class, 'editarAlumno'])->name('alumnos.editar');
-    Route::put('alumnos/{user}', [AdminEntrenadorController::class, 'actualizarAlumno'])->name('alumnos.actualizar');
-    Route::post('alumnos/{user}/eliminar', [AdminEntrenadorController::class, 'eliminarAlumno'])->name('alumnos.eliminar');
+    Route::get('alumnos', [AdminEntrenadorController::class, 'verAlumnos'])->name('alumnos.index');
+    Route::get('alumnos/{user}/editar', [AdminEntrenadorController::class, 'editarAlumno'])->name('alumnos.edit');
+    Route::put('alumnos/{user}', [AdminEntrenadorController::class, 'actualizarAlumno'])->name('alumnos.update');
+    Route::post('alumnos/{user}/quitar-de-clase/{claseId}', [AdminEntrenadorController::class, 'quitarDeClase'])->name('alumnos.quitarDeClase');
+
+    // Aceptar o rechazar solicitudes de clases
     Route::post('clases/{clase}/aceptar/{user}', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('clases.aceptar');
     Route::post('clases/{clase}/rechazar/{user}', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('clases.rechazar');
-    
-    // Gestión de suscripciones
+
+    // Gestión de suscripciones de usuarios
     Route::get('users/{id}/suscripciones', [UserController::class, 'suscripciones'])->name('users.suscripciones');
 });
-
 
 // ----------------------
 // RUTAS ENTRENADOR (gestionar sus propias clases y usuarios)
@@ -105,19 +104,21 @@ Route::middleware([
     // Dashboard del entrenador
     Route::get('/dashboard', [EntrenadorController::class, 'index'])->name('dashboard');
 
-    // Clases
-    Route::get('clases', [EntrenadorController::class, 'index'])->name('clase.index');
-    Route::get('clase/{id}/edit', [EntrenadorController::class, 'editClase'])->name('clase.edit');
-    Route::put('clase/{id}', [EntrenadorController::class, 'updateClase'])->name('clase.update');
+    // Clases del entrenador
+    Route::get('clases', [EntrenadorController::class, 'index'])->name('clases.index');
+    Route::get('clases/{id}/edit', [EntrenadorController::class, 'editClase'])->name('clases.edit');
+    Route::put('clases/{id}', [EntrenadorController::class, 'updateClase'])->name('clases.update');
 
-    // Gestión de alumnos en clases
-    Route::post('clases/{clase}/{usuario}/aceptar', [ClaseGrupalController::class, 'aceptarSolicitud'])->name('entrenador.suscripcion.aceptar');
-    Route::post('clases/{clase}/{usuario}/rechazar', [ClaseGrupalController::class, 'rechazarSolicitud'])->name('entrenador.suscripcion.rechazar');
-
+    // Gestión de alumnos en sus clases (aceptar o rechazar solicitudes)
+    Route::post('clases/{claseId}/aceptar/{userId}', [EntrenadorController::class, 'aceptarSolicitud'])->name('clases.aceptar');
+    Route::post('clases/{claseId}/rechazar/{userId}', [EntrenadorController::class, 'rechazarSolicitud'])->name('clases.rechazar');
 });
+
 
 // ----------------------
 // RUTAS CLIENTE (ver clases y unirse)
 // ----------------------
-Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
-Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
+Route::prefix('cliente')->name('cliente.')->group(function () {
+    Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
+    Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
+});

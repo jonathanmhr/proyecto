@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\ClaseGrupal;
 
-use App\Models\ClaseGrupal;
-use App\Models\Suscripcion;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\ClaseGrupal;
+use App\Models\Suscripcion;
+use App\Models\User;
 
 class ClaseGrupalController extends Controller
 {
@@ -14,28 +15,18 @@ class ClaseGrupalController extends Controller
     {
         $user = auth()->user();
 
-        // Mostrar clases según el rol
-        if ($user->can('admin_entrenador')) {
+        if ($user->isAn('admin_entrenador')) {
             $clases = ClaseGrupal::all();
-        } elseif ($user->can('entrenador')) {
+        } elseif ($user->isAn('entrenador')) {
             $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
         } else {
-            // Mostrar solo clases con cupo disponible, fecha de inicio futura o actual
             $clases = ClaseGrupal::withCount('usuarios')
                 ->whereDate('fecha_inicio', '>=', now())
-                ->get()
-                ->filter(function ($clase) {
-                    return $clase->usuarios_count < $clase->cupos_maximos;
-                });
+                ->havingRaw('usuarios_count < cupos_maximos')
+                ->get();
         }
 
         return view('clases.index', compact('clases'));
-    }
-
-    // Mostrar el formulario para crear una nueva clase
-    public function create()
-    {
-        return redirect()->route('clases.index');
     }
 
     // Permitir que un usuario se una a una clase
@@ -76,30 +67,24 @@ class ClaseGrupalController extends Controller
     // Aceptar la solicitud de un usuario para unirse a una clase
     public function aceptarSolicitud($claseId, $usuarioId)
     {
-        // Encuentra la clase y el usuario por su ID
         $clase = ClaseGrupal::findOrFail($claseId);
         $usuario = User::findOrFail($usuarioId);
 
-        // Actualiza el estado de la suscripción en la tabla pivote
         $clase->usuarios()->updateExistingPivot($usuario->id, ['estado' => 'aceptado']);
 
-        // Redirige de nuevo a la vista de edición de la clase con un mensaje de éxito
-        return redirect()->route('entrenador.clase.edit', ['clase' => $clase->id_clase])
+        return redirect()->route('entrenador.clases.edit', ['id' => $clase->id_clase])
             ->with('success', 'La solicitud del alumno ha sido aceptada');
     }
 
-    // Método para rechazar la solicitud
+    // Rechazar la solicitud de un usuario
     public function rechazarSolicitud($claseId, $usuarioId)
     {
-        // Encuentra la clase y el usuario por su ID
         $clase = ClaseGrupal::findOrFail($claseId);
         $usuario = User::findOrFail($usuarioId);
 
-        // Actualiza el estado de la suscripción en la tabla pivote
         $clase->usuarios()->updateExistingPivot($usuario->id, ['estado' => 'rechazado']);
 
-        // Redirige de nuevo a la vista de edición de la clase con un mensaje de error
-        return redirect()->route('entrenador.clase.edit', ['clase' => $clase->id_clase])
+        return redirect()->route('entrenador.clases.edit', ['id' => $clase->id_clase])
             ->with('error', 'La solicitud del alumno ha sido rechazada');
     }
 }

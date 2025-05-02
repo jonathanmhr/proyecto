@@ -21,8 +21,8 @@ class AdminEntrenadorController extends Controller
     public function dashboard()
     {
         $totalClases = ClaseGrupal::count();
-        $totalEntrenadores = Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
-        $totalAlumnos = Bouncer::role()->where('name', 'cliente')->first()->users()->count();
+        $totalEntrenadores = Bouncer::role('entrenador')->users()->count();
+        $totalAlumnos = Bouncer::role('cliente')->users()->count();
 
         return view('admin-entrenador.dashboard', compact('totalClases', 'totalEntrenadores', 'totalAlumnos'));
     }
@@ -61,7 +61,8 @@ class AdminEntrenadorController extends Controller
         if ($user->isAn('entrenador')) {
             $user->removeRole('entrenador');
             $user->assignRole('cliente');
-            $user->clasesGrupales()->detach();
+            $user->clasesGrupales()->detach(); // Desasignar clases
+            $user->suscripciones()->delete(); // Eliminar suscripciones
 
             return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Entrenador dado de baja correctamente, ahora es un cliente.');
         }
@@ -82,7 +83,6 @@ class AdminEntrenadorController extends Controller
         ]);
 
         $clasesSeleccionadas = $request->input('clases', []);
-
         if (!empty($clasesSeleccionadas)) {
             $entrenador->clases()->sync($clasesSeleccionadas);
             return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases asignadas correctamente.');
@@ -113,6 +113,35 @@ class AdminEntrenadorController extends Controller
 
         return redirect()->route('admin-entrenador.alumnos')->with('success', 'Clases del alumno actualizadas.');
     }
+
+    public function quitarDeClase(User $user, $claseId)
+    {
+        $clase = ClaseGrupal::findOrFail($claseId);
+    
+        // Verificamos si el alumno está inscrito en la clase
+        if (!$user->clases->contains($clase)) {
+            return redirect()->route('admin-entrenador.alumnos.index')->with('error', 'El alumno no está inscrito en esta clase.');
+        }
+    
+        // Desvinculamos al alumno de la clase
+        $user->clases()->detach($claseId);
+    
+        // Cancelar la suscripción (si existe)
+        $suscripcion = Suscripcion::where('id_usuario', $user->id)
+            ->where('id_clase', $claseId)
+            ->where('estado', Suscripcion::ESTADO_ACTIVO) // Solo si está activa
+            ->first();
+    
+        if ($suscripcion) {
+            // Opcionalmente, puedes cambiar el estado de la suscripción a 'inactivo' si no quieres eliminarla completamente
+            $suscripcion->estado = Suscripcion::ESTADO_INACTIVO;
+            $suscripcion->save();
+            // Si prefieres eliminarla, usa $suscripcion->delete(); en lugar de $suscripcion->save();
+        }
+    
+        return redirect()->route('admin-entrenador.alumnos.index')->with('success', 'Alumno quitado de la clase y su suscripción cancelada.');
+    }
+
 
     // ========================================
     // Gestión de Clases
@@ -217,11 +246,7 @@ class AdminEntrenadorController extends Controller
 
     public function aceptarSolicitud($claseId, $usuarioId)
     {
-        $usuario = Auth::user();
-
-        if (!$usuario->can('admin_entrenador')) {
-            abort(403, 'No tienes permisos para aceptar solicitudes.');
-        }
+        $this->autorizarAdmin(); // Verificación centralizada
 
         $suscripcion = Suscripcion::where('id_clase', $claseId)
             ->where('id_usuario', $usuarioId)
@@ -243,11 +268,7 @@ class AdminEntrenadorController extends Controller
 
     public function rechazarSolicitud($claseId, $usuarioId)
     {
-        $usuario = Auth::user();
-
-        if (!$usuario->can('admin_entrenador')) {
-            abort(403, 'No tienes permisos para rechazar solicitudes.');
-        }
+        $this->autorizarAdmin(); // Verificación centralizada
 
         $suscripcion = Suscripcion::where('id_clase', $claseId)
             ->where('id_usuario', $usuarioId)
@@ -268,9 +289,17 @@ class AdminEntrenadorController extends Controller
         $clase = ClaseGrupal::findOrFail($id);
 
         // Marcar que los cambios fueron aprobados
-        $clase->cambio_pendiente = false;
+        $clase->cambio_pendiente = false; // Asegúrate de que este campo exista en la base de datos
         $clase->save();
 
-        return redirect()->route('admin.clases.index')->with('success', 'Cambios aprobados exitosamente.');
+        return redirect()->route('admin-entrenador.clases.index')->with('success', 'Cambios aprobados exitosamente.');
+    }
+
+    // Método centralizado para verificar permisos
+    protected function autorizarAdmin()
+    {
+        if (!auth()->user()->can('admin_entrenador')) {
+            abort(403, 'No tienes permisos para realizar esta acción.');
+        }
     }
 }
