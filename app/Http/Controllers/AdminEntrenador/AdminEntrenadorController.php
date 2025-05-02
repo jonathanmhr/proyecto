@@ -224,7 +224,7 @@ class AdminEntrenadorController extends Controller
         return view('admin-entrenador.clases.edit', compact('clase', 'entrenadores'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, ClaseGrupal $clase)
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
@@ -237,9 +237,8 @@ class AdminEntrenadorController extends Controller
             'cupos_maximos' => 'required|integer|min:5|max:20',
             'entrenador_id' => 'required|exists:users,id',
         ]);
-
-        $clase = ClaseGrupal::findOrFail($id);
-
+    
+        // Ya no necesitas buscar la clase, Laravel la inyecta automáticamente
         $clase->update([
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
@@ -251,7 +250,7 @@ class AdminEntrenadorController extends Controller
             'cupos_maximos' => $request->cupos_maximos,
             'entrenador_id' => $request->entrenador_id,
         ]);
-
+    
         return redirect()->route('admin-entrenador.clases.index')->with('success', 'Clase actualizada correctamente.');
-    }
+    }    
 }

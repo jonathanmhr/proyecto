@@ -2,7 +2,7 @@
     <div class="container mx-auto px-4 py-6">
         <h1 class="text-2xl font-bold mb-6">Editar Clase: {{ $clase->nombre }}</h1>
 
-        <form action="{{ route('admin-entrenador.clases.update', ['clase' => $clase->id]) }}" method="POST">
+        <form action="{{ route('admin-entrenador.clases.update', $clase) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="bg-white shadow rounded-xl p-6">
