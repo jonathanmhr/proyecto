@@ -48,7 +48,7 @@ class EntrenadorController extends Controller
         $clase = ClaseGrupal::findOrFail($id);
         return view('entrenador.clase.edit', compact('clase'));
     }
-
+    
     public function updateClase(Request $request, $id)
     {
         $clase = ClaseGrupal::findOrFail($id);
