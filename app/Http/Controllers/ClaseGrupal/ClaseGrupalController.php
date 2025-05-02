@@ -74,54 +74,32 @@ class ClaseGrupalController extends Controller
     }
 
     // Aceptar la solicitud de un usuario para unirse a una clase
-    public function aceptarSolicitud(Request $request, ClaseGrupal $clase)
+    public function aceptarSolicitud($claseId, $usuarioId)
     {
-        $usuario = auth()->user();
+        // Encuentra la clase y el usuario por su ID
+        $clase = ClaseGrupal::findOrFail($claseId);
+        $usuario = User::findOrFail($usuarioId);
 
-        // Verifica que el entrenador actual sea el dueño de la clase
-        if ($clase->entrenador_id !== $usuario->id || !$usuario->can('entrenador-access')) {
-            abort(403, 'No tienes permisos para aceptar solicitudes en esta clase.');
-        }
+        // Actualiza el estado de la suscripción en la tabla pivote
+        $clase->usuarios()->updateExistingPivot($usuario->id, ['estado' => 'aceptado']);
 
-        $suscripcion = Suscripcion::where('id_clase', $clase->id_clase)
-            ->where('id_usuario', $request->id_usuario)
-            ->where('estado', 'pendiente')
-            ->first();
-
-        if (!$suscripcion) {
-            return redirect()->back()->with('error', 'No se encontró la solicitud pendiente.');
-        }
-
-        $suscripcion->update([
-            'estado' => 'activo',
-            'fecha_inicio' => now(),
-            'fecha_fin' => now()->addMonth(),
-        ]);
-
-        return redirect()->back()->with('success', 'Solicitud aceptada correctamente.');
+        // Redirige de nuevo a la vista de edición de la clase con un mensaje de éxito
+        return redirect()->route('entrenador.clase.edit', ['clase' => $clase->id_clase])
+            ->with('success', 'La solicitud del alumno ha sido aceptada');
     }
 
-    // Rechazar la solicitud de un usuario para unirse a una clase
-    public function rechazarSolicitud(Request $request, ClaseGrupal $clase)
+    // Método para rechazar la solicitud
+    public function rechazarSolicitud($claseId, $usuarioId)
     {
-        $usuario = auth()->user();
+        // Encuentra la clase y el usuario por su ID
+        $clase = ClaseGrupal::findOrFail($claseId);
+        $usuario = User::findOrFail($usuarioId);
 
-        // Verifica que el entrenador actual sea el dueño de la clase
-        if ($clase->entrenador_id !== $usuario->id || !$usuario->can('entrenador-access')) {
-            abort(403, 'No tienes permisos para rechazar solicitudes en esta clase.');
-        }
+        // Actualiza el estado de la suscripción en la tabla pivote
+        $clase->usuarios()->updateExistingPivot($usuario->id, ['estado' => 'rechazado']);
 
-        $suscripcion = Suscripcion::where('id_clase', $clase->id_clase)
-            ->where('id_usuario', $request->id_usuario)
-            ->where('estado', 'pendiente')
-            ->first();
-
-        if (!$suscripcion) {
-            return redirect()->back()->with('error', 'No se encontró la solicitud pendiente.');
-        }
-
-        $suscripcion->delete();
-
-        return redirect()->back()->with('success', 'Solicitud rechazada correctamente.');
+        // Redirige de nuevo a la vista de edición de la clase con un mensaje de error
+        return redirect()->route('entrenador.clase.edit', ['clase' => $clase->id_clase])
+            ->with('error', 'La solicitud del alumno ha sido rechazada');
     }
 }
