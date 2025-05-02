@@ -3,69 +3,55 @@
 namespace App\Http\Controllers\ClaseGrupal;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\ClaseGrupal;
+use Illuminate\Http\Request;
 use App\Models\Suscripcion;
-use App\Models\User;
 
 class ClaseGrupalController extends Controller
 {
-    // Mostrar todas las clases disponibles
     public function index()
     {
         $user = auth()->user();
 
-        if ($user->isAn('admin_entrenador')) {
+        if ($user->hasRole('admin_entrenador')) {
+            // Admin-entrenador: Ve todas las clases
             $clases = ClaseGrupal::all();
-        } elseif ($user->isAn('entrenador')) {
+        } elseif ($user->hasRole('entrenador')) {
+            // Entrenador: Ve solo sus propias clases
             $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
         } else {
-            $clases = ClaseGrupal::withCount('usuarios')
-            ->whereDate('fecha_inicio', '>=', now())
-            ->get()
-            ->filter(function ($clase) {
-                return $clase->usuarios_count < $clase->cupos_maximos;
-            });
+            // Cliente: Ve solo clases futuras con cupos disponibles
+            $clases = ClaseGrupal::whereDate('fecha_inicio', '>=', now())
+                ->where('cupos_maximos', '>', 0) // Solo clases con cupos disponibles
+                ->get();
         }
 
         return view('clases.index', compact('clases'));
     }
 
-    // Permitir que un usuario se una a una clase
     public function unirse($id)
     {
-        $clase = ClaseGrupal::findOrFail($id); // Encuentra la clase por su ID
-        $usuario = auth()->user();
-        
-        // Verificar si el usuario ya está inscrito en la clase
-        if ($clase->usuarios()->where('id_usuario', $usuario->id)->exists()) {
-            return redirect()->route('dashboard')->with('info', 'Ya estás inscrito en esta clase.');
+        $clase = ClaseGrupal::findOrFail($id);
+        $user = auth()->user();
+
+        if ($clase->usuarios()->where('id_usuario', $user->id)->exists()) {
+            return redirect()->route('clases.index')->with('info', 'Ya estás inscrito en esta clase.');
         }
-        
-        // Verificar si la clase ya está completa
+
         if ($clase->usuarios()->count() >= $clase->cupos_maximos) {
-            return redirect()->route('clases.index')->with('error', 'Esta clase ya está completa.');
+            return redirect()->route('clases.index')->with('error', 'Esta clase ya está llena.');
         }
-        
-        // Verificar si la clase ya ha comenzado
-        if ($clase->fecha_inicio < now()) {
-            return redirect()->route('clases.index')->with('error', 'No puedes inscribirte en una clase ya iniciada.');
-        }
-        
-        // Crear una suscripción para el usuario
-        Suscripcion::create([
-            'id_usuario' => $usuario->id,
-            'id_clase' => $clase->id_clase,
+
+        // Crear la suscripción
+        $user->suscripciones()->create([
+            'clase_id' => $clase->id,
             'estado' => 'activo',
-            'fecha_inicio' => now(),
-            'fecha_fin' => now()->addMonths(1),
         ]);
-        
-        // Redirigir al usuario a su dashboard con un mensaje de éxito
-        return redirect()->route('dashboard')->with('success', 'Te has unido a la clase con éxito.');
+
+        return redirect()->route('clases.index')->with('success', 'Te has unido a la clase.');
     }
 
-    // Mostrar suscripciones del usuario
+    // Mostrar las suscripciones del usuario
     public function suscripciones()
     {
         $suscripciones = Suscripcion::where('id_usuario', auth()->user()->id)->get();
