@@ -28,7 +28,8 @@
                     <div class="border-b border-blue-200 pb-2 mb-2">
                         <div class="text-blue-900 font-medium">{{ $clase->nombre }}</div>
                         <div class="text-sm text-blue-700">{{ $clase->descripcion }}</div>
-                        <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}</div>
+                        <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}
+                        </div>
                     </div>
                 @empty
                     <p class="text-blue-600">No tienes clases programadas.</p>
@@ -55,12 +56,20 @@
                 @forelse ($suscripciones as $suscripcion)
                     <div class="border-b border-purple-200 pb-2 mb-2">
                         <div class="text-purple-900 font-medium">{{ $suscripcion->clase->nombre }}</div>
-                        <div class="text-sm text-purple-700">Suscrito el {{ $suscripcion->created_at->format('d/m/Y') }}</div>
+                        <div class="text-sm text-purple-700">
+                            Suscrito el
+                            @if ($suscripcion->created_at)
+                                {{ $suscripcion->created_at->format('d/m/Y') }}
+                            @else
+                                Fecha no disponible
+                            @endif
+                        </div>
                     </div>
                 @empty
                     <p class="text-purple-600">No hay suscripciones activas.</p>
                 @endforelse
             </div>
+
         </div>
     </div>
 </x-app-layout>
