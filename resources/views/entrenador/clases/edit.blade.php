@@ -33,7 +33,8 @@
                         action="{{ route('entrenador.suscripcion.aceptar', ['clase' => $clase->id_clase, 'usuario' => $usuario->id]) }}"
                         method="POST" class="inline-block">
                         @csrf
-                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Aceptar</button>
+                        <button type="submit"
+                            class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Aceptar</button>
                     </form>
 
                     <!-- Formulario para rechazar -->
@@ -41,17 +42,19 @@
                         action="{{ route('entrenador.suscripcion.rechazar', ['clase' => $clase->id_clase, 'usuario' => $usuario->id]) }}"
                         method="POST" class="inline-block ml-4">
                         @csrf
-                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Rechazar</button>
+                        <button type="submit"
+                            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Rechazar</button>
                     </form>
-                </div>
-            @empty
-                <p class="text-blue-600">No hay alumnos suscritos a esta clase.</p>
+        </div>
+        @empty
+            <p class="text-blue-600">No hay alumnos suscritos a esta clase.</p>
             @endforelse
         </div>
 
         <!-- Botón para regresar -->
         <div class="mt-6">
-            <a href="{{ route('entrenador.clase.index') }}" class="text-blue-500 hover:underline">Volver a la lista de clases</a>
+            <a href="{{ route('entrenador.clase.index') }}" class="text-blue-500 hover:underline">Volver a la lista de
+                clases</a>
         </div>
-    </div>
-</x-app-layout>
+        </div>
+    </x-app-layout>
