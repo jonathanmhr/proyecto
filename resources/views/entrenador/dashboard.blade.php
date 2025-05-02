@@ -74,7 +74,7 @@
                             @endif
                         </div>
                         <!-- Botón para ver detalles de suscripción -->
-                        <a href="{{ route('entrenador.suscripcion.show', $suscripcion->id) }}"
+                        <a href="{{ route('entrenador.dashboard') }}"
                             class="text-purple-500 hover:underline">Ver detalles</a>
                     </div>
                 @empty
