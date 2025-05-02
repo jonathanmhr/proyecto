@@ -12,40 +12,35 @@ class EntrenadorController extends Controller
     public function index()
     {
         $user = auth()->user();
+        
+        // Obtener las clases solo para el entrenador actual
+        $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
     
-        // Obtener las clases según el rol
-        if ($user->can('admin_entrenador')) {
-            $clases = ClaseGrupal::all();
-        } elseif ($user->can('entrenador')) {
-            $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
-        } else {
-            $clases = ClaseGrupal::withCount('usuarios')
-                ->whereDate('fecha_inicio', '>=', now())
-                ->get()
-                ->filter(function ($clase) {
-                    return $clase->usuarios_count < $clase->cupos_maximos;
-                });
-        }
-    
-        // Obtener entrenamientos del entrenador (asumiendo que id_usuario es el id del entrenador)
+        // Obtener entrenamientos del entrenador (utilizando id_usuario en lugar de id_entrenamiento)
         $entrenamientos = Entrenamiento::where('id_usuario', $user->id)->get();
-    
+        
         // Obtener clases con cambios pendientes, aprobadas y rechazadas
         $clasesPendientes = ClaseGrupal::where('entrenador_id', $user->id)
             ->where('cambio_pendiente', true)
             ->get();
-    
+        
         $clasesAprobadas = ClaseGrupal::where('entrenador_id', $user->id)
             ->where('cambio_pendiente', false)
             ->get();
-    
+        
         $clasesRechazadas = ClaseGrupal::where('entrenador_id', $user->id)
             ->where('cambio_pendiente', '!=', true)
             ->get();
-    
+        
+        // Obtener las suscripciones activas para el entrenador
+        $suscripciones = ClaseGrupal::whereHas('usuarios', function ($query) use ($user) {
+            $query->where('usuario_id', $user->id)->where('activo', true);
+        })->get();
+        
         // Pasar las variables a la vista
-        return view('entrenador.dashboard', compact('clases', 'entrenamientos', 'clasesPendientes', 'clasesAprobadas', 'clasesRechazadas'));
+        return view('entrenador.dashboard', compact('clases', 'entrenamientos', 'clasesPendientes', 'clasesAprobadas', 'clasesRechazadas', 'suscripciones'));
     }
+    
     
 
     public function editClase($id)

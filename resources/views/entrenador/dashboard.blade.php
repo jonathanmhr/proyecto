@@ -115,7 +115,8 @@
                 <h2 class="text-xl font-semibold text-purple-800 mb-4">Suscripciones Activas</h2>
                 @forelse ($suscripciones as $suscripcion)
                     <div class="border-b border-purple-200 pb-2 mb-2">
-                        <div class="text-purple-900 font-medium">{{ $suscripcion->clase->nombre }}</div>
+                        <div class="text-purple-900 font-medium">
+                            {{ $suscripcion->clase ? $suscripcion->clase->nombre : 'Clase no disponible' }}</div>
                         <div class="text-sm text-purple-700">
                             Suscrito el
                             @if ($suscripcion->created_at)
@@ -124,7 +125,6 @@
                                 <span class="text-red-500">Fecha no disponible</span>
                             @endif
                         </div>
-                        <!-- Mostrar estado de la suscripción -->
                         <div class="text-sm text-purple-700">
                             Estado:
                             @if ($suscripcion->estaActiva())
@@ -133,7 +133,6 @@
                                 <span class="text-red-500">Inactiva</span>
                             @endif
                         </div>
-                        <!-- Botón para ver detalles de suscripción -->
                         <a href="{{ route('entrenador.dashboard') }}" class="text-purple-500 hover:underline">Ver
                             detalles</a>
                     </div>
