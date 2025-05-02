@@ -34,25 +34,24 @@ class ClaseGrupalController extends Controller
     // Permitir que un usuario se una a una clase
     public function unirse($id)
     {
-        // Busca la clase por su ID
-        $clase = ClaseGrupal::findOrFail($id);  // Encuentra la clase por su ID
+        $clase = ClaseGrupal::findOrFail($id); // Encuentra la clase por su ID
         $usuario = auth()->user();
-    
+        
         // Verificar si el usuario ya está inscrito en la clase
         if ($clase->usuarios()->where('id_usuario', $usuario->id)->exists()) {
             return redirect()->route('dashboard')->with('info', 'Ya estás inscrito en esta clase.');
         }
-    
+        
         // Verificar si la clase ya está completa
         if ($clase->usuarios()->count() >= $clase->cupos_maximos) {
             return redirect()->route('clases.index')->with('error', 'Esta clase ya está completa.');
         }
-    
+        
         // Verificar si la clase ya ha comenzado
         if ($clase->fecha_inicio < now()) {
             return redirect()->route('clases.index')->with('error', 'No puedes inscribirte en una clase ya iniciada.');
         }
-    
+        
         // Crear una suscripción para el usuario
         Suscripcion::create([
             'id_usuario' => $usuario->id,
@@ -61,11 +60,10 @@ class ClaseGrupalController extends Controller
             'fecha_inicio' => now(),
             'fecha_fin' => now()->addMonths(1),
         ]);
-    
+        
         // Redirigir al usuario a su dashboard con un mensaje de éxito
         return redirect()->route('dashboard')->with('success', 'Te has unido a la clase con éxito.');
     }
-    
 
     // Mostrar suscripciones del usuario
     public function suscripciones()

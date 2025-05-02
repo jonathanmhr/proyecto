@@ -118,7 +118,5 @@ Route::middleware([
 // ----------------------
 // RUTAS CLIENTE (ver clases y unirse)
 // ----------------------
-Route::prefix('cliente')->name('cliente.')->group(function () {
-    Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
-    Route::post('clases/{id}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
-});
+Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
+Route::post('clases/{id}/unirse', [ClaseGrupalController::class, 'unirse'])->name('cliente.clases.unirse');
