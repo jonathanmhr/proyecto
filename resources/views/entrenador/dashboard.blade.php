@@ -28,17 +28,68 @@
                     <div class="border-b border-blue-200 pb-2 mb-2">
                         <div class="text-blue-900 font-medium">{{ $clase->nombre }}</div>
                         <div class="text-sm text-blue-700">{{ $clase->descripcion }}</div>
-                        <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}</div>
+                        <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}
+                        </div>
                         <!-- Botón de acción para editar clase -->
-                        <a href="{{ route('entrenador.clase.edit', $clase->id_clase) }}" class="text-blue-500 hover:underline">Editar Clase</a>
+                        <a href="{{ route('entrenador.clase.edit', $clase->id_clase) }}"
+                            class="text-blue-500 hover:underline">Editar Clase</a>
                     </div>
                 @empty
                     <p class="text-blue-600">No tienes clases programadas.</p>
                 @endforelse
                 <!-- Botón para ir al listado completo de clases -->
                 <div class="mt-4">
-                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver todas mis clases</a>
+                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver todas
+                        mis clases</a>
                 </div>
+            </div>
+            <!-- Mis Clases Pendientes -->
+            <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-2xl shadow">
+                <h2 class="text-xl font-semibold text-yellow-800 mb-4">Mis Clases Pendientes</h2>
+                @forelse ($clasesPendientes as $clase)
+                    <div class="border-b border-yellow-200 pb-2 mb-2">
+                        <div class="text-yellow-900 font-medium">{{ $clase->nombre }}</div>
+                        <div class="text-sm text-yellow-700">{{ $clase->descripcion }}</div>
+                        <div class="text-sm text-yellow-700">Fecha: {{ $clase->fecha_inicio }} -
+                            {{ $clase->fecha_fin }}</div>
+                        <div class="text-sm text-yellow-700">Estado: <span class="text-yellow-500">Pendiente de
+                                aprobación</span></div>
+                    </div>
+                @empty
+                    <p class="text-yellow-600">No tienes clases pendientes de aprobación.</p>
+                @endforelse
+            </div>
+
+            <!-- Mis Clases Aprobadas -->
+            <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl shadow">
+                <h2 class="text-xl font-semibold text-green-800 mb-4">Mis Clases Aprobadas</h2>
+                @forelse ($clasesAprobadas as $clase)
+                    <div class="border-b border-green-200 pb-2 mb-2">
+                        <div class="text-green-900 font-medium">{{ $clase->nombre }}</div>
+                        <div class="text-sm text-green-700">{{ $clase->descripcion }}</div>
+                        <div class="text-sm text-green-700">Fecha: {{ $clase->fecha_inicio }} -
+                            {{ $clase->fecha_fin }}</div>
+                        <div class="text-sm text-green-700">Estado: <span class="text-green-500">Aprobada</span></div>
+                    </div>
+                @empty
+                    <p class="text-green-600">No tienes clases aprobadas.</p>
+                @endforelse
+            </div>
+
+            <!-- Mis Clases Rechazadas -->
+            <div class="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-2xl shadow">
+                <h2 class="text-xl font-semibold text-red-800 mb-4">Mis Clases Rechazadas</h2>
+                @forelse ($clasesRechazadas as $clase)
+                    <div class="border-b border-red-200 pb-2 mb-2">
+                        <div class="text-red-900 font-medium">{{ $clase->nombre }}</div>
+                        <div class="text-sm text-red-700">{{ $clase->descripcion }}</div>
+                        <div class="text-sm text-red-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}
+                        </div>
+                        <div class="text-sm text-red-700">Estado: <span class="text-red-500">Rechazada</span></div>
+                    </div>
+                @empty
+                    <p class="text-red-600">No tienes clases rechazadas.</p>
+                @endforelse
             </div>
 
             <!-- Mis Entrenamientos -->
@@ -50,7 +101,8 @@
                         <div class="text-sm text-green-700">{{ $entrenamiento->descripcion }}</div>
                         <div class="text-sm text-green-700">Fecha: {{ $entrenamiento->fecha->format('d/m/Y') }}</div>
                         <!-- Botón de acción para ver detalles del entrenamiento -->
-                        <a href="{{ route('entrenador.entrenamiento.detalles', $entrenamiento->id) }}" class="text-green-500 hover:underline">Ver Detalles</a>
+                        <a href="{{ route('entrenador.entrenamiento.detalles', $entrenamiento->id) }}"
+                            class="text-green-500 hover:underline">Ver Detalles</a>
                     </div>
                 @empty
                     <p class="text-green-600">No tienes entrenamientos asignados.</p>
@@ -81,7 +133,8 @@
                             @endif
                         </div>
                         <!-- Botón para ver detalles de suscripción -->
-                        <a href="{{ route('entrenador.dashboard') }}" class="text-purple-500 hover:underline">Ver detalles</a>
+                        <a href="{{ route('entrenador.dashboard') }}" class="text-purple-500 hover:underline">Ver
+                            detalles</a>
                     </div>
                 @empty
                     <p class="text-purple-600">No tienes suscripciones activas.</p>

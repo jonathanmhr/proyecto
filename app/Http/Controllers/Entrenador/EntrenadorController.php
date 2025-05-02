@@ -12,12 +12,18 @@ class EntrenadorController extends Controller
     public function index()
     {
         $user = auth()->user();
-
+    
         // Mostrar clases según el rol
         if ($user->can('admin_entrenador')) {
             $clases = ClaseGrupal::all();
         } elseif ($user->can('entrenador')) {
+            // Clases del entrenador con estado
             $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
+    
+            // Filtrar clases por estado
+            $clasesPendientes = $clases->where('cambio_pendiente', true);
+            $clasesAprobadas = $clases->where('cambio_pendiente', false);
+            $clasesRechazadas = $clases->where('estado', 'rechazada'); // Ajusta si usas otro campo para rechazar
         } else {
             // Mostrar solo clases con cupo disponible, fecha de inicio futura o actual
             $clases = ClaseGrupal::withCount('usuarios')
@@ -27,9 +33,11 @@ class EntrenadorController extends Controller
                     return $clase->usuarios_count < $clase->cupos_maximos;
                 });
         }
-
-        return view('entrenador.clases.index', compact('clases'));
+    
+        // Pasar las clases por estado a la vista
+        return view('entrenador.clases.index', compact('clasesAprobadas', 'clasesPendientes', 'clasesRechazadas'));
     }
+    
 
     public function editClase($id)
     {
