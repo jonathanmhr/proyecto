@@ -34,8 +34,8 @@ class EntrenadorController extends Controller
         
         // Obtener las suscripciones activas para el entrenador
         $suscripciones = ClaseGrupal::whereHas('usuarios', function ($query) use ($user) {
-            $query->where('usuario_id', $user->id)->where('activo', true);
-        })->get();
+            $query->where('id_usuario', $user->id)->where('estado', Suscripcion::ESTADO_ACTIVO);
+        })->get();        
         
         // Pasar las variables a la vista
         return view('entrenador.dashboard', compact('clases', 'entrenamientos', 'clasesPendientes', 'clasesAprobadas', 'clasesRechazadas', 'suscripciones'));
