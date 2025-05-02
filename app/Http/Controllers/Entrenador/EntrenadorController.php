@@ -11,23 +11,53 @@ class EntrenadorController extends Controller
 {
     public function index()
     {
-        // Obtener todas las clases grupales asociadas al entrenador logueado
-        $clases = ClaseGrupal::where('entrenador_id', auth()->user()->id)->get();
+        $user = auth()->user();
 
-        // Obtener todos los entrenamientos del entrenador logueado
-        $entrenamientos = Entrenamiento::where('id_usuario', auth()->user()->id)->get();
+        // Mostrar clases según el rol
+        if ($user->can('admin_entrenador')) {
+            $clases = ClaseGrupal::all();
+        } elseif ($user->can('entrenador')) {
+            $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
+        } else {
+            // Mostrar solo clases con cupo disponible, fecha de inicio futura o actual
+            $clases = ClaseGrupal::withCount('usuarios')
+                ->whereDate('fecha_inicio', '>=', now())
+                ->get()
+                ->filter(function ($clase) {
+                    return $clase->usuarios_count < $clase->cupos_maximos;
+                });
+        }
 
-        // Obtener todas las suscripciones activas del entrenador (a clases que tengan este entrenador)
-        $suscripciones = Suscripcion::whereHas('clase', function ($query) {
-            $query->where('entrenador_id', auth()->user()->id);
-        })->get();
-
-        // Pasar todas las variables a la vista
-        return view('entrenador.dashboard', compact('clases', 'entrenamientos', 'suscripciones'));
+        return view('entrenador.clases.index', compact('clases'));
     }
+
     public function editClase($id)
     {
         $clase = ClaseGrupal::findOrFail($id);
         return view('entrenador.clase.edit', compact('clase'));
+    }
+
+    public function updateClase(Request $request, $id)
+    {
+        $clase = ClaseGrupal::findOrFail($id);
+
+        // Validar los datos de entrada
+        $validated = $request->validate([
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date',
+            'cupos_maximos' => 'required|integer',
+            'ubicacion' => 'nullable|string|max:100',
+            'duracion' => 'required|integer',
+            'nivel' => 'required|in:principiante,intermedio,avanzado',
+        ]);
+
+        // Actualizar los datos de la clase
+        $clase->update($validated);
+
+        // Marcar como cambio pendiente
+        $clase->cambio_pendiente = true;
+        $clase->save();
+
+        return redirect()->route('entrenador.clase.index')->with('success', 'Clase actualizada, pendiente de aprobación.');
     }
 }
