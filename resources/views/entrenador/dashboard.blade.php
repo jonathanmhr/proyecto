@@ -31,7 +31,7 @@
                         <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}
                         </div>
                         <!-- Botón de acción para editar clase -->
-                        <a href="{{ route('clase.edit', $clase->id) }}">Editar clase</a>
+                        <a href="{{ route('entrenador.clase.edit', $clase->id) }}">Editar clase</a>
                             class="text-blue-500 hover:underline">Editar Clase</a>
                     </div>
                 @empty
