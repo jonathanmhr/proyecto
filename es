@@ -1,0 +1,35 @@
+[90m= [39m[34;4mIlluminate\Database\Eloquent\Collection[39;24m {#1614
+    [34mall[39m: [
+      [34;4mApp\Models\ClaseGrupal[39;24m {#6672
+        [34mid_clase[39m: [35m3[39m,
+        [34mnombre[39m: "[32mYoga para principiantes[39m",
+        [34mdescripcion[39m: "[32mClase de yoga para nivel básico[39m",
+        [34mcupos_maximos[39m: [35m20[39m,
+        [34mfecha_inicio[39m: "[32m2025-05-15[39m",
+        [34mfecha_fin[39m: "[32m2025-06-15[39m",
+        [34mcreated_at[39m: "[32m2025-05-01 00:20:00[39m",
+        [34mupdated_at[39m: "[32m2025-05-01 00:20:00[39m",
+        [34mentrenador_id[39m: [35m16[39m,
+        [34mfecha[39m: "[32m0000-00-00 00:00:00[39m",
+        [34mduracion[39m: [36mnull[39m,
+        [34mubicacion[39m: [36mnull[39m,
+        [34mnivel[39m: [36mnull[39m,
+      },
+      [34;4mApp\Models\ClaseGrupal[39;24m {#6673
+        [34mid_clase[39m: [35m4[39m,
+        [34mnombre[39m: "[32mPrueba Clase[39m",
+        [34mdescripcion[39m: "[32mDescripción de prueba[39m",
+        [34mcupos_maximos[39m: [35m10[39m,
+        [34mfecha_inicio[39m: "[32m2025-05-01[39m",
+        [34mfecha_fin[39m: "[32m2025-05-02[39m",
+        [34mcreated_at[39m: [36mnull[39m,
+        [34mupdated_at[39m: [36mnull[39m,
+        [34mentrenador_id[39m: [35m16[39m,
+        [34mfecha[39m: "[32m2025-05-01 13:00:47[39m",
+        [34mduracion[39m: [35m60[39m,
+        [34mubicacion[39m: "[32mSala 1[39m",
+        [34mnivel[39m: "[32mprincipiante[39m",
+      },
+    ],
+  }
+
