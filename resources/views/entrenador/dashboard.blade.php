@@ -1,57 +1,65 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard del Entrenador') }}
+            {{ __('Panel del Entrenador') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Grilla de Secciones -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                <!-- Panel de Clases -->
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-semibold">Clases Grupales</h3>
-                    <p class="text-gray-600">Administra las clases grupales.</p>
-                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver clases</a>
-                </div>
+    <div class="container mx-auto px-4 py-6">
+        <h1 class="text-3xl font-bold text-gray-900 mb-6">
+            👋 ¡Bienvenido de nuevo, {{ auth()->user()->name }}!
+        </h1>
 
-                <!-- Panel de Usuarios -->
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-semibold">Usuarios Inscritos</h3>
-                    <p class="text-gray-600">Gestiona los usuarios del gimnasio.</p>
-                    <a href="{{ route('entrenador.usuarios.index') }}" class="text-blue-500 hover:underline">Ver usuarios</a>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Resumen General -->
+            <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-2xl shadow">
+                <h2 class="text-xl font-semibold text-indigo-800 mb-4">Resumen General</h2>
+                <div class="text-sm text-indigo-600">
+                    <p><strong>Total de Clases Activas:</strong> {{ $clases->count() }}</p>
+                    <p><strong>Entrenamientos en Curso:</strong> {{ $entrenamientos->count() }}</p>
+                    <p><strong>Suscripciones Activas:</strong> {{ $suscripciones->count() }}</p>
                 </div>
+            </div>
 
-                <!-- Panel de Notificaciones -->
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-semibold">Notificaciones</h3>
-                    <p class="text-gray-600">Envía notificaciones a los usuarios.</p>
-                    <a href="{{ route('entrenador.usuarios.index') }}" class="text-blue-500 hover:underline">Ver notificaciones</a>
-                </div>
+            <!-- Mis Clases -->
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow">
+                <h2 class="text-xl font-semibold text-blue-800 mb-4">Mis Clases</h2>
+                @forelse ($clases as $clase)
+                    <div class="border-b border-blue-200 pb-2 mb-2">
+                        <div class="text-blue-900 font-medium">{{ $clase->nombre }}</div>
+                        <div class="text-sm text-blue-700">{{ $clase->descripcion }}</div>
+                        <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}</div>
+                    </div>
+                @empty
+                    <p class="text-blue-600">No tienes clases programadas.</p>
+                @endforelse
+            </div>
 
-                <!-- Panel de Estadísticas -->
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-semibold">Estadísticas</h3>
-                    <p class="text-gray-600">Revisa las estadísticas de las clases.</p>
-                    <a href="{{ route('entrenador.usuarios.index') }}" class="text-blue-500 hover:underline">Ver estadísticas</a>
-                </div>
+            <!-- Mis Entrenamientos -->
+            <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl shadow">
+                <h2 class="text-xl font-semibold text-green-800 mb-4">Mis Entrenamientos</h2>
+                @forelse ($entrenamientos as $entrenamiento)
+                    <div class="border-b border-green-200 pb-2 mb-2">
+                        <div class="text-green-900 font-medium">{{ $entrenamiento->nombre }}</div>
+                        <div class="text-sm text-green-700">{{ $entrenamiento->descripcion }}</div>
+                        <div class="text-sm text-green-700">Fecha: {{ $entrenamiento->fecha_inicio }}</div>
+                    </div>
+                @empty
+                    <p class="text-green-600">No tienes entrenamientos asignados.</p>
+                @endforelse
+            </div>
 
-                <!-- Panel de Suscripciones -->
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-semibold">Suscripciones</h3>
-                    <p class="text-gray-600">Gestiona las suscripciones de los usuarios.</p>
-                    <a href="{{ route('entrenador.usuarios.index') }}" class="text-blue-500 hover:underline">Ver suscripciones</a>
-                </div>
-
-                <!-- Panel de Reportes -->
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-semibold">Reportes</h3>
-                    <p class="text-gray-600">Genera reportes sobre las clases y usuarios.</p>
-                    <a href="{{ route('entrenador.usuarios.index') }}" class="text-blue-500 hover:underline">Ver reportes</a>
-                </div>
-
+            <!-- Suscripciones -->
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-2xl shadow">
+                <h2 class="text-xl font-semibold text-purple-800 mb-4">Suscripciones Activas</h2>
+                @forelse ($suscripciones as $suscripcion)
+                    <div class="border-b border-purple-200 pb-2 mb-2">
+                        <div class="text-purple-900 font-medium">{{ $suscripcion->clase->nombre }}</div>
+                        <div class="text-sm text-purple-700">Suscrito el {{ $suscripcion->created_at->format('d/m/Y') }}</div>
+                    </div>
+                @empty
+                    <p class="text-purple-600">No hay suscripciones activas.</p>
+                @endforelse
             </div>
         </div>
     </div>
