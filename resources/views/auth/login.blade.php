@@ -1,54 +1,67 @@
 <x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
-
-        <x-validation-errors class="mb-4" />
-
-        @session('status')
-            <div class="mb-4 font-medium text-sm text-green-600">
-                {{ $value }}
+    <div class="min-h-screen flex items-center justify-center bg-gray-100">
+        <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+            <div class="flex justify-center mb-6">
+                <x-application-logo class="w-12 h-12" />
             </div>
-        @endsession
+            <h2 class="text-center text-2xl font-bold mb-2">Bienvenido!</h2>
+            <p class="text-center text-gray-500 mb-6">Inicia sesión en tu cuenta</p>
 
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
+            <x-validation-errors class="mb-4" />
+            @if (session('status'))
+                <div class="mb-4 text-green-600 text-sm">
+                    {{ session('status') }}
+                </div>
+            @endif
 
-            <div>
-                <x-label for="email" value="{{ __('Correo') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+
+                {{-- Email --}}
+                <div class="mb-4 relative">
+                    <input id="email" type="email" name="email" :value="old('email')" required autofocus placeholder="Correo electrónico"
+                        class="w-full px-10 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                        <x-icon-email />
+                    </div>
+                </div>
+
+                {{-- Password --}}
+                <div class="mb-4 relative">
+                    <input id="password" type="password" name="password" required placeholder="Contraseña"
+                        class="w-full px-10 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                        <x-icon-lock />
+                    </div>
+                    <button type="button" onclick="togglePassword('password', this)" class="absolute right-3 inset-y-0 flex items-center text-gray-400">
+                        <x-icon-eye />
+                    </button>
+                </div>
+
+                {{-- Links --}}
+                <div class="flex justify-between items-center text-sm mb-6">
+                    <a href="{{ route('password.request') }}" class="text-blue-500 hover:underline">¿Has olvidado la contraseña?</a>
+                </div>
+
+                {{-- Submit --}}
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                    Login
+                </button>
+            </form>
+
+            <div class="mt-6 text-center text-sm">
+                ¿No tienes una cuenta?
+                <a href="{{ route('register') }}" class="text-blue-500 hover:underline">Crear cuenta</a>
             </div>
+        </div>
+    </div>
 
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Contraseña') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
-            </div>
-
-            <div class="block mt-4">
-                <label for="remember_me" class="flex items-center">
-                    <x-checkbox id="remember_me" name="remember" />
-                    <span class="ms-2 text-sm text-gray-600">{{ __('Recuérdame') }}</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-between mt-4">
-                @if (Route::has('register'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('register') }}">
-                        {{ __('Registrarse') }}
-                    </a>
-                @endif
-
-                @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                        {{ __('¿Olvidaste tu contraseña?') }}
-                    </a>
-                @endif
-
-                <x-button class="ms-4">
-                    {{ __('Login') }}
-                </x-button>
-            </div>
-        </form>
-    </x-authentication-card>
+    {{-- Script para mostrar/ocultar contraseña --}}
+    <script>
+        function togglePassword(id, btn) {
+            const input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+            btn.innerHTML = input.type === 'password' ? `@svg('eye')` : `@svg('eye-off')`;
+        }
+    </script>
 </x-guest-layout>
