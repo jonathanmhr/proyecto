@@ -31,8 +31,8 @@
                         <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}
                         </div>
                         <!-- Botón de acción para editar clase -->
-                        <a href="{{ route('entrenador.clase.edit', $clase->id) }}">Editar clase</a>
-                            class="text-blue-500 hover:underline">Editar Clase</a>
+                        <a href="{{ route('entrenador.clase.edit', $clase->id) }}"
+                            class="text-blue-500 hover:underline">Editar clase</a>
                     </div>
                 @empty
                     <p class="text-blue-600">No tienes clases programadas.</p>
@@ -43,6 +43,7 @@
                         mis clases</a>
                 </div>
             </div>
+
             <!-- Mis Clases Pendientes -->
             <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-2xl shadow">
                 <h2 class="text-xl font-semibold text-yellow-800 mb-4">Mis Clases Pendientes</h2>
