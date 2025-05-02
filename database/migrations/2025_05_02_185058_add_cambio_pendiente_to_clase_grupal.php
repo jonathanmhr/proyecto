@@ -9,20 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::table('clase_grupal', function (Blueprint $table) {
-            //
+        Schema::table('clases_grupales', function (Blueprint $table) {
+            $table->boolean('cambio_pendiente')->default(false); // Campo para marcar si hay cambios pendientes
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    
+    public function down()
     {
-        Schema::table('clase_grupal', function (Blueprint $table) {
-            //
+        Schema::table('clases_grupales', function (Blueprint $table) {
+            $table->dropColumn('cambio_pendiente');
         });
     }
 };
