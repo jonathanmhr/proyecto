@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
         <div class="flex justify-end items-center mb-6">
-            <a href="{{ route('admin-entrenador.dashboard') }}"
+            <a href="{{ route('admin-entrenador.clases.index') }}"
                 class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
                 <i data-feather="arrow-left" class="w-4 h-4"></i> Volver
             </a>
