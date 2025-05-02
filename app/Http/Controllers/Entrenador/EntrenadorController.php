@@ -15,7 +15,7 @@ class EntrenadorController extends Controller
         $clases = ClaseGrupal::where('entrenador_id', auth()->user()->id)->get();
         
         // Obtener todos los entrenamientos del entrenador logueado
-        $entrenamientos = Entrenamiento::where('entrenador_id', auth()->user()->id)->get();
+        $entrenamientos = Entrenamiento::where('id_usuario', auth()->user()->id)->get();
         
         // Obtener todas las suscripciones activas del entrenador (a clases que tengan este entrenador)
         $suscripciones = Suscripcion::whereHas('claseGrupal', function ($query) {
