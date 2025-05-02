@@ -5,9 +5,9 @@
                 class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition w-[160px] justify-center">
                 <i data-feather="arrow-left" class="w-4 h-4"></i> Volver
             </a>
-        </div>   
+        </div>
 
-        <h1 class="text-2xl font-bold mb-6">Editar Clase: {{ $clase->nombre }}</h1>     
+        <h1 class="text-2xl font-bold mb-6">Editar Clase: {{ $clase->nombre }}</h1>
         <form action="{{ route('admin-entrenador.clases.update', $clase) }}" method="POST">
             @csrf
             @method('PUT')
