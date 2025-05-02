@@ -139,30 +139,30 @@ class AdminEntrenadorController extends Controller
     public function actualizarEntrenador(Request $request, User $entrenador)
     {
         Log::info('Datos recibidos para actualizar las clases:', $request->all());
-    
+
         // Validar las clases seleccionadas
         $request->validate([
             'clases' => 'nullable|array|exists:clases_grupales,id_clase',
         ]);
-        
+
         // Obtener las clases seleccionadas
         $clasesSeleccionadas = $request->input('clases', []);
-    
+
         Log::info('Clases seleccionadas:', $clasesSeleccionadas);
-    
+
         // Si hay clases seleccionadas, las asignamos
         if (!empty($clasesSeleccionadas)) {
             // Asignar las clases seleccionadas (usamos 'clases()' que es 'belongsToMany')
             $entrenador->clases()->sync($clasesSeleccionadas);
             return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases asignadas correctamente.');
         }
-    
+
         // Si no se seleccionaron clases, desasignar todas las clases (usamos 'clases()' que es 'belongsToMany')
         $entrenador->clases()->detach();
         Log::info('Clases desasignadas del entrenador:', $entrenador->clases()->get());
         return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases desasignadas correctamente.');
     }
-    
+
 
     // ---------- Gestión de Alumnos ----------
     public function verAlumnos()
@@ -211,5 +211,47 @@ class AdminEntrenadorController extends Controller
         // Borramos la clase
         $clase->delete();
         return redirect()->route('admin-entrenador.clases.index')->with('success', 'Clase eliminada correctamente.');
+    }
+
+    public function edit($id)
+    {
+        $clase = ClaseGrupal::findOrFail($id);
+
+        $entrenadores = User::whereHas('roles', function ($query) {
+            $query->where('name', 'entrenador');
+        })->get();
+
+        return view('admin-entrenador.clases.edit', compact('clase', 'entrenadores'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string|max:500',
+            'fecha_inicio' => ['required', 'date', 'after_or_equal:today'],
+            'fecha_fin' => ['required', 'date', 'after:' . $request->fecha_inicio],
+            'duracion' => 'nullable|integer|min:1',
+            'ubicacion' => 'nullable|string|max:100',
+            'nivel' => 'nullable|in:principiante,intermedio,avanzado',
+            'cupos_maximos' => 'required|integer|min:5|max:20',
+            'entrenador_id' => 'required|exists:users,id',
+        ]);
+
+        $clase = ClaseGrupal::findOrFail($id);
+
+        $clase->update([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'fecha_inicio' => $request->fecha_inicio,
+            'fecha_fin' => $request->fecha_fin,
+            'duracion' => $request->duracion,
+            'ubicacion' => $request->ubicacion,
+            'nivel' => $request->nivel,
+            'cupos_maximos' => $request->cupos_maximos,
+            'entrenador_id' => $request->entrenador_id,
+        ]);
+
+        return redirect()->route('admin-entrenador.clases.index')->with('success', 'Clase actualizada correctamente.');
     }
 }
