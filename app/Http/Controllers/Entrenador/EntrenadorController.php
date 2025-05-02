@@ -13,25 +13,40 @@ class EntrenadorController extends Controller
     {
         $user = auth()->user();
     
-        // Obtener clases según el rol
+        // Obtener las clases según el rol
         if ($user->can('admin_entrenador')) {
             $clases = ClaseGrupal::all();
-            $clasesPendientes = ClaseGrupal::where('estado', 'pendiente')->get();
-            $clasesAprobadas = ClaseGrupal::where('estado', 'aprobada')->get();
-            $clasesRechazadas = ClaseGrupal::where('estado', 'rechazada')->get();
         } elseif ($user->can('entrenador')) {
             $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
-            $clasesPendientes = ClaseGrupal::where('entrenador_id', $user->id)->where('estado', 'pendiente')->get();
-            $clasesAprobadas = ClaseGrupal::where('entrenador_id', $user->id)->where('estado', 'aprobada')->get();
-            $clasesRechazadas = ClaseGrupal::where('entrenador_id', $user->id)->where('estado', 'rechazada')->get();
+        } else {
+            $clases = ClaseGrupal::withCount('usuarios')
+                ->whereDate('fecha_inicio', '>=', now())
+                ->get()
+                ->filter(function ($clase) {
+                    return $clase->usuarios_count < $clase->cupos_maximos;
+                });
         }
     
-        // Obtener entrenamientos y suscripciones (modifica según cómo lo manejas)
-        $entrenamientos = Entrenamiento::where('entrenador_id', $user->id)->get();
-        $suscripciones = Suscripcion::where('usuario_id', $user->id)->get();
+        // Obtener entrenamientos del entrenador (asumiendo que id_usuario es el id del entrenador)
+        $entrenamientos = Entrenamiento::where('id_usuario', $user->id)->get();
     
-        return view('entrenador.dashboard', compact('clases', 'clasesPendientes', 'clasesAprobadas', 'clasesRechazadas', 'entrenamientos', 'suscripciones'));
+        // Obtener clases con cambios pendientes, aprobadas y rechazadas
+        $clasesPendientes = ClaseGrupal::where('entrenador_id', $user->id)
+            ->where('cambio_pendiente', true)
+            ->get();
+    
+        $clasesAprobadas = ClaseGrupal::where('entrenador_id', $user->id)
+            ->where('cambio_pendiente', false)
+            ->get();
+    
+        $clasesRechazadas = ClaseGrupal::where('entrenador_id', $user->id)
+            ->where('cambio_pendiente', '!=', true)
+            ->get();
+    
+        // Pasar las variables a la vista
+        return view('entrenador.dashboard', compact('clases', 'entrenamientos', 'clasesPendientes', 'clasesAprobadas', 'clasesRechazadas'));
     }
+    
 
     public function editClase($id)
     {
