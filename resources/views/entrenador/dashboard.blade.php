@@ -37,7 +37,7 @@
                 @endforelse
                 <!-- Botón para ir al listado completo de clases -->
                 <div class="mt-4">
-                    <a href="{{ route('entrenador.clase.index') }}" class="text-blue-500 hover:underline">Ver todas mis clases</a>
+                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver todas mis clases</a>
                 </div>
             </div>
 
