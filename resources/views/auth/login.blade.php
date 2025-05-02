@@ -19,7 +19,8 @@
 
                 {{-- Email --}}
                 <div class="mb-4 relative">
-                    <input id="email" type="email" name="email" :value="old('email')" required autofocus placeholder="Correo electrónico"
+                    <input id="email" type="email" name="email" :value="old('email')" required autofocus
+                        placeholder="Correo electrónico"
                         class="w-full px-10 py-3 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                     <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                         <x-icon-email />
@@ -33,18 +34,22 @@
                     <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                         <x-icon-lock />
                     </div>
-                    <button type="button" onclick="togglePassword('password', this)" class="absolute right-3 inset-y-0 flex items-center text-gray-400">
+                    <button type="button" onclick="togglePassword('password', this)"
+                        class="absolute right-3 inset-y-0 flex items-center text-gray-400">
                         <x-icon-eye />
                     </button>
                 </div>
 
+
                 {{-- Links --}}
                 <div class="flex justify-between items-center text-sm mb-6">
-                    <a href="{{ route('password.request') }}" class="text-blue-500 hover:underline">¿Has olvidado la contraseña?</a>
+                    <a href="{{ route('password.request') }}" class="text-blue-500 hover:underline">¿Has olvidado la
+                        contraseña?</a>
                 </div>
 
                 {{-- Submit --}}
-                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
                     Login
                 </button>
             </form>
@@ -61,7 +66,7 @@
         function togglePassword(inputId, icon) {
             const input = document.getElementById(inputId);
             const iconElement = icon.querySelector('svg');
-    
+
             if (input.type === 'password') {
                 input.type = 'text';
                 iconElement.setAttribute('name', 'eye-off'); // Cambia el ícono a "ojo cerrado"
