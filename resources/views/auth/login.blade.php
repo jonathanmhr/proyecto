@@ -3,7 +3,8 @@
         <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
             <div class="text-center mb-6">
                 <x-application-logo class="w-12 h-12 mx-auto" />
-                <h2 class="text-2xl font-bold mt-2">Iniciar sesión</h2>
+                <h1 class="text-2xl font-bold mt-2">Bienvenido</h1>
+                <h3 class="text-2xl font-bold mt-2">Iniciar sesión en tu cuenta</h3>
             </div>
 
             <x-validation-errors class="mb-4" />
