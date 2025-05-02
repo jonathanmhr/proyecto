@@ -28,11 +28,9 @@
                     <div class="border-b border-blue-200 pb-2 mb-2">
                         <div class="text-blue-900 font-medium">{{ $clase->nombre }}</div>
                         <div class="text-sm text-blue-700">{{ $clase->descripcion }}</div>
-                        <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}
-                        </div>
+                        <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}</div>
                         <!-- Botón de acción para editar clase -->
-                        <a href="{{ route('entrenador.dashboard') }}" class="text-blue-500 hover:underline">Editar
-                            Clase</a>
+                        <a href="{{ route('entrenador.clase.edit', $clase->id_clase) }}" class="text-blue-500 hover:underline">Editar Clase</a>
                     </div>
                 @empty
                     <p class="text-blue-600">No tienes clases programadas.</p>
@@ -48,8 +46,7 @@
                         <div class="text-sm text-green-700">{{ $entrenamiento->descripcion }}</div>
                         <div class="text-sm text-green-700">Fecha: {{ $entrenamiento->fecha->format('d/m/Y') }}</div>
                         <!-- Botón de acción para ver detalles del entrenamiento -->
-                        <a href="{{ route('entrenador.dashboard') }}" class="text-green-500 hover:underline">Ver
-                            Detalles</a>
+                        <a href="{{ route('entrenador.entrenamiento.detalles', $entrenamiento->id) }}" class="text-green-500 hover:underline">Ver Detalles</a>
                     </div>
                 @empty
                     <p class="text-green-600">No tienes entrenamientos asignados.</p>
@@ -80,37 +77,37 @@
                             @endif
                         </div>
                         <!-- Botón para ver detalles de suscripción -->
-                        <a href="{{ route('entrenador.dashboard') }}" class="text-purple-500 hover:underline">Ver
-                            detalles</a>
+                        <a href="{{ route('entrenador.dashboard') }}" class="text-purple-500 hover:underline">Ver detalles</a>
                     </div>
                 @empty
                     <p class="text-purple-600">No tienes suscripciones activas.</p>
                 @endforelse
             </div>
 
-        <!-- Calendario de Clases y Entrenamientos -->
-        <div class="bg-white mt-8 p-6 rounded-2xl shadow">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Calendario de Actividades</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Implementa tu calendario aquí -->
-                <!-- Ejemplo básico con eventos próximos -->
-                <div class="bg-gray-100 p-4 rounded-xl">
-                    <h3 class="text-lg font-medium">Próximos Eventos</h3>
-                    @foreach ($clases as $clase)
-                        <div class="mt-2">
-                            <strong>{{ $clase->nombre }}</strong><br>
-                            Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}
-                        </div>
-                    @endforeach
-                </div>
-                <div class="bg-gray-100 p-4 rounded-xl">
-                    <h3 class="text-lg font-medium">Próximos Entrenamientos</h3>
-                    @foreach ($entrenamientos as $entrenamiento)
-                        <div class="mt-2">
-                            <strong>{{ $entrenamiento->nombre }}</strong><br>
-                            Fecha: {{ $entrenamiento->fecha->format('d/m/Y') }}
-                        </div>
-                    @endforeach
+            <!-- Calendario de Clases y Entrenamientos -->
+            <div class="bg-white mt-8 p-6 rounded-2xl shadow">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Calendario de Actividades</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Implementa tu calendario aquí -->
+                    <!-- Ejemplo básico con eventos próximos -->
+                    <div class="bg-gray-100 p-4 rounded-xl">
+                        <h3 class="text-lg font-medium">Próximos Eventos</h3>
+                        @foreach ($clases as $clase)
+                            <div class="mt-2">
+                                <strong>{{ $clase->nombre }}</strong><br>
+                                Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="bg-gray-100 p-4 rounded-xl">
+                        <h3 class="text-lg font-medium">Próximos Entrenamientos</h3>
+                        @foreach ($entrenamientos as $entrenamiento)
+                            <div class="mt-2">
+                                <strong>{{ $entrenamiento->nombre }}</strong><br>
+                                Fecha: {{ $entrenamiento->fecha->format('d/m/Y') }}
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
