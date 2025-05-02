@@ -106,7 +106,7 @@ Route::middleware([
     Route::get('/dashboard', [EntrenadorController::class, 'index'])->name('dashboard');
 
     // Clases
-    Route::get('clases', [EntrenadorController::class, 'index'])->name('clases.index');
+    Route::get('clases', [EntrenadorController::class, 'index'])->name('clase.index');
     Route::get('clase/{id}/edit', [EntrenadorController::class, 'editClase'])->name('clase.edit');
     Route::put('clase/{id}', [EntrenadorController::class, 'updateClase'])->name('clase.update');
 
