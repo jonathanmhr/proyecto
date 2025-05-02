@@ -159,6 +159,7 @@ class AdminEntrenadorController extends Controller
     
         // Si no se seleccionaron clases, desasignar todas las clases (usamos 'clases()' que es 'belongsToMany')
         $entrenador->clases()->detach();
+        Log::info('Clases desasignadas del entrenador:', $entrenador->clases()->get());
         return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases desasignadas correctamente.');
     }
     
