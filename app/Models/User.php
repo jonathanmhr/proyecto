@@ -75,4 +75,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(ClaseGrupal::class, 'entrenador_id');
     }
+    public function usuarios()
+    {
+        return $this->belongsToMany(User::class, 'suscripciones', 'id_clase', 'id_usuario')
+            ->withPivot('estado', 'fecha_inicio', 'fecha_fin');  // Para manejar los datos adicionales de la suscripción
+    }
 }

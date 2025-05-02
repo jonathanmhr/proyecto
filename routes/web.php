@@ -108,8 +108,9 @@ Route::middleware([
     Route::get('/clase/{id}/edit', [EntrenadorController::class, 'editClase'])->name('clase.edit');
 
     // Gestión de alumnos en clases
-    Route::post('clases/{clase}/{user}/aceptar', [ClaseGrupalController::class, 'aceptarSolicitud'])->name('clases.aceptar');
-    Route::post('clases/{clase}/{user}/rechazar', [ClaseGrupalController::class, 'rechazarSolicitud'])->name('clases.rechazar');
+    Route::post('clases/{clase}/{usuario}/aceptar', [ClaseGrupalController::class, 'aceptarSolicitud'])->name('entrenador.suscripcion.aceptar');
+    Route::post('clases/{clase}/{usuario}/rechazar', [ClaseGrupalController::class, 'rechazarSolicitud'])->name('entrenador.suscripcion.rechazar');
+
 
 });
 
