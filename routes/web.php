@@ -69,6 +69,9 @@ Route::middleware([
     Route::get('clases/{clase}/edit', [AdminEntrenadorController::class, 'edit'])->name('clases.edit');
     Route::put('clases/{clase}', [AdminEntrenadorController::class, 'update'])->name('clases.update');
     Route::delete('clases/{clase}', [AdminEntrenadorController::class, 'destroy'])->name('clases.destroy');
+
+    // Aprobar cambios pendientes en clase
+    Route::put('/admin/clase/{id}/aprobar', [AdminEntrenadorController::class, 'aprobarCambios'])->name('admin.clase.aprobar');
     
     // Gestión de entrenadores
     Route::get('entrenadores', [AdminEntrenadorController::class, 'verEntrenadores'])->name('entrenadores');
@@ -85,6 +88,7 @@ Route::middleware([
     Route::post('alumnos/{user}/eliminar', [AdminEntrenadorController::class, 'eliminarAlumno'])->name('alumnos.eliminar');
     Route::post('clases/{clase}/aceptar/{user}', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('clases.aceptar');
     Route::post('clases/{clase}/rechazar/{user}', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('clases.rechazar');
+    
 
 
     // Gestión de suscripciones
@@ -104,8 +108,9 @@ Route::middleware([
     Route::get('/dashboard', [EntrenadorController::class, 'index'])->name('dashboard');
 
     // Clases
-    Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
-    Route::get('/clase/{id}/edit', [EntrenadorController::class, 'editClase'])->name('clase.edit');
+    Route::get('clases', [EntrenadorController::class, 'index'])->name('clases.index');
+    Route::get('clase/{id}/edit', [EntrenadorController::class, 'editClase'])->name('entrenador.clase.edit');
+    Route::put('clase/{id}', [EntrenadorController::class, 'updateClase'])->name('entrenador.clase.update');
 
     // Gestión de alumnos en clases
     Route::post('clases/{clase}/{usuario}/aceptar', [ClaseGrupalController::class, 'aceptarSolicitud'])->name('entrenador.suscripcion.aceptar');

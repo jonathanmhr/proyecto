@@ -82,7 +82,7 @@ class AdminEntrenadorController extends Controller
         ]);
 
         $clasesSeleccionadas = $request->input('clases', []);
-        
+
         if (!empty($clasesSeleccionadas)) {
             $entrenador->clases()->sync($clasesSeleccionadas);
             return redirect()->route('admin-entrenador.entrenadores')->with('success', 'Clases asignadas correctamente.');
@@ -261,5 +261,16 @@ class AdminEntrenadorController extends Controller
         $suscripcion->delete();
 
         return redirect()->back()->with('success', 'Solicitud rechazada correctamente.');
+    }
+
+    public function aprobarCambios($id)
+    {
+        $clase = ClaseGrupal::findOrFail($id);
+
+        // Marcar que los cambios fueron aprobados
+        $clase->cambio_pendiente = false;
+        $clase->save();
+
+        return redirect()->route('admin.clases.index')->with('success', 'Cambios aprobados exitosamente.');
     }
 }
