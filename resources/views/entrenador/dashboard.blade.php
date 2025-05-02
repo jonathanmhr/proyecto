@@ -35,6 +35,10 @@
                 @empty
                     <p class="text-blue-600">No tienes clases programadas.</p>
                 @endforelse
+                <!-- Botón para ir al listado completo de clases -->
+                <div class="mt-4">
+                    <a href="{{ route('entrenador.clase.index') }}" class="text-blue-500 hover:underline">Ver todas mis clases</a>
+                </div>
             </div>
 
             <!-- Mis Entrenamientos -->
