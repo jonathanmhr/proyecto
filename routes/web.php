@@ -105,6 +105,7 @@ Route::middleware([
 
     // Clases
     Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
+    Route::get('/clase/{id}/edit', [EntrenadorController::class, 'editClase'])->name('clase.edit');
 
     // Gestión de alumnos en clases
     Route::post('clases/{clase}/{user}/aceptar', [ClaseGrupalController::class, 'aceptarSolicitud'])->name('clases.aceptar');

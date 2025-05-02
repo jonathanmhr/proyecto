@@ -13,10 +13,10 @@ class EntrenadorController extends Controller
     {
         // Obtener todas las clases grupales asociadas al entrenador logueado
         $clases = ClaseGrupal::where('entrenador_id', auth()->user()->id)->get();
-        
+
         // Obtener todos los entrenamientos del entrenador logueado
         $entrenamientos = Entrenamiento::where('id_usuario', auth()->user()->id)->get();
-        
+
         // Obtener todas las suscripciones activas del entrenador (a clases que tengan este entrenador)
         $suscripciones = Suscripcion::whereHas('clase', function ($query) {
             $query->where('entrenador_id', auth()->user()->id);
@@ -24,5 +24,10 @@ class EntrenadorController extends Controller
 
         // Pasar todas las variables a la vista
         return view('entrenador.dashboard', compact('clases', 'entrenamientos', 'suscripciones'));
+    }
+    public function editClase($id)
+    {
+        $clase = ClaseGrupal::findOrFail($id);
+        return view('entrenador.clase.edit', compact('clase'));
     }
 }
