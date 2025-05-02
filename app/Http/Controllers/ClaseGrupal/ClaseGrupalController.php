@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\ClaseGrupal;
 
-use App\Models\User;
 use App\Models\ClaseGrupal;
 use App\Models\Suscripcion;
 use App\Http\Controllers\Controller;
@@ -15,6 +14,7 @@ class ClaseGrupalController extends Controller
     {
         $user = auth()->user();
 
+        // Mostrar clases según el rol
         if ($user->can('admin_entrenador')) {
             $clases = ClaseGrupal::all();
         } elseif ($user->can('entrenador')) {
@@ -35,73 +35,26 @@ class ClaseGrupalController extends Controller
     // Mostrar el formulario para crear una nueva clase
     public function create()
     {
-        // Verificar si el usuario tiene el permiso de admin_entrenador
-        if (!auth()->user()->can('admin_entrenador')) {
-            return redirect()->route('clases.index')->with('error', 'Solo los administradores pueden crear clases.');
-        }
-
-        return view('clases.create');
+        return redirect()->route('clases.index');
     }
-/*
-    public function store(Request $request)
-    {
-        // Validación de los datos de entrada
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string|max:500',
-            'fecha_inicio' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
-            'fecha_fin' => ['required', 'date', 'after:' . $request->fecha_inicio, 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
-            'fecha' => 'nullable|date',
-            'duracion' => 'nullable|integer|min:1',
-            'ubicacion' => 'nullable|string|max:100',
-            'nivel' => 'nullable|in:principiante,intermedio,avanzado',
-            'cupos_maximos' => 'required|integer|min:5|max:20'
-        ]);
-    
-        // Asegúrate de que el entrenador esté relacionado con el usuario autenticado
-        $entrenador = auth()->user();
-    
-        // Crear la clase grupal, asociando al entrenador con el ID del usuario autenticado
-        ClaseGrupal::create([
-            'nombre' => $request->nombre,
-            'descripcion' => $request->descripcion,
-            'fecha_inicio' => $request->fecha_inicio,
-            'fecha_fin' => $request->fecha_fin,
-            'fecha' => now(), // Establece la fecha actual para la clase
-            'duracion' => $request->duracion,
-            'ubicacion' => $request->ubicacion,
-            'nivel' => $request->nivel,
-            'cupos_maximos' => $request->cupos_maximos,
-            'entrenador_id' => $entrenador->id,  // Relacionar con el ID del usuario autenticado
-        ]);
-    
-        return redirect()->route('admin-entrenador.dashboard')->with('success', 'Clase creada exitosamente.');
-    }
-    
-*/
-
 
     // Permitir que un usuario se una a una clase
     public function unirse(ClaseGrupal $clase)
     {
         $usuario = auth()->user();
 
-        // Verificar si ya está inscrito
         if ($clase->usuarios()->where('id_usuario', $usuario->id)->exists()) {
             return redirect()->route('dashboard')->with('info', 'Ya estás inscrito en esta clase.');
         }
 
-        // Validar cupo disponible
         if ($clase->usuarios()->count() >= $clase->cupos_maximos) {
             return redirect()->route('clases.index')->with('error', 'Esta clase ya está completa.');
         }
 
-        // Validar fecha
         if ($clase->fecha_inicio < now()) {
             return redirect()->route('clases.index')->with('error', 'No puedes inscribirte en una clase ya iniciada.');
         }
 
-        // Crear la suscripción
         Suscripcion::create([
             'id_usuario' => $usuario->id,
             'id_clase' => $clase->id_clase,
@@ -113,107 +66,62 @@ class ClaseGrupalController extends Controller
         return redirect()->route('dashboard')->with('success', 'Te has unido a la clase con éxito.');
     }
 
-    // Editar clase (solo para el entrenador que creó la clase o el admin entrenador)
-    public function edit(ClaseGrupal $clase)
+    // Mostrar suscripciones del usuario
+    public function suscripciones()
     {
-        // Verificar si el usuario es el entrenador asignado o el admin_entrenador
-        if ($clase->entrenador_id !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
-            return redirect()->route('clases.index')->with('error', 'No tienes permiso para editar esta clase.');
-        }
-
-        $usuarios = $clase->usuarios;
-        $todosLosUsuarios = User::where('email_verified_at', '!=', null)->get();
-
-        return view('clases.edit', compact('clase', 'usuarios', 'todosLosUsuarios'));
+        $suscripciones = Suscripcion::where('id_usuario', auth()->user()->id)->get();
+        return view('clases.suscripciones', compact('suscripciones'));
     }
 
-    // Actualizar clase
-    public function update(Request $request, ClaseGrupal $clase)
+    // Aceptar la solicitud de un usuario para unirse a una clase
+    public function aceptarSolicitud(Request $request, ClaseGrupal $clase)
     {
-        if ($clase->entrenador_id !== auth()->id() && !auth()->user()->can('admin_entrenador')) {
-            return redirect()->route('clases.index')->with('error', 'No tienes permiso para actualizar esta clase.');
+        $usuario = auth()->user();
+
+        // Verifica que el entrenador actual sea el dueño de la clase
+        if ($clase->entrenador_id !== $usuario->id || !$usuario->can('entrenador-access')) {
+            abort(403, 'No tienes permisos para aceptar solicitudes en esta clase.');
         }
 
-        // Validaciones comunes
-        $request->validate([
-            'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date|after:fecha_inicio',
-            'cupos_maximos' => 'required|integer|min:1',
-        ]);
+        $suscripcion = Suscripcion::where('id_clase', $clase->id_clase)
+            ->where('id_usuario', $request->id_usuario)
+            ->where('estado', 'pendiente')
+            ->first();
 
-        $data = $request->only(['fecha_inicio', 'fecha_fin', 'cupos_maximos']);
-
-        // Solo el admin-entrenador puede editar nombre y descripción
-        if (auth()->user()->can('admin_entrenador')) {
-            $request->validate([
-                'nombre' => 'required|string|max:255',
-                'descripcion' => 'required|string|max:500',
-            ]);
-
-            $data['nombre'] = $request->nombre;
-            $data['descripcion'] = $request->descripcion;
+        if (!$suscripcion) {
+            return redirect()->back()->with('error', 'No se encontró la solicitud pendiente.');
         }
 
-        $clase->update($data);
-
-        return redirect()->route('clases.index')->with('success', 'Clase actualizada correctamente.');
-    }
-
-
-    // Eliminar clase
-    public function destroy(ClaseGrupal $clase)
-    {
-        // Solo el entrenador que creó la clase o un admin_entrenador puede eliminar la clase
-        if ($clase->entrenador_id !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
-            return redirect()->route('clases.index')->with('error', 'No tienes permiso para eliminar esta clase.');
-        }
-
-        $clase->delete();
-
-        return redirect()->route('clases.index')->with('success', 'Clase eliminada.');
-    }
-
-    // Agregar usuario a una clase
-    public function agregarUsuario(Request $request, ClaseGrupal $clase)
-    {
-        $request->validate([
-            'id_usuario' => 'required|exists:users,id',
-        ]);
-
-        // Solo el entrenador o admin_entrenador puede agregar usuarios
-        if ($clase->entrenador_id !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
-            return back()->with('error', 'No tienes permiso para agregar usuarios a esta clase.');
-        }
-
-        if ($clase->usuarios()->where('id_usuario', $request->id_usuario)->exists()) {
-            return back()->with('info', 'El usuario ya está inscrito.');
-        }
-
-        Suscripcion::create([
-            'id_usuario' => $request->id_usuario,
-            'id_clase' => $clase->id_clase,
+        $suscripcion->update([
             'estado' => 'activo',
             'fecha_inicio' => now(),
-            'fecha_fin' => now()->addMonths(1),
+            'fecha_fin' => now()->addMonth(),
         ]);
 
-        return back()->with('success', 'Usuario agregado a la clase.');
+        return redirect()->back()->with('success', 'Solicitud aceptada correctamente.');
     }
 
-    // Eliminar usuario de la clase
-    public function eliminarUsuario(ClaseGrupal $clase, User $user)
+    // Rechazar la solicitud de un usuario para unirse a una clase
+    public function rechazarSolicitud(Request $request, ClaseGrupal $clase)
     {
-        // Solo el entrenador o admin_entrenador puede eliminar usuarios
-        if ($clase->entrenador_id !== auth()->user()->id && !auth()->user()->can('admin_entrenador')) {
-            return back()->with('error', 'No tienes permiso para eliminar usuarios de esta clase.');
+        $usuario = auth()->user();
+
+        // Verifica que el entrenador actual sea el dueño de la clase
+        if ($clase->entrenador_id !== $usuario->id || !$usuario->can('entrenador-access')) {
+            abort(403, 'No tienes permisos para rechazar solicitudes en esta clase.');
         }
 
-        $clase->usuarios()->detach($user->id);
-        return back()->with('success', 'Usuario eliminado de la clase.');
-    }
+        $suscripcion = Suscripcion::where('id_clase', $clase->id_clase)
+            ->where('id_usuario', $request->id_usuario)
+            ->where('estado', 'pendiente')
+            ->first();
 
-    public function entrenador()
-    {
-        return $this->belongsTo(User::class, 'entrenador_id');
+        if (!$suscripcion) {
+            return redirect()->back()->with('error', 'No se encontró la solicitud pendiente.');
+        }
+
+        $suscripcion->delete();
+
+        return redirect()->back()->with('success', 'Solicitud rechazada correctamente.');
     }
 }

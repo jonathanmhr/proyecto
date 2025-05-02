@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Suscripcion extends Model
 {
@@ -14,6 +15,9 @@ class Suscripcion extends Model
 
     // Definir la tabla si el nombre no sigue la convención
     protected $table = 'suscripciones';
+
+    // Indicar si el modelo debe gestionar timestamps
+    public $timestamps = true;  // Si no tienes 'created_at' y 'updated_at', ponlo en false
 
     // Campos que pueden ser asignados masivamente
     protected $fillable = [
@@ -34,5 +38,29 @@ class Suscripcion extends Model
     public function clase()
     {
         return $this->belongsTo(ClaseGrupal::class, 'id_clase');
+    }
+
+    // Definir constantes para el estado de la suscripción
+    const ESTADO_ACTIVO = 'activo';
+    const ESTADO_INACTIVO = 'inactivo';
+
+    // Verificar si la suscripción está activa
+    public function estaActiva()
+    {
+        return $this->estado === self::ESTADO_ACTIVO && $this->fecha_fin > now();
+    }
+
+    // Accesor para formatear las fechas de forma adecuada
+    protected $dates = ['fecha_inicio', 'fecha_fin'];
+
+    // Mutador para manejar fechas de suscripción (ejemplo, si lo necesitas)
+    public function setFechaInicioAttribute($value)
+    {
+        $this->attributes['fecha_inicio'] = Carbon::parse($value);
+    }
+
+    public function setFechaFinAttribute($value)
+    {
+        $this->attributes['fecha_fin'] = Carbon::parse($value);
     }
 }

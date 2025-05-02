@@ -32,7 +32,6 @@ class UserController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
-
     // Método para asignar un rol a un usuario
     public function assignRole(Request $request, $id)
     {
@@ -114,11 +113,12 @@ class UserController extends Controller
     // Método para mostrar el formulario de edición de un usuario
     public function edit($id)
     {
-        // Obtener el usuario por su ID
         $user = User::findOrFail($id);
 
-        // Retornar la vista de edición con el usuario
-        return view('admin.users.edit', compact('user'));
+        // Obtener las clases a las que el usuario está suscrito
+        $clases = $user->clases;
+
+        return view('admin.users.edit', compact('user', 'clases'));
     }
 
     // Método para actualizar la información de un usuario
@@ -145,13 +145,31 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Evitar eliminar usuarios con el rol 'admin' (suponiendo que tienes un campo 'role')
+        // Verificar si el usuario tiene suscripciones activas
+        if ($user->clases()->exists()) {
+            // Eliminar las suscripciones del usuario
+            $user->clases()->detach(); // Desvincula las clases
+        }
+
+        // Evitar eliminar usuarios con el rol 'admin'
         if ($user->role === 'admin') {
             return redirect()->route('admin.users.index')->with('error', 'No puedes eliminar un usuario con rol de admin.');
         }
 
         // Eliminar el usuario
         $user->delete();
+
         return redirect()->route('admin.users.index')->with('success', 'Usuario eliminado correctamente.');
+    }
+
+    // Método para ver todas las suscripciones de un usuario
+    public function suscripciones($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Obtener las clases a las que está suscrito el usuario
+        $suscripciones = $user->clases;
+
+        return view('admin.users.suscripciones', compact('user', 'suscripciones'));
     }
 }

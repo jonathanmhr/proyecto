@@ -39,7 +39,6 @@ Route::post('/email/verification-notification', function (Request $request) {
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 
-
 // ----------------------
 // RUTAS ADMIN (acceso total)
 // ----------------------
@@ -79,12 +78,17 @@ Route::middleware([
     Route::post('entrenadores', [AdminEntrenadorController::class, 'storeEntrenador'])->name('entrenadores.store');
     Route::post('entrenadores/{entrenador}/dar-baja', [AdminEntrenadorController::class, 'darBajaEntrenador'])->name('entrenadores.darBaja');
 
-
     // Gestión de alumnos
     Route::get('alumnos', [AdminEntrenadorController::class, 'verAlumnos'])->name('alumnos');
     Route::get('alumnos/{user}/editar', [AdminEntrenadorController::class, 'editarAlumno'])->name('alumnos.editar');
     Route::put('alumnos/{user}', [AdminEntrenadorController::class, 'actualizarAlumno'])->name('alumnos.actualizar');
     Route::post('alumnos/{user}/eliminar', [AdminEntrenadorController::class, 'eliminarAlumno'])->name('alumnos.eliminar');
+    Route::post('clases/{clase}/aceptar/{user}', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('clases.aceptar');
+    Route::post('clases/{clase}/rechazar/{user}', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('clases.rechazar');
+
+
+    // Gestión de suscripciones
+    Route::get('users/{id}/suscripciones', [UserController::class, 'suscripciones'])->name('users.suscripciones');
 });
 
 
@@ -100,33 +104,16 @@ Route::middleware([
     Route::get('/dashboard', [EntrenadorController::class, 'index'])->name('dashboard');
 
     // Clases
-    Route::resource('clases', ClaseGrupalController::class)->except(['show']);
+    Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
 
     // Gestión de alumnos en clases
-    Route::post('clases/{clase}/agregar-usuario', [ClaseGrupalController::class, 'agregarUsuario'])->name('clases.agregarUsuario');
-    Route::post('clases/{clase}/{user}/eliminar-usuario', [ClaseGrupalController::class, 'eliminarUsuario'])->name('clases.eliminarUsuario');
+    Route::post('clases/{clase}/{user}/aceptar', [ClaseGrupalController::class, 'aceptarSolicitud'])->name('clases.aceptar');
+    Route::post('clases/{clase}/{user}/rechazar', [ClaseGrupalController::class, 'rechazarSolicitud'])->name('clases.rechazar');
 
-    // Usuarios
-    Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
-    Route::put('/usuarios/{user}', [UserController::class, 'update'])->name('usuarios.update');
-
-    // Notificaciones
-    //Route::resource('notificaciones', NotificacionesController::class)->only(['index', 'store']);
-
-    // Estadísticas
-    //Route::get('/estadisticas', [EstadisticasController::class, 'index'])->name('estadisticas.index');
-
-    // Suscripciones
-    //Route::get('/suscripciones', [SuscripcionesController::class, 'index'])->name('suscripciones.index');
-
-    // Reportes
-    //Route::get('/reportes', [ReportesController::class, 'index'])->name('reportes.index');
 });
 
 // ----------------------
 // RUTAS CLIENTE (ver clases y unirse)
 // ----------------------
-// Rutas para las clases grupales
 Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
-Route::post('clases', [ClaseGrupalController::class, 'store'])->name('clases.store');
 Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
