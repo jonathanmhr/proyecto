@@ -21,9 +21,11 @@ class ClaseGrupalController extends Controller
             $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
         } else {
             $clases = ClaseGrupal::withCount('usuarios')
-                ->whereDate('fecha_inicio', '>=', now())
-                ->havingRaw('usuarios_count < cupos_maximos')
-                ->get();
+            ->whereDate('fecha_inicio', '>=', now())
+            ->get()
+            ->filter(function ($clase) {
+                return $clase->usuarios_count < $clase->cupos_maximos;
+            });
         }
 
         return view('clases.index', compact('clases'));
