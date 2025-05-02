@@ -18,6 +18,11 @@ class AdminEntrenadorController extends Controller
     // Dashboard y vistas principales
     // ========================================
 
+    public function index()
+    {
+        return view('entrenador.dashboard');
+    }
+
     public function dashboard()
     {
         $totalClases = ClaseGrupal::count();
