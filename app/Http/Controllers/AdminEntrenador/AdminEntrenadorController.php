@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Silber\Bouncer\BouncerFacade as Bouncer;
+use Silber\Bouncer\Database\Role;
 use Auth;
 
 class AdminEntrenadorController extends Controller
