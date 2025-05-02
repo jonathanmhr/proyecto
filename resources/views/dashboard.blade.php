@@ -50,7 +50,13 @@
                     @if ($suscripcion->clase)
                         <div class="border-b border-purple-200 pb-2 mb-2">
                             <div class="text-purple-900 font-medium">{{ $suscripcion->clase->nombre }}</div>
-                            <div class="text-sm text-purple-700">Suscrito el {{ $suscripcion->created_at->format('d/m/Y') }}</div>
+                            <div class="text-sm text-purple-700">
+                                @if ($suscripcion->created_at)
+                                    Suscrito el {{ $suscripcion->created_at->format('d/m/Y') }}
+                                @else
+                                    Suscripción sin fecha
+                                @endif
+                            </div>
                         </div>
                     @else
                         <div class="text-sm text-red-500">❌ Clase eliminada de una suscripción anterior.</div>
