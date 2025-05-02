@@ -13,19 +13,12 @@ class EntrenadorController extends Controller
     {
         $user = auth()->user();
     
-        // Mostrar clases según el rol
+        // Obtener las clases según el rol
         if ($user->can('admin_entrenador')) {
             $clases = ClaseGrupal::all();
         } elseif ($user->can('entrenador')) {
-            // Clases del entrenador con estado
             $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
-    
-            // Filtrar clases por estado
-            $clasesPendientes = $clases->where('cambio_pendiente', true);
-            $clasesAprobadas = $clases->where('cambio_pendiente', false);
-            $clasesRechazadas = $clases->where('estado', 'rechazada'); // Ajusta si usas otro campo para rechazar
         } else {
-            // Mostrar solo clases con cupo disponible, fecha de inicio futura o actual
             $clases = ClaseGrupal::withCount('usuarios')
                 ->whereDate('fecha_inicio', '>=', now())
                 ->get()
@@ -34,9 +27,23 @@ class EntrenadorController extends Controller
                 });
         }
     
-        // Pasar las clases por estado a la vista
-        return view('entrenador.clases.index', compact('clasesAprobadas', 'clasesPendientes', 'clasesRechazadas'));
+        // Obtener clases con cambios pendientes, aprobadas y rechazadas
+        $clasesPendientes = ClaseGrupal::where('entrenador_id', $user->id)
+            ->where('cambio_pendiente', true)
+            ->get();
+    
+        $clasesAprobadas = ClaseGrupal::where('entrenador_id', $user->id)
+            ->where('cambio_pendiente', false)
+            ->get();
+    
+        $clasesRechazadas = ClaseGrupal::where('entrenador_id', $user->id)
+            ->where('cambio_pendiente', '!=', true)
+            ->get();
+    
+        // Pasar las variables a la vista
+        return view('entrenador.dashboard', compact('clases', 'clasesPendientes', 'clasesAprobadas', 'clasesRechazadas'));
     }
+    
     
 
     public function editClase($id)
