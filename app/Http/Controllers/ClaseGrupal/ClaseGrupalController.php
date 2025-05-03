@@ -30,27 +30,38 @@ class ClaseGrupalController extends Controller
         return view('clases.index', compact('clases'));
     }
 
-    public function unirse($id)
+    public function unirse(ClaseGrupal $clase)
     {
-        $clase = ClaseGrupal::findOrFail($id);
-        $user = auth()->user();
-
-        if ($clase->usuarios()->where('id_usuario', $user->id)->exists()) {
-            return redirect()->route('clases.index')->with('info', 'Ya estás inscrito en esta clase.');
+        $usuario = auth()->user();
+    
+        // Verificar si ya está inscrito
+        if ($clase->usuarios()->where('id_usuario', $usuario->id)->exists()) {
+            return redirect()->route('cliente.clases.index')->with('info', 'Ya estás inscrito en esta clase.');
         }
-
+    
+        // Validar cupo disponible
         if ($clase->usuarios()->count() >= $clase->cupos_maximos) {
-            return redirect()->route('clases.index')->with('error', 'Esta clase ya está llena.');
+            return redirect()->route('cliente.clases.index')->with('error', 'Esta clase ya está llena.');
         }
-
+    
+        // Validar fecha
+        if ($clase->fecha_inicio < now()) {
+            return redirect()->route('cliente.clases.index')->with('error', 'No puedes inscribirte en una clase ya iniciada.');
+        }
+    
         // Crear la suscripción
-        $user->suscripciones()->create([
-            'clase_id' => $clase->id,
+        Suscripcion::create([
+            'id_usuario' => $usuario->id,
+            'id_clase' => $clase->id_clase,
             'estado' => 'activo',
+            'fecha_inicio' => now(),
+            'fecha_fin' => now()->addMonths(1),
         ]);
-
-        return redirect()->route('clases.index')->with('success', 'Te has unido a la clase.');
+    
+        return redirect()->route('cliente.clases.index')->with('success', 'Te has unido a la clase con éxito.');
     }
+    
+    
 
     // Mostrar las suscripciones del usuario
     public function suscripciones()
