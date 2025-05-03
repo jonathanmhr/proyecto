@@ -1,5 +1,12 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
+        <!-- Botón para volver al Dashboard -->
+        <div class="mb-4">
+            <a href="{{ route('admin-entrenador.dashboard') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
+                Volver al Dashboard
+            </a>
+        </div>
+
         <h1 class="text-2xl font-bold mb-6">Solicitudes Pendientes de Clase</h1>
 
         @if ($solicitudesPendientes->isEmpty())
