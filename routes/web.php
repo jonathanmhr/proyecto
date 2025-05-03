@@ -74,12 +74,10 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
         Route::put('clase/{id}/aprobar', [AdminEntrenadorController::class, 'aprobarCambios'])->name('clases.aprobar');
 
         // Gestión de entrenadores
-        //Route::resource('entrenadores', AdminEntrenadorController::class)->except(['show']);
+        Route::resource('entrenadores', AdminEntrenadorController::class)->except(['show']);
 
         // Gestión de alumnos
-        Route::get('alumnos', [AdminEntrenadorController::class, 'verAlumnos'])->name('alumnos.index');
-        Route::get('alumnos/{user}/edit', [AdminEntrenadorController::class, 'editarAlumno'])->name('alumnos.edit');
-        Route::put('alumnos/{user}', [AdminEntrenadorController::class, 'actualizarAlumno'])->name('alumnos.update');
+        Route::resource('alumnos', AdminEntrenadorController::class)->except(['show']);
         Route::post('alumnos/{user}/quitar-de-clase/{claseId}', [AdminEntrenadorController::class, 'quitarDeClase'])->name('alumnos.quitarDeClase');
 
         // Solicitudes de clases
