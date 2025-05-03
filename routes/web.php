@@ -65,7 +65,7 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
         Route::get('/', [AdminEntrenadorController::class, 'dashboard'])->name('dashboard');
 
         // Gestión de clases
-        Route::get('admin-entrenador/clases', [AdminEntrenadorController::class, 'verClases'])->name('admin-entrenador.clases.index');
+        Route::get('clases', [AdminEntrenadorController::class, 'verClases'])->name('clases.index');
         Route::resource('clases', AdminEntrenadorController::class)->except(['show']);
         Route::put('clase/{id}/aprobar', [AdminEntrenadorController::class, 'aprobarCambios'])->name('clases.aprobar');
 
