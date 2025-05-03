@@ -33,7 +33,7 @@
                                 {{ $alumno->clases->count() }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                <a href="{{ route('admin-entrenador.alumnos.editar', $alumno->id) }}"
+                                <a href="{{ route('admin-entrenador.entrenadores.edit', $alumno->id) }}"
                                    class="inline-flex items-center px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-lg shadow">
                                     <i data-feather="edit" class="w-4 h-4 mr-1"></i> Gestionar
                                 </a>
