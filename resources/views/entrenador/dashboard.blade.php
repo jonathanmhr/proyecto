@@ -12,9 +12,9 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Resumen General -->
-            <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-2xl shadow">
+            <div class="bg-gradient-to-br from-indigo-200 to-indigo-400 p-6 rounded-xl shadow-lg">
                 <h2 class="text-xl font-semibold text-indigo-800 mb-4">Resumen General</h2>
-                <div class="text-sm text-indigo-600">
+                <div class="text-sm text-indigo-700">
                     <p><strong>Total de Clases Activas:</strong> {{ $clases->count() }}</p>
                     <p><strong>Entrenamientos en Curso:</strong> {{ $entrenamientos->count() }}</p>
                     <p><strong>Suscripciones Activas:</strong> {{ $suscripciones->count() }}</p>
@@ -22,14 +22,13 @@
             </div>
 
             <!-- Mis Clases -->
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow">
+            <div class="bg-gradient-to-br from-blue-200 to-blue-400 p-6 rounded-xl shadow-lg">
                 <h2 class="text-xl font-semibold text-blue-800 mb-4">Mis Clases</h2>
                 @forelse ($clases as $clase)
-                    <div class="border-b border-blue-200 pb-2 mb-2">
+                    <div class="border-b border-blue-300 pb-2 mb-2">
                         <div class="text-blue-900 font-medium">{{ $clase->nombre }}</div>
                         <div class="text-sm text-blue-700">{{ $clase->descripcion }}</div>
-                        <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}
-                        </div>
+                        <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}</div>
                         <p class="text-sm text-blue-700">
                             @if ($clase->cambio_pendiente)
                                 <span class="text-yellow-600 font-bold">Cambio Pendiente de Aprobación</span>
@@ -37,23 +36,21 @@
                                 <span class="text-green-600 font-bold">Clase Aceptada</span>
                             @endif
                         </p>
-                        <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Editar
-                            clase</a>
+                        <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Editar clase</a>
                     </div>
                 @empty
                     <p class="text-blue-600">No tienes clases programadas.</p>
                 @endforelse
                 <div class="mt-4">
-                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver todas
-                        mis clases</a>
+                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver todas mis clases</a>
                 </div>
             </div>
 
             <!-- Mis Entrenamientos -->
-            <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl shadow">
+            <div class="bg-gradient-to-br from-green-200 to-green-400 p-6 rounded-xl shadow-lg">
                 <h2 class="text-xl font-semibold text-green-800 mb-4">Mis Entrenamientos</h2>
                 @forelse ($entrenamientos as $entrenamiento)
-                    <div class="border-b border-green-200 pb-2 mb-2">
+                    <div class="border-b border-green-300 pb-2 mb-2">
                         <div class="text-green-900 font-medium">{{ $entrenamiento->nombre }}</div>
                         <div class="text-sm text-green-700">Tipo: {{ $entrenamiento->tipo }}</div>
                         <div class="text-sm text-green-700">Duración: {{ $entrenamiento->duracion }} minutos</div>
@@ -65,12 +62,11 @@
             </div>
 
             <!-- Mis Reservas y Estado de Solicitudes -->
-            <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-2xl shadow">
+            <div class="bg-gradient-to-br from-yellow-200 to-yellow-400 p-6 rounded-xl shadow-lg">
                 <h2 class="text-xl font-semibold text-yellow-800 mb-4">Mis Reservas y Estado de Solicitudes</h2>
                 @forelse ($reservas as $reserva)
-                    <div class="border-b border-yellow-200 pb-2 mb-2">
-                        <div class="text-yellow-900 font-medium">{{ $reserva->clase->nombre }} (Reserva para:
-                            {{ $reserva->usuario->name }})</div>
+                    <div class="border-b border-yellow-300 pb-2 mb-2">
+                        <div class="text-yellow-900 font-medium">{{ $reserva->clase->nombre }} (Reserva para: {{ $reserva->usuario->name }})</div>
                         <div class="text-sm text-yellow-700">
                             Estado de la Reserva:
                             @if ($reserva->estado == 'pendiente')
@@ -88,16 +84,15 @@
             </div>
 
             <!-- Solicitudes Pendientes -->
-            <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-2xl shadow">
-                <h2 class="text-xl font-semibold text-yellow-800 mb-4">Solicitudes Pendientes</h2>
+            <div class="bg-gradient-to-br from-teal-200 to-teal-400 p-6 rounded-xl shadow-lg">
+                <h2 class="text-xl font-semibold text-teal-800 mb-4">Solicitudes Pendientes</h2>
                 @if ($solicitudesPendientes->count() > 0)
-                    <p class="text-sm text-yellow-600">
+                    <p class="text-sm text-teal-600">
                         Tienes {{ $solicitudesPendientes->count() }} solicitud(es) pendiente(s).
                     </p>
-                    <a href="{{ route('solicitudes.index') }}" class="text-yellow-500 hover:underline">Ver Solicitudes
-                        Pendientes</a>
+                    <a href="{{ route('solicitudes.index') }}" class="text-teal-500 hover:underline">Ver Solicitudes Pendientes</a>
                 @else
-                    <p class="text-sm text-yellow-600">
+                    <p class="text-sm text-teal-600">
                         No tienes solicitudes pendientes.
                     </p>
                 @endif
