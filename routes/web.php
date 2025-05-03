@@ -74,7 +74,13 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
         Route::put('clase/{id}/aprobar', [AdminEntrenadorController::class, 'aprobarCambios'])->name('clases.aprobar');
 
         // Gestión de entrenadores
-        Route::resource('entrenadores', AdminEntrenadorController::class)->except(['show']);
+        Route::get('entrenadores', [AdminEntrenadorController::class, 'index'])->name('entrenadores.index');
+        Route::get('entrenadores/create', [AdminEntrenadorController::class, 'create'])->name('entrenadores.create');
+        Route::post('entrenadores', [AdminEntrenadorController::class, 'store'])->name('entrenadores.store');
+        Route::get('entrenadores/{entrenador}/edit', [AdminEntrenadorController::class, 'editarEntrenador'])->name('entrenadores.edit');
+        Route::put('entrenadores/{entrenador}', [AdminEntrenadorController::class, 'actualizarEntrenador'])->name('entrenadores.update');
+        Route::delete('entrenadores/{entrenador}', [AdminEntrenadorController::class, 'destroy'])->name('entrenadores.destroy');
+        Route::post('entrenadores/{user}/dar-baja', [AdminEntrenadorController::class, 'darBajaEntrenador'])->name('entrenadores.darBaja');
 
         // Gestión de alumnos
         Route::get('alumnos', [AdminEntrenadorController::class, 'verAlumnos'])->name('alumnos.index');
