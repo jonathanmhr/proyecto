@@ -13,28 +13,36 @@ use App\Models\ReservaDeClase;
 class EntrenadorController extends Controller
 {
 
+    // EntrenadorController.php
     public function index()
     {
         // Obtener las clases del entrenador con su estado de cambio pendiente
         $clases = ClaseGrupal::where('entrenador_id', auth()->id())
             ->select('id_clase', 'nombre', 'fecha_inicio', 'fecha_fin', 'cambio_pendiente')
             ->get();
-    
+
         // Obtener las reservas de clases relacionadas con el entrenador
         $reservas = ReservaDeClase::whereIn('id_clase', $clases->pluck('id_clase'))->get();
-    
+
         // Obtener los entrenamientos del entrenador
         $entrenamientos = Entrenamiento::where('id_usuario', auth()->id())->get();
-    
+
         // Obtener las suscripciones activas
         $suscripciones = Suscripcion::where('id_usuario', auth()->id())->where('estado', 'activo')->get();
-    
+
         // Obtener las solicitudes pendientes
         $solicitudesPendientes = ReservaDeClase::where('estado', 'pendiente')->get();
-    
+
         // Pasar las clases, reservas, entrenamientos, suscripciones y solicitudes a la vista
-        return view('entrenador.dashboard', compact('clases', 'reservas', 'entrenamientos', 'suscripciones', 'solicitudesPendientes'));
+        return view('entrenador.clases.index', compact('clases', 'reservas', 'entrenamientos', 'suscripciones', 'solicitudesPendientes'));
     }
+
+    public function misClases()
+    {
+        $clases = ClaseGrupal::where('entrenador_id', auth()->id())->get();
+        return view('entrenador.clases.index', compact('clases'));
+    }
+
 
     // Método para aceptar una solicitud de alumno
     public function aceptarSolicitud($claseId, $userId)

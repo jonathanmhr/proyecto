@@ -105,7 +105,10 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access'])
     ->name('entrenador.')
     ->group(function () {
         Route::get('/dashboard', [EntrenadorController::class, 'index'])->name('dashboard');
-        Route::resource('clases', ClaseGrupalController::class)->except(['show']);
+
+        // Gestión de clases
+        Route::get('clases', [EntrenadorController::class, 'misClases'])->name('clases.index');
+        Route::get('clases/{clase}/edit', [EntrenadorController::class, 'edit'])->name('clases.edit');
 
         // Gestión de alumnos en clases
         Route::post('clases/{clase}/agregar-usuario', [ClaseGrupalController::class, 'agregarUsuario'])->name('clases.agregarUsuario');
