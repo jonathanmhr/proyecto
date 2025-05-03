@@ -39,4 +39,8 @@ class ClaseGrupal extends Model
     {
         return $this->belongsTo(User::class, 'entrenador_id');  // Suponiendo que tienes un campo 'id_entrenador' en tu tabla 'clases_grupales'
     }
+    public function reservas()
+    {
+        return $this->hasMany(ReservaDeClase::class, 'id_clase');
+    }
 }
