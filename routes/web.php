@@ -66,6 +66,11 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
 
         // Gestión de clases
         Route::get('clases', [AdminEntrenadorController::class, 'verClases'])->name('clases.index');
+        Route::get('clases/create', [AdminEntrenadorController::class, 'create'])->name('clases.create');
+        Route::post('clases', [AdminEntrenadorController::class, 'store'])->name('clases.store');
+        Route::get('clases/{clase}/edit', [AdminEntrenadorController::class, 'edit'])->name('clases.edit');
+        Route::put('clases/{clase}', [AdminEntrenadorController::class, 'update'])->name('clases.update');
+        Route::delete('clases/{clase}', [AdminEntrenadorController::class, 'destroy'])->name('clases.destroy');
         Route::put('clase/{id}/aprobar', [AdminEntrenadorController::class, 'aprobarCambios'])->name('clases.aprobar');
 
         // Gestión de entrenadores
