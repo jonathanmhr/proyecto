@@ -46,7 +46,7 @@
                             <td class="px-4 py-2">{{ $entrenador->email }}</td>
                             <td class="px-4 py-2 space-x-2">
                                 <!-- Editar Entrenador -->
-                                <a href="{{ route('admin-entrenador.entrenadores.edit', $entrenador) }}"
+                                <a href="{{ route('admin-entrenador.alumnos.edit', $alumno) }}">
                                     class="text-blue-500 hover:text-blue-700">
                                     Editar
                                 </a>
