@@ -59,7 +59,7 @@ class AdminEntrenadorController extends Controller
     public function darBajaEntrenador(User $user)
     {
         if (auth()->user()->hasRole('admin_entrenador')) {
-            if ($user->hasRole('admin_entrenador')) {
+            if ($user->can('admin_entrenador')) {
                 return redirect()->route('admin-entrenador.entrenadores')
                     ->with('error', 'No puedes dar de baja a otro admin_entrenador.');
             }

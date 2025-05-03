@@ -10,7 +10,7 @@
             <div class="bg-white p-8 rounded-2xl shadow-lg">
                 <div class="flex items-center justify-between mb-6">
                     <h1 class="text-3xl font-bold text-gray-900">Clases Disponibles</h1>
-                    @if(auth()->user()->hasRole('admin_entrenador'))
+                    @if(auth()->user()->isAn('admin_entrenador'))
                         <a href="{{ route('admin-entrenador.clases.create') }}" class="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg shadow transition duration-200">
                             Crear Clase
                         </a>
@@ -25,7 +25,7 @@
                             Cupos disponibles: {{ $clase->cupos_maximos - $clase->usuarios->count() }}
                         </span>
 
-                        @if(auth()->user()->hasRole('cliente'))
+                        @if(auth()->user()->isA('cliente'))
                             <form action="{{ route('cliente.clases.unirse', $clase->id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
