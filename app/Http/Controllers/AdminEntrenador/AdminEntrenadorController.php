@@ -26,20 +26,14 @@ class AdminEntrenadorController extends Controller
 
     public function dashboard()
     {
-        // Obtener las clases activas (inicio pasado o presente, fin futuro o presente)
-        $clases = ClaseGrupal::where('fecha_inicio', '<=', now())
-                             ->where('fecha_fin', '>=', now())
-                             ->get(); // Obtener todas las clases activas
-    
-        // Contamos el total de clases activas
-        $totalClases = $clases->count();
+        // Obtener todas las clases
+        $totalClases = ClaseGrupal::count();
     
         // Contamos el total de entrenadores y alumnos
         $totalEntrenadores = Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
         $totalAlumnos = Bouncer::role()->where('name', 'cliente')->first()->users()->count();
     
-        // Pasamos las variables a la vista
-        return view('admin-entrenador.dashboard', compact('clases', 'totalClases', 'totalEntrenadores', 'totalAlumnos'));
+        return view('admin-entrenador.dashboard', compact('totalClases', 'totalEntrenadores', 'totalAlumnos'));
     }
 
     public function verClases()
