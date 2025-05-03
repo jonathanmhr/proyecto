@@ -75,6 +75,7 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
 
         // Gestión de entrenadores
         Route::get('entrenadores', [AdminEntrenadorController::class, 'index'])->name('entrenadores.index');
+        Route::get('admin-entrenador/entrenadores', [AdminEntrenadorController::class, 'index'])->name('admin-entrenador.entrenadores.index');
         Route::get('entrenadores/create', [AdminEntrenadorController::class, 'create'])->name('entrenadores.create');
         Route::post('entrenadores', [AdminEntrenadorController::class, 'store'])->name('entrenadores.store');
         Route::get('entrenadores/{entrenador}/edit', [AdminEntrenadorController::class, 'editarEntrenador'])->name('entrenadores.edit');
