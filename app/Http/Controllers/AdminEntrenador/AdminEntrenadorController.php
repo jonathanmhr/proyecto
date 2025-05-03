@@ -259,7 +259,7 @@ class AdminEntrenadorController extends Controller
             ->where('estado', 'pendiente')
             ->get();
     
-        return view('admin-entrenador.solicitudes.index', compact('solicitudesPendientes'));
+            return view('admin-entrenador.solicitudes.index', compact('solicitudesPendientes'));
     }
 
     public function aceptarSolicitud($claseId, $usuarioId)

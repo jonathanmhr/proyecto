@@ -89,9 +89,9 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
         Route::post('alumnos/{user}/quitar-de-clase/{claseId}', [AdminEntrenadorController::class, 'quitarDeClase'])->name('alumnos.quitarDeClase');
 
         // Solicitudes de clases
-        Route::get('admin-entrenador/solicitudes', [AdminEntrenadorController::class, 'verSolicitudesClases'])->name('admin-entrenador.solicitudes.index');
-        Route::post('admin-entrenador/clases/{claseId}/aceptar/{usuarioId}', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('admin-entrenador.solicitudes.aceptar');
-        Route::post('admin-entrenador/clases/{claseId}/rechazar/{usuarioId}', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('admin-entrenador.solicitudes.rechazar');        
+        Route::get('admin-entrenador/solicitudes', [AdminEntrenadorController::class, 'verSolicitudesClases'])->name('solicitudes.index');
+        Route::post('admin-entrenador/solicitudes/{claseId}/aceptar/{usuarioId}', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('solicitudes.aceptar');
+        Route::post('admin-entrenador/solicitudes/{claseId}/rechazar/{usuarioId}', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
 
         // Suscripciones de usuarios
         Route::get('users/{id}/suscripciones', [UserController::class, 'suscripciones'])->name('users.suscripciones');

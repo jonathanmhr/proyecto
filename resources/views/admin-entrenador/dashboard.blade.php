@@ -72,7 +72,7 @@
                 <!-- Gestionar Solicitudes -->
                 <div class="bg-white shadow rounded-xl p-4">
                     <h2 class="text-lg font-semibold text-gray-700 mb-2">Gestionar Solicitudes Pendientes</h2>
-                    <a href="{{ route('admin-entrenador.solicitudes.index') }}"
+                    <a href="{{ route('solicitudes.index') }}"
                         class="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                         <i data-feather="alert-circle" class="w-5 h-5"></i> Ver Solicitudes
                     </a>
