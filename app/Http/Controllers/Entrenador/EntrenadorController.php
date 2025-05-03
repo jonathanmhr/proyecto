@@ -10,6 +10,15 @@ use Illuminate\Http\Request;
 
 class EntrenadorController extends Controller
 {
+
+    public function index()
+    {
+        // Aquí puedes traer la información que necesitas para el dashboard, por ejemplo, clases del entrenador
+        $clases = ClaseGrupal::where('id_entrenador', auth()->id())->get();
+
+        return view('entrenador.dashboard', compact('clases'));
+    }
+
     // Método para aceptar una solicitud de alumno
     public function aceptarSolicitud($claseId, $userId)
     {
@@ -96,4 +105,3 @@ class EntrenadorController extends Controller
         return redirect()->route('entrenador.clase.index')->with('success', 'Clase actualizada, pendiente de aprobación.');
     }
 }
-    
