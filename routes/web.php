@@ -65,6 +65,7 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
         Route::get('/', [AdminEntrenadorController::class, 'dashboard'])->name('dashboard');
 
         // Gestión de clases
+        Route::get('admin-entrenador/clases', [AdminEntrenadorController::class, 'verClases'])->name('admin-entrenador.clases.index');
         Route::resource('clases', AdminEntrenadorController::class)->except(['show']);
         Route::put('clase/{id}/aprobar', [AdminEntrenadorController::class, 'aprobarCambios'])->name('clases.aprobar');
 
@@ -91,7 +92,15 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access'])
     ->name('entrenador.')
     ->group(function () {
         Route::get('/dashboard', [EntrenadorController::class, 'index'])->name('dashboard');
-        Route::resource('clases', EntrenadorController::class)->except(['show']);
+        Route::resource('clases', ClaseGrupalController::class)->except(['show']);
+
+        // Gestión de alumnos en clases
+        Route::post('clases/{clase}/agregar-usuario', [ClaseGrupalController::class, 'agregarUsuario'])->name('clases.agregarUsuario');
+        Route::post('clases/{clase}/{user}/eliminar-usuario', [ClaseGrupalController::class, 'eliminarUsuario'])->name('clases.eliminarUsuario');
+
+        // solicitud
+        Route::post('clases/{claseId}/aceptar/{userId}', [EntrenadorController::class, 'aceptarSolicitud'])->name('clases.aceptarSolicitud');
+        Route::post('clases/{claseId}/rechazar/{userId}', [EntrenadorController::class, 'rechazarSolicitud'])->name('clases.rechazarSolicitud');
     });
 
 // ----------------------
