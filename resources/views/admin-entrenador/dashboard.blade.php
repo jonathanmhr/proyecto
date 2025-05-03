@@ -71,7 +71,7 @@
 
                 <!-- Gestionar Solicitudes -->
                     <a href="{{ route('admin-entrenador.solicitudes.index') }}"
-                        class="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
+                        class="bg-pink-50 hover:bg-pink-100 text-pink-600 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                         <i data-feather="alert-circle" class="w-5 h-5"></i> Ver Solicitudes
                     </a>
             </div>
