@@ -37,7 +37,7 @@
                             @endif
                         </p>
                         <p>{{ dd($clase->id) }}</p>
-                        <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Editar clase</a>
+                        <a href="{{ route('entrenador.clases.edit', $clase->id) }}" class="text-blue-500 hover:underline">Editar clase</a>
                     </div>
                 @empty
                     <p class="text-blue-600">No tienes clases programadas.</p>
