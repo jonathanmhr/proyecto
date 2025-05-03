@@ -36,6 +36,7 @@
                                 <span class="text-green-500 font-bold">Clase Aceptada</span>
                             @endif
                         </p>
+                        <p>{{ dd($clase->id) }}</p>
                         <a href="{{ route('entrenador.clases.edit', $clase->id) }}" class="text-blue-500 hover:underline">Editar clase</a>
                     </div>
                 @empty
