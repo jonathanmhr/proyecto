@@ -107,6 +107,7 @@ class AdminEntrenadorController extends Controller
     // Gestión de Alumnos
     // ========================================
 
+
     public function editarAlumno(User $user)
     {
         $clases = ClaseGrupal::all();
