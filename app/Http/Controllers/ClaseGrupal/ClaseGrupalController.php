@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ClaseGrupal;
 use Illuminate\Http\Request;
 use App\Models\Suscripcion;
+use App\Models\User;
 
 class ClaseGrupalController extends Controller
 {
@@ -13,10 +14,10 @@ class ClaseGrupalController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->hasRole('admin_entrenador')) {
+        if ($user->can('admin_entrenador')) {
             // Admin-entrenador: Ve todas las clases
             $clases = ClaseGrupal::all();
-        } elseif ($user->hasRole('entrenador')) {
+        } elseif ($user->can('entrenador')) {
             // Entrenador: Ve solo sus propias clases
             $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
         } else {
