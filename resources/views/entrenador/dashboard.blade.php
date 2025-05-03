@@ -28,21 +28,24 @@
                     <div class="border-b border-blue-200 pb-2 mb-2">
                         <div class="text-blue-900 font-medium">{{ $clase->nombre }}</div>
                         <div class="text-sm text-blue-700">{{ $clase->descripcion }}</div>
-                        <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}</div>
+                        <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}
+                        </div>
                         <p class="text-sm text-blue-700">
-                            @if($clase->cambio_pendiente)
+                            @if ($clase->cambio_pendiente)
                                 <span class="text-yellow-600 font-bold">Cambio Pendiente de Aprobación</span>
                             @else
                                 <span class="text-green-600 font-bold">Clase Aceptada</span>
                             @endif
                         </p>
-                        <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Editar clase</a>
+                        <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Editar
+                            clase</a>
                     </div>
                 @empty
                     <p class="text-blue-600">No tienes clases programadas.</p>
                 @endforelse
                 <div class="mt-4">
-                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver todas mis clases</a>
+                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver todas
+                        mis clases</a>
                 </div>
             </div>
 
@@ -66,10 +69,11 @@
                 <h2 class="text-xl font-semibold text-yellow-800 mb-4">Mis Reservas y Estado de Solicitudes</h2>
                 @forelse ($reservas as $reserva)
                     <div class="border-b border-yellow-200 pb-2 mb-2">
-                        <div class="text-yellow-900 font-medium">{{ $reserva->clase->nombre }} (Reserva para: {{ $reserva->usuario->name }})</div>
+                        <div class="text-yellow-900 font-medium">{{ $reserva->clase->nombre }} (Reserva para:
+                            {{ $reserva->usuario->name }})</div>
                         <div class="text-sm text-yellow-700">
-                            Estado de la Reserva: 
-                            @if($reserva->estado == 'pendiente')
+                            Estado de la Reserva:
+                            @if ($reserva->estado == 'pendiente')
                                 <span class="text-yellow-600">Pendiente</span>
                             @elseif($reserva->estado == 'aceptada')
                                 <span class="text-green-600">Aceptada</span>
@@ -86,10 +90,17 @@
             <!-- Solicitudes Pendientes -->
             <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-2xl shadow">
                 <h2 class="text-xl font-semibold text-yellow-800 mb-4">Solicitudes Pendientes</h2>
-                <p class="text-sm text-yellow-600">
-                    Tienes {{ $solicitudesPendientes->count() }} solicitud(es) pendiente(s).
-                </p>
-                <a href="{{ route('solicitudes.index') }}" class="text-yellow-500 hover:underline">Ver Solicitudes Pendientes</a>
+                @if ($solicitudesPendientes->count() > 0)
+                    <p class="text-sm text-yellow-600">
+                        Tienes {{ $solicitudesPendientes->count() }} solicitud(es) pendiente(s).
+                    </p>
+                    <a href="{{ route('solicitudes.index') }}" class="text-yellow-500 hover:underline">Ver Solicitudes
+                        Pendientes</a>
+                @else
+                    <p class="text-sm text-yellow-600">
+                        No tienes solicitudes pendientes.
+                    </p>
+                @endif
             </div>
         </div>
     </div>
