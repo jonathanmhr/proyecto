@@ -101,10 +101,11 @@ class EntrenadorController extends Controller
     // Método para editar los detalles de una clase
     public function edit($id)
     {
-        dd('Método edit alcanzado', $id);
+        dd($id); // Para ver si el ID llega correctamente
         $clase = ClaseGrupal::findOrFail($id);
         return view('entrenador.clase.edit', compact('clase'));
     }
+    
     // Método para actualizar los detalles de la clase, pero debe marcarse como pendiente para aprobación
     public function updateClase(Request $request, $id)
     {
