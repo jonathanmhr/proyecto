@@ -74,7 +74,7 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
         Route::put('clase/{id}/aprobar', [AdminEntrenadorController::class, 'aprobarCambios'])->name('clases.aprobar');
 
         // Gestión de entrenadores
-        Route::get('admin-entrenador/entrenadores', [AdminEntrenadorController::class, 'verEntrenadores'])->name('admin-entrenador.entrenadores.index');
+        Route::get('entrenadores', [AdminEntrenadorController::class, 'verEntrenadores'])->name('admin-entrenador.entrenadores.index');
         //Route::get('admin-entrenador/entrenadores', [AdminEntrenadorController::class, 'index'])->name('admin-entrenador.entrenadores.index');
         Route::get('entrenadores/create', [AdminEntrenadorController::class, 'create'])->name('entrenadores.create');
         Route::post('entrenadores', [AdminEntrenadorController::class, 'store'])->name('entrenadores.store');
