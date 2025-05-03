@@ -24,21 +24,8 @@ class AdminEntrenadorController extends Controller
         return view('entrenador.dashboard');
     }
 
-    public function dashboard()
-    {
-        $totalClases = ClaseGrupal::count();
-    
-        $totalEntrenadores = Role::where('name', 'entrenador')->first()?->users()->count() ?? 0;
-        $totalAlumnos = Role::where('name', 'cliente')->first()?->users()->count() ?? 0;
-    
-        return view('admin-entrenador.dashboard', compact('totalClases', 'totalEntrenadores', 'totalAlumnos'));
-    }
 
-    public function verClases()
-    {
-        $clases = ClaseGrupal::with('entrenador')->get();
-        return view('admin-entrenador.clases.index', compact('clases'));
-    }
+
 
     public function verEntrenadores()
     {
@@ -124,28 +111,28 @@ class AdminEntrenadorController extends Controller
     public function quitarDeClase(User $user, $claseId)
     {
         $clase = ClaseGrupal::findOrFail($claseId);
-    
+
         // Verificamos si el alumno está inscrito en la clase
         if (!$user->clases->contains($clase)) {
             return redirect()->route('admin-entrenador.alumnos.index')->with('error', 'El alumno no está inscrito en esta clase.');
         }
-    
+
         // Desvinculamos al alumno de la clase
         $user->clases()->detach($claseId);
-    
+
         // Cancelar la suscripción (si existe)
         $suscripcion = Suscripcion::where('id_usuario', $user->id)
             ->where('id_clase', $claseId)
             ->where('estado', Suscripcion::ESTADO_ACTIVO) // Solo si está activa
             ->first();
-    
+
         if ($suscripcion) {
             // Opcionalmente, puedes cambiar el estado de la suscripción a 'inactivo' si no quieres eliminarla completamente
             $suscripcion->estado = Suscripcion::ESTADO_INACTIVO;
             $suscripcion->save();
             // Si prefieres eliminarla, usa $suscripcion->delete(); en lugar de $suscripcion->save();
         }
-    
+
         return redirect()->route('admin-entrenador.alumnos.index')->with('success', 'Alumno quitado de la clase y su suscripción cancelada.');
     }
 
