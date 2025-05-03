@@ -90,8 +90,8 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
 
         // Solicitudes de clases
         Route::get('admin-entrenador/solicitudes', [AdminEntrenadorController::class, 'verSolicitudesClases'])->name('admin-entrenador.solicitudes.index');
-        Route::post('clases/{clase}/aceptar/{user}', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('clases.aceptar');
-        Route::post('clases/{clase}/rechazar/{user}', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('clases.rechazar');
+        Route::post('admin-entrenador/clases/{claseId}/aceptar/{usuarioId}', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('admin-entrenador.solicitudes.aceptar');
+        Route::post('admin-entrenador/clases/{claseId}/rechazar/{usuarioId}', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('admin-entrenador.solicitudes.rechazar');        
 
         // Suscripciones de usuarios
         Route::get('users/{id}/suscripciones', [UserController::class, 'suscripciones'])->name('users.suscripciones');

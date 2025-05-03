@@ -29,7 +29,7 @@ class AdminEntrenadorController extends Controller
         $totalEntrenadores = Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
         $totalAlumnos = Bouncer::role()->where('name', 'cliente')->first()->users()->count();
         $totalSolicitudesPendientes = ReservaDeClase::where('estado', 'pendiente')->count();
-        
+
         return view('admin-entrenador.dashboard', compact('totalClases', 'totalEntrenadores', 'totalAlumnos', 'totalSolicitudesPendientes'));
     }
 
@@ -259,7 +259,7 @@ class AdminEntrenadorController extends Controller
             ->where('estado', 'pendiente')
             ->get();
     
-        return view('admin-entrenador.clases.solicitudes.index', compact('solicitudesPendientes'));
+        return view('admin-entrenador.solicitudes.index', compact('solicitudesPendientes'));
     }
 
     public function aceptarSolicitud($claseId, $usuarioId)
