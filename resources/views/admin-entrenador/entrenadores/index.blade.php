@@ -1,7 +1,4 @@
 <x-app-layout>
-    @php
-        dd($entrenadores);
-    @endphp
     <div class="container mx-auto mt-6">
         @if (session('success'))
             <div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4">
