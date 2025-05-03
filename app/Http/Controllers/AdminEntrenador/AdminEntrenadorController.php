@@ -19,11 +19,6 @@ class AdminEntrenadorController extends Controller
     // Dashboard y vistas principales
     // ========================================
 
-    public function index()
-    {
-        return view('entrenador.dashboard');
-    }
-
     public function dashboard()
     {
         // Contar el total de clases sin necesidad de cargar todas
