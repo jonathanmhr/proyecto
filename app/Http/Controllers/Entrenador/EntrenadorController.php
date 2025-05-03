@@ -17,18 +17,18 @@ class EntrenadorController extends Controller
     {
         // Obtener las clases del entrenador con su estado de cambio pendiente
         $clases = ClaseGrupal::where('entrenador_id', auth()->id())
-                            ->select('id', 'nombre', 'fecha_inicio', 'fecha_fin', 'cambio_pendiente')
-                            ->get();
-    
+            ->select('id_clase', 'nombre', 'fecha_inicio', 'fecha_fin', 'cambio_pendiente')
+            ->get();
+
         // Obtener las reservas de clases relacionadas con el entrenador
-        $reservas = ReservaDeClase::whereIn('id_clase', $clases->pluck('id'))->get();
-    
+        $reservas = ReservaDeClase::whereIn('id_clase', $clases->pluck('id_clase'))->get();
+
         // Obtener los entrenamientos del entrenador
         $entrenamientos = Entrenamiento::where('id_usuario', auth()->id())->get();
-    
+
         // Obtener las suscripciones activas
         $suscripciones = Suscripcion::where('id_usuario', auth()->id())->where('estado', 'activo')->get();
-    
+
         // Pasar las clases, reservas, entrenamientos y suscripciones a la vista
         return view('entrenador.dashboard', compact('clases', 'reservas', 'entrenamientos', 'suscripciones'));
     }
