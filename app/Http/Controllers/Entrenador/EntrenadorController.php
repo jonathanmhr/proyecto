@@ -8,23 +8,29 @@ use App\Models\Suscripcion;
 use App\Models\User;
 use App\Models\Entrenamiento;
 use Illuminate\Http\Request;
+use App\Models\ReservaDeClase;
 
 class EntrenadorController extends Controller
 {
 
     public function index()
     {
-        // Aquí puedes traer la información que necesitas para el dashboard, por ejemplo, clases del entrenador
-        $clases = ClaseGrupal::where('entrenador_id', auth()->id())->get();
-
+        // Obtener las clases del entrenador con su estado de cambio pendiente
+        $clases = ClaseGrupal::where('entrenador_id', auth()->id())
+                            ->select('id', 'nombre', 'fecha_inicio', 'fecha_fin', 'cambio_pendiente')
+                            ->get();
+    
+        // Obtener las reservas de clases relacionadas con el entrenador
+        $reservas = ReservaDeClase::whereIn('id_clase', $clases->pluck('id'))->get();
+    
         // Obtener los entrenamientos del entrenador
         $entrenamientos = Entrenamiento::where('id_usuario', auth()->id())->get();
-
+    
         // Obtener las suscripciones activas
         $suscripciones = Suscripcion::where('id_usuario', auth()->id())->where('estado', 'activo')->get();
-
-        // Pasar las clases, entrenamientos y suscripciones a la vista
-        return view('entrenador.dashboard', compact('clases', 'entrenamientos', 'suscripciones'));
+    
+        // Pasar las clases, reservas, entrenamientos y suscripciones a la vista
+        return view('entrenador.dashboard', compact('clases', 'reservas', 'entrenamientos', 'suscripciones'));
     }
 
     // Método para aceptar una solicitud de alumno
