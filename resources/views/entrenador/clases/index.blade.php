@@ -1,4 +1,3 @@
-<!-- resources/views/entrenador/clases/index.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -9,18 +8,25 @@
     <div class="container mx-auto px-4 py-6">
         <h1 class="text-3xl font-bold text-gray-900 mb-6">Lista de Clases</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @foreach ($clases as $clase)
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow">
-                    <h3 class="text-xl font-semibold text-blue-800">{{ $clase->nombre }}</h3>
-                    <p class="text-sm text-blue-700">{{ $clase->descripcion }}</p>
-                    <p class="text-sm text-blue-700"><strong>Fecha:</strong> {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}</p>
-                    <p class="text-sm text-blue-700"><strong>Ubicación:</strong> {{ $clase->ubicacion }}</p>
-                    <p class="text-sm text-blue-700"><strong>Cupos disponibles:</strong> {{ $clase->cupos_maximos }}</p>
-                    <p class="text-sm text-blue-700"><strong>Duración estimada:</strong> {{ $clase->duracion }} minutos</p>
+                <div class="bg-white border border-gray-300 rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-semibold text-blue-800 mb-2">{{ $clase->nombre }}</h3>
+                    <p class="text-sm text-gray-700 mb-2">{{ $clase->descripcion }}</p>
+                    <div class="text-sm text-gray-600 mb-2">
+                        <strong>Fecha:</strong> {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}
+                    </div>
+                    <div class="text-sm text-gray-600 mb-2">
+                        <strong>Ubicación:</strong> {{ $clase->ubicacion }}
+                    </div>
+                    <div class="text-sm text-gray-600 mb-2">
+                        <strong>Cupos disponibles:</strong> {{ $clase->cupos_maximos }}
+                    </div>
+                    <div class="text-sm text-gray-600 mb-4">
+                        <strong>Duración estimada:</strong> {{ $clase->duracion }} minutos
+                    </div>
 
-                    <!-- Botón de acción para editar clase -->
-                    <a href="{{ route('entrenador.clases.edit', $clase->id_clase) }}" class="text-blue-500 hover:underline">Editar Clase</a>
+                    <a href="{{ route('entrenador.clases.edit', $clase->id_clase) }}" class="text-blue-600 hover:text-blue-800 font-semibold">Editar Clase</a>
                 </div>
             @endforeach
         </div>
