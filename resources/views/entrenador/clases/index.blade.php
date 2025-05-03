@@ -8,7 +8,7 @@
     <div class="container mx-auto px-4 py-6">
         <h1 class="text-3xl font-bold text-gray-900 mb-6">Lista de Clases</h1>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="space-y-6">
             @foreach ($clases as $clase)
                 <div class="bg-white border border-gray-300 rounded-lg shadow-lg p-6">
                     <h3 class="text-xl font-semibold text-blue-800 mb-2">{{ $clase->nombre }}</h3>
