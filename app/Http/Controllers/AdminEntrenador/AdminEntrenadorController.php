@@ -40,7 +40,6 @@ class AdminEntrenadorController extends Controller
     {
         // Obtener las clases con su respectivo entrenador
         $clases = ClaseGrupal::with('entrenador')->get();
-        dd($clases); 
         return view('admin-entrenador.clases.index', compact('clases'));
     }
     

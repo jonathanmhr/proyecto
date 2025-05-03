@@ -1,4 +1,7 @@
 <x-app-layout>
+    @php
+        dd($entrenadores);
+    @endphp
     <div class="container mx-auto mt-6">
         @if (session('success'))
             <div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4">
@@ -42,11 +45,12 @@
                 <tbody>
                     @foreach ($entrenadores as $entrenador)
                         <tr class="border-b">
-                            <td class="px-4 py-2">{{ $entrenador->name }}</td>
-                            <td class="px-4 py-2">{{ $entrenador->email }}</td>
+                            <td class="px-4 py-2">{{ $entrenador->name ?? 'Nombre no disponible' }}</td>
+                            <td class="px-4 py-2">{{ $entrenador->email ?? 'Correo no disponible' }}</td>
                             <td class="px-4 py-2 space-x-2">
                                 <!-- Editar Entrenador -->
-                                <a href="{{ route('admin-entrenador.entrenadores.edit', $entrenador) }}" class="text-blue-500 hover:text-blue-700">
+                                <a href="{{ route('admin-entrenador.entrenadores.edit', $entrenador) }}"
+                                    class="text-blue-500 hover:text-blue-700">
                                     Editar
                                 </a>
 
