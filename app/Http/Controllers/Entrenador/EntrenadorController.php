@@ -14,7 +14,7 @@ class EntrenadorController extends Controller
     public function index()
     {
         // Aquí puedes traer la información que necesitas para el dashboard, por ejemplo, clases del entrenador
-        $clases = ClaseGrupal::where('id_entrenador', auth()->id())->get();
+        $clases = ClaseGrupal::where('entrenador_id', auth()->id())->get();
 
         return view('entrenador.dashboard', compact('clases'));
     }
