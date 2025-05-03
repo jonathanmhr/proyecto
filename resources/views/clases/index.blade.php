@@ -10,17 +10,6 @@
             <div class="bg-white p-8 rounded-2xl shadow-lg">
                 <div class="flex items-center justify-between mb-6">
                     <h1 class="text-3xl font-bold text-gray-900">Clases Disponibles</h1>
-
-                    @if(auth()->user()->isAn('admin_entrenador'))
-                        <a href="{{ route('admin-entrenador.clases.create') }}"
-                           class="inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg shadow transition duration-200">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
-                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                            </svg>
-                            Crear Clase
-                        </a>
-                    @endif
                 </div>
 
                 @if ($clases->isEmpty())
@@ -59,8 +48,9 @@
 
                                             <form action="{{ route('cliente.clases.unirse', $clase->id) }}" method="POST">
                                                 @csrf
-                                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
-                                                    Unirse
+                                                <button type="submit"
+                                                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">
+                                                    Confirmar
                                                 </button>
                                             </form>
                                         </div>
