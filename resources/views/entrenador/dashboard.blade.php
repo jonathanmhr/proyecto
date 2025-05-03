@@ -28,19 +28,31 @@
                     <div class="border-b border-blue-200 pb-2 mb-2">
                         <div class="text-blue-900 font-medium">{{ $clase->nombre }}</div>
                         <div class="text-sm text-blue-700">{{ $clase->descripcion }}</div>
-                        <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}
-                        </div>
-                        <!-- Botón de acción para editar clase -->
-                        <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Editar
-                            clase</a>
+                        <div class="text-sm text-blue-700">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}</div>
+                        <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Editar clase</a>
                     </div>
                 @empty
                     <p class="text-blue-600">No tienes clases programadas.</p>
                 @endforelse
-                <!-- Botón para ir al listado completo de clases -->
                 <div class="mt-4">
-                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver todas
-                        mis clases</a>
+                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver todas mis clases</a>
                 </div>
             </div>
+
+            <!-- Mis Entrenamientos -->
+            <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl shadow">
+                <h2 class="text-xl font-semibold text-green-800 mb-4">Mis Entrenamientos</h2>
+                @forelse ($entrenamientos as $entrenamiento)
+                    <div class="border-b border-green-200 pb-2 mb-2">
+                        <div class="text-green-900 font-medium">{{ $entrenamiento->nombre }}</div>
+                        <div class="text-sm text-green-700">Tipo: {{ $entrenamiento->tipo }}</div>
+                        <div class="text-sm text-green-700">Duración: {{ $entrenamiento->duracion }} minutos</div>
+                        <div class="text-sm text-green-700">Fecha: {{ $entrenamiento->fecha }}</div>
+                    </div>
+                @empty
+                    <p class="text-green-600">No tienes entrenamientos programados.</p>
+                @endforelse
+            </div>
+        </div>
+    </div>
 </x-app-layout>

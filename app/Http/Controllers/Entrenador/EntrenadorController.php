@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ClaseGrupal;
 use App\Models\Suscripcion;
 use App\Models\User;
+use App\Models\Entrenamiento;
 use Illuminate\Http\Request;
 
 class EntrenadorController extends Controller
@@ -16,7 +17,14 @@ class EntrenadorController extends Controller
         // Aquí puedes traer la información que necesitas para el dashboard, por ejemplo, clases del entrenador
         $clases = ClaseGrupal::where('entrenador_id', auth()->id())->get();
 
-        return view('entrenador.dashboard', compact('clases'));
+        // Obtener los entrenamientos del entrenador
+        $entrenamientos = Entrenamiento::where('id_usuario', auth()->id())->get();
+
+        // Obtener las suscripciones activas
+        $suscripciones = Suscripcion::where('id_usuario', auth()->id())->where('estado', 'activo')->get();
+
+        // Pasar las clases, entrenamientos y suscripciones a la vista
+        return view('entrenador.dashboard', compact('clases', 'entrenamientos', 'suscripciones'));
     }
 
     // Método para aceptar una solicitud de alumno
