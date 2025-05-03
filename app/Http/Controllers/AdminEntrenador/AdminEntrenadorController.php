@@ -42,6 +42,7 @@ class AdminEntrenadorController extends Controller
         return view('admin-entrenador.dashboard', compact('clases', 'totalClases', 'totalEntrenadores', 'totalAlumnos'));
     }
     
+    
     public function verClases()
     {
         // Obtener las clases con su respectivo entrenador
