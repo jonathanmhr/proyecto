@@ -9,20 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::table('perfil_usuario', function (Blueprint $table) {
-            //
+            $table->timestamps();  // Esto agrega las columnas 'created_at' y 'updated_at'
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    
+    public function down()
     {
         Schema::table('perfil_usuario', function (Blueprint $table) {
-            //
+            $table->dropTimestamps(); // Esto elimina las columnas 'created_at' y 'updated_at'
         });
     }
 };
