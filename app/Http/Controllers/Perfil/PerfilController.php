@@ -34,7 +34,7 @@ class PerfilController extends Controller
         $suscripciones = Suscripcion::where('id_usuario', $usuario->id)->get();
     
         // Pasar los datos a la vista
-        return view('dashboard', compact('clases', 'entrenamientos', 'suscripciones', 'incompleteProfile', 'datosCompletos'));
+        return view('dashboard', compact('clases', 'entrenamientos', 'suscripciones', 'incompleteProfile', 'datosCompletos','perfil'));
     }
     
     public function completar()
