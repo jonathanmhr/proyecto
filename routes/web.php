@@ -108,7 +108,7 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access'])
 
         // Gestión de clases
         Route::get('clases', [EntrenadorController::class, 'misClases'])->name('clases.index');
-        Route::get('clases/{clase}/edit', [EntrenadorController::class, 'edit'])->name('clases.edit'); 
+        Route::get('clases/{clase}/edit', [EntrenadorController::class, 'edit'])->name('clases.edit');
 
         // Gestión de alumnos en clases
         Route::post('clases/{clase}/agregar-usuario', [ClaseGrupalController::class, 'agregarUsuario'])->name('clases.agregarUsuario');
@@ -128,4 +128,13 @@ Route::middleware('auth')
     ->group(function () {
         Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
         Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
+    });
+
+Route::middleware('auth')
+    ->prefix('perfil')
+    ->name('perfil.')
+    ->group(function () {
+        // Ruta para completar el perfil
+        Route::get('completar', [PerfilController::class, 'completar'])->name('completar');
+        Route::post('completar', [PerfilController::class, 'guardarPerfil'])->name('guardar');
     });

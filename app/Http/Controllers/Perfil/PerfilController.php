@@ -22,7 +22,7 @@ class PerfilController extends Controller
 
         // Si no está completo, mostrar una notificación
         if (!$datosCompletos) {
-            session()->flash('incomplete_profile', 'Por favor complete sus datos para poder acceder a las clases.');
+            return redirect()->route('perfil.completar')->with('incomplete_profile', 'Por favor complete sus datos para poder acceder a las clases.');
         }
 
         // Obtener clases inscritas por el usuario a través de la relación muchos a muchos
@@ -37,5 +37,33 @@ class PerfilController extends Controller
         // Pasar los datos a la vista
         return view('dashboard', compact('clases', 'entrenamientos', 'suscripciones', 'perfil'));
     }
-}
+    public function completar()
+    {
+        $usuario = auth()->user(); // Obtener al usuario autenticado
+        $perfil = $usuario->perfilUsuario; // Obtener el perfil del usuario (si existe)
 
+        return view('perfil.completar', compact('perfil')); // Pasar los datos a la vista del formulario
+    }
+
+    public function guardarPerfil(Request $request)
+    {
+        $usuario = auth()->user();
+
+        // Validar los datos del perfil
+        $validated = $request->validate([
+            'fecha_nacimiento' => 'required|date',
+            'peso' => 'required|numeric',
+            'altura' => 'required|numeric',
+            'objetivo' => 'required|string',
+            'id_nivel' => 'required|integer',
+        ]);
+
+        // Guardar o actualizar el perfil
+        $perfil = $usuario->perfilUsuario ?: new PerfilUsuario();
+        $perfil->fill($validated);
+        $perfil->id_usuario = $usuario->id;
+        $perfil->save();
+
+        return redirect()->route('cliente.clases.index')->with('profile_completed', 'Tu perfil ha sido actualizado.');
+    }
+}
