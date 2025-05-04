@@ -83,8 +83,8 @@ class PerfilController extends Controller
         $validated = $request->validate([
             'fecha_nacimiento' => 'required|date',
             'peso' => 'required|numeric|max:300',
-            'altura' => 'required|numeric|max:220', // Suponiendo que la altura no puede superar los 3 metros
-            'objetivo' => 'required|string|max:255', // Limitar el objetivo a 255 caracteres
+            'altura' => 'required|numeric|max:220',
+            'objetivo' => 'required|string|max:255', 
             'id_nivel' => 'required|integer',
         ]);
 
