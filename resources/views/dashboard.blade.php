@@ -32,6 +32,22 @@
                 </div>
             </div>
         @endif
+
+        <!-- Mostrar notificación de éxito -->
+        @if (session('status') && session('status_type') == 'success')
+            <div class="flex items-center bg-green-100 text-green-800 p-4 rounded-lg mb-4">
+                <i data-feather="check-circle" class="w-5 h-5 mr-2"></i>
+                <span>{{ session('status') }}</span>
+            </div>
+        @endif
+
+        <!-- Mostrar notificación de error -->
+        @if (session('status') && session('status_type') == 'error')
+            <div class="flex items-center bg-red-100 text-red-800 p-4 rounded-lg mb-4">
+                <i data-feather="alert-triangle" class="w-5 h-5 mr-2"></i>
+                <span>{{ session('status') }}</span>
+            </div>
+        @endif
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Clases Inscritas -->
             <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow">

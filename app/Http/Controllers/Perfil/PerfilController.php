@@ -64,6 +64,7 @@ class PerfilController extends Controller
         $perfil->id_usuario = $usuario->id;
         $perfil->save();
 
-        return redirect()->route('cliente.clases.index')->with('profile_completed', 'Tu perfil ha sido actualizado.');
+        // Redirigir al dashboard con una notificación
+        return redirect()->route('dashboard')->with('status', 'Perfil completado con éxito')->with('status_type', 'success');
     }
 }
