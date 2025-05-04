@@ -10,6 +10,12 @@
             👋 ¡Bienvenido de nuevo, {{ auth()->user()->name }}!
         </h1>
 
+        @if (session('incomplete_profile'))
+            <div class="alert alert-warning">
+                {{ session('incomplete_profile') }}
+            </div>
+        @endif
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Clases Inscritas -->
             <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow">

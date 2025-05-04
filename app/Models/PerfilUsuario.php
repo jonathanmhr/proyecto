@@ -6,5 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class PerfilUsuario extends Model
 {
-    //
+    protected $table = 'perfil_usuario'; // Definimos el nombre de la tabla explícitamente
+
+    protected $fillable = [
+        'id_usuario', 'fecha_nacimiento', 'peso', 'altura', 'objetivo', 'id_nivel',
+    ];
+
+    // Relación inversa con el modelo User
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_usuario', 'id');
+    }
 }

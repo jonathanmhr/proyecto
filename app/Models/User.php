@@ -87,4 +87,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(ReservaDeClase::class, 'id_usuario');
     }
+
+    public function perfilUsuario()
+{
+    return $this->hasOne(PerfilUsuario::class, 'id_usuario', 'id');
+}
 }
