@@ -12,6 +12,7 @@ class Entrenamiento extends Model
     protected $primaryKey = 'id_entrenamiento';
 
     protected $table = 'entrenamientos';
+    public $timestamps = false;
 
     protected $fillable = [
         'id_usuario',
