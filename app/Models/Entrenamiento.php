@@ -9,11 +9,17 @@ class Entrenamiento extends Model
 {
     use HasFactory;
 
-    // Definir la clave primaria personalizada
     protected $primaryKey = 'id_entrenamiento';
 
-    // Definir la tabla si el nombre no sigue la convención
     protected $table = 'entrenamientos';
+
+    protected $fillable = [
+        'id_usuario',
+        'nombre',
+        'tipo',
+        'duracion',
+        'fecha',
+    ];
 
     public function usuario()
     {
