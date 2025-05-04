@@ -32,6 +32,7 @@
     </div>
 
     @stack('modals')
+    @stack('scripts')
     @livewireScripts
 
     <script src="https://unpkg.com/feather-icons"></script>
