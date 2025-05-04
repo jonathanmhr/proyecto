@@ -30,7 +30,7 @@
 
                     <!-- Formulario para aceptar -->
                     <form
-                        action="{{ route('entrenador.suscripcion.aceptar', ['clase' => $clase->id_clase, 'usuario' => $usuario->id]) }}"
+                        action="{{ route('entrenador.clases.aceptarSolicitud', ['claseId' => $clase->id_clase, 'userId' => $usuario->id]) }}"
                         method="POST" class="inline-block">
                         @csrf
                         <button type="submit"
@@ -39,7 +39,7 @@
 
                     <!-- Formulario para rechazar -->
                     <form
-                        action="{{ route('entrenador.suscripcion.rechazar', ['clase' => $clase->id_clase, 'usuario' => $usuario->id]) }}"
+                        action="{{ route('entrenador.clases.rechazarSolicitud', ['claseId' => $clase->id_clase, 'userId' => $usuario->id]) }}"
                         method="POST" class="inline-block ml-4">
                         @csrf
                         <button type="submit"
@@ -53,7 +53,7 @@
 
         <!-- Botón para regresar -->
         <div class="mt-6">
-            <a href="{{ route('entrenador.clase.index') }}" class="text-blue-500 hover:underline">Volver a la lista de
+            <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Volver a la lista de
                 clases</a>
         </div>
         </div>
