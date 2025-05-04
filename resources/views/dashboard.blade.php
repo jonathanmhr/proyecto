@@ -49,56 +49,40 @@
             </div>
         @endif
 
-        <!-- Si el perfil está completo, mostrar el panel para editar -->
         @if ($datosCompletos)
-            <div class="bg-white p-6 rounded-lg shadow-lg mb-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-4">Mis Datos</h2>
-                <form action="{{ route('perfil.guardar') }}" method="POST">
-                    @csrf
+            <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-2xl shadow mb-6">
+                <h2 class="text-xl font-semibold text-yellow-800 mb-4 flex items-center gap-2">
+                    <i data-feather="user" class="w-5 h-5"></i> Mi Perfil
+                </h2>
+                <ul class="text-yellow-900 space-y-2">
+                    <li><strong>Fecha de Nacimiento:</strong>
+                        {{ \Carbon\Carbon::parse($perfil->fecha_nacimiento)->format('d/m/Y') }}</li>
+                    <li><strong>Peso:</strong> {{ $perfil->peso }} kg</li>
+                    <li><strong>Altura:</strong> {{ $perfil->altura }} cm</li>
+                    <li><strong>Objetivo:</strong> {{ $perfil->objetivo }}</li>
+                    <li><strong>Nivel:</strong>
+                        @switch($perfil->id_nivel)
+                            @case(1)
+                                Principiante
+                            @break
 
-                    <div class="grid grid-cols-1 gap-6">
-                        <div class="mb-4">
-                            <label for="peso" class="block text-sm font-medium text-gray-700">Peso (kg)</label>
-                            <input type="number" id="peso" name="peso" value="{{ old('peso', $perfil->peso) }}"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            @error('peso')
-                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
+                            @case(2)
+                                Intermedio
+                            @break
 
-                        <div class="mb-4">
-                            <label for="objetivo" class="block text-sm font-medium text-gray-700">Objetivo</label>
-                            <textarea id="objetivo" name="objetivo" rows="4"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('objetivo', $perfil->objetivo) }}</textarea>
-                            @error('objetivo')
-                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="id_nivel" class="block text-sm font-medium text-gray-700">Nivel</label>
-                            <select id="id_nivel" name="id_nivel"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value="1" {{ old('id_nivel', $perfil->id_nivel) == 1 ? 'selected' : '' }}>
-                                    Principiante</option>
-                                <option value="2" {{ old('id_nivel', $perfil->id_nivel) == 2 ? 'selected' : '' }}>
-                                    Intermedio</option>
-                                <option value="3" {{ old('id_nivel', $perfil->id_nivel) == 3 ? 'selected' : '' }}>
-                                    Avanzado</option>
-                            </select>
-                            @error('id_nivel')
-                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <div class="mt-4">
-                            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar
-                                cambios</button>
-                        </div>
-                    </div>
-                </form>
+                            @case(3)
+                                Avanzado
+                            @break
+                        @endswitch
+                    </li>
+                </ul>
+                <div class="mt-4">
+                    <a href="{{ route('perfil.editar') }}" class="bg-yellow-500 text-white px-4 py-2 rounded-lg">Editar
+                        perfil</a>
+                </div>
             </div>
         @endif
+
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Clases Inscritas -->

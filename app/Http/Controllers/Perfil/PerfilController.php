@@ -14,35 +14,65 @@ class PerfilController extends Controller
     public function index()
     {
         $usuario = auth()->user(); // Obtener al usuario autenticado
-    
+
         // Obtener el perfil del usuario
         $perfil = $usuario->perfilUsuario; // Asumiendo que ya tienes la relación configurada
-    
+
         // Verificar si el perfil está completo
         $datosCompletos = $perfil && $perfil->fecha_nacimiento && $perfil->peso && $perfil->altura && $perfil->objetivo && $perfil->id_nivel;
-    
+
         // Pasar a la vista el flag que indica si el perfil está incompleto
         $incompleteProfile = !$datosCompletos;
-    
+
         // Obtener clases inscritas por el usuario a través de la relación muchos a muchos
         $clases = $usuario->clases; // Relación ya definida en el modelo User
-    
+
         // Obtener entrenamientos del usuario (relación uno a muchos)
         $entrenamientos = Entrenamiento::where('id_usuario', $usuario->id)->get();
-    
+
         // Obtener suscripciones del usuario (relación uno a muchos)
         $suscripciones = Suscripcion::where('id_usuario', $usuario->id)->get();
-    
+
         // Pasar los datos a la vista
-        return view('dashboard', compact('clases', 'entrenamientos', 'suscripciones', 'incompleteProfile', 'datosCompletos','perfil'));
+        return view('dashboard', compact('clases', 'entrenamientos', 'suscripciones', 'incompleteProfile', 'datosCompletos', 'perfil'));
     }
-    
+
     public function completar()
     {
         $usuario = auth()->user(); // Obtener al usuario autenticado
         $perfil = $usuario->perfilUsuario; // Obtener el perfil del usuario (si existe)
 
         return view('perfil.completar', compact('perfil')); // Pasar los datos a la vista del formulario
+    }
+
+    public function editar()
+    {
+        $perfil = auth()->user()->perfilUsuario;
+        return view('perfil.editar', compact('perfil'));
+    }
+
+    public function actualizar(Request $request)
+    {
+        $request->validate([
+            'peso' => 'required|numeric|min:1',
+            'objetivo' => 'required|string|max:255',
+            'id_nivel' => 'required|in:1,2,3',
+        ]);
+
+        try {
+            $perfil = auth()->user()->perfilUsuario;
+            $perfil->update($request->only('peso', 'objetivo', 'id_nivel'));
+
+            return redirect()->route('dashboard')->with([
+                'status' => 'Perfil actualizado con éxito.',
+                'status_type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->route('dashboard')->with([
+                'status' => 'Error al actualizar el perfil.',
+                'status_type' => 'error'
+            ]);
+        }
     }
 
     public function guardarPerfil(Request $request)
