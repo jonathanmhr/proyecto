@@ -28,6 +28,11 @@ class ClaseGrupal extends Model
         'nivel',
         'entrenador_id',
     ];
+    public function getRouteKeyName()
+    {
+        return 'id_clase';
+    }
+
     // Si la relación existe, se define aquí
     public function usuarios()
     {

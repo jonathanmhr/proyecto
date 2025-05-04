@@ -103,6 +103,7 @@ class EntrenadorController extends Controller
     {
         return view('entrenador.clases.edit', compact('clase'));
     }
+    
 
     // Método para actualizar los detalles de la clase, pero debe marcarse como pendiente para aprobación
     public function updateClase(Request $request, $id)
