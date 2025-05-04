@@ -22,7 +22,8 @@ class PerfilController extends Controller
         $datosCompletos = $perfil && $perfil->fecha_nacimiento && $perfil->peso && $perfil->altura && $perfil->objetivo && $perfil->id_nivel;
 
         // Pasar a la vista el flag que indica si el perfil está incompleto
-        $incompleteProfile = !$datosCompletos;
+        $incompleteProfile = !$datosCompletos && !session('profile_modal_shown');
+        session(['profile_modal_shown' => true]); // Se marca que ya se mostró
 
         // Obtener clases inscritas por el usuario a través de la relación muchos a muchos
         $clases = $usuario->clases; // Relación ya definida en el modelo User
