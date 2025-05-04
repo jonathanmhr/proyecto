@@ -138,5 +138,5 @@ Route::middleware('auth')
         Route::get('completar', [PerfilController::class, 'completar'])->name('completar');
         Route::post('completar', [PerfilController::class, 'guardarPerfil'])->name('guardar');
         Route::get('editar', [PerfilController::class, 'editar'])->name('editar');
-        Route::post('actualizar', [PerfilController::class, 'actualizar'])->name('actualizar');
+        Route::put('actualizar', [PerfilController::class, 'actualizar'])->name('actualizar');
     });
