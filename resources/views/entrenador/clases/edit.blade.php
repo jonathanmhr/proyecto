@@ -4,7 +4,7 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Editar Clase: ') }} {{ $clase->nombre }}
         </h2>
-        <a href="{{ route('admin-entrenador.dashboard') }}"
+        <a href="{{ route('entrenador.dashboard') }}"
         class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold rounded-lg transition">
          <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
      </a>
