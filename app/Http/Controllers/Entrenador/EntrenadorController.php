@@ -34,7 +34,7 @@ class EntrenadorController extends Controller
         $solicitudesPendientes = ReservaDeClase::where('estado', 'pendiente')->get();
 
         // Pasar las clases, reservas, entrenamientos, suscripciones y solicitudes a la vista
-        return view('entrenador.clases.dashboard', compact('clases', 'reservas', 'entrenamientos', 'suscripciones', 'solicitudesPendientes'));
+        return view('entrenador.dashboard', compact('clases', 'reservas', 'entrenamientos', 'suscripciones', 'solicitudesPendientes'));
     }
 
     public function misClases()
