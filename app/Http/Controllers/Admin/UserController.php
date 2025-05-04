@@ -152,8 +152,8 @@ class UserController extends Controller
         }
 
         // Evitar eliminar usuarios con el rol 'admin'
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.users.index')->with('error', 'No puedes eliminar un usuario con rol de admin.');
+        if (Bouncer::is(auth()->user())->a('admin') && Bouncer::is($user)->a('admin')) {
+            return redirect()->route('admin.users.index')->with('error', 'No puedes eliminar a otro usuario con rol de admin.');
         }
 
         // Eliminar el usuario
