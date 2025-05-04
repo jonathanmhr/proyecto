@@ -135,7 +135,15 @@
                 <div class="flex justify-center">
                     {{ $users->links() }}
                 </div>
-            </div>            
+            
+                {{-- Texto de rango de resultados --}}
+                <div class="mt-4 text-center text-sm text-gray-600">
+                    Mostrando
+                    <span class="font-semibold">{{ $users->firstItem() }}</span> al
+                    <span class="font-semibold">{{ $users->lastItem() }}</span> de
+                    <span class="font-semibold">{{ $users->total() }}</span> resultados
+                </div>
+            </div>     
         </div>
     </div>
 
