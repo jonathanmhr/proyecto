@@ -12,6 +12,21 @@
                     <h1 class="text-3xl font-bold text-gray-900">Clases Disponibles</h1>
                 </div>
 
+                <!-- Mensajes de estado -->
+                @if(session('success'))
+                    <div class="bg-green-500 text-white p-3 rounded mb-4">
+                        {{ session('success') }}
+                    </div>
+                @elseif(session('error'))
+                    <div class="bg-red-500 text-white p-3 rounded mb-4">
+                        {{ session('error') }}
+                    </div>
+                @elseif(session('info'))
+                    <div class="bg-blue-500 text-white p-3 rounded mb-4">
+                        {{ session('info') }}
+                    </div>
+                @endif
+
                 @if ($clases->isEmpty())
                     <p class="text-center text-gray-500 text-lg">No hay clases disponibles en este momento.</p>
                 @else
@@ -26,10 +41,18 @@
                                     Cupos disponibles: {{ $clase->cupos_maximos - $clase->usuarios->count() }}
                                 </span>
 
-                                <button @click="showModal = true"
-                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
-                                    Unirse
-                                </button>
+                                <!-- Mostrar el botón de unirse solo si el usuario no está inscrito o tiene solicitud pendiente -->
+                                @if (!$clase->usuarios()->where('id_usuario', auth()->id())->exists() && 
+                                      !$clase->solicitudes()->where('user_id', auth()->id())->exists())
+                                    <button @click="showModal = true"
+                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
+                                        Unirse
+                                    </button>
+                                @elseif($clase->usuarios()->where('id_usuario', auth()->id())->exists())
+                                    <p class="text-green-600 font-semibold mt-2">Ya estás inscrito en esta clase.</p>
+                                @elseif($clase->solicitudes()->where('user_id', auth()->id())->exists())
+                                    <p class="text-yellow-600 font-semibold mt-2">Tienes una solicitud pendiente para unirte a esta clase.</p>
+                                @endif
 
                                 <!-- Modal -->
                                 <div x-show="showModal"

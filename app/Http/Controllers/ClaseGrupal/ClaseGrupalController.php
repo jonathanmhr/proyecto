@@ -34,9 +34,14 @@ class ClaseGrupalController extends Controller
     {
         $usuario = auth()->user();
     
-        // Verificar si ya está inscrito
+        // Verificar si el usuario ya está inscrito
         if ($clase->usuarios()->where('id_usuario', $usuario->id)->exists()) {
             return redirect()->route('cliente.clases.index')->with('info', 'Ya estás inscrito en esta clase.');
+        }
+    
+        // Verificar si el usuario tiene una solicitud pendiente
+        if ($clase->solicitudes()->where('user_id', $usuario->id)->exists()) {
+            return redirect()->route('cliente.clases.index')->with('info', 'Ya tienes una solicitud pendiente para unirte a esta clase.');
         }
     
         // Validar cupo disponible
@@ -44,21 +49,18 @@ class ClaseGrupalController extends Controller
             return redirect()->route('cliente.clases.index')->with('error', 'Esta clase ya está llena.');
         }
     
-        // Validar fecha
+        // Validar fecha de la clase (no se puede inscribir si ya ha pasado)
         if ($clase->fecha_inicio < now()) {
             return redirect()->route('cliente.clases.index')->with('error', 'No puedes inscribirte en una clase ya iniciada.');
         }
     
-        // Crear la suscripción
-        Suscripcion::create([
-            'id_usuario' => $usuario->id,
-            'id_clase' => $clase->id_clase,
-            'estado' => 'activo',
-            'fecha_inicio' => now(),
-            'fecha_fin' => now()->addMonths(1),
+        // Crear la solicitud de inscripción
+        $clase->solicitudes()->create([
+            'user_id' => $usuario->id,
+            // otros campos si los hubiera
         ]);
     
-        return redirect()->route('cliente.clases.index')->with('success', 'Te has unido a la clase con éxito.');
+        return redirect()->route('cliente.clases.index')->with('success', 'Tu solicitud para unirte a la clase ha sido enviada.');
     }
     
     
