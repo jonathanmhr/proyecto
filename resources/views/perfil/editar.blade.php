@@ -1,4 +1,4 @@
-@extends('layouts.app')
+<x-app-layout>
 
 @section('content')
 <div class="max-w-xl mx-auto mt-10 bg-white p-6 rounded shadow">
@@ -45,3 +45,4 @@
     </form>
 </div>
 @endsection
+</x-app-layout>
