@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Perfil;
 use App\Models\ClaseGrupal;
 use App\Models\Entrenamiento;
 use App\Models\Suscripcion;
+use App\Models\PerfilUsuario;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
