@@ -99,9 +99,8 @@ class EntrenadorController extends Controller
     }
 
     // Método para editar los detalles de una clase
-    public function edit($id)
+    public function edit(ClaseGrupal $clase)
     {
-        $clase = ClaseGrupal::findOrFail($id);
         return view('entrenador.clases.edit', compact('clase'));
     }
 
