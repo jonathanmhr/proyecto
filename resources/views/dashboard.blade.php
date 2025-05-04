@@ -18,7 +18,7 @@
 
         <!-- Modal para completar el perfil -->
         @if ($incompleteProfile)
-            <div class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+            <div id="profile-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
                 <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
                     <h2 class="text-xl font-semibold text-gray-900 mb-4">¡Tu perfil está incompleto!</h2>
                     <p class="text-gray-700 mb-4">Por favor, completa tus datos para acceder a las clases y
@@ -93,6 +93,11 @@
     @push('scripts')
         <script>
             feather.replace(); // Para íconos
+
+            // Función para cerrar el modal
+            function closeModal() {
+                document.getElementById('profile-modal').style.display = 'none';
+            }
         </script>
     @endpush
 </x-app-layout>
