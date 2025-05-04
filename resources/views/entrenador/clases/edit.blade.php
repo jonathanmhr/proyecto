@@ -7,11 +7,13 @@
     </x-slot>
 
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-3xl font-bold text-gray-900 mb-6">Alumnos Suscritos a la Clase</h1>
-        <a href="{{ route('entrenador.clases.index') }}"
-        class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold rounded-lg transition">
-         <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
-     </a>
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">Alumnos Suscritos a la Clase</h1>
+            <a href="{{ route('entrenador.clases.index') }}"
+                class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold rounded-lg transition">
+                <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
+            </a>
+        </div>        
 
         <!-- Lista de alumnos suscritos -->
         <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow">

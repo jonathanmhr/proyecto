@@ -6,10 +6,14 @@
     </x-slot>
 
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-3xl font-bold text-gray-900 mb-6">Lista de Clases</h1>
-        <a href="{{ route('entrenador.dashboard') }}"
-            class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold rounded-lg transition">
-            <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">Lista de Clases</h1>
+            <a href="{{ route('entrenador.dashboard') }}"
+                class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold rounded-lg transition">
+                <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
+            </a>
+        </div>
+        
         </a>
         <div class="space-y-6">
             @foreach ($clases as $clase)
