@@ -20,10 +20,8 @@ class PerfilController extends Controller
         // Verificar si el perfil está completo
         $datosCompletos = $perfil && $perfil->fecha_nacimiento && $perfil->peso && $perfil->altura && $perfil->objetivo && $perfil->id_nivel;
 
-        // Si no está completo, mostrar una notificación
-        if (!$datosCompletos) {
-            return redirect()->route('perfil.completar')->with('incomplete_profile', 'Por favor complete sus datos para poder acceder a las clases.');
-        }
+        // Pasar a la vista el flag que indica si el perfil está incompleto
+        $incompleteProfile = !$datosCompletos;
 
         // Obtener clases inscritas por el usuario a través de la relación muchos a muchos
         $clases = $usuario->clases; // Relación ya definida en el modelo User
@@ -35,8 +33,9 @@ class PerfilController extends Controller
         $suscripciones = Suscripcion::where('id_usuario', $usuario->id)->get();
 
         // Pasar los datos a la vista
-        return view('dashboard', compact('clases', 'entrenamientos', 'suscripciones', 'perfil'));
+        return view('dashboard', compact('clases', 'entrenamientos', 'suscripciones', 'incompleteProfile'));
     }
+
     public function completar()
     {
         $usuario = auth()->user(); // Obtener al usuario autenticado
@@ -52,9 +51,9 @@ class PerfilController extends Controller
         // Validar los datos del perfil
         $validated = $request->validate([
             'fecha_nacimiento' => 'required|date',
-            'peso' => 'required|numeric',
-            'altura' => 'required|numeric',
-            'objetivo' => 'required|string',
+            'peso' => 'required|numeric|max:300',
+            'altura' => 'required|numeric|max:220', // Suponiendo que la altura no puede superar los 3 metros
+            'objetivo' => 'required|string|max:255', // Limitar el objetivo a 255 caracteres
             'id_nivel' => 'required|integer',
         ]);
 

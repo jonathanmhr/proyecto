@@ -16,6 +16,22 @@
             </div>
         @endif
 
+        <!-- Modal para completar el perfil -->
+        @if ($incompleteProfile)
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+                <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">¡Tu perfil está incompleto!</h2>
+                    <p class="text-gray-700 mb-4">Por favor, completa tus datos para acceder a las clases y
+                        entrenamientos personalizados.</p>
+                    <div class="flex justify-end gap-2">
+                        <a href="{{ route('perfil.completar') }}"
+                            class="bg-blue-500 text-white px-4 py-2 rounded-lg">Completar Perfil</a>
+                        <button class="bg-gray-500 text-white px-4 py-2 rounded-lg"
+                            onclick="closeModal()">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Clases Inscritas -->
             <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl shadow">
