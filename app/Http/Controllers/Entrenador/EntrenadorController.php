@@ -136,11 +136,15 @@ class EntrenadorController extends Controller
         $alumno = User::findOrFail($alumnoId);
 
         // Eliminar la suscripción
-        $suscripcion = Suscripcion::where('id_clase', $clase->id_clase)
-            ->where('id_usuario', $alumno->id)
+        $solicitud = SolicitudClase::where('id_clase', $clase->id_clase)
+            ->where('user_id', $alumno->id)
+            ->where('estado', 'aceptado')
             ->first();
 
-        $suscripcion->delete();
+        if ($solicitud) {
+            $solicitud->estado = 'rechazado'; // O simplemente elimínala si prefieres
+            $solicitud->save();
+        }
 
         // Notificar al admin_entrenador
         // Notification::send($adminEntrenador, new AlumnoEliminadoNotificacion($alumno, $clase));
