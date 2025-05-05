@@ -1,10 +1,15 @@
 <x-app-layout>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight flex justify-between items-center">
+            <span>Gestionar Solicitudes</span>
+            <a href="{{ route('entrenador.dashboard') }}" class="bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                Volver al Dashboard
+            </a>
+        </h2>
 
     <div class="py-10">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight flex justify-between items-center">
             <span>Gestionar Solicitudes</span>
-            <a href="{{ route('entrenador.dashboard') }}"
-                class="bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500">
+            <a href="{{ route('entrenador.dashboard') }}" class="bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500">
                 Volver al Dashboard
             </a>
         </h2>
@@ -14,51 +19,33 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Alumno</th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Clase</th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Acciones</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alumno</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clase</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
                             @foreach ($solicitudesPendientes as $solicitud)
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $solicitud->usuario->name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $solicitud->clase->nombre }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $solicitud->usuario->name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $solicitud->clase->nombre }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap flex space-x-2">
                                         <!-- Botón Aceptar -->
-                                        <button type="button"
-                                            class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-                                            data-modal-target="modal-aceptar-{{ $solicitud->id }}"
-                                            data-modal-toggle="modal-aceptar-{{ $solicitud->id }}">
+                                        <button type="button" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500" data-modal-target="modal-aceptar-{{ $solicitud->id }}" data-modal-toggle="modal-aceptar-{{ $solicitud->id }}">
                                             Aceptar
                                         </button>
 
                                         <!-- Modal Aceptar -->
-                                        <div id="modal-aceptar-{{ $solicitud->id }}"
-                                            class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50 px-4">
+                                        <div id="modal-aceptar-{{ $solicitud->id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50 px-4">
                                             <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
-                                                <h3 class="text-xl font-semibold mb-4 break-words">¿Confirmas que
-                                                    deseas<br>aceptar esta solicitud?</h3>
-                                                <form
-                                                    action="{{ route('entrenador.clases.aceptarSolicitud', [$solicitud->id_clase, $solicitud->user_id]) }}"
-                                                    method="POST">
+                                                <h3 class="text-xl font-semibold mb-4 break-words">¿Confirmas que deseas<br>aceptar esta solicitud?</h3>
+                                                <form action="{{ route('entrenador.clases.aceptarSolicitud', [$solicitud->id_clase, $solicitud->user_id]) }}" method="POST">
                                                     @csrf
                                                     <div class="flex justify-center gap-4 mt-4">
-                                                        <button type="button"
-                                                            class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
-                                                            data-modal-hide="modal-aceptar-{{ $solicitud->id }}">
+                                                        <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600" data-modal-hide="modal-aceptar-{{ $solicitud->id }}">
                                                             Cancelar
                                                         </button>
-                                                        <button type="submit"
-                                                            class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+                                                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
                                                             Confirmar
                                                         </button>
                                                     </div>
@@ -67,32 +54,22 @@
                                         </div>
 
                                         <!-- Botón Rechazar -->
-                                        <button type="button"
-                                            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                                            data-modal-target="modal-rechazar-{{ $solicitud->id }}"
-                                            data-modal-toggle="modal-rechazar-{{ $solicitud->id }}">
+                                        <button type="button" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500" data-modal-target="modal-rechazar-{{ $solicitud->id }}" data-modal-toggle="modal-rechazar-{{ $solicitud->id }}">
                                             Rechazar
                                         </button>
 
                                         <!-- Modal Rechazar -->
-                                        <div id="modal-rechazar-{{ $solicitud->id }}"
-                                            class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50 px-4">
+                                        <div id="modal-rechazar-{{ $solicitud->id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50 px-4">
                                             <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
-                                                <h3 class="text-xl font-semibold mb-4 break-words">¿Confirmas que
-                                                    deseas<br>rechazar esta solicitud?</h3>
-                                                <form
-                                                    action="{{ route('entrenador.clases.rechazarSolicitud', [$solicitud->id_clase, $solicitud->user_id]) }}"
-                                                    method="POST">
+                                                <h3 class="text-xl font-semibold mb-4 break-words">¿Confirmas que deseas<br>rechazar esta solicitud?</h3>
+                                                <form action="{{ route('entrenador.clases.rechazarSolicitud', [$solicitud->id_clase, $solicitud->user_id]) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <div class="flex justify-center gap-4 mt-4">
-                                                        <button type="button"
-                                                            class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
-                                                            data-modal-hide="modal-rechazar-{{ $solicitud->id }}">
+                                                        <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600" data-modal-hide="modal-rechazar-{{ $solicitud->id }}">
                                                             Cancelar
                                                         </button>
-                                                        <button type="submit"
-                                                            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+                                                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
                                                             Confirmar
                                                         </button>
                                                     </div>
