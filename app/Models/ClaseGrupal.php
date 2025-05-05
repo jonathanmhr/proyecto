@@ -9,10 +9,10 @@ class ClaseGrupal extends Model
 {
     use HasFactory;
 
-    // Definir la clave primaria personalizada
+    // Definir la clave primaria
     protected $primaryKey = 'id_clase';
 
-    // Definir la tabla si el nombre no sigue la convención
+    // Definir la tabla
     protected $table = 'clases_grupales';
 
     // Atributos asignables masivamente
@@ -28,24 +28,32 @@ class ClaseGrupal extends Model
         'nivel',
         'entrenador_id',
     ];
+
+    // Definir la clave de ruta personalizada
     public function getRouteKeyName()
     {
         return 'id_clase';
     }
 
-    // Si la relación existe, se define aquí
+    // Relaciones
     public function usuarios()
     {
         return $this->belongsToMany(User::class, 'suscripciones', 'id_clase', 'id_usuario')
-            ->withPivot('estado', 'fecha_inicio', 'fecha_fin');  // Para manejar los datos adicionales de la suscripción
+            ->withPivot('estado', 'fecha_inicio', 'fecha_fin'); // Datos adicionales de la suscripción
     }
 
     public function entrenador()
     {
-        return $this->belongsTo(User::class, 'entrenador_id');  // Suponiendo que tienes un campo 'id_entrenador' en tu tabla 'clases_grupales'
+        return $this->belongsTo(User::class, 'entrenador_id'); // Relación con el entrenador
     }
+
     public function reservas()
     {
-        return $this->hasMany(ReservaDeClase::class, 'id_clase');
+        return $this->hasMany(ReservaDeClase::class, 'id_clase'); // Relación con las reservas
+    }
+
+    public function solicitudes()
+    {
+        return $this->hasMany(SolicitudClase::class, 'id_clase'); // Relación con las solicitudes
     }
 }

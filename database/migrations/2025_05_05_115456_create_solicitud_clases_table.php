@@ -9,11 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('solicitud_clases', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_clase');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
+    
+            // Claves foráneas
+            $table->foreign('id_clase')->references('id_clase')->on('clases_grupales')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
