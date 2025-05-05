@@ -13,20 +13,25 @@ return new class extends Migration
     {
         Schema::create('solicitud_clases', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_clase');
-            $table->unsignedBigInteger('user_id');
+
+            // Coinciden con las columnas referenciadas
+            $table->unsignedBigInteger('user_id');     // BIGINT UNSIGNED para users.id
+            $table->unsignedInteger('id_clase');        // INT UNSIGNED para clases_grupales.id_clase
+
             $table->timestamps();
-    
-            // Claves foráneas
-            $table->foreign('id_clase')->references('id_clase')->on('clases_grupales')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            // Llaves foráneas correctas
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
+
+            $table->foreign('id_clase')
+                ->references('id_clase')->on('clases_grupales')
+                ->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('solicitud_clases');
     }
