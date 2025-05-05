@@ -90,7 +90,7 @@
                     <p class="text-sm text-teal-600">
                         Tienes {{ $solicitudesPendientes->count() }} solicitud(es) pendiente(s).
                     </p>
-                    <a href="{{ route('solicitudes.index') }}" class="text-teal-500 hover:underline">Ver Solicitudes Pendientes</a>
+                    <a href="{{ route('entrenador.solicitudes.index') }}" class="text-teal-500 hover:underline">Ver Solicitudes Pendientes</a>
                 @else
                     <p class="text-sm text-teal-600">
                         No tienes solicitudes pendientes.
