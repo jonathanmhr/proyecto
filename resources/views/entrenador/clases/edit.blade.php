@@ -23,53 +23,59 @@
                 <div class="border-b border-blue-200 pb-2 mb-2">
                     <div class="text-blue-900 font-medium">{{ $usuario->name }}</div>
                     <div class="text-sm text-blue-700">{{ $usuario->email }}</div>
-                    <div class="text-sm text-blue-700 mb-2">Fecha de suscripción: {{ $usuario->pivot->created_at->format('d/m/Y') }}</div>
-                    <div class="text-sm text-blue-700">
-                        Estado de la Suscripción:
-                        @if ($usuario->pivot->estado === 'pendiente')
-                            <span class="text-yellow-500">Pendiente</span>
-                        @elseif ($usuario->pivot->estado === 'aceptado')
-                            <span class="text-green-500">Aceptado</span>
+                    <div class="text-sm text-blue-700 mb-2"> Fecha de suscripción:
+                        @if ($usuario->pivot->created_at)
+                            {{ $usuario->pivot->created_at->format('d/m/Y') }}
                         @else
-                            <span class="text-red-500">Rechazado</span>
+                            <span class="text-red-500">Fecha no disponible</span>
                         @endif
-                    </div>
+                        <div class="text-sm text-blue-700">
+                            Estado de la Suscripción:
+                            @if ($usuario->pivot->estado === 'pendiente')
+                                <span class="text-yellow-500">Pendiente</span>
+                            @elseif ($usuario->pivot->estado === 'aceptado')
+                                <span class="text-green-500">Aceptado</span>
+                            @else
+                                <span class="text-red-500">Rechazado</span>
+                            @endif
+                        </div>
 
-                    <!-- Botón para quitar de clase -->
-                    <button type="button" 
-                        class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 mt-4"
-                        data-modal-target="modal-quitar-{{ $usuario->id }}" 
-                        data-modal-toggle="modal-quitar-{{ $usuario->id }}">
-                        Quitar de clase
-                    </button>
+                        <!-- Botón para quitar de clase -->
+                        <button type="button" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 mt-4"
+                            data-modal-target="modal-quitar-{{ $usuario->id }}"
+                            data-modal-toggle="modal-quitar-{{ $usuario->id }}">
+                            Quitar de clase
+                        </button>
 
-                    <!-- Modal Quitar -->
-                    <div id="modal-quitar-{{ $usuario->id }}" 
-                        class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 px-4">
-                        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
-                            <h3 class="text-lg font-semibold mb-4 break-words leading-relaxed">
-                                ¿Confirmas que deseas quitar a {{ $usuario->name }} de esta clase?
-                            </h3>
-                            <form action="{{ route('entrenador.clases.quitarUsuario', ['claseId' => $clase->id_clase, 'userId' => $usuario->id]) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <div class="flex justify-center gap-4 mt-4">
-                                    <button type="button" 
-                                        class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600" 
-                                        data-modal-hide="modal-quitar-{{ $usuario->id }}">
-                                        Cancelar
-                                    </button>
-                                    <button type="submit" 
-                                        class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
-                                        Confirmar
-                                    </button>
-                                </div>
-                            </form>
+                        <!-- Modal Quitar -->
+                        <div id="modal-quitar-{{ $usuario->id }}"
+                            class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 px-4">
+                            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
+                                <h3 class="text-lg font-semibold mb-4 break-words leading-relaxed">
+                                    ¿Confirmas que deseas quitar a {{ $usuario->name }} de esta clase?
+                                </h3>
+                                <form
+                                    action="{{ route('entrenador.clases.quitarUsuario', ['claseId' => $clase->id_clase, 'userId' => $usuario->id]) }}"
+                                    method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <div class="flex justify-center gap-4 mt-4">
+                                        <button type="button"
+                                            class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                                            data-modal-hide="modal-quitar-{{ $usuario->id }}">
+                                            Cancelar
+                                        </button>
+                                        <button type="submit"
+                                            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+                                            Confirmar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-            @empty
-                <p class="text-blue-600">No hay alumnos suscritos a esta clase.</p>
+                @empty
+                    <p class="text-blue-600">No hay alumnos suscritos a esta clase.</p>
             @endforelse
         </div>
     </div>
