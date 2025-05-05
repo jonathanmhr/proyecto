@@ -47,6 +47,17 @@ class EntrenadorController extends Controller
         return view('entrenador.clases.index', compact('clases'));
     }
 
+    public function verSolicitudes()
+    {
+        $solicitudesPendientes = \App\Models\SolicitudClase::where('estado', 'pendiente')
+            ->whereHas('clase', function ($query) {
+                $query->where('entrenador_id', auth()->id());
+            })
+            ->paginate(10);
+    
+        return view('entrenador.solicitudes.index', compact('solicitudesPendientes'));
+    }
+    
 
     // Método para aceptar una solicitud de alumno
     public function aceptarSolicitud($claseId, $userId)
@@ -141,6 +152,6 @@ class EntrenadorController extends Controller
         $clase->cambio_pendiente = true;
         $clase->save();
 
-        return redirect()->route('entrenador.dashboard')->with('success', 'Clase actualizada, pendiente de aprobación.');
+        return redirect()->route('entrenador.clase.index')->with('success', 'Clase actualizada, pendiente de aprobación.');
     }
 }
