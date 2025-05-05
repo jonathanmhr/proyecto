@@ -43,15 +43,19 @@
 
                                 <!-- Mostrar el botón de unirse solo si el usuario no está inscrito o tiene solicitud pendiente -->
                                 @if (!$clase->usuarios()->where('id_usuario', auth()->id())->exists() && 
-                                      !$clase->solicitudes()->where('user_id', auth()->id())->exists())
+                                      !$clase->suscripciones()->where('id_usuario', auth()->id())->where('estado', 'pendiente')->exists())
                                     <button @click="showModal = true"
                                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
                                         Unirse
                                     </button>
                                 @elseif($clase->usuarios()->where('id_usuario', auth()->id())->exists())
                                     <p class="text-green-600 font-semibold mt-2">Ya estás inscrito en esta clase.</p>
-                                @elseif($clase->solicitudes()->where('user_id', auth()->id())->exists())
+                                @elseif($clase->suscripciones()->where('id_usuario', auth()->id())->where('estado', 'pendiente')->exists())
                                     <p class="text-yellow-600 font-semibold mt-2">Tienes una solicitud pendiente para unirte a esta clase.</p>
+                                @elseif($clase->suscripciones()->where('id_usuario', auth()->id())->where('estado', 'rechazado')->exists())
+                                    <p class="text-red-600 font-semibold mt-2">Tu solicitud fue rechazada.</p>
+                                @elseif($clase->suscripciones()->where('id_usuario', auth()->id())->where('estado', 'aceptado')->exists())
+                                    <p class="text-green-600 font-semibold mt-2">Tu solicitud ha sido aceptada.</p>
                                 @endif
 
                                 <!-- Modal -->
@@ -79,7 +83,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Fin del Modal -->
                             </div>
                         @endforeach
                     </div>
