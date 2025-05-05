@@ -40,6 +40,12 @@
 
                     <a href="{{ route('entrenador.clases.edit', $clase->id_clase) }}"
                         class="text-blue-600 hover:text-blue-800 font-semibold">Editar Clase</a>
+
+                    <!-- Enlace para gestionar alumnos -->
+                    <div class="mt-4">
+                        <a href="{{ route('entrenador.clases.alumnos', $clase->id_clase) }}" 
+                           class="text-blue-600 hover:text-blue-800 font-semibold">Gestionar Alumnos</a>
+                    </div>
                 </div>
             @endforeach
         </div>
