@@ -55,7 +55,7 @@
                                     ¿Confirmas que deseas quitar a {{ $usuario->name }} de esta clase?
                                 </h3>
                                 <form
-                                    action="{{ route('entrenador.clases.quitarUsuario', ['claseId' => $clase->id_clase, 'userId' => $usuario->id]) }}"
+                                    action="{{ route('clases.quitarUsuario', ['claseId' => $clase->id_clase, 'userId' => $usuario->id]) }}"
                                     method="POST">
                                     @csrf
                                     @method('DELETE')
