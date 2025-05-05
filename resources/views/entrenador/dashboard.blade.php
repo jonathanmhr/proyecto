@@ -83,17 +83,17 @@
                 @endforelse
             </div>
 
-            <!-- Solicitudes Pendientes -->
+            <!-- Suscripciones Pendientes -->
             <div class="bg-gradient-to-br from-teal-100 to-teal-200 p-6 rounded-xl shadow-md">
                 <h2 class="text-xl font-semibold text-teal-700 mb-4">Solicitudes Pendientes</h2>
-                @if ($solicitudesPendientes->count() > 0)
+                @if ($suscripcionesPendientes->count() > 0)
                     <p class="text-sm text-teal-600">
-                        Tienes {{ $solicitudesPendientes->count() }} solicitud(es) pendiente(s).
+                        Tienes {{ $suscripcionesPendientes->count() }} suscripción(es) pendiente(s).
                     </p>
-                    <a href="{{ route('entrenador.solicitudes.index') }}" class="text-teal-500 hover:underline">Ver Solicitudes Pendientes</a>
+                    <a href="{{ route('entrenador.suscripciones.index') }}" class="text-teal-500 hover:underline">Ver Suscripciones Pendientes</a>
                 @else
                     <p class="text-sm text-teal-600">
-                        No tienes solicitudes pendientes.
+                        No tienes suscripciones pendientes.
                     </p>
                 @endif
             </div>

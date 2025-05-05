@@ -115,7 +115,7 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access'])
         Route::post('clases/{clase}/{user}/eliminar-usuario', [ClaseGrupalController::class, 'eliminarUsuario'])->name('clases.eliminarUsuario');
 
         // solicitud
-        Route::get('solicitudes', [EntrenadorController::class, 'verSolicitudes'])->name('solicitudes.index');
+        Route::get('suscripciones', [EntrenadorController::class, 'verSuscripciones'])->name('suscripciones.index');
         Route::post('clases/{claseId}/aceptar/{userId}', [EntrenadorController::class, 'aceptarSolicitud'])->name('clases.aceptarSolicitud');
         Route::post('clases/{claseId}/rechazar/{userId}', [EntrenadorController::class, 'rechazarSolicitud'])->name('clases.rechazarSolicitud');
     });
