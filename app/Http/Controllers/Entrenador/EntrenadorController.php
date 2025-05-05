@@ -66,8 +66,11 @@ class EntrenadorController extends Controller
 
     public function verAlumnos(ClaseGrupal $clase)
     {
-        // Obtener los alumnos inscritos en la clase
-        $alumnos = $clase->suscripciones()->where('estado', 'aceptado')->get();
+        // Obtener los usuarios que han solicitado unirse a la clase y han sido aceptados
+        $alumnos = SolicitudClase::where('id_clase', $clase->id_clase)
+            ->where('estado', 'aceptado')
+            ->with('usuario')  // Asegúrate de cargar la relación de usuario
+            ->get();
 
         return view('entrenador.clases.alumnos', compact('clase', 'alumnos'));
     }
