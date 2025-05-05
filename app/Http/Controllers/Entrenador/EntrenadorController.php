@@ -108,13 +108,14 @@ class EntrenadorController extends Controller
         // Encuentra la clase y el usuario
         $clase = ClaseGrupal::findOrFail($claseId);
         $usuario = User::findOrFail($userId);
-    
+        
         // Quitar al usuario de la clase
         $clase->usuarios()->detach($usuario);
-    
+        
         // Redirigir a la vista con un mensaje de éxito
-        return redirect()->route('entrenador.clases.edit', $claseId)->with('success', 'Usuario quitado de la clase con éxito.');
-    }  
+        return redirect()->route('entrenador.clases.edit', ['clase' => $claseId])
+            ->with('success', 'Usuario quitado de la clase con éxito.');
+    }    
 
     // Método para actualizar los detalles de la clase, pero debe marcarse como pendiente para aprobación
     public function updateClase(Request $request, $id)
