@@ -70,7 +70,7 @@ class ClaseGrupalController extends Controller
     // Crear la solicitud con estado 'pendiente'
     SolicitudClase::create([
         'user_id' => $usuario->id,    // ID del usuario
-        'id_clase' => $clase->id,      // ID de la clase
+        'id_clase' => $clase->id_clase,      // ID de la clase
         'estado' => 'pendiente',       // Estado de la solicitud
     ]);
 
