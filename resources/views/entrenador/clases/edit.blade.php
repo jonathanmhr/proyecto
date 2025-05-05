@@ -1,11 +1,16 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Editar Clase') }}
-        </h2>
-    </x-slot>
+    <!-- Título con h2 -->
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        {{ __('Editar Clase') }}
+    </h2>
 
     <div class="container mx-auto px-4 py-6">
+        <!-- Botón Volver -->
+        <a href="{{ route('entrenador.clases.index') }}" 
+            class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold rounded-lg transition mb-4">
+            <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
+        </a>
+
         <form method="POST" action="{{ route('entrenador.clases.update', $clase->id_clase) }}">
             @csrf
             @method('PUT')
