@@ -9,7 +9,7 @@ class SolicitudClase extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id_clase', 'user_id'];
+    protected $fillable = ['id_clase', 'user_id', 'estado'];
 
     public function clase()
     {
