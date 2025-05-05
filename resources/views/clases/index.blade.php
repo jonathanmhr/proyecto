@@ -34,7 +34,11 @@
                         @foreach ($clases as $clase)
                             @php
                                 $usuarioId = auth()->id();
-                                $estaInscrito = $clase->usuarios()->wherePivot('estado', 'aceptado')->where('id_usuario', $usuarioId)->exists();
+                                $estaInscrito = $clase
+                                    ->usuarios()
+                                    ->wherePivot('estado', 'aceptado')
+                                    ->where('id_usuario', $usuarioId)
+                                    ->exists();
                                 $solicitud = $clase->solicitudes()->where('user_id', $usuarioId)->first();
                             @endphp
 
@@ -45,7 +49,8 @@
 
                                 <span
                                     class="inline-block bg-blue-100 text-blue-800 text-sm font-medium py-1 px-3 rounded-full mb-4">
-                                    Cupos disponibles: {{ $clase->cupos_maximos - $clase->usuarios->where('pivot.estado', 'aceptado')->count() }}
+                                    Cupos disponibles:
+                                    {{ $clase->cupos_maximos - $clase->usuarios->where('pivot.estado', 'aceptado')->count() }}
                                 </span>
 
                                 @if (!$estaInscrito && !$solicitud)
@@ -57,7 +62,8 @@
                                     <p class="text-green-600 font-semibold mt-2">Ya estás inscrito en esta clase.</p>
                                 @elseif ($solicitud)
                                     @if ($solicitud->estado === 'pendiente')
-                                        <p class="text-yellow-600 font-semibold mt-2">Tu solicitud está pendiente de aprobación por el entrenador.</p>
+                                        <p class="text-yellow-600 font-semibold mt-2">Tu solicitud está pendiente de
+                                            aprobación por el entrenador.</p>
                                     @elseif ($solicitud->estado === 'aceptado')
                                         <p class="text-green-600 font-semibold mt-2">Tu solicitud ha sido aceptada.</p>
                                     @elseif ($solicitud->estado === 'rechazado')
@@ -70,16 +76,19 @@
                                     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                                     <div @click.away="showModal = false"
                                         class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
-                                        <h2 class="text-xl font-semibold text-gray-800 mb-4">¿Deseas unirte a esta clase?</h2>
+                                        <h2 class="text-xl font-semibold text-gray-800 mb-4">¿Deseas unirte a esta
+                                            clase?</h2>
                                         <p class="text-gray-600 mb-6">Confirmarás tu participación en
-                                            <strong>{{ $clase->nombre }}</strong>.</p>
+                                            <strong>{{ $clase->nombre }}</strong>.
+                                        </p>
 
                                         <div class="flex justify-end space-x-4">
                                             <button @click="showModal = false"
                                                 class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md">
                                                 Cancelar
                                             </button>
-
+                                            {{-- Debug temporal --}}
+                                            <p>ID de clase: {{ $clase->id_clase }}</p>
                                             <form action="{{ route('cliente.clases.unirse', $clase) }}" method="POST">
                                                 @csrf
                                                 <button type="submit"
