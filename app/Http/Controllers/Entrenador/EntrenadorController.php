@@ -100,6 +100,7 @@ class EntrenadorController extends Controller
     // Método para editar los detalles de una clase
     public function edit(ClaseGrupal $clase)
     {
+        $clase->load('usuarios'); 
         dd($clase);
         return view('entrenador.clases.edit', compact('clase'));
     }
