@@ -16,21 +16,24 @@ class ClaseGrupalController extends Controller
     public function index()
     {
         $user = auth()->user();
-
+    
         if ($user->can('admin_entrenador')) {
-            // Admin-entrenador: Ve todas las clases
             $clases = ClaseGrupal::all();
+            return view('clases.index', compact('clases'));
         } elseif ($user->can('entrenador')) {
-            // Entrenador: Ve solo sus propias clases
             $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
+            return view('clases.index', compact('clases'));
         } else {
-            // Cliente: Ve solo clases futuras con cupos disponibles
+            // Cliente: Ve clases futuras con cupos disponibles
             $clases = ClaseGrupal::whereDate('fecha_inicio', '>=', now())
-                ->where('cupos_maximos', '>', 0) // Solo clases con cupos disponibles
+                ->where('cupos_maximos', '>', 0)
                 ->get();
+    
+            // Aquí se cargan las solicitudes del usuario
+            $solicitudes = SolicitudClase::where('user_id', $user->id)->get();
+    
+            return view('clases.index', compact('clases', 'solicitudes'));
         }
-
-        return view('clases.index', compact('clases'));
     }
 
     // Mostrar las suscripciones del usuario
