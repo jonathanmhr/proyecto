@@ -87,8 +87,6 @@
                                                 class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md">
                                                 Cancelar
                                             </button>
-                                            {{-- Debug temporal --}}
-                                            <p>ID de clase: {{ $clase->id_clase }}</p>
                                             <form action="{{ route('cliente.clases.unirse', ['clase' => $clase->id_clase]) }}" method="POST">
                                                 @csrf
                                                 <button type="submit"
