@@ -38,12 +38,12 @@ class ClaseGrupalController extends Controller
         $usuario = auth()->user();
     
         // Verificar si el usuario ya está inscrito
-        if ($clase->usuarios()->where('id_usuario', $usuario->id)->exists()) {
+        if ($clase->usuarios()->where('user_id', $usuario->id)->exists()) {
             return redirect()->route('cliente.clases.index')->with('info', 'Ya estás inscrito en esta clase.');
         }
     
         // Verificar si el usuario tiene una solicitud pendiente
-        $solicitudPendiente = $clase->solicitudes()->where('id_usuario', $usuario->id)
+        $solicitudPendiente = $clase->solicitudes()->where('user_id', $usuario->id)
             ->where('estado', 'pendiente')
             ->exists();
     
@@ -63,7 +63,7 @@ class ClaseGrupalController extends Controller
     
         // Crear la solicitud de inscripción (solicitud pendiente)
         SolicitudClase::create([
-            'id_usuario' => $usuario->id,
+            'user_id' => $usuario->id,
             'id_clase' => $clase->id,
             'estado' => 'pendiente', // Estado pendiente
         ]);
