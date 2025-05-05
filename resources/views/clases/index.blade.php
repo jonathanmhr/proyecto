@@ -13,7 +13,7 @@
                 </div>
 
                 <!-- Mensajes de estado -->
-                @if(session('success'))
+                @if (session('success'))
                     <div class="bg-green-500 text-white p-3 rounded mb-4">
                         {{ session('success') }}
                     </div>
@@ -33,17 +33,19 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         @foreach ($clases as $clase)
                             <div x-data="{ showModal: false }"
-                                 class="bg-white border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl transition duration-300">
+                                class="bg-white border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl transition duration-300">
                                 <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $clase->nombre }}</h3>
                                 <p class="text-gray-600 mb-3">{{ Str::limit($clase->descripcion, 100) }}</p>
 
-                                <span class="inline-block bg-blue-100 text-blue-800 text-sm font-medium py-1 px-3 rounded-full mb-4">
+                                <span
+                                    class="inline-block bg-blue-100 text-blue-800 text-sm font-medium py-1 px-3 rounded-full mb-4">
                                     Cupos disponibles: {{ $clase->cupos_maximos - $clase->usuarios->count() }}
                                 </span>
 
                                 <!-- Mostrar el botón de unirse solo si el usuario no está inscrito o tiene solicitud pendiente -->
-                                @if (!$clase->usuarios()->where('id_usuario', auth()->id())->exists() && 
-                                      !$clase->solicitudes()->where('user_id', auth()->id())->exists())
+                                @if (
+                                    !$clase->usuarios()->where('id_usuario', auth()->id())->exists() &&
+                                        !$clase->solicitudes()->where('user_id', auth()->id())->exists())
                                     <button @click="showModal = true"
                                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
                                         Unirse
@@ -51,17 +53,31 @@
                                 @elseif($clase->usuarios()->where('id_usuario', auth()->id())->exists())
                                     <p class="text-green-600 font-semibold mt-2">Ya estás inscrito en esta clase.</p>
                                 @elseif($clase->solicitudes()->where('user_id', auth()->id())->exists())
-                                    <p class="text-yellow-600 font-semibold mt-2">Tienes una solicitud pendiente para unirte a esta clase.</p>
+                                    @php
+                                        $solicitud = $clase
+                                            ->solicitudes()
+                                            ->where('user_id', auth()->id())
+                                            ->first();
+                                    @endphp
+                                    @if ($solicitud->estado == 'pendiente')
+                                        <p class="text-yellow-600 font-semibold mt-2">Tu solicitud está pendiente de
+                                            aprobación por el entrenador.</p>
+                                    @elseif ($solicitud->estado == 'aceptado')
+                                        <p class="text-green-600 font-semibold mt-2">Tu solicitud ha sido aceptada.</p>
+                                    @elseif ($solicitud->estado == 'rechazado')
+                                        <p class="text-red-600 font-semibold mt-2">Tu solicitud ha sido rechazada.</p>
+                                    @endif
                                 @endif
 
                                 <!-- Modal -->
-                                <div x-show="showModal"
-                                     x-cloak
-                                     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                                <div x-show="showModal" x-cloak
+                                    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                                     <div @click.away="showModal = false"
-                                         class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
-                                        <h2 class="text-xl font-semibold text-gray-800 mb-4">¿Deseas unirte a esta clase?</h2>
-                                        <p class="text-gray-600 mb-6">Confirmarás tu participación en <strong>{{ $clase->nombre }}</strong>.</p>
+                                        class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+                                        <h2 class="text-xl font-semibold text-gray-800 mb-4">¿Deseas unirte a esta
+                                            clase?</h2>
+                                        <p class="text-gray-600 mb-6">Confirmarás tu participación en
+                                            <strong>{{ $clase->nombre }}</strong>.</p>
 
                                         <div class="flex justify-end space-x-4">
                                             <button @click="showModal = false"
