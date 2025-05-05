@@ -21,35 +21,35 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($solicitudesPendientes as $solicitud)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    {{ $solicitud->usuario->name }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    {{ $solicitud->clase->nombre }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    {{ $solicitud->created_at->format('d/m/Y H:i') }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex space-x-2">
-                                        <form method="POST" action="{{ route('entrenador.solicitudes.aceptar', [$solicitud->id]) }}">
-                                            @csrf
-                                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded">
-                                                Aceptar
-                                            </button>
-                                        </form>
-
-                                        <form method="POST" action="{{ route('entrenador.solicitudes.rechazar', [$solicitud->id]) }}">
-                                            @csrf
-                                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded">
-                                                Rechazar
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ $solicitud->usuario->name }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ $solicitud->clase->nombre }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ $solicitud->created_at->format('d/m/Y H:i') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex space-x-2">
+                                    <form method="POST" action="{{ route('entrenador.solicitudes.aceptar', [$solicitud->clase->id, $solicitud->user_id]) }}">
+                                        @csrf
+                                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded">
+                                            Aceptar
+                                        </button>
+                                    </form>
+                    
+                                    <form method="POST" action="{{ route('entrenador.solicitudes.rechazar', [$solicitud->clase->id, $solicitud->user_id]) }}">
+                                        @csrf
+                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded">
+                                            Rechazar
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
