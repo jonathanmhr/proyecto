@@ -33,14 +33,14 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">
-                                    <form method="POST" action="{{ route('entrenador.solicitudes.aceptar', [$solicitud->clase->id, $solicitud->user_id]) }}">
+                                    <form method="POST" action="{{ route('solicitudes.aceptar', [$solicitud->clase->id, $solicitud->user_id]) }}">
                                         @csrf
                                         <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded">
                                             Aceptar
                                         </button>
                                     </form>
                     
-                                    <form method="POST" action="{{ route('entrenador.solicitudes.rechazar', [$solicitud->clase->id, $solicitud->user_id]) }}">
+                                    <form method="POST" action="{{ route('solicitudes.rechazar', [$solicitud->clase->id, $solicitud->user_id]) }}">
                                         @csrf
                                         <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded">
                                             Rechazar
@@ -49,7 +49,7 @@
                                 </div>
                             </td>
                         </tr>
-                    @endforeach
+                    @endforeach                    
                     </tbody>
                 </table>
             </div>

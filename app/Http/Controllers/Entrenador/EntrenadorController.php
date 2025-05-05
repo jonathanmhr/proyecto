@@ -101,12 +101,9 @@ class EntrenadorController extends Controller
         $solicitud->estado = 'aceptado';
         $solicitud->save();
 
-        // Aquí puedes agregar lógica adicional, como agregar al usuario a la clase, si es necesario.
-
         return redirect()->route('entrenador.clases.index')->with('success', 'La solicitud ha sido aceptada.');
     }
 
-    // Método para rechazar una solicitud de un alumno
     public function rechazarSolicitud($claseId, $userId)
     {
         // Buscar la clase
@@ -128,6 +125,7 @@ class EntrenadorController extends Controller
 
         return redirect()->route('entrenador.clases.index')->with('success', 'La solicitud ha sido rechazada.');
     }
+
 
     public function eliminarAlumno($claseId, $alumnoId)
     {
