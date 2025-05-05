@@ -50,7 +50,7 @@ class ClaseGrupalController extends Controller
         }
 
         // Verificar si el usuario tiene una solicitud pendiente
-        $solicitudPendiente = $clase->solicitudes()->where('user_id', $usuario->id)  // Cambié id_usuario por user_id
+        $solicitudPendiente = $clase->solicitudes()->where('user_id', $usuario->id)
             ->where('estado', 'pendiente')
             ->exists();
 
@@ -68,15 +68,17 @@ class ClaseGrupalController extends Controller
             return redirect()->route('cliente.clases.index')->with('error', 'No puedes inscribirte en una clase ya iniciada.');
         }
 
-        // Crear la solicitud de inscripción (solicitud pendiente)
+        // Crear la solicitud de inscripción (estado pendiente)
         SolicitudClase::create([
-            'user_id' => $usuario->id,  // Cambié id_usuario por user_id
+            'user_id' => $usuario->id,
             'id_clase' => $clase->id,
-            'estado' => 'pendiente', // Estado pendiente
+            'estado' => 'pendiente',
         ]);
 
         return redirect()->route('cliente.clases.index')->with('success', 'Tu solicitud para unirte a la clase ha sido enviada.');
     }
+
+
 
     // Aceptar la solicitud de un usuario para unirse a una clase
     public function aceptarSolicitud($claseId, $usuarioId)
@@ -85,7 +87,7 @@ class ClaseGrupalController extends Controller
         $usuario = User::findOrFail($usuarioId);
 
         // Asegúrate de que la solicitud esté pendiente antes de aceptarla
-        $solicitud = SolicitudClase::where('user_id', $usuario->id)  // Cambié id_usuario por user_id
+        $solicitud = SolicitudClase::where('user_id', $usuario->id)
             ->where('id_clase', $clase->id)
             ->where('estado', 'pendiente')
             ->first();
@@ -94,9 +96,11 @@ class ClaseGrupalController extends Controller
             $solicitud->update(['estado' => 'aceptado']);
         }
 
-        return redirect()->route('entrenador.clases.edit', ['id' => $clase->id_clase])
+        // En este punto el usuario debería estar inscrito (si es necesario se puede agregar en otro lugar)
+        return redirect()->route('entrenador.clases.edit', ['id' => $clase->id])
             ->with('success', 'La solicitud del alumno ha sido aceptada');
     }
+
 
     // Rechazar la solicitud de un usuario
     public function rechazarSolicitud($claseId, $usuarioId)
@@ -105,7 +109,7 @@ class ClaseGrupalController extends Controller
         $usuario = User::findOrFail($usuarioId);
 
         // Asegúrate de que la solicitud esté pendiente antes de rechazarla
-        $solicitud = SolicitudClase::where('user_id', $usuario->id)  // Cambié id_usuario por user_id
+        $solicitud = SolicitudClase::where('user_id', $usuario->id)
             ->where('id_clase', $clase->id)
             ->where('estado', 'pendiente')
             ->first();
@@ -114,7 +118,7 @@ class ClaseGrupalController extends Controller
             $solicitud->update(['estado' => 'rechazado']);
         }
 
-        return redirect()->route('entrenador.clases.edit', ['id' => $clase->id_clase])
+        return redirect()->route('entrenador.clases.edit', ['id' => $clase->id])
             ->with('error', 'La solicitud del alumno ha sido rechazada');
     }
 }

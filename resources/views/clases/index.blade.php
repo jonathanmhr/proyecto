@@ -11,8 +11,6 @@
                 <div class="flex items-center justify-between mb-6">
                     <h1 class="text-3xl font-bold text-gray-900">Clases Disponibles</h1>
                 </div>
-
-                <!-- Mensajes de estado -->
                 @if(session('success'))
                     <div class="bg-green-500 text-white p-3 rounded mb-4">
                         {{ session('success') }}
