@@ -33,44 +33,6 @@ class ClaseGrupalController extends Controller
         return view('clases.index', compact('clases'));
     }
 
-    public function unirse(ClaseGrupal $clase)
-    {
-        $usuario = auth()->user();
-    
-        // Verificar si el usuario ya está inscrito
-        if ($clase->usuarios()->where('user_id', $usuario->id)->exists()) {
-            return redirect()->route('cliente.clases.index')->with('info', 'Ya estás inscrito en esta clase.');
-        }
-    
-        // Verificar si el usuario tiene una solicitud pendiente
-        $solicitudPendiente = $clase->solicitudes()->where('user_id', $usuario->id)
-            ->where('estado', 'pendiente')
-            ->exists();
-    
-        if ($solicitudPendiente) {
-            return redirect()->route('cliente.clases.index')->with('info', 'Ya tienes una solicitud pendiente para unirte a esta clase.');
-        }
-    
-        // Validar cupo disponible
-        if ($clase->usuarios()->count() >= $clase->cupos_maximos) {
-            return redirect()->route('cliente.clases.index')->with('error', 'Esta clase ya está llena.');
-        }
-    
-        // Validar fecha de la clase (no se puede inscribir si ya ha pasado)
-        if ($clase->fecha_inicio < now()) {
-            return redirect()->route('cliente.clases.index')->with('error', 'No puedes inscribirte en una clase ya iniciada.');
-        }
-    
-        // Crear la solicitud de inscripción (solicitud pendiente)
-        SolicitudClase::create([
-            'user_id' => $usuario->id,
-            'id_clase' => $clase->id,
-            'estado' => 'pendiente', // Estado pendiente
-        ]);
-    
-        return redirect()->route('cliente.clases.index')->with('success', 'Tu solicitud para unirte a la clase ha sido enviada.');
-    }
-
     // Mostrar las suscripciones del usuario
     public function suscripciones()
     {
@@ -78,22 +40,60 @@ class ClaseGrupalController extends Controller
         return view('clases.suscripciones', compact('suscripciones'));
     }
 
+    public function unirse(ClaseGrupal $clase)
+    {
+        $usuario = auth()->user();
+
+        // Verificar si el usuario ya está inscrito
+        if ($clase->usuarios()->where('user_id', $usuario->id)->exists()) {
+            return redirect()->route('cliente.clases.index')->with('info', 'Ya estás inscrito en esta clase.');
+        }
+
+        // Verificar si el usuario tiene una solicitud pendiente
+        $solicitudPendiente = $clase->solicitudes()->where('user_id', $usuario->id)  // Cambié id_usuario por user_id
+            ->where('estado', 'pendiente')
+            ->exists();
+
+        if ($solicitudPendiente) {
+            return redirect()->route('cliente.clases.index')->with('info', 'Ya tienes una solicitud pendiente para unirte a esta clase.');
+        }
+
+        // Validar cupo disponible
+        if ($clase->usuarios()->count() >= $clase->cupos_maximos) {
+            return redirect()->route('cliente.clases.index')->with('error', 'Esta clase ya está llena.');
+        }
+
+        // Validar fecha de la clase (no se puede inscribir si ya ha pasado)
+        if ($clase->fecha_inicio < now()) {
+            return redirect()->route('cliente.clases.index')->with('error', 'No puedes inscribirte en una clase ya iniciada.');
+        }
+
+        // Crear la solicitud de inscripción (solicitud pendiente)
+        SolicitudClase::create([
+            'user_id' => $usuario->id,  // Cambié id_usuario por user_id
+            'id_clase' => $clase->id,
+            'estado' => 'pendiente', // Estado pendiente
+        ]);
+
+        return redirect()->route('cliente.clases.index')->with('success', 'Tu solicitud para unirte a la clase ha sido enviada.');
+    }
+
     // Aceptar la solicitud de un usuario para unirse a una clase
     public function aceptarSolicitud($claseId, $usuarioId)
     {
         $clase = ClaseGrupal::findOrFail($claseId);
         $usuario = User::findOrFail($usuarioId);
-    
+
         // Asegúrate de que la solicitud esté pendiente antes de aceptarla
-        $solicitud = SolicitudClase::where('id_usuario', $usuario->id)
+        $solicitud = SolicitudClase::where('user_id', $usuario->id)  // Cambié id_usuario por user_id
             ->where('id_clase', $clase->id)
             ->where('estado', 'pendiente')
             ->first();
-    
+
         if ($solicitud) {
             $solicitud->update(['estado' => 'aceptado']);
         }
-    
+
         return redirect()->route('entrenador.clases.edit', ['id' => $clase->id_clase])
             ->with('success', 'La solicitud del alumno ha sido aceptada');
     }
@@ -103,17 +103,17 @@ class ClaseGrupalController extends Controller
     {
         $clase = ClaseGrupal::findOrFail($claseId);
         $usuario = User::findOrFail($usuarioId);
-    
+
         // Asegúrate de que la solicitud esté pendiente antes de rechazarla
-        $solicitud = SolicitudClase::where('id_usuario', $usuario->id)
+        $solicitud = SolicitudClase::where('user_id', $usuario->id)  // Cambié id_usuario por user_id
             ->where('id_clase', $clase->id)
             ->where('estado', 'pendiente')
             ->first();
-    
+
         if ($solicitud) {
             $solicitud->update(['estado' => 'rechazado']);
         }
-    
+
         return redirect()->route('entrenador.clases.edit', ['id' => $clase->id_clase])
             ->with('error', 'La solicitud del alumno ha sido rechazada');
     }
