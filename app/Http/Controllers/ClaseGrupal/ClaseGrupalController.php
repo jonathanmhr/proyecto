@@ -41,45 +41,38 @@ class ClaseGrupalController extends Controller
     }
 
     public function unirse(ClaseGrupal $clase)
-    {
-        $usuario = auth()->user();
+{
+    $usuario = auth()->user();
     
-        // Verificar si el usuario ya está inscrito
-        if (Suscripcion::where('id_clase', $clase->id)->where('id_usuario', $usuario->id)->exists()) {
-            return redirect()->route('cliente.clases.index')->with('info', 'Ya estás inscrito en esta clase.');
-        }
+    // Verificar si ya existe una solicitud pendiente
+    $solicitudPendiente = SolicitudClase::where('id_clase', $clase->id)
+        ->where('user_id', $usuario->id)
+        ->where('estado', 'pendiente')
+        ->exists();
     
-        // Verificar si ya existe una suscripción pendiente
-        $suscripcionPendiente = Suscripcion::where('id_clase', $clase->id)
-            ->where('id_usuario', $usuario->id)
-            ->where('estado', 'pendiente')
-            ->exists();
-    
-        if ($suscripcionPendiente) {
-            return redirect()->route('cliente.clases.index')->with('info', 'Ya tienes una suscripción pendiente para esta clase.');
-        }
-    
-        // Validar si hay cupo disponible en la clase
-        if ($clase->usuarios()->count() >= $clase->cupos_maximos) {
-            return redirect()->route('cliente.clases.index')->with('error', 'Esta clase ya está llena.');
-        }
-    
-        // Validar fecha de la clase (no se puede inscribir si ya ha pasado)
-        if ($clase->fecha_inicio < now()) {
-            return redirect()->route('cliente.clases.index')->with('error', 'No puedes inscribirte en una clase que ya ha comenzado.');
-        }
-    
-        // Crear la suscripción con estado 'pendiente'
-        Suscripcion::create([
-            'id_usuario' => $usuario->id,    // ID del usuario
-            'id_clase' => $clase->id,        // ID de la clase
-            'estado' => 'pendiente',         // Estado de la suscripción
-            'fecha_inicio' => now(),         // Fecha de inicio
-            'fecha_fin' => now()->addMonth(), // Fecha de finalización (por ejemplo, 1 mes)
-        ]);
-    
-        return redirect()->route('cliente.clases.index')->with('success', 'Tu solicitud para unirte a la clase ha sido enviada.');
+    if ($solicitudPendiente) {
+        return redirect()->route('cliente.clases.index')->with('info', 'Ya tienes una solicitud pendiente para esta clase.');
     }
+
+    // Validar si hay cupo disponible en la clase
+    if ($clase->usuarios()->count() >= $clase->cupos_maximos) {
+        return redirect()->route('cliente.clases.index')->with('error', 'Esta clase ya está llena.');
+    }
+
+    // Validar fecha de la clase (no se puede inscribir si ya ha pasado)
+    if ($clase->fecha_inicio < now()) {
+        return redirect()->route('cliente.clases.index')->with('error', 'No puedes inscribirte en una clase que ya ha comenzado.');
+    }
+
+    // Crear la solicitud con estado 'pendiente'
+    SolicitudClase::create([
+        'user_id' => $usuario->id,    // ID del usuario
+        'id_clase' => $clase->id,      // ID de la clase
+        'estado' => 'pendiente',       // Estado de la solicitud
+    ]);
+
+    return redirect()->route('cliente.clases.index')->with('success', 'Tu solicitud para unirte a la clase ha sido enviada.');
+}
     
 
     public function aceptarSolicitud($claseId, $usuarioId)

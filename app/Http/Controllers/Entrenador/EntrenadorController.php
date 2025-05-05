@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Entrenador;
 use App\Http\Controllers\Controller;
 use App\Models\ClaseGrupal;
 use App\Models\Suscripcion;
+use App\Models\SolicitudClase;
 use App\Models\User;
 use App\Models\Entrenamiento;
 use Illuminate\Http\Request;
@@ -31,12 +32,17 @@ class EntrenadorController extends Controller
         // Obtener las suscripciones pendientes
         $suscripcionesPendientes = Suscripcion::where('estado', 'pendiente')
             ->whereHas('clase', function ($query) {
-                $query->where('entrenador_id', auth()->user()->id); // Filtrar por clases del entrenador
+                $query->where('entrenador_id', auth()->user()->id);
             })
             ->get();
 
+        // Solicitudes pendientes
+        $solicitudesPendientes = SolicitudClase::where('estado', 'pendiente')
+            ->whereIn('id_clase', $clases->pluck('id_clase'))
+            ->get();
+
         // Pasar las clases, reservas, entrenamientos, suscripciones y solicitudes a la vista
-        return view('entrenador.dashboard', compact('clases', 'reservas', 'entrenamientos', 'suscripciones', 'suscripcionesPendientes'));
+        return view('entrenador.dashboard', compact('clases', 'reservas', 'entrenamientos', 'suscripciones', 'suscripcionesPendientes', 'solicitudesPendientes'));
     }
 
     public function misClases()
@@ -45,15 +51,17 @@ class EntrenadorController extends Controller
         return view('entrenador.clases.index', compact('clases'));
     }
 
-    public function verSuscripciones()
+    public function verSolicitudesPendientes()
     {
-        $suscripcionesPendientes = \App\Models\Suscripcion::where('estado', 'pendiente')
+        // Obtener las solicitudes pendientes para las clases del entrenador
+        $solicitudesPendientes = SolicitudClase::where('estado', 'pendiente')
             ->whereHas('clase', function ($query) {
                 $query->where('entrenador_id', auth()->id());
             })
-            ->paginate(10);
+            ->with(['usuario', 'clase'])
+            ->get();
 
-        return view('entrenador.suscripciones.index', compact('suscripcionesPendientes'));
+        return view('entrenador.solicitudes.index', compact('solicitudesPendientes'));
     }
 
     public function verAlumnos(ClaseGrupal $clase)
@@ -73,22 +81,24 @@ class EntrenadorController extends Controller
     // Método para aceptar una solicitud de un alumno
     public function aceptarSolicitud($claseId, $userId)
     {
-        // Recuperar la clase y la suscripción pendiente
+        // Buscar la clase
         $clase = ClaseGrupal::findOrFail($claseId);
-        $suscripcion = Suscripcion::where('id_clase', $claseId)
-            ->where('id_usuario', $userId)
+
+        // Buscar la solicitud pendiente
+        $solicitud = SolicitudClase::where('id_clase', $claseId)
+            ->where('user_id', $userId)
             ->where('estado', 'pendiente')
             ->first();
 
-        if (!$suscripcion) {
+        if (!$solicitud) {
             return redirect()->route('entrenador.clases.index')->with('error', 'No se ha encontrado una solicitud pendiente.');
         }
 
-        // Cambiar el estado de la suscripción a 'aceptado'
-        $suscripcion->estado = 'aceptado';
-        $suscripcion->save();
+        // Cambiar el estado a 'aceptado'
+        $solicitud->estado = 'aceptado';
+        $solicitud->save();
 
-        // Aquí puedes agregar notificación al usuario si lo deseas.
+        // Aquí puedes agregar lógica adicional, como agregar al usuario a la clase, si es necesario.
 
         return redirect()->route('entrenador.clases.index')->with('success', 'La solicitud ha sido aceptada.');
     }
@@ -96,22 +106,22 @@ class EntrenadorController extends Controller
     // Método para rechazar una solicitud de un alumno
     public function rechazarSolicitud($claseId, $userId)
     {
-        // Recuperar la clase y la suscripción pendiente
+        // Buscar la clase
         $clase = ClaseGrupal::findOrFail($claseId);
-        $suscripcion = Suscripcion::where('id_clase', $claseId)
-            ->where('id_usuario', $userId)
+
+        // Buscar la solicitud pendiente
+        $solicitud = SolicitudClase::where('id_clase', $claseId)
+            ->where('user_id', $userId)
             ->where('estado', 'pendiente')
             ->first();
 
-        if (!$suscripcion) {
+        if (!$solicitud) {
             return redirect()->route('entrenador.clases.index')->with('error', 'No se ha encontrado una solicitud pendiente.');
         }
 
-        // Cambiar el estado de la suscripción a 'rechazado'
-        $suscripcion->estado = 'rechazado';
-        $suscripcion->save();
-
-        // Aquí puedes agregar notificación al usuario si lo deseas.
+        // Cambiar el estado a 'rechazado'
+        $solicitud->estado = 'rechazado';
+        $solicitud->save();
 
         return redirect()->route('entrenador.clases.index')->with('success', 'La solicitud ha sido rechazada.');
     }

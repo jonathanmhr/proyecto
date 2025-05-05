@@ -28,7 +28,8 @@
                     <div class="border-b border-blue-300 pb-2 mb-2">
                         <div class="text-blue-800 font-medium">{{ $clase->nombre }}</div>
                         <div class="text-sm text-blue-600">{{ $clase->descripcion }}</div>
-                        <div class="text-sm text-blue-600">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}</div>
+                        <div class="text-sm text-blue-600">Fecha: {{ $clase->fecha_inicio }} - {{ $clase->fecha_fin }}
+                        </div>
                         <p class="text-sm text-blue-600">
                             @if ($clase->cambio_pendiente)
                                 <span class="text-yellow-500 font-bold">Cambio Pendiente de Aprobación</span>
@@ -36,13 +37,15 @@
                                 <span class="text-green-500 font-bold">Clase Aceptada</span>
                             @endif
                         </p>
-                        <a href="{{ route('entrenador.clases.edit', $clase) }}" class="text-blue-500 hover:underline">Editar clase</a>
+                        <a href="{{ route('entrenador.clases.edit', $clase) }}"
+                            class="text-blue-500 hover:underline">Editar clase</a>
                     </div>
                 @empty
                     <p class="text-blue-600">No tienes clases programadas.</p>
                 @endforelse
                 <div class="mt-4">
-                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver todas mis clases</a>
+                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver todas
+                        mis clases</a>
                 </div>
             </div>
 
@@ -66,7 +69,8 @@
                 <h2 class="text-xl font-semibold text-yellow-700 mb-4">Mis Reservas y Estado de Solicitudes</h2>
                 @forelse ($reservas as $reserva)
                     <div class="border-b border-yellow-300 pb-2 mb-2">
-                        <div class="text-yellow-800 font-medium">{{ $reserva->clase->nombre }} (Reserva para: {{ $reserva->usuario->name }})</div>
+                        <div class="text-yellow-800 font-medium">{{ $reserva->clase->nombre }} (Reserva para:
+                            {{ $reserva->usuario->name }})</div>
                         <div class="text-sm text-yellow-600">
                             Estado de la Reserva:
                             @if ($reserva->estado == 'pendiente')
@@ -83,20 +87,24 @@
                 @endforelse
             </div>
 
-            <!-- Suscripciones Pendientes -->
+            <!-- Solicitudes Pendientes -->
             <div class="bg-gradient-to-br from-teal-100 to-teal-200 p-6 rounded-xl shadow-md">
                 <h2 class="text-xl font-semibold text-teal-700 mb-4">Solicitudes Pendientes</h2>
-                @if ($suscripcionesPendientes->count() > 0)
+                @if ($solicitudesPendientes->count() > 0)
                     <p class="text-sm text-teal-600">
-                        Tienes {{ $suscripcionesPendientes->count() }} suscripción(es) pendiente(s).
+                        Tienes {{ $solicitudesPendientes->count() }} solicitud(es) pendiente(s).
                     </p>
-                    <a href="{{ route('entrenador.suscripciones.index') }}" class="text-teal-500 hover:underline">Ver Suscripciones Pendientes</a>
+                    <a href="{{ route('entrenador.solicitudes.index') }}" class="text-teal-500 hover:underline">Ver
+                        Solicitudes Pendientes</a>
                 @else
                     <p class="text-sm text-teal-600">
-                        No tienes suscripciones pendientes.
+                        No tienes solicitudes pendientes.
                     </p>
                 @endif
             </div>
+
+
+
         </div>
     </div>
 </x-app-layout>
