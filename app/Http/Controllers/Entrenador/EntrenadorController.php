@@ -82,50 +82,55 @@ class EntrenadorController extends Controller
     }
 
     // Método para aceptar una solicitud de un alumno
-    public function aceptarSolicitud($claseId, $userId)
+    public function aceptarSolicitud($id)
     {
-        // Buscar la clase
-        $clase = ClaseGrupal::findOrFail($claseId);
-
-        // Buscar la solicitud pendiente
-        $solicitud = SolicitudClase::where('id_clase', $claseId)
-            ->where('user_id', $userId)
-            ->where('estado', 'pendiente')
-            ->first();
-
-        if (!$solicitud) {
-            return redirect()->route('entrenador.clases.index')->with('error', 'No se ha encontrado una solicitud pendiente.');
+        // Buscar la solicitud pendiente por su id
+        $solicitud = SolicitudClase::findOrFail($id);
+    
+        // Asegúrate de que la solicitud esté pendiente
+        if ($solicitud->estado !== 'pendiente') {
+            return redirect()->route('entrenador.solicitudes.index')->with('error', 'La solicitud no está pendiente.');
         }
-
-        // Cambiar el estado a 'aceptado'
+    
+        // Buscar la clase asociada a la solicitud
+        $clase = $solicitud->clase;
+    
+        // Verificar que la clase pertenece al entrenador
+        if ($clase->entrenador_id != auth()->id()) {
+            return redirect()->route('entrenador.solicitudes.index')->with('error', 'No puedes aceptar solicitudes para esta clase.');
+        }
+    
+        // Cambiar el estado de la solicitud a 'aceptado'
         $solicitud->estado = 'aceptado';
         $solicitud->save();
-
-        return redirect()->route('entrenador.clases.index')->with('success', 'La solicitud ha sido aceptada.');
+    
+        return redirect()->route('entrenador.solicitudes.index')->with('success', 'La solicitud ha sido aceptada.');
     }
 
-    public function rechazarSolicitud($claseId, $userId)
+    public function rechazarSolicitud($id)
     {
-        // Buscar la clase
-        $clase = ClaseGrupal::findOrFail($claseId);
-
-        // Buscar la solicitud pendiente
-        $solicitud = SolicitudClase::where('id_clase', $claseId)
-            ->where('user_id', $userId)
-            ->where('estado', 'pendiente')
-            ->first();
-
-        if (!$solicitud) {
-            return redirect()->route('entrenador.clases.index')->with('error', 'No se ha encontrado una solicitud pendiente.');
+        // Buscar la solicitud pendiente por su id
+        $solicitud = SolicitudClase::findOrFail($id);
+    
+        // Asegúrate de que la solicitud esté pendiente
+        if ($solicitud->estado !== 'pendiente') {
+            return redirect()->route('entrenador.solicitudes.index')->with('error', 'La solicitud no está pendiente.');
         }
-
-        // Cambiar el estado a 'rechazado'
+    
+        // Buscar la clase asociada a la solicitud
+        $clase = $solicitud->clase;
+    
+        // Verificar que la clase pertenece al entrenador
+        if ($clase->entrenador_id != auth()->id()) {
+            return redirect()->route('entrenador.solicitudes.index')->with('error', 'No puedes rechazar solicitudes para esta clase.');
+        }
+    
+        // Cambiar el estado de la solicitud a 'rechazado'
         $solicitud->estado = 'rechazado';
         $solicitud->save();
-
-        return redirect()->route('entrenador.clases.index')->with('success', 'La solicitud ha sido rechazada.');
-    }
-
+    
+        return redirect()->route('entrenador.solicitudes.index')->with('success', 'La solicitud ha sido rechazada.');
+    }    
 
     public function eliminarAlumno($claseId, $alumnoId)
     {
