@@ -1,17 +1,16 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Alumnos de la clase: ') }} {{ $clase->nombre }}
-        </h2>
-    </x-slot>
-
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-3xl font-bold text-gray-900 mb-6">
-            👋 ¡Alumnos Inscritos!
-        </h1>
+        <!-- Título y botón "Volver" en una fila -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">¡Alumnos Inscritos!</h1>
+            <a href="{{ route('entrenador.clases.index') }}" 
+                class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold rounded-lg transition">
+                <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
+            </a>
+        </div>
 
         <div class="bg-white p-6 rounded-xl shadow-md">
-            <h2 class="text-xl font-semibold text-gray-700 mb-4">Alumnos Inscritos</h2>
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Alumnos Inscritos en la clase: {{ $clase->nombre }}</h2>
 
             @foreach ($alumnos as $alumno)
                 <div class="border-b border-gray-300 pb-2 mb-2">
