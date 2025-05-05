@@ -11,6 +11,8 @@
                 <div class="flex items-center justify-between mb-6">
                     <h1 class="text-3xl font-bold text-gray-900">Clases Disponibles</h1>
                 </div>
+
+                <!-- Mensajes de estado -->
                 @if(session('success'))
                     <div class="bg-green-500 text-white p-3 rounded mb-4">
                         {{ session('success') }}
@@ -41,19 +43,15 @@
 
                                 <!-- Mostrar el botón de unirse solo si el usuario no está inscrito o tiene solicitud pendiente -->
                                 @if (!$clase->usuarios()->where('id_usuario', auth()->id())->exists() && 
-                                      !$clase->solicitudes()->where('user_id', auth()->id())->where('estado', 'pendiente')->exists())
+                                      !$clase->solicitudes()->where('user_id', auth()->id())->exists())
                                     <button @click="showModal = true"
                                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
                                         Unirse
                                     </button>
                                 @elseif($clase->usuarios()->where('id_usuario', auth()->id())->exists())
                                     <p class="text-green-600 font-semibold mt-2">Ya estás inscrito en esta clase.</p>
-                                @elseif($clase->solicitudes()->where('user_id', auth()->id())->where('estado', 'pendiente')->exists())
+                                @elseif($clase->solicitudes()->where('user_id', auth()->id())->exists())
                                     <p class="text-yellow-600 font-semibold mt-2">Tienes una solicitud pendiente para unirte a esta clase.</p>
-                                @elseif($clase->solicitudes()->where('user_id', auth()->id())->where('estado', 'rechazado')->exists())
-                                    <p class="text-red-600 font-semibold mt-2">Tu solicitud fue rechazada.</p>
-                                @elseif($clase->solicitudes()->where('user_id', auth()->id())->where('estado', 'aceptado')->exists())
-                                    <p class="text-green-600 font-semibold mt-2">Tu solicitud ha sido aceptada.</p>
                                 @endif
 
                                 <!-- Modal -->
@@ -81,6 +79,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Fin del Modal -->
                             </div>
                         @endforeach
                     </div>
