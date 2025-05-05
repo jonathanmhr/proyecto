@@ -141,6 +141,6 @@ class EntrenadorController extends Controller
         $clase->cambio_pendiente = true;
         $clase->save();
 
-        return redirect()->route('entrenador.clase.index')->with('success', 'Clase actualizada, pendiente de aprobación.');
+        return redirect()->route('entrenador.dashboard')->with('success', 'Clase actualizada, pendiente de aprobación.');
     }
 }
