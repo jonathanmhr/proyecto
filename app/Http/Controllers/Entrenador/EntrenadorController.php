@@ -56,91 +56,115 @@ class EntrenadorController extends Controller
         return view('entrenador.suscripciones.index', compact('suscripcionesPendientes'));
     }
 
-    public function aceptarSolicitud($claseId, $userId)
+    public function verAlumnos(ClaseGrupal $clase)
     {
-        $user = User::findOrFail($userId);
-        $clase = ClaseGrupal::findOrFail($claseId);
+        // Obtener los alumnos inscritos en la clase
+        $alumnos = $clase->suscripciones()->where('estado', 'aceptado')->get();
 
-        // Verificar si el alumno ya está inscrito
-        if (Suscripcion::where('id_clase', $clase->id)->where('id_usuario', $user->id)->exists()) {
-            return redirect()->route('entrenador.dashboard')->with('error', 'El alumno ya está inscrito en esta clase.');
-        }
-
-        // Crear la suscripción activa
-        Suscripcion::create([
-            'id_usuario' => $user->id,
-            'id_clase' => $clase->id,
-            'estado' => Suscripcion::ESTADO_ACTIVO,  // Ahora activo
-            'fecha_inicio' => now(),
-            'fecha_fin' => now()->addMonth(),  // Suscripción de un mes, ejemplo
-        ]);
-
-        return redirect()->route('entrenador.dashboard')->with('success', 'Solicitud aceptada y suscripción creada.');
-    }
-
-    public function rechazarSolicitud($claseId, $userId)
-    {
-        $user = User::findOrFail($userId);
-        $clase = ClaseGrupal::findOrFail($claseId);
-
-        // Verificar si el alumno está inscrito
-        $suscripcion = Suscripcion::where('id_clase', $clase->id)
-            ->where('id_usuario', $user->id)
-            ->first();
-        if (!$suscripcion) {
-            return redirect()->route('entrenador.dashboard')->with('error', 'El alumno no está inscrito en esta clase.');
-        }
-
-        // Eliminar la suscripción
-        $suscripcion->delete();
-
-        return redirect()->route('entrenador.dashboard')->with('success', 'Solicitud rechazada y el alumno eliminado de la clase.');
+        return view('entrenador.clases.alumnos', compact('clase', 'alumnos'));
     }
 
     // Método para editar los detalles de una clase
     public function edit(ClaseGrupal $clase)
     {
-        $clase->load('usuarios'); 
-        dd($clase);
         return view('entrenador.clases.edit', compact('clase'));
     }
 
-    public function quitarUsuario($claseId, $userId)
+    // Método para aceptar una solicitud de un alumno
+    public function aceptarSolicitud($claseId, $userId)
     {
-        // Encuentra la clase y el usuario
+        // Recuperar la clase y la suscripción pendiente
         $clase = ClaseGrupal::findOrFail($claseId);
-        $usuario = User::findOrFail($userId);
-        
-        // Quitar al usuario de la clase
-        $clase->usuarios()->detach($usuario);
-        
-        // Redirigir a la vista con un mensaje de éxito
-        return redirect()->route('entrenador.clases.edit', ['clase' => $claseId])
-            ->with('success', 'Usuario quitado de la clase con éxito.');
-    }    
+        $suscripcion = Suscripcion::where('id_clase', $claseId)
+            ->where('id_usuario', $userId)
+            ->where('estado', 'pendiente')
+            ->first();
+
+        if (!$suscripcion) {
+            return redirect()->route('entrenador.clases.index')->with('error', 'No se ha encontrado una solicitud pendiente.');
+        }
+
+        // Cambiar el estado de la suscripción a 'aceptado'
+        $suscripcion->estado = 'aceptado';
+        $suscripcion->save();
+
+        // Aquí puedes agregar notificación al usuario si lo deseas.
+
+        return redirect()->route('entrenador.clases.index')->with('success', 'La solicitud ha sido aceptada.');
+    }
+
+    // Método para rechazar una solicitud de un alumno
+    public function rechazarSolicitud($claseId, $userId)
+    {
+        // Recuperar la clase y la suscripción pendiente
+        $clase = ClaseGrupal::findOrFail($claseId);
+        $suscripcion = Suscripcion::where('id_clase', $claseId)
+            ->where('id_usuario', $userId)
+            ->where('estado', 'pendiente')
+            ->first();
+
+        if (!$suscripcion) {
+            return redirect()->route('entrenador.clases.index')->with('error', 'No se ha encontrado una solicitud pendiente.');
+        }
+
+        // Cambiar el estado de la suscripción a 'rechazado'
+        $suscripcion->estado = 'rechazado';
+        $suscripcion->save();
+
+        // Aquí puedes agregar notificación al usuario si lo deseas.
+
+        return redirect()->route('entrenador.clases.index')->with('success', 'La solicitud ha sido rechazada.');
+    }
+
+    public function eliminarAlumno($claseId, $alumnoId)
+    {
+        // Encontrar la clase y el alumno
+        $clase = ClaseGrupal::findOrFail($claseId);
+        $alumno = User::findOrFail($alumnoId);
+
+        // Eliminar la suscripción
+        $suscripcion = Suscripcion::where('id_clase', $clase->id_clase)
+            ->where('id_usuario', $alumno->id)
+            ->first();
+
+        $suscripcion->delete();
+
+        // Notificar al admin_entrenador
+        // Notification::send($adminEntrenador, new AlumnoEliminadoNotificacion($alumno, $clase));
+
+        return redirect()->route('entrenador.clases.alumnos', $clase->id_clase)
+            ->with('success', 'El alumno ha sido eliminado de la clase.');
+    }
 
     // Método para actualizar los detalles de la clase, pero debe marcarse como pendiente para aprobación
     public function updateClase(Request $request, $id)
     {
-        $clase = ClaseGrupal::findOrFail($id);
-
-        // Validar los datos de entrada
+        // Validar los datos recibidos
         $validated = $request->validate([
-            'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date',
-            'cupos_maximos' => 'required|integer',
-            'ubicacion' => 'nullable|string|max:100',
-            'duracion' => 'required|integer',
-            'nivel' => 'required|in:principiante,intermedio,avanzado',
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'required|string|max:1000',
+            'ubicacion' => 'required|string|max:255',
+            'cupos_maximos' => 'required|integer|min:1',
+            'nivel' => 'required|string|in:principiante,intermedio,avanzado',
         ]);
 
-        // Actualizar los datos de la clase
-        $clase->update($validated);
+        // Encontrar la clase
+        $clase = ClaseGrupal::findOrFail($id);
 
-        // Marcar como cambio pendiente para aprobación por el Admin
+        // Actualizar los datos
+        $clase->nombre = $request->input('nombre');
+        $clase->descripcion = $request->input('descripcion');
+        $clase->ubicacion = $request->input('ubicacion');
+        $clase->cupos_maximos = $request->input('cupos_maximos');
+        $clase->nivel = $request->input('nivel');
+
+        // Marcar como pendiente
         $clase->cambio_pendiente = true;
         $clase->save();
 
-        return redirect()->route('entrenador.clase.index')->with('success', 'Clase actualizada, pendiente de aprobación.');
+        // Notificar al admin_entrenador sobre los cambios pendientes (puedes implementar una notificación)
+        // Notification::send($adminEntrenador, new CambioPendienteNotificacion($clase));
+
+        return redirect()->route('entrenador.clases.index')->with('success', 'Tu clase ha sido actualizada y está pendiente de aprobación.');
     }
 }
