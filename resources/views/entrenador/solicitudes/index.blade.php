@@ -33,7 +33,7 @@
 
                                         <!-- Modal de Confirmación Aceptar -->
                                         <div id="modal-aceptar-{{ $solicitud->id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-                                            <div class="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full">
+                                            <div class="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full overflow-auto">
                                                 <h3 class="text-xl font-semibold mb-4">¿Confirmas que deseas aceptar esta solicitud?</h3>
                                                 <form action="{{ route('entrenador.clases.aceptarSolicitud', [$solicitud->id_clase, $solicitud->user_id]) }}" method="POST">
                                                     @csrf
@@ -56,7 +56,7 @@
 
                                         <!-- Modal de Confirmación Rechazar -->
                                         <div id="modal-rechazar-{{ $solicitud->id }}" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-                                            <div class="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full">
+                                            <div class="bg-white p-6 rounded-lg shadow-lg max-w-xs w-full overflow-auto">
                                                 <h3 class="text-xl font-semibold mb-4">¿Confirmas que deseas rechazar esta solicitud?</h3>
                                                 <form action="{{ route('entrenador.clases.rechazarSolicitud', [$solicitud->id_clase, $solicitud->user_id]) }}" method="POST">
                                                     @csrf
