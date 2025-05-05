@@ -66,7 +66,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
-    
+
     // RELACIONES
     public function clases()
     {
@@ -106,3 +106,4 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Suscripcion::class, 'id_clase');
     }
     
+}
