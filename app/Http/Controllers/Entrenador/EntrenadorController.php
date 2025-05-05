@@ -31,7 +31,11 @@ class EntrenadorController extends Controller
         $suscripciones = Suscripcion::where('id_usuario', auth()->id())->where('estado', 'activo')->get();
 
         // Obtener las solicitudes pendientes
-        $solicitudesPendientes = ReservaDeClase::where('estado', 'pendiente')->get();
+        $solicitudesPendientes = \App\Models\SolicitudClase::where('estado', 'pendiente')
+            ->whereHas('clase', function ($query) {
+                $query->where('entrenador_id', auth()->id());
+            })
+            ->get();
 
         // Pasar las clases, reservas, entrenamientos, suscripciones y solicitudes a la vista
         return view('entrenador.dashboard', compact('clases', 'reservas', 'entrenamientos', 'suscripciones', 'solicitudesPendientes'));
@@ -55,19 +59,24 @@ class EntrenadorController extends Controller
             return redirect()->route('entrenador.dashboard')->with('error', 'El alumno ya está inscrito en esta clase.');
         }
 
-        // Marcar la solicitud como aceptada pero pendiente de aprobación
-        $clase->usuarios()->attach($user);
+        // Marcar la solicitud como aceptada
+        $solicitud = \App\Models\SolicitudClase::where('user_id', $user->id)
+            ->where('id_clase', $clase->id_clase)
+            ->first();
+        if ($solicitud) {
+            $solicitud->update(['estado' => 'aceptado']);
+        }
 
-        // Crear una suscripción pendiente de aprobación por el Admin
+        // Crear la suscripción activa
         Suscripcion::create([
             'id_usuario' => $user->id,
             'id_clase' => $clase->id,
-            'estado' => Suscripcion::ESTADO_INACTIVO,  // Pendiente de revisión
+            'estado' => Suscripcion::ESTADO_ACTIVO,  // Ahora activo
             'fecha_inicio' => now(),
             'fecha_fin' => now()->addMonth(),  // Por ejemplo, suscripción de un mes
         ]);
 
-        return redirect()->route('entrenador.dashboard')->with('success', 'Solicitud aceptada, pendiente de aprobación por el Admin.');
+        return redirect()->route('entrenador.dashboard')->with('success', 'Solicitud aceptada y suscripción creada.');
     }
 
     // Método para rechazar una solicitud de alumno
@@ -84,18 +93,23 @@ class EntrenadorController extends Controller
         // Eliminar la relación del alumno con la clase
         $clase->usuarios()->detach($user);
 
-        // Cancelar la suscripción (estado inactivo)
+        // Cancelar la suscripción
         $suscripcion = Suscripcion::where('id_usuario', $user->id)
-            ->where('id_clase', $clase->id)
-            ->where('estado', Suscripcion::ESTADO_INACTIVO) // Asegurarse de que esté pendiente
+            ->where('id_clase', $clase->id_clase)
             ->first();
-
         if ($suscripcion) {
-            $suscripcion->estado = Suscripcion::ESTADO_INACTIVO;
-            $suscripcion->save();
+            $suscripcion->delete();
         }
 
-        return redirect()->route('entrenador.dashboard')->with('success', 'Solicitud rechazada, el alumno ha sido eliminado de la clase.');
+        // Eliminar la solicitud
+        $solicitud = \App\Models\SolicitudClase::where('user_id', $user->id)
+            ->where('id_clase', $clase->id_clase)
+            ->first();
+        if ($solicitud) {
+            $solicitud->delete();
+        }
+
+        return redirect()->route('entrenador.dashboard')->with('success', 'Solicitud rechazada y el alumno eliminado de la clase.');
     }
 
     // Método para editar los detalles de una clase
@@ -103,7 +117,7 @@ class EntrenadorController extends Controller
     {
         return view('entrenador.clases.edit', compact('clase'));
     }
-    
+
 
     // Método para actualizar los detalles de la clase, pero debe marcarse como pendiente para aprobación
     public function updateClase(Request $request, $id)
