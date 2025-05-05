@@ -79,8 +79,6 @@
             @endforelse
         </div>
     </div>
-
-    <!-- Script de modales -->
     <script>
         document.querySelectorAll('[data-modal-toggle]').forEach(button => {
             button.addEventListener('click', () => {
