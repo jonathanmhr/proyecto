@@ -109,10 +109,7 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access'])
         // Gestión de clases
         Route::get('clases', [EntrenadorController::class, 'misClases'])->name('clases.index');
         Route::get('clases/{clase}/edit', [EntrenadorController::class, 'edit'])->name('clases.edit');
-
-        // Gestión de alumnos en clases
-        Route::post('clases/{clase}/agregar-usuario', [ClaseGrupalController::class, 'agregarUsuario'])->name('clases.agregarUsuario');
-        Route::post('clases/{clase}/{user}/eliminar-usuario', [ClaseGrupalController::class, 'eliminarUsuario'])->name('clases.eliminarUsuario');
+        Route::delete('clases/{claseId}/quitar/{userId}', [EntrenadorController::class, 'quitarUsuario'])->name('entrenador.clases.quitarUsuario');
 
         // solicitud
         Route::get('suscripciones', [EntrenadorController::class, 'verSuscripciones'])->name('suscripciones.index');
