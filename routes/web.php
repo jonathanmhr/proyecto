@@ -110,6 +110,7 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access'])
         Route::get('clases', [EntrenadorController::class, 'misClases'])->name('clases.index');
         Route::get('clases/{clase}/alumnos', [EntrenadorController::class, 'verAlumnos'])->name('clases.alumnos');
         Route::get('clases/{clase}/edit', [EntrenadorController::class, 'edit'])->name('clases.edit');
+        Route::put('clases/{clase}', [EntrenadorController::class, 'updateClase'])->name('clases.update');
         Route::delete('clases/{clase}/quitar/{userId}', [EntrenadorController::class, 'quitarUsuario'])->name('clases.quitarUsuario');
 
         // solicitud
