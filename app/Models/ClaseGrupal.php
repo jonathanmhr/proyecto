@@ -56,4 +56,8 @@ class ClaseGrupal extends Model
     {
         return $this->hasMany(SolicitudClase::class, 'id_clase'); // Relación con las solicitudes
     }
+    public function suscripciones()
+    {
+        return $this->hasMany(Suscripcion::class, 'id_clase');
+    }
 }

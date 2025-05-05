@@ -100,10 +100,4 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(PerfilUsuario::class, 'id_usuario', 'id');
     }
     
-    // Relación: Suscripciones asociadas a la clase grupal
-    public function suscripciones()
-    {
-        return $this->hasMany(Suscripcion::class, 'id_clase');
-    }
-    
 }
