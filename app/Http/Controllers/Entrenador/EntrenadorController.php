@@ -114,7 +114,7 @@ class EntrenadorController extends Controller
     
         // Redirigir a la vista con un mensaje de éxito
         return redirect()->route('entrenador.clases.edit', $claseId)->with('success', 'Usuario quitado de la clase con éxito.');
-    }    
+    }  
 
     // Método para actualizar los detalles de la clase, pero debe marcarse como pendiente para aprobación
     public function updateClase(Request $request, $id)

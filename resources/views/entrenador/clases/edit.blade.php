@@ -54,9 +54,10 @@
                                 <h3 class="text-lg font-semibold mb-4 break-words leading-relaxed">
                                     ¿Confirmas que deseas quitar a {{ $usuario->name }} de esta clase?
                                 </h3>
-                                <form action="{{ route('clases.quitarUsuario', ['clase' => $clase->id, 'userId' => $usuario->id]) }}" method="POST">
+                                <form action="{{ route('clases.quitarUsuario', ['clase' => $clase->id_clase, 'userId' => $usuario->id]) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
+                                    {{ dd(route('clases.quitarUsuario', ['clase' => $clase->id_clase, 'userId' => $usuario->id])) }}
                                     <div class="flex justify-center gap-4 mt-4">
                                         <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600" data-modal-hide="modal-quitar-{{ $usuario->id }}">
                                             Cancelar
@@ -65,7 +66,8 @@
                                             Confirmar
                                         </button>
                                     </div>
-                                </form>                                
+                                </form>
+                                                             
                             </div>
                         </div>
                     </div>
