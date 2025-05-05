@@ -2,34 +2,64 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Bouncer;
+
 
 class UserController extends Controller
 {
     // Método para mostrar la lista de usuarios
     public function index(Request $request)
     {
-        // Verificar si el usuario está autenticado
         if (!auth()->check()) {
             return redirect()->route('login');
         }
-
-        // Recuperar los usuarios de la base de datos con paginación
-        $users = User::when($request->search, function ($query) use ($request) {
-            // Validación de longitud de búsqueda: mínimo 3 caracteres, máximo 8
-            if (strlen($request->search) >= 3 && strlen($request->search) <= 8) {
-                return $query->where('name', 'like', '%' . $request->search . '%')
-                    ->orWhere('email', 'like', '%' . $request->search . '%');
-            }
-            return $query; // Si no cumple la longitud, no filtra
-        })
-            ->paginate(10); // 10 usuarios por página
-
-        // Retornar la vista con la lista de usuarios
-        return view('admin.users.index', compact('users'));
+    
+        $search = $request->search;
+        $roleFilter = $request->role;
+    
+        $users = User::with('roles')
+            ->when($search, function ($query) use ($search) {
+                if (strlen($search) >= 3 && strlen($search) <= 100) {
+                    return $query->where(function ($q) use ($search) {
+                        $q->where('name', 'like', "%$search%")
+                          ->orWhere('email', 'like', "%$search%");
+                    });
+                }
+            })
+            ->get()
+            ->filter(function ($user) use ($roleFilter) {
+                if (!$roleFilter) return true;
+                return $user->roles->contains('name', $roleFilter);
+            })
+            ->sortBy(function ($user) {
+                $priority = [
+                    'admin' => 1,
+                    'admin_entrenador' => 2,
+                    'entrenador' => 3,
+                    'cliente' => 4,
+                ];
+    
+                $userRole = optional($user->roles->first())->name;
+                return $priority[$userRole] ?? 999;
+            })
+            ->values();
+    
+        // Convertir a una colección paginada manual (ya que usamos get()->filter()->sortBy())
+        $perPage = 10;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $paginatedUsers = new LengthAwarePaginator(
+            $users->slice(($currentPage - 1) * $perPage, $perPage),
+            $users->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+    
+        return view('admin.users.index', ['users' => $paginatedUsers]);
     }
 
     // Método para asignar un rol a un usuario

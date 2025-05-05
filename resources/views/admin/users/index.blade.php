@@ -27,21 +27,38 @@
         @endif
 
         <!-- Buscador -->
-        <div
+        <form method="GET" action="{{ route('admin.users.index') }}"
             class="bg-white shadow-md rounded-lg mb-6 p-4 flex flex-col md:flex-row md:justify-between items-center gap-4">
+
             <div class="relative w-full md:w-1/2">
-                <input type="text" id="search" placeholder="Buscar por nombre o email"
+                <input type="text" name="search" id="search" placeholder="Buscar por nombre o email"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value="{{ request('search') }}">
                 <p id="error-message" class="text-red-500 text-sm mt-1 hidden">
-                    Por favor, ingresa entre 3 y 8 caracteres para la búsqueda.
+                    Por favor, ingresa entre 3 y 100 caracteres para la búsqueda.
                 </p>
             </div>
-            <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md transition"
-                onclick="liveSearch()">
+
+            <div class="flex items-center gap-2">
+                <label for="role" class="text-sm font-medium text-gray-700">Filtrar por rol:</label>
+                <select name="role" id="role"
+                    class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
+                    onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Administrador</option>
+                    <option value="admin_entrenador" {{ request('role') == 'admin_entrenador' ? 'selected' : '' }}>Admin
+                        Entrenador</option>
+                    <option value="entrenador" {{ request('role') == 'entrenador' ? 'selected' : '' }}>Entrenador
+                    </option>
+                    <option value="cliente" {{ request('role') == 'cliente' ? 'selected' : '' }}>Cliente</option>
+                </select>
+            </div>
+
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md transition">
                 Buscar
             </button>
-        </div>
+        </form>
+
 
         <!-- Tabla de usuarios -->
         <div class="overflow-x-auto bg-white shadow-xl rounded-lg">
@@ -135,7 +152,7 @@
                 <div class="flex justify-center">
                     {{ $users->links() }}
                 </div>
-            
+
                 {{-- Texto de rango de resultados --}}
                 <div class="mt-4 text-center text-sm text-gray-600">
                     Mostrando
@@ -143,7 +160,7 @@
                     <span class="font-semibold">{{ $users->lastItem() }}</span> de
                     <span class="font-semibold">{{ $users->total() }}</span> resultados
                 </div>
-            </div>     
+            </div>
         </div>
     </div>
 
