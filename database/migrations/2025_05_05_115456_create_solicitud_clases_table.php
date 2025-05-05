@@ -9,29 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('solicitud_clases', function (Blueprint $table) {
             $table->id();
-
-            // Coinciden con las columnas referenciadas
-            $table->unsignedBigInteger('user_id');     // BIGINT UNSIGNED para users.id
-            $table->unsignedInteger('id_clase');        // INT UNSIGNED para clases_grupales.id_clase
-
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedInteger('id_clase');
             $table->timestamps();
 
-            // Llaves foráneas correctas
-            $table->foreign('user_id')
-                ->references('id')->on('users')
-                ->onDelete('cascade');
-
-            $table->foreign('id_clase')
-                ->references('id_clase')->on('clases_grupales')
-                ->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('id_clase')->references('id_clase')->on('clases_grupales')->onDelete('cascade');
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('solicitud_clases');
     }
