@@ -105,3 +105,4 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Suscripcion::class, 'id_clase');
     }
     
+}
