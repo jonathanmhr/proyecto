@@ -5,7 +5,7 @@ export default defineConfig({
     server: {
         host: true, // Esto permite conexiones externas
         hmr: {
-            host: '192.168.1.25',
+            host: '192.168.1.27',
         }
     },
     plugins: [
