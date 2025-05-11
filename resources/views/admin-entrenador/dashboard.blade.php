@@ -34,6 +34,12 @@
                 <p class="text-3xl font-bold text-purple-500">{{ $totalAlumnos }}</p>
             </div>
 
+            <!-- Total de entrenamientos -->
+            <div class="bg-white shadow rounded-xl p-4">
+                <h2 class="text-lg font-semibold text-gray-700 mb-2">Entrenamientos</h2>
+                <p class="text-3xl font-bold text-indigo-500">{{ $totalEntrenamientos }}</p>
+            </div>
+
             <!-- Solicitudes Pendientes -->
             <div class="bg-white shadow rounded-xl p-4">
                 <h2 class="text-lg font-semibold text-gray-700 mb-2">Solicitudes Pendientes</h2>
@@ -63,17 +69,24 @@
                     <i data-feather="user-check" class="w-5 h-5"></i> Gestionar Entrenadores
                 </a>
 
+                <!-- Gestionar Entrenamientos -->
+                <a href="{{ route('entrenamientos.index') }}"
+                    class="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
+                    <i data-feather="activity" class="w-5 h-5"></i> Gestionar Entrenamientos
+                </a>
+
                 <!-- Gestionar pagos -->
                 <a href="{{ route('admin-entrenador.alumnos.index') }}"
                     class="bg-purple-100 hover:bg-purple-200 text-purple-700 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
                     <i data-feather="credit-card" class="w-5 h-5"></i> Gestionar pagos
                 </a>
 
+
                 <!-- Gestionar Solicitudes -->
-                    <a href="{{ route('admin-entrenador.solicitudes.index') }}"
-                        class="bg-pink-50 hover:bg-pink-100 text-pink-600 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
-                        <i data-feather="alert-circle" class="w-5 h-5"></i> Ver Solicitudes
-                    </a>
+                <a href="{{ route('admin-entrenador.solicitudes.index') }}"
+                    class="bg-pink-50 hover:bg-pink-100 text-pink-600 font-semibold py-3 px-4 rounded-xl flex items-center gap-2 transition">
+                    <i data-feather="alert-circle" class="w-5 h-5"></i> Ver Solicitudes
+                </a>
             </div>
 
 

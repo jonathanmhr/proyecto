@@ -2,17 +2,24 @@
 
 namespace App\Http\Controllers\AdminEntrenador;
 
+// Controladores  
 use App\Http\Controllers\Controller;
-use App\Models\ClaseGrupal;
+use App\Http\Controllers\AdminEntrenador;
+
+// Modelos  
 use App\Models\User;
+use App\Models\ClaseGrupal;
 use App\Models\Suscripcion;
-use Carbon\Carbon;
+use App\Models\ReservaDeClase;
+use App\Models\Entrenamiento;
+
+// Otras dependencias  
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Auth;
+use Carbon\Carbon;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 use Silber\Bouncer\Database\Role;
-use Auth;
-use App\Models\ReservaDeClase;
 
 class AdminEntrenadorController extends Controller
 {
@@ -29,8 +36,9 @@ class AdminEntrenadorController extends Controller
         $totalEntrenadores = Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
         $totalAlumnos = Bouncer::role()->where('name', 'cliente')->first()->users()->count();
         $totalSolicitudesPendientes = ReservaDeClase::where('estado', 'pendiente')->count();
+         $totalEntrenamientos = Entrenamiento::count();
 
-        return view('admin-entrenador.dashboard', compact('totalClases', 'totalEntrenadores', 'totalAlumnos', 'totalSolicitudesPendientes'));
+        return view('admin-entrenador.dashboard', compact('totalClases', 'totalEntrenadores', 'totalAlumnos', 'totalSolicitudesPendientes','totalEntrenamientos'));
     }
 
     public function verClases()
