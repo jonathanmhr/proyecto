@@ -32,16 +32,6 @@
                 @else
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         @foreach ($clases as $clase)
-                            @php
-                                $usuarioId = auth()->id();
-                                $estaInscrito = $clase
-                                    ->usuarios()
-                                    ->wherePivot('estado', 'aceptado')
-                                    ->where('id_usuario', $usuarioId)
-                                    ->exists();
-                                $solicitud = $clase->solicitudes()->where('user_id', $usuarioId)->first();
-                            @endphp
-
                             <div x-data="{ showModal: false }"
                                 class="bg-white border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl transition duration-300">
                                 <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $clase->nombre }}</h3>
@@ -102,6 +92,43 @@
                         @endforeach
                     </div>
                 @endif
+
+                <!-- Agregar entrenamiento -->
+                <div class="mt-8">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Mis Entrenamientos</h2>
+                    <div class="bg-gray-50 p-6 rounded-2xl shadow-lg">
+                        <p class="text-gray-700 mb-4">Agrega un entrenamiento para programar tus actividades.</p>
+                        <form action="{{ route('entrenamientos.agregar') }}" method="POST">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="nombre" class="block text-gray-700">Nombre del Entrenamiento</label>
+                                <input type="text" id="nombre" name="nombre" class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="tipo" class="block text-gray-700">Tipo</label>
+                                <select id="tipo" name="tipo" class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg" required>
+                                    <option value="cardio">Cardio</option>
+                                    <option value="fuerza">Fuerza</option>
+                                    <option value="flexibilidad">Flexibilidad</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label for="duracion" class="block text-gray-700">Duración (minutos)</label>
+                                <input type="number" id="duracion" name="duracion" class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="fecha" class="block text-gray-700">Fecha</label>
+                                <input type="date" id="fecha" name="fecha" class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-lg" required>
+                            </div>
+                            <div class="mt-6">
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
+                                    Agregar Entrenamiento
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
