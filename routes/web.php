@@ -94,12 +94,13 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
         Route::post('solicitudes/{claseId}/aceptar/{usuarioId}', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('solicitudes.aceptar');
         Route::post('solicitudes/{claseId}/rechazar/{usuarioId}', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
 
-                // Gestión de entrenamientos
+        // Gestión de entrenamientos
         Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
         Route::get('entrenamientos/{entrenamiento}', [EntrenamientoController::class, 'show'])->name('entrenamientos.show');
         Route::get('entrenamientos/create', [EntrenamientoController::class, 'create'])->name('entrenamientos.create');
         Route::post('entrenamientos', [EntrenamientoController::class, 'store'])->name('entrenamientos.store');
         Route::get('entrenamientos/{entrenamiento}/edit', [EntrenamientoController::class, 'edit'])->name('entrenamientos.edit');
+        Route::get('entrenamientos/{entrenamiento}/asignar', [AdminEntrenadorController::class, 'asignarUsuario'])->name('entrenamientos.asignar');
         Route::put('entrenamientos/{entrenamiento}', [EntrenamientoController::class, 'update'])->name('entrenamientos.update');
         Route::delete('entrenamientos/{entrenamiento}', [EntrenamientoController::class, 'destroy'])->name('entrenamientos.destroy');
 
