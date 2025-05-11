@@ -1,6 +1,6 @@
 <x-app-layout>
     <h1 class="text-xl font-bold mb-4">Lista de Entrenamientos</h1>
-    <a href="{{ route('entrenamientos.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Crear Nuevo</a>
+    <a href="{{ route('admin-entrenador.entrenamientos.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Crear Nuevo</a>
     <table class="mt-4 w-full">
         <thead>
             <tr>
@@ -23,7 +23,7 @@
                         |
                         <a href="{{ route('entrenamientos.edit', $entrenamiento->id_entrenamiento) }}" class="text-blue-600">Editar</a>
                         |
-                        <form action="{{ route('entrenamientos.destroy', $entrenamiento->id_entrenamiento) }}" method="POST" class="inline">
+                        <form action="{{ route('admin-entrenador.entrenamientos.destroy', $entrenamiento->id_entrenamiento) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="text-red-600">Eliminar</button>

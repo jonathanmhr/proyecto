@@ -1,6 +1,6 @@
 <x-app-layout>
     <h1 class="text-xl font-bold mb-4">Editar Entrenamiento</h1>
-    <form action="{{ route('entrenamientos.update', $entrenamiento->id_entrenamiento) }}" method="POST">
+    <form action="{{ route('admin-entrenador.entrenamientos.update', $entrenamiento->id_entrenamiento) }}" method="POST">
         @csrf
         @method('PUT')
         <input type="text" name="nombre" value="{{ $entrenamiento->nombre }}" required class="block mb-2">
