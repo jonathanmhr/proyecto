@@ -19,9 +19,9 @@
                     <td>{{ $entrenamiento->duracion }} min</td>
                     <td>{{ $entrenamiento->fecha }}</td>
                     <td>
-                        <a href="{{ route('entrenamientos.show', $entrenamiento->id_entrenamiento) }}" class="text-green-600">Ver</a>
+                        <a href="{{ route('admin-entrenador.entrenamientos.show', $entrenamiento->id_entrenamiento) }}" class="text-green-600">Ver</a>
                         |
-                        <a href="{{ route('entrenamientos.edit', $entrenamiento->id_entrenamiento) }}" class="text-blue-600">Editar</a>
+                        <a href="{{ route('admin-entrenador.entrenamientos.edit', $entrenamiento->id_entrenamiento) }}" class="text-blue-600">Editar</a>
                         |
                         <form action="{{ route('admin-entrenador.entrenamientos.destroy', $entrenamiento->id_entrenamiento) }}" method="POST" class="inline">
                             @csrf
