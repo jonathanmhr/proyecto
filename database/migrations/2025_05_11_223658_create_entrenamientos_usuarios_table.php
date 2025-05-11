@@ -9,13 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+public function up()
     {
         Schema::create('entrenamientos_usuarios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('entrenamiento_id')->constrained('entrenamientos')->onDelete('cascade');
-            $table->foreignId('usuario_id')->constrained('users')->onDelete('cascade');
+            $table->unsignedInteger('entrenamiento_id');  // Cambiar a unsignedInteger
+            $table->unsignedBigInteger('usuario_id');
             $table->timestamps();
+
+            // Definir las claves foráneas
+            $table->foreign('entrenamiento_id')->references('id_entrenamiento')->on('entrenamientos')->onDelete('cascade');
+            $table->foreign('usuario_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
