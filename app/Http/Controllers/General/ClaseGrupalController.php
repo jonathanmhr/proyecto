@@ -28,7 +28,7 @@ class ClaseGrupalController extends Controller
                 ->latest()->take(6)->get();
         }
 
-        return view('clases.index', compact('clases', 'entrenamientos'));
+        return view('cliente.clases.index', compact('clases', 'entrenamientos'));
     }
 
     public function unirse(Request $request, $claseId)
