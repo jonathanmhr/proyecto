@@ -45,7 +45,7 @@
                                 <p class="text-red-600 font-semibold mt-2">No puedes unirte a esta clase porque te han
                                     revocado de la inscripción.</p>
                             @else
-                                <form action="{{ route('cliente.clases.unirse', ['clase' => $clase->id]) }}"
+                                <form action="{{ route('clases.unirse', ['clase' => $clase->id]) }}"
                                     method="POST">
                                     @csrf
                                     <button type="submit"
