@@ -67,10 +67,15 @@ class AdminEntrenamientoController extends Controller
 
     public function usuarios(Entrenamiento $entrenamiento)
     {
-        $usuarios = User::where('role', 'cliente')->get();
+        // Obtenemos todos los usuarios que tienen el rol "cliente"
+        $usuarios = User::whereHas('roles', function ($query) {
+            $query->where('name', 'cliente');  // Reemplaza 'name' con el nombre real del campo de rol en la tabla de roles
+        })->get();
+
         $usuariosAsignados = $entrenamiento->usuarios ?? [];
         return view('admin-entrenador.entrenamientos.usuarios', compact('entrenamiento', 'usuarios', 'usuariosAsignados'));
     }
+
 
     public function agregarUsuario(Request $request, Entrenamiento $entrenamiento)
     {
