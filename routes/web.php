@@ -149,8 +149,6 @@ Route::middleware('auth')
         // Clases
         Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
         Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('cliente.clases.unirse');
-
-
         // Entrenamientos
         Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
         Route::post('entrenamientos/{entrenamientoId}/unirse', [EntrenamientoController::class, 'unirseEntrenamiento'])->name('entrenamientos.unirse');
