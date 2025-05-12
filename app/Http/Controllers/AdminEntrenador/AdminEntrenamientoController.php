@@ -92,4 +92,19 @@ class AdminEntrenamientoController extends Controller
         $entrenamiento->usuarios()->detach($usuario->id);
         return back()->with('success', 'Usuario quitado del entrenamiento.');
     }
+
+    public function agregarUsuariosMasivos(Request $request, Entrenamiento $entrenamiento)
+    {
+        // Validar que los IDs de usuario sean correctos
+        $request->validate([
+            'usuario_ids' => 'required|array',
+            'usuario_ids.*' => 'exists:users,id', // Validar que cada ID de usuario exista en la base de datos
+        ]);
+
+        // Agregar los usuarios seleccionados al entrenamiento
+        $entrenamiento->usuarios()->attach($request->usuario_ids);
+
+        // Redirigir de nuevo con un mensaje de éxito
+        return back()->with('success', 'Usuarios agregados correctamente al entrenamiento.');
+    }
 }

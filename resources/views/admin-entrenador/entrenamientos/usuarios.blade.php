@@ -13,12 +13,12 @@
             </div>
         @endif
 
-        {{-- Formulario para agregar usuario --}}
+        {{-- Formulario para agregar múltiples usuarios --}}
         <div class="bg-white p-6 shadow rounded-lg mb-6">
-            <h3 class="text-lg font-medium text-gray-700 mb-4">Agregar usuario al entrenamiento</h3>
-            <form action="{{ route('admin-entrenador.entrenamientos.usuarios.agregar', $entrenamiento->id_entrenamiento) }}" method="POST" class="flex flex-col sm:flex-row gap-4 items-center">
+            <h3 class="text-lg font-medium text-gray-700 mb-4">Agregar usuarios al entrenamiento</h3>
+            <form action="{{ route('admin-entrenador.entrenamientos.usuarios.agregar-masivos', $entrenamiento->id_entrenamiento) }}" method="POST" class="flex flex-col sm:flex-row gap-4 items-center">
                 @csrf
-                <select name="usuario_id" class="border rounded px-4 py-2 w-full sm:w-1/2">
+                <select name="usuario_ids[]" class="border rounded px-4 py-2 w-full sm:w-1/2" multiple>
                     @foreach ($usuarios as $usuario)
                         @if(!$entrenamiento->usuarios->contains($usuario->id))
                             <option value="{{ $usuario->id }}">{{ $usuario->name }} ({{ $usuario->email }})</option>
@@ -26,7 +26,7 @@
                     @endforeach
                 </select>
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                    Agregar
+                    Agregar a los seleccionados
                 </button>
             </form>
         </div>
