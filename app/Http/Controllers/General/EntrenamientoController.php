@@ -4,6 +4,7 @@ namespace App\Http\Controllers\General;
 
 use App\Http\Controllers\Controller;
 use App\Models\Entrenamiento;
+use App\Models\ClaseGrupal;
 use Illuminate\Http\Request;
 
 class EntrenamientoController extends Controller
@@ -16,15 +17,21 @@ class EntrenamientoController extends Controller
         if ($user->can('admin_entrenador')) {
             // Admin Entrenador: Ver todos los entrenamientos
             $entrenamientos = Entrenamiento::all();
+            $clases = ClaseGrupal::all();
         } elseif ($user->can('entrenador')) {
             // Entrenador: Ver solo los entrenamientos asignados a sus clases
             $entrenamientos = Entrenamiento::where('id_usuario', $user->id)->get();
+            $clases = ClaseGrupal::where('entrenador_id', $user->id)->get();
         } else {
-            // Cliente: Ver entrenamientos disponibles
-            $entrenamientos = Entrenamiento::where('estado', 'activo')->get();
+            // Cliente: Ver solo las clases disponibles, no se usan entrenamientos
+            $entrenamientos = null;  // Aseguramos que la variable esté definida aunque no se use.
+            $clases = ClaseGrupal::whereDate('fecha_inicio', '>=', now())
+                ->where('cupos_maximos', '>', 0)
+                ->get();
         }
 
-        return view('clases.entrenamientos', compact('entrenamientos'));
+        // Pasar las variables a la vista
+        return view('clases.index', compact('clases', 'entrenamientos'));
     }
 
     // Unirse a un entrenamiento
