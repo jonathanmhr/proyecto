@@ -6,11 +6,13 @@ use Illuminate\Http\Request;
 
 // Controladores
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AdminEntrenador\AdminEntrenadorController;
 use App\Http\Controllers\Entrenador\EntrenadorController;
 use App\Http\Controllers\Perfil\PerfilController;
-use App\Http\Controllers\ClaseGrupal\ClaseGrupalController;
-use App\Http\Controllers\AdminEntrenador\AdminEntrenadorController;
-use App\Http\Controllers\AdminEntrenador\EntrenamientoController;
+use App\Http\Controllers\General\ClaseGrupalController;
+use App\Http\Controllers\General\EntrenamientoController;
+use App\Http\Controllers\General\SolicitudClaseController;
+use App\Http\Controllers\General\SuscripcionController;
 
 // ----------------------
 // RUTA DE BIENVENIDA
@@ -108,7 +110,7 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
         Route::delete('entrenamientos/{entrenamiento}/usuarios/{usuario}', [EntrenamientoController::class, 'quitarUsuario'])->name('entrenamientos.usuarios.quitar');
 
         // Suscripciones de usuarios
-        Route::get('users/{id}/suscripciones', [UserController::class, 'suscripciones'])->name('users.suscripciones');
+        Route::get('users/{id}/suscripciones', [SuscripcionController::class, 'index'])->name('users.suscripciones');
     });
 
 // ----------------------

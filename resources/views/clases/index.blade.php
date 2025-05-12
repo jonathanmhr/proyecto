@@ -85,7 +85,8 @@
                                             <h2 class="text-xl font-semibold text-gray-800 mb-4">¿Deseas unirte a esta
                                                 clase?</h2>
                                             <p class="text-gray-600 mb-6">Confirmarás tu participación en
-                                                <strong>{{ $clase->nombre }}</strong>.</p>
+                                                <strong>{{ $clase->nombre }}</strong>.
+                                            </p>
 
                                             <div class="flex justify-end space-x-4">
                                                 <button @click="showModal = false"
@@ -110,7 +111,6 @@
                         </div>
                     @endif
                 </div>
-
                 <!-- Sección de Entrenamientos -->
                 <div class="mb-8">
                     <h2 class="text-2xl font-bold text-gray-900 mb-4">Entrenamientos Disponibles</h2>
@@ -139,7 +139,6 @@
                                         ->wherePivot('estado', 'revocado')
                                         ->exists();
                                 @endphp
-
 
                                 <div x-data="{ showModal: false }"
                                     class="bg-white border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl transition duration-300">
@@ -171,7 +170,8 @@
                                             <h2 class="text-xl font-semibold text-gray-800 mb-4">¿Deseas unirte a este
                                                 entrenamiento?</h2>
                                             <p class="text-gray-600 mb-6">Confirmarás tu participación en
-                                                <strong>{{ $entrenamiento->nombre }}</strong>.</p>
+                                                <strong>{{ $entrenamiento->nombre }}</strong>.
+                                            </p>
 
                                             <div class="flex justify-end space-x-4">
                                                 <button @click="showModal = false"
@@ -196,6 +196,7 @@
                         </div>
                     @endif
                 </div>
+
             </div>
         </div>
     </div>
