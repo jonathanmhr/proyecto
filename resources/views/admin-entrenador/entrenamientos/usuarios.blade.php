@@ -1,6 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
+            <!-- Título -->
             <h2 class="text-xl font-semibold text-gray-800 leading-tight">
                 Usuarios del Entrenamiento: {{ $entrenamiento->nombre }}
             </h2>
