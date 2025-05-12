@@ -13,7 +13,7 @@
     <!-- Navegación principal -->
     <nav class="flex-1 w-full space-y-2 px-2">
 
-        <x-sidebar-link icon="home" route="dashboard" label="Dashboard" />
+        <x-sidebar-link icon="user" route="dashboard" label="Perfil" />
 
         {{-- ADMIN --}}
         @can('admin-access')
