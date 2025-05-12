@@ -43,6 +43,7 @@
                                         ->where('id_usuario', $usuarioId)
                                         ->exists();
                                     $solicitud = $clase->solicitudes()->where('user_id', $usuarioId)->first();
+                                    $revocado = $clase->usuarios()->where('id_usuario', $usuarioId)->wherePivot('estado', 'revocado')->exists();
                                 @endphp
 
                                 <div x-data="{ showModal: false }"
@@ -54,7 +55,7 @@
                                         Cupos disponibles: {{ $clase->cupos_maximos - $clase->usuarios->where('pivot.estado', 'aceptado')->count() }}
                                     </span>
 
-                                    @if (!$estaInscrito && !$solicitud)
+                                    @if (!$estaInscrito && !$solicitud && !$revocado)
                                         <button @click="showModal = true"
                                             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
                                             Unirse
@@ -63,6 +64,8 @@
                                         <p class="text-green-600 font-semibold mt-2">Ya estás inscrito en esta clase.</p>
                                     @elseif ($solicitud)
                                         <p class="text-yellow-600 font-semibold mt-2">Tu solicitud está pendiente de aprobación por el entrenador.</p>
+                                    @elseif ($revocado)
+                                        <p class="text-red-600 font-semibold mt-2">No puedes unirte a esta clase porque te han revocado de la inscripción.</p>
                                     @endif
 
                                     <!-- Modal -->
@@ -105,10 +108,13 @@
                             @foreach ($entrenamientos as $entrenamiento)
                                 @php
                                     $usuarioId = auth()->id();
-                                    $yaGuardado = $entrenamiento
+                                    $estaInscritoEntrenamiento = $entrenamiento
                                         ->usuarios()
+                                        ->wherePivot('estado', 'aceptado')
                                         ->where('id_usuario', $usuarioId)
                                         ->exists();
+                                    $solicitudEntrenamiento = $entrenamiento->usuarios()->where('id_usuario', $usuarioId)->first();
+                                    $revocadoEntrenamiento = $entrenamiento->usuarios()->where('id_usuario', $usuarioId)->wherePivot('estado', 'revocado')->exists();
                                 @endphp
 
                                 <div x-data="{ showModal: false }"
@@ -116,13 +122,17 @@
                                     <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $entrenamiento->nombre }}</h3>
                                     <p class="text-gray-600 mb-3">{{ Str::limit($entrenamiento->descripcion, 100) }}</p>
 
-                                    @if (!$yaGuardado)
+                                    @if (!$estaInscritoEntrenamiento && !$solicitudEntrenamiento && !$revocadoEntrenamiento)
                                         <button @click="showModal = true"
                                             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
-                                            Guardar entrenamiento
+                                            Unirse
                                         </button>
-                                    @else
-                                        <p class="text-green-600 font-semibold mt-2">Ya has guardado este entrenamiento.</p>
+                                    @elseif ($estaInscritoEntrenamiento)
+                                        <p class="text-green-600 font-semibold mt-2">Ya estás inscrito en este entrenamiento.</p>
+                                    @elseif ($solicitudEntrenamiento)
+                                        <p class="text-yellow-600 font-semibold mt-2">Tu solicitud está pendiente de aprobación por el entrenador.</p>
+                                    @elseif ($revocadoEntrenamiento)
+                                        <p class="text-red-600 font-semibold mt-2">No puedes unirte a este entrenamiento porque te han revocado de la inscripción.</p>
                                     @endif
 
                                     <!-- Modal -->
@@ -130,15 +140,15 @@
                                         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                                         <div @click.away="showModal = false"
                                             class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
-                                            <h2 class="text-xl font-semibold text-gray-800 mb-4">¿Deseas guardar este entrenamiento?</h2>
-                                            <p class="text-gray-600 mb-6">Confirmarás que deseas guardar el entrenamiento <strong>{{ $entrenamiento->nombre }}</strong>.</p>
+                                            <h2 class="text-xl font-semibold text-gray-800 mb-4">¿Deseas unirte a este entrenamiento?</h2>
+                                            <p class="text-gray-600 mb-6">Confirmarás tu participación en <strong>{{ $entrenamiento->nombre }}</strong>.</p>
 
                                             <div class="flex justify-end space-x-4">
                                                 <button @click="showModal = false"
                                                     class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md">
                                                     Cancelar
                                                 </button>
-                                                <form action="{{ route('cliente.entrenamientos.guardar', ['entrenamiento' => $entrenamiento->id_entrenamiento]) }}" method="POST">
+                                                <form action="{{ route('cliente.entrenamientos.unirse', ['entrenamiento' => $entrenamiento->id_entrenamiento]) }}" method="POST">
                                                     @csrf
                                                     <button type="submit"
                                                         class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">
