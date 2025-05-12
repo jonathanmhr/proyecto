@@ -1,7 +1,5 @@
 <?php
 
-<?php
-
 namespace App\Http\Controllers\General;
 
 use App\Http\Controllers\Controller;
