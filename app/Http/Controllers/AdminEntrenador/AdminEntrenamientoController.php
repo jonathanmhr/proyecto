@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Entrenamiento;
 use App\Models\User;
 
-class AdminEntrenamiento extends Controller
+class AdminEntrenamientoController extends Controller
 {
     public function index()
     {
