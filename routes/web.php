@@ -110,6 +110,8 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
         Route::get('entrenamientos/{entrenamiento}/usuarios', [AdminEntrenamientoController::class, 'usuarios'])->name('entrenamientos.usuarios');
         Route::post('entrenamientos/{entrenamiento}/usuarios/agregar', [AdminEntrenamientoController::class, 'agregarUsuario'])->name('entrenamientos.usuarios.agregar');
         Route::delete('entrenamientos/{entrenamiento}/usuarios/{usuario}', [AdminEntrenamientoController::class, 'quitarUsuario'])->name('entrenamientos.usuarios.quitar');
+        Route::post('entrenamientos/{entrenamiento}/usuarios/agregar-masivos', [AdminEntrenamientoController::class, 'agregarUsuariosMasivos'])->name('entrenamientos.usuarios.agregar-masivos');
+
 
         // Suscripciones de usuarios
         Route::get('users/{id}/suscripciones', [SuscripcionController::class, 'index'])->name('users.suscripciones');
