@@ -114,9 +114,12 @@
                 <!-- Sección de Entrenamientos -->
                 <div class="mb-8">
                     <h2 class="text-2xl font-bold text-gray-900 mb-4">Entrenamientos Disponibles</h2>
-                    @if ($entrenamientos->isEmpty())
+                    @if (isset($entrenamientos) && $entrenamientos->isEmpty())
                         <p class="text-center text-gray-500 text-lg">No hay entrenamientos disponibles en este momento.
                         </p>
+                    @elseif(!isset($entrenamientos))
+                        <p class="text-center text-gray-500 text-lg">No tienes acceso a los entrenamientos en este
+                            momento.</p>
                     @else
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                             @foreach ($entrenamientos as $entrenamiento)
@@ -196,7 +199,6 @@
                         </div>
                     @endif
                 </div>
-
             </div>
         </div>
     </div>
