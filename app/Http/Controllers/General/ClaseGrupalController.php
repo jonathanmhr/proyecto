@@ -4,7 +4,6 @@ namespace App\Http\Controllers\General;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClaseGrupal;
-use App\Models\Entrenamiento;
 use Illuminate\Http\Request;
 
 class ClaseGrupalController extends Controller
