@@ -27,7 +27,7 @@ class Entrenamiento extends Model
         return $this->belongsTo(User::class, 'id_usuario');
     }
     public function usuarios()
-{
-    return $this->belongsToMany(User::class, 'entrenamientos_usuarios', 'entrenamiento_id', 'usuario_id');
-}
+    {
+        return $this->belongsToMany(User::class, 'entrenamientos_usuarios', 'id_entrenamiento', 'id_usuario');
+    }
 }

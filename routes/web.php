@@ -96,18 +96,16 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
 
         // Gestión de entrenamientos
         Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
-        Route::get('entrenamientos/{entrenamiento}', [EntrenamientoController::class, 'show'])->name('entrenamientos.show');
         Route::get('entrenamientos/create', [EntrenamientoController::class, 'create'])->name('entrenamientos.create');
         Route::post('entrenamientos', [EntrenamientoController::class, 'store'])->name('entrenamientos.store');
         Route::get('entrenamientos/{entrenamiento}/edit', [EntrenamientoController::class, 'edit'])->name('entrenamientos.edit');
-        Route::get('entrenamientos/{entrenamiento}/asignar', [AdminEntrenadorController::class, 'asignarUsuario'])->name('entrenamientos.asignar');
         Route::put('entrenamientos/{entrenamiento}', [EntrenamientoController::class, 'update'])->name('entrenamientos.update');
         Route::delete('entrenamientos/{entrenamiento}', [EntrenamientoController::class, 'destroy'])->name('entrenamientos.destroy');
 
-        // Gestión de usuarios asignados a entrenamientos
-        Route::get('entrenamientos/{entrenamiento}/usuarios', [EntrenamientoController::class, 'usuariosAsignados'])->name('entrenamientos.usuarios');
-        Route::post('entrenamientos/{entrenamiento}/agregar-usuario/{usuarioId}', [EntrenamientoController::class, 'agregarUsuario'])->name('entrenamientos.agregarUsuario');
-        Route::post('entrenamientos/{entrenamiento}/quitar-usuario/{usuarioId}', [EntrenamientoController::class, 'quitarUsuario'])->name('entrenamientos.quitarUsuario');
+        // Usuarios en entrenamientos
+        Route::get('entrenamientos/{entrenamiento}/usuarios', [EntrenamientoController::class, 'verUsuarios'])->name('entrenamientos.usuarios');
+        Route::post('entrenamientos/{entrenamiento}/usuarios/agregar', [EntrenamientoController::class, 'agregarUsuario'])->name('entrenamientos.usuarios.agregar');
+        Route::delete('entrenamientos/{entrenamiento}/usuarios/{usuario}', [EntrenamientoController::class, 'quitarUsuario'])->name('entrenamientos.usuarios.quitar');
 
         // Suscripciones de usuarios
         Route::get('users/{id}/suscripciones', [UserController::class, 'suscripciones'])->name('users.suscripciones');

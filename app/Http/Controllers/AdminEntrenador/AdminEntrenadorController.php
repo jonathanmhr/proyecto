@@ -20,6 +20,7 @@ use Auth;
 use Carbon\Carbon;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 use Silber\Bouncer\Database\Role;
+use Illuminate\Support\Facades\Cache;
 
 class AdminEntrenadorController extends Controller
 {
@@ -29,16 +30,31 @@ class AdminEntrenadorController extends Controller
 
     public function dashboard()
     {
-        // Contar el total de clases sin necesidad de cargar todas
         $totalClases = ClaseGrupal::count();
 
-        // Obtener el conteo de otros elementos
-        $totalEntrenadores = Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
-        $totalAlumnos = Bouncer::role()->where('name', 'cliente')->first()->users()->count();
-        $totalSolicitudesPendientes = ReservaDeClase::where('estado', 'pendiente')->count();
-         $totalEntrenamientos = Entrenamiento::count();
+        $totalEntrenadores = Cache::remember('total_entrenadores', 60, function () {
+            return Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
+        });
 
-        return view('admin-entrenador.dashboard', compact('totalClases', 'totalEntrenadores', 'totalAlumnos', 'totalSolicitudesPendientes','totalEntrenamientos'));
+        $totalAlumnos = Cache::remember('total_alumnos', 60, function () {
+            return Bouncer::role()->where('name', 'cliente')->first()->users()->count();
+        });
+
+        $totalSolicitudesPendientes = Cache::remember('total_solicitudes_pendientes', 60, function () {
+            return ReservaDeClase::where('estado', 'pendiente')->count();
+        });
+
+        $totalEntrenamientos = Cache::remember('total_entrenamientos', 60, function () {
+            return Entrenamiento::count();
+        });
+
+        return view('admin-entrenador.dashboard', compact(
+            'totalClases',
+            'totalEntrenadores',
+            'totalAlumnos',
+            'totalSolicitudesPendientes',
+            'totalEntrenamientos'
+        ));
     }
 
     public function verClases()
@@ -266,8 +282,8 @@ class AdminEntrenadorController extends Controller
         $solicitudesPendientes = ReservaDeClase::with(['usuario', 'clase'])
             ->where('estado', 'pendiente')
             ->get();
-    
-            return view('admin-entrenador.solicitudes.index', compact('solicitudesPendientes'));
+
+        return view('admin-entrenador.solicitudes.index', compact('solicitudesPendientes'));
     }
 
     public function aceptarSolicitud($claseId, $usuarioId)

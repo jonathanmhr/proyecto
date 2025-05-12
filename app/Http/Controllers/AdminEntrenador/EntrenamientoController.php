@@ -23,82 +23,69 @@ class EntrenamientoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre' => 'required|string|max:100',
-            'tipo' => 'required|string|max:50',
+            'nombre' => 'required',
+            'tipo' => 'required',
             'duracion' => 'required|integer',
             'fecha' => 'required|date',
         ]);
 
         Entrenamiento::create([
-            'id_usuario' => auth()->id(),
             'nombre' => $request->nombre,
             'tipo' => $request->tipo,
             'duracion' => $request->duracion,
             'fecha' => $request->fecha,
+            'id_usuario' => auth()->id(), // o el entrenador actual
         ]);
 
-        return redirect()->route('entrenamientos.index')->with('success', 'Entrenamiento creado correctamente.');
+        return redirect()->route('admin-entrenador.entrenamientos.index')->with('success', 'Entrenamiento creado correctamente.');
     }
 
-    public function edit($id_entrenamiento)
+    public function edit(Entrenamiento $entrenamiento)
     {
-        $entrenamiento = Entrenamiento::where('id_entrenamiento', $id_entrenamiento)->firstOrFail();
         return view('admin-entrenador.entrenamientos.edit', compact('entrenamiento'));
     }
 
-    public function update(Request $request, $id_entrenamiento)
+    public function update(Request $request, Entrenamiento $entrenamiento)
     {
         $request->validate([
-            'nombre' => 'required|string|max:100',
-            'tipo' => 'required|string|max:50',
+            'nombre' => 'required',
+            'tipo' => 'required',
             'duracion' => 'required|integer',
             'fecha' => 'required|date',
         ]);
 
-        $entrenamiento = Entrenamiento::where('id_entrenamiento', $id_entrenamiento)->firstOrFail();
         $entrenamiento->update($request->only(['nombre', 'tipo', 'duracion', 'fecha']));
 
-        return redirect()->route('entrenamientos.index')->with('success', 'Entrenamiento actualizado correctamente.');
+        return redirect()->route('admin-entrenador.entrenamientos.index')->with('success', 'Entrenamiento actualizado correctamente.');
     }
 
-    public function destroy($id_entrenamiento)
+    public function destroy(Entrenamiento $entrenamiento)
     {
-        $entrenamiento = Entrenamiento::where('id_entrenamiento', $id_entrenamiento)->firstOrFail();
         $entrenamiento->delete();
-
-        return redirect()->route('entrenamientos.index')->with('success', 'Entrenamiento eliminado.');
+        return redirect()->route('admin-entrenador.entrenamientos.index')->with('success', 'Entrenamiento eliminado.');
     }
 
-    public function show($id_entrenamiento)
+    // Usuarios vinculados
+    public function usuarios(Entrenamiento $entrenamiento)
     {
-        $entrenamiento = Entrenamiento::where('id_entrenamiento', $id_entrenamiento)->firstOrFail();
-        $usuarios = $entrenamiento->usuarios; // Relación many-to-many
-        return view('admin-entrenador.entrenamientos.show', compact('entrenamiento', 'usuarios'));
+        $usuarios = User::where('role', 'cliente')->get(); // según cómo manejes roles
+        $usuariosAsignados = $entrenamiento->usuarios ?? []; // si tienes la relación definida
+        return view('admin-entrenador.entrenamientos.usuarios', compact('entrenamiento', 'usuarios', 'usuariosAsignados'));
     }
 
-    public function asignarUsuario($id_entrenamiento)
+    public function agregarUsuario(Request $request, Entrenamiento $entrenamiento)
     {
-        $entrenamiento = Entrenamiento::where('id_entrenamiento', $id_entrenamiento)->firstOrFail();
-        $usuarios = User::whereDoesntHave('entrenamientos', function ($q) use ($id_entrenamiento) {
-            $q->where('entrenamiento_id', $id_entrenamiento);
-        })->get();
+        $request->validate([
+            'usuario_id' => 'required|exists:users,id',
+        ]);
 
-        return view('admin-entrenador.entrenamientos.asignar', compact('entrenamiento', 'usuarios'));
-    }
-
-    public function guardarAsignacion(Request $request, $id_entrenamiento)
-    {
-        $entrenamiento = Entrenamiento::where('id_entrenamiento', $id_entrenamiento)->firstOrFail();
         $entrenamiento->usuarios()->attach($request->usuario_id);
-
-        return redirect()->route('entrenamientos.usuarios', $id_entrenamiento)->with('success', 'Usuario asignado correctamente.');
+        return back()->with('success', 'Usuario agregado al entrenamiento.');
     }
 
-    public function quitarUsuario($id_entrenamiento, $usuario_id)
+    public function quitarUsuario(Entrenamiento $entrenamiento, User $usuario)
     {
-        $entrenamiento = Entrenamiento::where('id_entrenamiento', $id_entrenamiento)->firstOrFail();
-        $entrenamiento->usuarios()->detach($usuario_id);
-
-        return redirect()->route('entrenamientos.usuarios', $id_entrenamiento)->with('success', 'Usuario eliminado del entrenamiento.');
+        $entrenamiento->usuarios()->detach($usuario->id);
+        return back()->with('success', 'Usuario quitado del entrenamiento.');
     }
 }
