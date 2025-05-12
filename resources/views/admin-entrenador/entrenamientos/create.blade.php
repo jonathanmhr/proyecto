@@ -1,9 +1,11 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold leading-tight">
-            {{ __('Crear Entrenamiento') }}
-        </h2>
-    </x-slot>
+    <h2 class="text-xl font-semibold leading-tight">
+        {{ __('Crear Entrenamiento') }}
+    </h2>
+    <a href="{{ route('admin-entrenador.entrenamientos.index') }}"
+        class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold rounded-lg transition">
+        <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
+    </a>
 
     <div class="py-6">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
