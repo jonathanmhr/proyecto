@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 // Controladores
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminEntrenador\AdminEntrenadorController;
+use App\Http\Controllers\AdminEntrenador\AdminEntrenamiento;
 use App\Http\Controllers\Entrenador\EntrenadorController;
 use App\Http\Controllers\Perfil\PerfilController;
 use App\Http\Controllers\General\ClaseGrupalController;
@@ -143,6 +144,7 @@ Route::middleware('auth')
     ->group(function () {
         Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
         Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
+        Route::post('entrenamientos/{entrenamientoId}/unirse', [EntrenamientoController::class, 'unirseEntrenamiento'])->name('entrenamientos.unirse');
     });
 
 Route::middleware('auth')
