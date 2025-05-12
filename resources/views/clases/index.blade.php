@@ -146,7 +146,9 @@
                                 <div x-data="{ showModal: false }"
                                     class="bg-white border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl transition duration-300">
                                     <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $entrenamiento->nombre }}</h3>
-                                    <p class="text-gray-600 mb-3">{{ Str::limit($entrenamiento->descripcion, 100) }}
+                                    <p class="text-gray-600 mb-3">
+                                        Tipo: {{ $entrenamiento->tipo }} — Duración: {{ $entrenamiento->duracion }}
+                                        min
                                     </p>
 
                                     @if (!$estaInscritoEntrenamiento && !$solicitudEntrenamiento && !$revocadoEntrenamiento)
