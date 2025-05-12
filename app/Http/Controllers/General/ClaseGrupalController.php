@@ -13,23 +13,36 @@ class ClaseGrupalController extends Controller
     {
         $user = auth()->user();
 
+        // Obtenemos las clases disponibles dependiendo del rol del usuario
         if ($user->can('admin_entrenador')) {
             $clases = ClaseGrupal::latest()->take(6)->get();
-            $entrenamientos = Entrenamiento::latest()->take(6)->get();
         } elseif ($user->can('entrenador')) {
             $clases = ClaseGrupal::where('entrenador_id', $user->id)->latest()->take(6)->get();
-            $entrenamientos = Entrenamiento::where('entrenador_id', $user->id)->latest()->take(6)->get();
         } else {
+            // Clases con fecha de inicio futura y cupos disponibles
             $clases = ClaseGrupal::whereDate('fecha_inicio', '>=', now())
                 ->where('cupos_maximos', '>', 0)
                 ->latest()->take(6)->get();
-
-            $entrenamientos = Entrenamiento::whereDate('fecha', '>=', now())
-                ->latest()->take(6)->get();
         }
 
-        return view('cliente.clases.index', compact('clases', 'entrenamientos'));
+        // Verificamos la inscripción del usuario en las clases
+        foreach ($clases as $clase) {
+            // Verifica si el usuario ya está inscrito
+            $clase->inscrito = $clase->usuarios()->wherePivot('estado', 'aceptado')
+                ->where('id_usuario', $user->id)->exists();
+
+            // Verifica si hay una solicitud pendiente
+            $clase->solicitud_pendiente = $clase->solicitudes()->where('user_id', $user->id)
+                ->where('estado', 'pendiente')->exists();
+
+            // Verifica si el usuario ha sido revocado
+            $clase->revocado = $clase->usuarios()->wherePivot('estado', 'revocado')
+                ->where('id_usuario', $user->id)->exists();
+        }
+
+        return view('cliente.clases.index', compact('clases'));
     }
+
 
     public function unirse(Request $request, $claseId)
     {
