@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 // Controladores
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminEntrenador\AdminEntrenadorController;
-use App\Http\Controllers\AdminEntrenamiento\AdminEntrenamientoController;
+use App\Http\Controllers\AdminEntrenador\AdminEntrenamientoController;
 use App\Http\Controllers\Entrenador\EntrenadorController;
 use App\Http\Controllers\Perfil\PerfilController;
 use App\Http\Controllers\Cliente\DashboardController;

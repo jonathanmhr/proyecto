@@ -1,7 +1,6 @@
 <?php
 
-
-namespace App\Http\Controllers\AdminEntrenamiento;
+namespace App\Http\Controllers\AdminEntrenador;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
