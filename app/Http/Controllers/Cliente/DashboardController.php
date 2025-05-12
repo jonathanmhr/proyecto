@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\General;
+namespace App\Http\Controllers\Cliente;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClaseGrupal;
 use App\Models\Entrenamiento;
 use Illuminate\Http\Request;
 
-class ClaseGrupalController extends Controller
+class DashboardController extends Controller
 {
     public function index()
     {
@@ -28,6 +28,6 @@ class ClaseGrupalController extends Controller
                 ->latest()->take(6)->get();
         }
 
-        return view('clases.index', compact('clases', 'entrenamientos'));
+        return view('cliente.dashboard', compact('clases', 'entrenamientos'));
     }
 }

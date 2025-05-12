@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminEntrenador\AdminEntrenadorController;
 use App\Http\Controllers\AdminEntrenamiento\AdminEntrenamientoController;
 use App\Http\Controllers\Entrenador\EntrenadorController;
 use App\Http\Controllers\Perfil\PerfilController;
+use App\Http\Controllers\Cliente\DashboardController;
 use App\Http\Controllers\General\ClaseGrupalController;
 use App\Http\Controllers\General\EntrenamientoController;
 use App\Http\Controllers\General\SolicitudClaseController;
@@ -142,8 +143,15 @@ Route::middleware('auth')
     ->prefix('cliente')
     ->name('cliente.')
     ->group(function () {
+        // Nueva ruta del dashboard principal
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Clases
         Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
         Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
+
+        // Entrenamientos
+        Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
         Route::post('entrenamientos/{entrenamientoId}/unirse', [EntrenamientoController::class, 'unirseEntrenamiento'])->name('entrenamientos.unirse');
     });
 
