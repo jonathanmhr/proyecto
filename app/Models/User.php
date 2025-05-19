@@ -73,36 +73,40 @@ class User extends Authenticatable implements MustVerifyEmail
             ->wherePivot('estado', Suscripcion::ESTADO_ACTIVO)  // Filtrar solo suscripciones activas
             ->wherePivot('fecha_fin', '>', now());  // Filtrar suscripciones con fecha de fin futura
     }
-    
+
     // Relación: Clases grupales asociadas al entrenador
     public function clasesGrupales()
     {
         return $this->hasMany(ClaseGrupal::class, 'entrenador_id');
     }
-    
+
     // Relación: Usuarios inscritos en clases grupales
     public function usuarios()
     {
         return $this->belongsToMany(User::class, 'suscripciones', 'id_clase', 'id_usuario')
             ->withPivot('estado', 'fecha_inicio', 'fecha_fin');  // Datos adicionales de la suscripción
     }
-    
+
     // Relación: Reservas de clases realizadas por el usuario
     public function reservasDeClases()
     {
         return $this->hasMany(ReservaDeClase::class, 'id_usuario');
     }
-    
+
     // Relación: Perfil de usuario asociado
     public function perfilUsuario()
     {
         return $this->hasOne(PerfilUsuario::class, 'id_usuario', 'id');
     }
-    
+
     // Relación: Suscripciones asociadas a la clase grupal
     public function suscripciones()
     {
         return $this->hasMany(Suscripcion::class, 'id_clase');
     }
-    
+    // Relación: Solicitudes de clases asociadas al usuario
+    public function entrenamientos()
+    {
+        return $this->belongsToMany(Entrenamiento::class, 'entrenamientos_usuarios', 'usuario_id', 'entrenamiento_id');
+    }
 }

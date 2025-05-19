@@ -6,10 +6,15 @@ use Illuminate\Http\Request;
 
 // Controladores
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AdminEntrenador\AdminEntrenadorController;
+use App\Http\Controllers\AdminEntrenador\AdminEntrenamientoController;
 use App\Http\Controllers\Entrenador\EntrenadorController;
 use App\Http\Controllers\Perfil\PerfilController;
-use App\Http\Controllers\ClaseGrupal\ClaseGrupalController;
-use App\Http\Controllers\AdminEntrenador\AdminEntrenadorController;
+use App\Http\Controllers\Cliente\DashboardController;
+use App\Http\Controllers\General\ClaseGrupalController;
+use App\Http\Controllers\General\EntrenamientoController;
+use App\Http\Controllers\General\SolicitudClaseController;
+use App\Http\Controllers\General\SuscripcionController;
 
 // ----------------------
 // RUTA DE BIENVENIDA
@@ -93,8 +98,23 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
         Route::post('solicitudes/{claseId}/aceptar/{usuarioId}', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('solicitudes.aceptar');
         Route::post('solicitudes/{claseId}/rechazar/{usuarioId}', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
 
+        // Gestión de entrenamientos
+        Route::get('entrenamientos', [AdminEntrenamientoController::class, 'index'])->name('entrenamientos.index');
+        Route::get('entrenamientos/create', [AdminEntrenamientoController::class, 'create'])->name('entrenamientos.create');
+        Route::post('entrenamientos', [AdminEntrenamientoController::class, 'store'])->name('entrenamientos.store');
+        Route::get('entrenamientos/{entrenamiento}/edit', [AdminEntrenamientoController::class, 'edit'])->name('entrenamientos.edit');
+        Route::put('entrenamientos/{entrenamiento}', [AdminEntrenamientoController::class, 'update'])->name('entrenamientos.update');
+        Route::delete('entrenamientos/{entrenamiento}', [AdminEntrenamientoController::class, 'destroy'])->name('entrenamientos.destroy');
+
+        // Gestión de usuarios en los entrenamientos
+        Route::get('entrenamientos/{entrenamiento}/usuarios', [AdminEntrenamientoController::class, 'usuarios'])->name('entrenamientos.usuarios');
+        Route::post('entrenamientos/{entrenamiento}/usuarios/agregar', [AdminEntrenamientoController::class, 'agregarUsuario'])->name('entrenamientos.usuarios.agregar');
+        Route::delete('entrenamientos/{entrenamiento}/usuarios/{usuario}', [AdminEntrenamientoController::class, 'quitarUsuario'])->name('entrenamientos.usuarios.quitar');
+        Route::post('entrenamientos/{entrenamiento}/usuarios/agregar-masivos', [AdminEntrenamientoController::class, 'agregarUsuariosMasivos'])->name('entrenamientos.usuarios.agregar-masivos');
+
+
         // Suscripciones de usuarios
-        Route::get('users/{id}/suscripciones', [UserController::class, 'suscripciones'])->name('users.suscripciones');
+        Route::get('users/{id}/suscripciones', [SuscripcionController::class, 'index'])->name('users.suscripciones');
     });
 
 // ----------------------
@@ -125,8 +145,15 @@ Route::middleware('auth')
     ->prefix('cliente')
     ->name('cliente.')
     ->group(function () {
+        // Nueva ruta del dashboard principal
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Clases
         Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
         Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
+        // Entrenamientos
+        Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
+        Route::post('entrenamientos/{entrenamientoId}/unirse', [EntrenamientoController::class, 'unirseEntrenamiento'])->name('entrenamientos.unirse');
     });
 
 Route::middleware('auth')

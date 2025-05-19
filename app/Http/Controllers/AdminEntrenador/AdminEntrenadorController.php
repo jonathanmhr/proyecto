@@ -2,17 +2,25 @@
 
 namespace App\Http\Controllers\AdminEntrenador;
 
+// Controladores  
 use App\Http\Controllers\Controller;
-use App\Models\ClaseGrupal;
+use App\Http\Controllers\AdminEntrenador;
+
+// Modelos  
 use App\Models\User;
+use App\Models\ClaseGrupal;
 use App\Models\Suscripcion;
-use Carbon\Carbon;
+use App\Models\ReservaDeClase;
+use App\Models\Entrenamiento;
+
+// Otras dependencias  
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Auth;
+use Carbon\Carbon;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 use Silber\Bouncer\Database\Role;
-use Auth;
-use App\Models\ReservaDeClase;
+use Illuminate\Support\Facades\Cache;
 
 class AdminEntrenadorController extends Controller
 {
@@ -22,15 +30,31 @@ class AdminEntrenadorController extends Controller
 
     public function dashboard()
     {
-        // Contar el total de clases sin necesidad de cargar todas
         $totalClases = ClaseGrupal::count();
 
-        // Obtener el conteo de otros elementos
-        $totalEntrenadores = Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
-        $totalAlumnos = Bouncer::role()->where('name', 'cliente')->first()->users()->count();
-        $totalSolicitudesPendientes = ReservaDeClase::where('estado', 'pendiente')->count();
+        $totalEntrenadores = Cache::remember('total_entrenadores', 60, function () {
+            return Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
+        });
 
-        return view('admin-entrenador.dashboard', compact('totalClases', 'totalEntrenadores', 'totalAlumnos', 'totalSolicitudesPendientes'));
+        $totalAlumnos = Cache::remember('total_alumnos', 60, function () {
+            return Bouncer::role()->where('name', 'cliente')->first()->users()->count();
+        });
+
+        $totalSolicitudesPendientes = Cache::remember('total_solicitudes_pendientes', 60, function () {
+            return ReservaDeClase::where('estado', 'pendiente')->count();
+        });
+
+        $totalEntrenamientos = Cache::remember('total_entrenamientos', 60, function () {
+            return Entrenamiento::count();
+        });
+
+        return view('admin-entrenador.dashboard', compact(
+            'totalClases',
+            'totalEntrenadores',
+            'totalAlumnos',
+            'totalSolicitudesPendientes',
+            'totalEntrenamientos'
+        ));
     }
 
     public function verClases()
@@ -258,8 +282,8 @@ class AdminEntrenadorController extends Controller
         $solicitudesPendientes = ReservaDeClase::with(['usuario', 'clase'])
             ->where('estado', 'pendiente')
             ->get();
-    
-            return view('admin-entrenador.solicitudes.index', compact('solicitudesPendientes'));
+
+        return view('admin-entrenador.solicitudes.index', compact('solicitudesPendientes'));
     }
 
     public function aceptarSolicitud($claseId, $usuarioId)
