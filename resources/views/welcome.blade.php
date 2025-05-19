@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <div class="absolute top-0 right-0 h-full w-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <img src="" alt="HIIT" class="object-cover h-full w-full">
+                        <img src="resources\images\pesas.jpg" alt="HIIT" class="object-cover h-full w-full">
                     </div>
                 </div>
                 <div class="relative bg-gray-800 rounded-xl shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-500 group">

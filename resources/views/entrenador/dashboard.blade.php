@@ -32,19 +32,19 @@
                         </div>
                         <p class="text-sm text-blue-600">
                             @if ($clase->cambio_pendiente)
-                                <span class="text-yellow-500 font-bold">Cambio Pendiente de Aprobación</span>
+                                <span class="text-yellow-100 font-bold bg-yellow-600 rounded px-1">Cambio Pendiente de Aprobación</span>
                             @else
-                                <span class="text-green-500 font-bold">Clase Aceptada</span>
+                                <span class="text-green-100 font-bold bg-green-600 rounded px-1">Clase Aceptada</span>
                             @endif
                         </p>
                         <a href="{{ route('entrenador.clases.edit', $clase) }}"
-                            class="text-blue-500 hover:underline">Editar clase</a>
+                            class="text-blue-500 hover:bg-white hover:shadow-sm all-transitions px-1 py-1 my-1 rounded duration-300">Editar clase</a>
                     </div>
                 @empty
                     <p class="text-blue-600">No tienes clases programadas.</p>
                 @endforelse
                 <div class="mt-4">
-                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:underline">Ver todas
+                    <a href="{{ route('entrenador.clases.index') }}" class="text-blue-500 hover:bg-white hover:shadow-sm all-transitions px-1 py-1 my-1 rounded duration-300">Ver todas
                         mis clases</a>
                 </div>
             </div>

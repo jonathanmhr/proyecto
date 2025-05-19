@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="container mx-auto px-4 py-6">
+    <div class="container mx-auto px-4 py-6 bg-gray-100 rounded-lg">
         <!-- Título y botón "Volver" en una fila -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-gray-900">Editar Clase</h1>

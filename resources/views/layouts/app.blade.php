@@ -21,12 +21,12 @@
 <body class="font-sans antialiased">
     <x-banner />
 
-    <div x-data="{ sidebarOpen: false }" class="flex min-h-screen bg-gray-100">
+    <div x-data="{ sidebarOpen: false }" class="flex min-h-screen bg-white">
         <!-- Sidebar -->
         <x-sidebar />
 
         <!-- Contenido principal -->
-        <main :class="sidebarOpen ? 'ml-64' : 'ml-20'" class="transition-all duration-300 w-full p-6">
+        <main :class="sidebarOpen ? 'ml-64' : 'ml-20'" class="transition-all duration-300 w-full p-6 ">
             {{ $slot }}
         </main>
     </div>

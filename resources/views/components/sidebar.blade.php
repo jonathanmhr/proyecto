@@ -1,5 +1,5 @@
 <aside x-data="{ open: false }" x-bind="$el"
-    class="fixed top-4 left-4 h-[calc(100vh-2rem)] transition-all duration-300 bg-white rounded-xl shadow-md flex flex-col items-center py-4 z-50"
+    class="fixed top-4 left-4 h-[calc(100vh-2rem)] transition-all duration-300  bg-gray-100 rounded-xl shadow-md flex flex-col items-center py-4 z-50"
     :class="open ? 'w-64 items-start' : 'w-20 items-center'" @mouseenter="open = true" @mouseleave="open = false"
     x-init="$watch('open', () => feather.replace())">
 
@@ -11,7 +11,7 @@
     </div>
 
     <!-- Navegación principal -->
-    <nav class="flex-1 w-full space-y-2 px-2">
+    <nav class="flex-1 w-full space-y-2 px-2 text-gray-700">
 
         <x-sidebar-link icon="home" route="dashboard" label="Dashboard" />
 
@@ -49,7 +49,7 @@
                     <i data-feather="chevron-down" class="ml-auto" x-show="open"></i>
                 </button>
 
-                <div x-show="open && openEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1">
+                <div x-show="open && openEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1 text-gray-600">
                     <x-sidebar-link icon="layout" route="entrenador.dashboard" label="Panel General" />
                     <x-sidebar-link icon="file-text" route="entrenador.dashboard" label="Reportes" />
                     {{--
@@ -71,7 +71,7 @@
 
         {{-- COMÚN A VARIOS ROLES --}}
         @canany(['cliente-access', 'entrenador-access', 'admin_entrenador'])
-        <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Clases Disponibles" />
+        <x-sidebar-link icon="calendar" route="cliente.clases.index" label="Clases Disponibles"/>
             <x-sidebar-link icon="message-circle" route="cliente.clases.index" label="Comunidad" />
         @endcan
     </nav>

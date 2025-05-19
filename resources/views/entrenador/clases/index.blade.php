@@ -16,7 +16,7 @@
 
         <div class="space-y-6">
             @foreach ($clases as $clase)
-                <div class="bg-white border border-gray-300 rounded-lg shadow-lg p-6">
+                <div class="bg-white border border-gray-300 rounded-lg  p-6 hover:shadow-lg hover:bg-gray-100 transition-all duration-500">
                     <h3 class="text-xl font-semibold text-blue-800 mb-2">{{ $clase->nombre }}</h3>
                     <p class="text-sm text-gray-700 mb-2">{{ $clase->descripcion }}</p>
                     <div class="text-sm text-gray-600 mb-2">
@@ -39,13 +39,17 @@
                     @endif
 
                     <a href="{{ route('entrenador.clases.edit', $clase->id_clase) }}"
-                        class="text-blue-600 hover:text-blue-800 font-semibold">Editar Clase</a>
+                        class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-300">
+                        Editar Clase
+                    </a>
 
-                    <!-- Enlace para gestionar alumnos -->
                     <div class="mt-4">
-                        <a href="{{ route('entrenador.clases.alumnos', $clase->id_clase) }}" 
-                           class="text-blue-600 hover:text-blue-800 font-semibold">Gestionar Alumnos</a>
+                        <a href="{{ route('entrenador.clases.alumnos', $clase->id_clase) }}"
+                        class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-300">
+                        Gestionar Alumnos
+                        </a>
                     </div>
+
                 </div>
             @endforeach
         </div>

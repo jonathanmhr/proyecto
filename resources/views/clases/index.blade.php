@@ -7,9 +7,9 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white p-8 rounded-2xl shadow-lg">
+            <div class=" p-8 rounded-2xl shadow-lg bg-gradient-to-r from-green-700 to-green-500">
                 <div class="flex items-center justify-between mb-6">
-                    <h1 class="text-3xl font-bold text-gray-900">Clases Disponibles</h1>
+                    <h1 class="text-3xl font-bold text-lime-100">Clases Disponibles</h1>
                 </div>
 
                 <!-- Mensajes de estado -->
