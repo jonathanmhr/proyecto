@@ -23,7 +23,7 @@
                         <p class="text-4xl font-bold text-indigo-600">{{ $totalUsuarios }}</p>
                         <p class="text-gray-600 mt-1 flex items-center gap-1">👥 Usuarios totales</p>
                     </div>
-                    <a href="{{ route('admin.usuarios.index') }}" class="mt-4 inline-block text-indigo-500 hover:underline text-sm font-semibold">Ver más</a>
+                    <a href="{{ route('admin.users.index') }}" class="mt-4 inline-block text-indigo-500 hover:underline text-sm font-semibold">Ver más</a>
                 </div>
 
                 {{-- Tarjeta: Usuarios activos hoy --}}
@@ -32,7 +32,7 @@
                         <p class="text-4xl font-bold text-blue-600">{{ $usuariosActivosHoy }}</p>
                         <p class="text-gray-600 mt-1 flex items-center gap-1">📈 Usuarios activos hoy</p>
                     </div>
-                    <a href="{{ route('admin.usuarios.activos') }}" class="mt-4 inline-block text-blue-500 hover:underline text-sm font-semibold">Ver actividad</a>
+                    <a href="{{ route('admin.users.index') }}" class="mt-4 inline-block text-blue-500 hover:underline text-sm font-semibold">Ver actividad</a>
                 </div>
 
                 {{-- Tarjeta: Inactivos +7 días --}}
@@ -41,7 +41,7 @@
                         <p class="text-4xl font-bold text-red-600">{{ $inactivosMas7Dias }}</p>
                         <p class="text-gray-600 mt-1 flex items-center gap-1">⏱️ Inactivos +7 días</p>
                     </div>
-                    <a href="{{ route('admin.usuarios.inactivos') }}" class="mt-4 inline-block text-red-500 hover:underline text-sm font-semibold">Revisar</a>
+                    <a href="{{ route('admin.users.index') }}" class="mt-4 inline-block text-red-500 hover:underline text-sm font-semibold">Revisar</a>
                 </div>
             </div>
         </section>
@@ -51,17 +51,17 @@
             <h2 class="text-2xl font-semibold mb-4">Acciones rápidas</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
 
-                <a href="{{ route('admin.usuarios.create') }}" 
+                <a href="{{ route('admin.users.index') }}" 
                    class="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow">
                    <span class="text-2xl">➕</span> Crear nuevo usuario
                 </a>
 
-                <a href="{{ route('admin.reportes.generar') }}" 
+                <a href="{{ route('admin.users.index') }}" 
                    class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow">
                    <span class="text-2xl">🧾</span> Generar reporte
                 </a>
 
-                <a href="{{ route('admin.anuncios.enviar') }}" 
+                <a href="{{ route('admin.users.index') }}" 
                    class="bg-pink-100 hover:bg-pink-200 text-pink-700 font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow">
                    <span class="text-2xl">📤</span> Enviar anuncio
                 </a>
