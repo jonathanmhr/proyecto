@@ -26,7 +26,9 @@ class UserController extends Controller
         // Grupos creados (roles en Bouncer)
         $gruposCreados = Role::count();
 
-        //usuarios recientes (últimos 5)
+        //usuarios
+        $usuariosActivosHoy = 0; // Por ejemplo, 0 o colección vacía
+        $inactivosMas7Dias = 0;
         $usuariosRecientes = User::orderBy('created_at', 'desc')->take(5)->get();
 
         // ALERTAS: puedes adaptar o dejar estático si no tienes last_login_at
