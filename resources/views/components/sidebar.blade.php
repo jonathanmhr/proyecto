@@ -17,7 +17,7 @@
 
         {{-- ADMIN --}}
         @can('admin-access')
-            <x-sidebar-link icon="shield" route="admin.users.dasboard" label="Panel de Administrador" />
+            <x-sidebar-link icon="shield" route="admin.dasboard" label="Panel de Administrador" />
         @endcan
 
         {{-- ADMIN ENTRENADOR --}}
