@@ -47,8 +47,10 @@
                     onchange="this.form.submit()">
                     <option value="">Todos</option>
                     <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Administrador</option>
-                    <option value="admin_entrenador" {{ request('role') == 'admin_entrenador' ? 'selected' : '' }}>Admin Entrenador</option>
-                    <option value="entrenador" {{ request('role') == 'entrenador' ? 'selected' : '' }}>Entrenador</option>
+                    <option value="admin_entrenador" {{ request('role') == 'admin_entrenador' ? 'selected' : '' }}>Admin
+                        Entrenador</option>
+                    <option value="entrenador" {{ request('role') == 'entrenador' ? 'selected' : '' }}>Entrenador
+                    </option>
                     <option value="cliente" {{ request('role') == 'cliente' ? 'selected' : '' }}>Cliente</option>
                 </select>
             </div>
@@ -78,7 +80,8 @@
                             <td class="px-6 py-5 text-sm font-medium text-gray-900">{{ $user->id }}</td>
                             <td class="px-6 py-5 text-sm text-gray-800">{{ $user->name }}</td>
                             <td class="px-6 py-5 text-sm text-gray-800">{{ $user->email }}</td>
-                            <td class="px-6 py-5 text-sm text-gray-800">{{ $user->created_at->format('d/m/Y H:i') }}</td>
+                            <td class="px-6 py-5 text-sm text-gray-800">{{ $user->created_at->format('d/m/Y H:i') }}
+                            </td>
                             <td class="px-6 py-5 text-sm">
                                 @if ($user->roles->isEmpty())
                                     <span class="text-gray-400 italic">Sin rol</span>
@@ -86,10 +89,13 @@
                                     @foreach ($user->roles as $role)
                                         <span
                                             class="inline-block px-2 py-1 rounded-full text-xs font-semibold 
-                                            {{ $role->name === 'admin' ? 'bg-blue-100 text-blue-800'
-                                                : ($role->name === 'cliente' ? 'bg-green-100 text-green-800'
-                                                : ($role->name === 'entrenador' ? 'bg-yellow-100 text-yellow-800'
-                                                : 'bg-purple-100 text-purple-800')) }}">
+                                            {{ $role->name === 'admin'
+                                                ? 'bg-blue-100 text-blue-800'
+                                                : ($role->name === 'cliente'
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : ($role->name === 'entrenador'
+                                                        ? 'bg-yellow-100 text-yellow-800'
+                                                        : 'bg-purple-100 text-purple-800')) }}">
                                             {{ $role->name }}
                                         </span>
                                     @endforeach
@@ -101,9 +107,12 @@
                                     @csrf
                                     <select name="status" onchange="this.form.submit()"
                                         class="border rounded px-2 py-1 text-xs">
-                                        <option value="activo" {{ $user->status == 'activo' ? 'selected' : '' }}>Activo</option>
-                                        <option value="inactivo" {{ $user->status == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
-                                        <option value="suspendido" {{ $user->status == 'suspendido' ? 'selected' : '' }}>Suspendido</option>
+                                        <option value="activo" {{ $user->status == 'activo' ? 'selected' : '' }}>Activo
+                                        </option>
+                                        <option value="inactivo" {{ $user->status == 'inactivo' ? 'selected' : '' }}>
+                                            Inactivo</option>
+                                        <option value="suspendido"
+                                            {{ $user->status == 'suspendido' ? 'selected' : '' }}>Suspendido</option>
                                     </select>
                                 </form>
                             </td>
@@ -147,8 +156,7 @@
                                     </form>
 
                                     <!-- Botón eliminar con modal -->
-                                    <button
-                                        @click="openModal({{ $user->id }}, '{{ $user->name }}')"
+                                    <button @click="openModal({{ $user->id }}, '{{ $user->name }}')"
                                         class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-md flex items-center gap-1 transition-transform transform hover:scale-105"
                                         type="button">
                                         Eliminar
@@ -178,26 +186,22 @@
     </div>
 
     <!-- Modal eliminar usuario -->
-    <div
-        x-data="{
-            isOpen: false,
-            userId: null,
-            userName: '',
-            openModal(id, name) {
-                this.userId = id;
-                this.userName = name;
-                this.isOpen = true;
-            },
-            closeModal() {
-                this.isOpen = false;
-                this.userId = null;
-                this.userName = '';
-            }
-        }"
-        x-cloak
-        x-show="isOpen"
-        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-    >
+    <div x-data="{
+        isOpen: false,
+        userId: null,
+        userName: '',
+        openModal(id, name) {
+            this.userId = id;
+            this.userName = name;
+            this.isOpen = true;
+        },
+        closeModal() {
+            this.isOpen = false;
+            this.userId = null;
+            this.userName = '';
+        }
+    }" x-cloak x-show="isOpen"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div @click.away="closeModal()" class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
             <h3 class="text-lg font-semibold mb-4">Confirmar eliminación</h3>
             <p class="mb-6">¿Estás seguro que quieres eliminar al usuario <strong x-text="userName"></strong>?</p>
@@ -205,7 +209,8 @@
             <form :action="`{{ url('admin/users') }}/${userId}`" method="POST" class="flex justify-end gap-4">
                 @csrf
                 @method('DELETE')
-                <button type="button" @click="closeModal()" class="px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 transition">
+                <button type="button" @click="closeModal()"
+                    class="px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 transition">
                     Cancelar
                 </button>
                 <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
