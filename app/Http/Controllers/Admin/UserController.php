@@ -9,6 +9,7 @@ use App\Models\User;
 use Silber\Bouncer\Database\Role;
 use Bouncer;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Password;
 
 class UserController extends Controller
 {
@@ -200,6 +201,19 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('admin.users.index')->with('success', 'Usuario eliminado correctamente.');
+    }
+
+    public function resetPassword($id)
+    {
+        $user = User::findOrFail($id);
+
+        $status = Password::sendResetLink(['email' => $user->email]);
+
+        return back()->with(
+            $status === Password::RESET_LINK_SENT
+                ? ['success' => 'Enlace de restablecimiento enviado a ' . $user->email]
+                : ['error' => 'No se pudo enviar el enlace de restablecimiento.']
+        );
     }
 
     public function suscripciones($id)

@@ -73,6 +73,7 @@ Route::middleware(['auth', 'verified', 'can:admin-access'])
         // Asignación de roles y cambios de estado
         Route::post('users/{id}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
         Route::post('users/{id}/change-status', [UserController::class, 'changeStatus'])->name('users.changeStatus');
+        Route::post('users/{id}/reset-password', [UserController::class, 'resetPassword'])->name('admin.users.resetPassword');
 
         // Suscripciones de usuario
         Route::get('users/{id}/suscripciones', [UserController::class, 'suscripciones'])->name('users.suscripciones');
