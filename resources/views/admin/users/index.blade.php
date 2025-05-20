@@ -91,7 +91,7 @@
                                 <a href="{{ route('admin.users.edit', $user->id) }}"
                                     class="inline-flex items-center px-2 py-1 bg-yellow-400 hover:bg-yellow-500 text-white rounded-md"
                                     title="Editar usuario">
-                                    <x-icon name="edit" class="w-4 h-4" />
+                                    <i data-feather="edit"></i>
                                 </a>
 
                                 <!-- Resetear contraseña -->
@@ -101,7 +101,7 @@
                                     <button type="submit"
                                         class="inline-flex items-center px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-md"
                                         title="Resetear contraseña">
-                                        <x-icon name="refresh-ccw" class="w-4 h-4" />
+                                        <i data-feather="refresh-ccw"></i>
                                     </button>
                                 </form>
 
@@ -112,7 +112,7 @@
                                     <button type="submit"
                                         class="inline-flex items-center px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded-md"
                                         title="Cambiar estado">
-                                        <x-icon name="toggle-left" class="w-4 h-4" />
+                                        <i data-feather="toggle-left"></i>
                                     </button>
                                 </form>
 
@@ -125,7 +125,7 @@
                                     <button type="submit"
                                         class="inline-flex items-center px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md"
                                         title="Eliminar usuario">
-                                        <x-icon name="trash" class="w-4 h-4" />
+                                        <i data-feather="trash-2"></i>
                                     </button>
                                 </form>
                             </td>
