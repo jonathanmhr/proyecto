@@ -22,9 +22,9 @@
         <form method="GET" action="{{ route('admin.usuarios.index') }}"
             class="mb-4 bg-white p-4 rounded-lg shadow flex flex-wrap items-center gap-4">
             <div class="w-full sm:w-auto flex-1">
-                <label for="search" class="block text-sm font-medium text-gray-700">Buscar por nombre o correo</label>
+                <label for="search" class="block text-sm font-medium text-gray-700">Buscar</label>
                 <input type="text" name="search" id="search" value="{{ request('search') }}"
-                    placeholder="Ej. Juan o juan@email.com"
+                    placeholder="Nombre o email"
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
 
@@ -42,12 +42,7 @@
             <div class="self-end">
                 <button type="submit"
                     class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
-                    </svg>
-                    Filtrar
+                    🔍 Filtrar
                 </button>
             </div>
         </form>
@@ -57,19 +52,19 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roles</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Roles</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Estado</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($users as $user)
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-gray-900 font-medium">{{ $user->name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 text-sm">{{ $user->email }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-sm">
+                            <td class="px-6 py-4 font-medium text-gray-900">{{ $user->name }}</td>
+                            <td class="px-6 py-4 text-gray-500">{{ $user->email }}</td>
+                            <td class="px-6 py-4">
                                 @foreach ($user->roles as $role)
                                     <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold
                                         {{ $role->name === 'admin' ? 'bg-red-200 text-red-800' : '' }}
@@ -82,46 +77,46 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if ($user->is_active)
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
+                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
                                 @else
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Inactivo</span>
+                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Inactivo</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-1">
+                            <td class="px-6 py-4 text-center space-x-1">
                                 <!-- Editar -->
-                                <a href="{{ route('admin.usuarios.edit', $user) }}"
+                                <a href="{{ route('admin.users.edit', $user->id) }}"
                                     class="inline-flex items-center px-2 py-1 bg-yellow-400 hover:bg-yellow-500 text-white rounded-md"
                                     title="Editar usuario">
                                     ✏️
                                 </a>
 
                                 <!-- Resetear contraseña -->
-                                <form action="{{ route('admin.usuarios.reset', $user) }}" method="POST" class="inline">
+                                <form action="{{ route('admin.users.resetPassword', $user->id) }}" method="POST" class="inline">
                                     @csrf
                                     <button type="submit"
-                                        class="inline-flex items-center px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-xs font-semibold transition-colors duration-200"
+                                        class="inline-flex items-center px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-md"
                                         title="Resetear contraseña">
                                         🔄
                                     </button>
                                 </form>
 
                                 <!-- Cambiar estado -->
-                                <form action="{{ route('admin.usuarios.estado', $user) }}" method="POST" class="inline">
+                                <form action="{{ route('admin.users.changeStatus', $user->id) }}" method="POST" class="inline">
                                     @csrf
                                     <button type="submit"
-                                        class="inline-flex items-center px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-xs font-semibold transition-colors duration-200"
+                                        class="inline-flex items-center px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded-md"
                                         title="Cambiar estado">
                                         ⚙️
                                     </button>
                                 </form>
 
                                 <!-- Eliminar -->
-                                <form action="{{ route('admin.usuarios.destroy', $user) }}" method="POST" class="inline"
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline"
                                     onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                        class="inline-flex items-center px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-xs font-semibold transition-colors duration-200"
+                                        class="inline-flex items-center px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md"
                                         title="Eliminar usuario">
                                         🗑️
                                     </button>
