@@ -26,6 +26,9 @@ class UserController extends Controller
         // Grupos creados (roles en Bouncer)
         $gruposCreados = Role::count();
 
+        //usuarios recientes (últimos 5)
+        $usuariosRecientes = User::orderBy('created_at', 'desc')->take(5)->get();
+
         // ALERTAS: puedes adaptar o dejar estático si no tienes last_login_at
         $alertas = [
             "⚠️ Grupo 'Equipo Norte' sin entrenador asignado",
@@ -44,7 +47,6 @@ class UserController extends Controller
             'entrenadoresActivos',
             'gruposCreados',
             'alertas',
-            'accionesRapidas',
             'usuariosPorRol'
         ));
     }

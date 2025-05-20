@@ -26,24 +26,6 @@
                     <a href="{{ route('admin.usuarios.index') }}" class="mt-4 inline-block text-indigo-500 hover:underline text-sm font-semibold">Ver más</a>
                 </div>
 
-                {{-- Tarjeta: Entrenadores activos --}}
-                <div class="bg-white rounded-xl shadow p-5 flex flex-col justify-between">
-                    <div>
-                        <p class="text-4xl font-bold text-green-600">{{ $entrenadoresActivos }}</p>
-                        <p class="text-gray-600 mt-1 flex items-center gap-1">🧑‍🏫 Entrenadores activos</p>
-                    </div>
-                    <a href="{{ route('admin.entrenadores.index') }}" class="mt-4 inline-block text-green-500 hover:underline text-sm font-semibold">Gestionar</a>
-                </div>
-
-                {{-- Tarjeta: Grupos creados --}}
-                <div class="bg-white rounded-xl shadow p-5 flex flex-col justify-between">
-                    <div>
-                        <p class="text-4xl font-bold text-yellow-600">{{ $gruposCreados }}</p>
-                        <p class="text-gray-600 mt-1 flex items-center gap-1">📂 Grupos creados</p>
-                    </div>
-                    <a href="{{ route('admin.grupos.index') }}" class="mt-4 inline-block text-yellow-500 hover:underline text-sm font-semibold">Ver grupos</a>
-                </div>
-
                 {{-- Tarjeta: Usuarios activos hoy --}}
                 <div class="bg-white rounded-xl shadow p-5 flex flex-col justify-between">
                     <div>
@@ -74,16 +56,6 @@
                    <span class="text-2xl">➕</span> Crear nuevo usuario
                 </a>
 
-                <a href="{{ route('admin.entrenadores.asignar') }}" 
-                   class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow">
-                   <span class="text-2xl">👨‍🏫</span> Asignar entrenador a usuarios
-                </a>
-
-                <a href="{{ route('admin.grupos.create') }}" 
-                   class="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow">
-                   <span class="text-2xl">🗃️</span> Crear nuevo grupo
-                </a>
-
                 <a href="{{ route('admin.reportes.generar') }}" 
                    class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow">
                    <span class="text-2xl">🧾</span> Generar reporte
@@ -110,7 +82,7 @@
                 <li class="flex items-center gap-3 text-green-600 font-semibold">
                     ✅ <span>Se completó la exportación del reporte de progreso</span>
                 </li>
-                {{-- Agrega más aquí dinámicamente si quieres --}}
+                {{-- Puedes agregar alertas dinámicas aquí --}}
             </ul>
         </section>
 

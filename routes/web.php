@@ -57,6 +57,12 @@ Route::middleware(['auth', 'verified', 'can:admin-access'])
     ->name('admin.')
     ->group(function () {
         Route::get('/', [UserController::class, 'dashboard'])->name('dashboard');
+        Route::view('usuarios', UserController::class)->name('usuarios.index');
+        Route::view('usuarios/activos', UserController::class)->name('usuarios.activos');
+        Route::view('usuarios/inactivos', UserController::class)->name('usuarios.inactivos');
+        Route::view('usuarios/crear', UserController::class)->name('usuarios.create');
+        Route::view('reportes/generar', UserController::class)->name('reportes.generar');
+        Route::view('anuncios/enviar', UserController::class)->name('anuncios.enviar');
         Route::resource('users', UserController::class)->except(['create', 'show']);
         Route::post('users/{id}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
     });
