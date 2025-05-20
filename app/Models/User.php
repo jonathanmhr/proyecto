@@ -54,6 +54,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *

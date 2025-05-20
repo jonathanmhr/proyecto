@@ -22,8 +22,10 @@ class UserController extends Controller
 
         $gruposCreados = Role::count();
 
-        $usuariosActivosHoy = 0; // Ajustar según datos reales
-        $inactivosMas7Dias = 0; // Ajustar según datos reales
+        $usuariosActivosHoy = User::where('is_active', true)->count();
+        $inactivosMas7Dias = User::where('is_active', false)
+            ->where('updated_at', '<=', now()->subDays(7))
+            ->count();
         $usuariosRecientes = User::orderBy('created_at', 'desc')->take(5)->get();
 
         $alertas = [
@@ -70,7 +72,7 @@ class UserController extends Controller
             ->when($search && strlen($search) >= 3 && strlen($search) <= 100, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%$search%")
-                      ->orWhere('email', 'like', "%$search%");
+                        ->orWhere('email', 'like', "%$search%");
                 });
             })
             ->when($roleFilter, function ($query) use ($roleFilter) {
@@ -206,19 +208,28 @@ class UserController extends Controller
         $suscripciones = $user->clases;
         return view('admin.users.suscripciones', compact('user', 'suscripciones'));
     }
+
+    public function changeStatus($id)
+    {
+        $user = User::findOrFail($id);
+        $user->is_active = !$user->is_active;
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'Estado actualizado correctamente.');
+    }
+
     public function create()
-{
-    return view('admin.users.create');
-}
+    {
+        return view('admin.users.create');
+    }
 
-public function generarReporte()
-{
-    return view('admin.reportes.generar');
-}
+    public function generarReporte()
+    {
+        return view('admin.reportes.generar');
+    }
 
-public function enviarAnuncio()
-{
-    return view('admin.anuncios.enviar');
-}
-
+    public function enviarAnuncio()
+    {
+        return view('admin.anuncios.enviar');
+    }
 }

@@ -56,25 +56,26 @@ Route::middleware(['auth', 'verified', 'can:admin-access'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+
         // Gestión de usuarios
         Route::get('usuarios', [UserController::class, 'index'])->name('usuarios.index');
         Route::get('usuarios/activos', [UserController::class, 'index'])->name('usuarios.activos');
         Route::get('usuarios/inactivos', [UserController::class, 'index'])->name('usuarios.inactivos');
         Route::get('usuarios/crear', [UserController::class, 'create'])->name('usuarios.create');
 
-        // Reportes y anuncios (deben tener métodos en el controlador, incluso si devuelven solo una vista)
+        // Reportes y anuncios
         Route::get('reportes/generar', [UserController::class, 'generarReporte'])->name('reportes.generar');
         Route::get('anuncios/enviar', [UserController::class, 'enviarAnuncio'])->name('anuncios.enviar');
 
-        // CRUD de usuarios (excepto create/show porque se manejan aparte)
+        // CRUD de usuarios (excepto create/show)
         Route::resource('users', UserController::class)->except(['create', 'show']);
 
-        // Asignación de roles
+        // Asignación de roles y cambios de estado
         Route::post('users/{id}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
+        Route::post('users/{id}/change-status', [UserController::class, 'changeStatus'])->name('users.changeStatus');
 
-        // Suscripciones del usuario
+        // Suscripciones de usuario
         Route::get('users/{id}/suscripciones', [UserController::class, 'suscripciones'])->name('users.suscripciones');
-        Route::post('users/{id}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
     });
 
 // ----------------------
