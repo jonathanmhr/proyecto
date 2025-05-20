@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-6 px-4 max-w-7xl mx-auto" x-data="userModals()">
+    <div class="py-6 px-4 max-w-7xl mx-auto">
         <div class="mb-4 flex justify-between items-center">
             <h3 class="text-lg font-semibold text-gray-700">Usuarios</h3>
             <a href="{{ route('admin.usuarios.create') }}"
@@ -33,11 +33,9 @@
                 <select name="role" id="role" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                     <option value="">-- Todos --</option>
                     <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                    <option value="entrenador" {{ request('role') == 'entrenador' ? 'selected' : '' }}>Entrenador
-                    </option>
+                    <option value="entrenador" {{ request('role') == 'entrenador' ? 'selected' : '' }}>Entrenador</option>
                     <option value="cliente" {{ request('role') == 'cliente' ? 'selected' : '' }}>Cliente</option>
-                    <option value="admin_entrenador" {{ request('role') == 'admin_entrenador' ? 'selected' : '' }}>Admin
-                        Entrenador</option>
+                    <option value="admin_entrenador" {{ request('role') == 'admin_entrenador' ? 'selected' : '' }}>Admin Entrenador</option>
                 </select>
             </div>
 
@@ -54,40 +52,26 @@
             </div>
         </form>
 
+        <!-- Tabla de usuarios -->
         <div class="overflow-x-auto bg-white shadow rounded-lg">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Nombre
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Email
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Roles
-                        </th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Estado
-                        </th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Acciones
-                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roles</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($users as $user)
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-gray-900 font-medium">
-                                {{ $user->name }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 text-sm">
-                                {{ $user->email }}
-                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-900 font-medium">{{ $user->name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 text-sm">{{ $user->email }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-sm">
                                 @foreach ($user->roles as $role)
-                                    <span
-                                        class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold
+                                    <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold
                                         {{ $role->name === 'admin' ? 'bg-red-200 text-red-800' : '' }}
                                         {{ $role->name === 'entrenador' ? 'bg-green-200 text-green-800' : '' }}
                                         {{ $role->name === 'cliente' ? 'bg-blue-200 text-blue-800' : '' }}
@@ -98,67 +82,50 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if ($user->is_active)
-                                    <span
-                                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        Activo
-                                    </span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
                                 @else
-                                    <span
-                                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                        Inactivo
-                                    </span>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Inactivo</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-1">
                                 <!-- Editar -->
-                                <button
-                                    @click="openModal('edit', {{ $user->id }}, '{{ addslashes($user->name) }}', '{{ addslashes($user->email) }}')"
+                                <a href="{{ route('admin.usuarios.edit', $user) }}"
                                     class="inline-flex items-center px-2 py-1 bg-yellow-400 hover:bg-yellow-500 text-white rounded-md"
                                     title="Editar usuario">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M11 5h2M7 21v-2a4 4 0 014-4h6" />
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M18.364 5.636a2 2 0 112.828 2.828l-9.192 9.192a4 4 0 01-1.414.586l-3.536 1.178a1 1 0 01-1.274-1.274l1.178-3.536a4 4 0 01.586-1.414l9.192-9.192z" />
-                                    </svg>
-                                </button>
+                                    ✏️
+                                </a>
 
                                 <!-- Resetear contraseña -->
-                                <button
-                                    @click="openModal('reset', {{ $user->id }}, '{{ addslashes($user->name) }}')"
-                                    class="inline-flex items-center px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-xs font-semibold transition-colors duration-200"
-                                    title="Resetear contraseña">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M12 4v1m0 14v1m8-8h1M3 12H2m15.364-6.364l.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
-                                    </svg>
-                                </button>
+                                <form action="{{ route('admin.usuarios.reset', $user) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit"
+                                        class="inline-flex items-center px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-xs font-semibold transition-colors duration-200"
+                                        title="Resetear contraseña">
+                                        🔄
+                                    </button>
+                                </form>
 
                                 <!-- Cambiar estado -->
-                                <button
-                                    @click="openModal('changeStatus', {{ $user->id }}, '{{ addslashes($user->name) }}')"
-                                    class="inline-flex items-center px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-xs font-semibold transition-colors duration-200"
-                                    title="Cambiar estado usuario">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15 12H9m6 0a6 6 0 11-6-6m6 6a6 6 0 01-6 6" />
-                                    </svg>
-                                </button>
+                                <form action="{{ route('admin.usuarios.estado', $user) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit"
+                                        class="inline-flex items-center px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-xs font-semibold transition-colors duration-200"
+                                        title="Cambiar estado">
+                                        ⚙️
+                                    </button>
+                                </form>
 
                                 <!-- Eliminar -->
-                                <button
-                                    @click="openModal('delete', {{ $user->id }}, '{{ addslashes($user->name) }}')"
-                                    class="inline-flex items-center px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-xs font-semibold transition-colors duration-200"
-                                    title="Eliminar usuario">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
+                                <form action="{{ route('admin.usuarios.destroy', $user) }}" method="POST" class="inline"
+                                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="inline-flex items-center px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-xs font-semibold transition-colors duration-200"
+                                        title="Eliminar usuario">
+                                        🗑️
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach
@@ -170,122 +137,5 @@
         <div class="mt-4">
             {{ $users->links() }}
         </div>
-
-        <!-- Modales -->
-        <div x-show="isOpen" style="display: none"
-            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div @click.away="closeModal()" class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative">
-                <button @click="closeModal()"
-                    class="absolute top-2 right-2 text-gray-500 hover:text-gray-900 text-2xl font-bold">&times;</button>
-
-                <template x-if="modalType === 'edit'">
-                    <form :action="/admin/users / $ { selectedUserId }
-                    /edit" method="GET"
-                        class="space-y-4">
-                        <h3 class="text-lg font-semibold">Editar usuario: <span x-text="selectedUserName"></span></h3>
-
-                        <div>
-                            <label for="name" class="block font-medium text-gray-700">Nombre</label>
-                            <input type="text" id="name" name="name" x-model="selectedUserName" required
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                        </div>
-                        <div>
-                            <label for="email" class="block font-medium text-gray-700">Email</label>
-                            <input type="email" id="email" name="email" x-model="selectedUserEmail" required
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                        </div>
-
-                        <div class="flex justify-end space-x-2">
-                            <button type="button" @click="closeModal()"
-                                class="px-4 py-2 bg-gray-300 rounded">Cancelar</button>
-                            <button type="submit"
-                                class="px-4 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500">Guardar</button>
-                        </div>
-                    </form>
-                </template>
-
-                <template x-if="modalType === 'reset'">
-                    <form :action="/admin/users / $ { selectedUserId }
-                    /resetPassword"
-                        method="POST">
-                        @csrf
-                        <h3 class="text-lg font-semibold">Resetear contraseña de: <span
-                                x-text="selectedUserName"></span></h3>
-                        <p class="my-4">¿Estás seguro que quieres resetear la contraseña?</p>
-
-                        <div class="flex justify-end space-x-2">
-                            <button type="button" @click="closeModal()"
-                                class="px-4 py-2 bg-gray-300 rounded">Cancelar</button>
-                            <button type="submit"
-                                class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Confirmar</button>
-                        </div>
-                    </form>
-                </template>
-
-                <template x-if="modalType === 'changeStatus'">
-                    <form :action="/admin/users / $ { selectedUserId }
-                    /changeStatus"
-                        method="POST">
-                        @csrf
-                        <h3 class="text-lg font-semibold">Cambiar estado de: <span x-text="selectedUserName"></span>
-                        </h3>
-                        <p class="my-4">¿Confirmas cambiar el estado del usuario?</p>
-
-                        <div class="flex justify-end space-x-2">
-                            <button type="button" @click="closeModal()"
-                                class="px-4 py-2 bg-gray-300 rounded">Cancelar</button>
-                            <button type="submit"
-                                class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Confirmar</button>
-                        </div>
-                    </form>
-                </template>
-
-                <template x-if="modalType === 'delete'">
-                    <form :action="/admin/users / $ { selectedUserId }" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <h3 class="text-lg font-semibold text-red-600">Eliminar usuario: <span
-                                x-text="selectedUserName"></span></h3>
-                        <p class="my-4 text-red-700">¿Estás seguro que quieres eliminar este usuario? Esta acción no se
-                            puede deshacer.</p>
-
-                        <div class="flex justify-end space-x-2">
-                            <button type="button" @click="closeModal()"
-                                class="px-4 py-2 bg-gray-300 rounded">Cancelar</button>
-                            <button type="submit"
-                                class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
-                        </div>
-                    </form>
-                </template>
-            </div>
-        </div>
     </div>
-
-    <script>
-        function userModals() {
-            return {
-                isOpen: false,
-                modalType: '',
-                selectedUserId: null,
-                selectedUserName: '',
-                selectedUserEmail: '',
-
-                openModal(type, id, name, email = '') {
-                    this.modalType = type;
-                    this.selectedUserId = id;
-                    this.selectedUserName = name;
-                    this.selectedUserEmail = email;
-                    this.isOpen = true;
-                },
-
-                closeModal() {
-                    this.isOpen = false;
-                    this.modalType = '';
-                    this.selectedUserId = null;
-                    this.selectedUserName = '';
-                    this.selectedUserEmail = '';
-                }
-            }
-        }
-    </script>
 </x-app-layout>
