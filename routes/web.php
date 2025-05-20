@@ -56,7 +56,7 @@ Route::middleware(['auth', 'verified', 'can:admin-access'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        
+
         // Dashboard principal
         Route::get('/', [UserController::class, 'dashboard'])->name('dashboard');
 
