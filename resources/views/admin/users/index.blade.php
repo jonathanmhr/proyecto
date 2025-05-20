@@ -18,27 +18,41 @@
             </a>
         </div>
 
-<!-- Buscador por nombre o correo -->
-<form method="GET" action="{{ route('admin.usuarios.index') }}" id="searchForm"
-    class="mb-4 bg-white p-4 rounded-lg shadow flex flex-wrap items-center gap-4">
-    <div class="w-full sm:w-auto flex-1">
-        <label for="search" class="block text-sm font-medium text-gray-700">Buscar por nombre o correo</label>
-        <input type="text" name="search" id="search" value="{{ request('search') }}"
-            placeholder="Ej. Juan o juan@email.com"
-            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-    </div>
+        <!-- Filtros -->
+        <form method="GET" action="{{ route('admin.usuarios.index') }}"
+            class="mb-4 bg-white p-4 rounded-lg shadow flex flex-wrap items-center gap-4">
+            <div class="w-full sm:w-auto flex-1">
+                <label for="search" class="block text-sm font-medium text-gray-700">Buscar por nombre o correo</label>
+                <input type="text" name="search" id="search" value="{{ request('search') }}"
+                    placeholder="Ej. Juan o juan@email.com"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            </div>
 
-    <div class="self-end">
-        <button type="submit"
-            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
-            </svg>
-            Buscar
-        </button>
-    </div>
-</form>
+            <div>
+                <label for="role" class="block text-sm font-medium text-gray-700">Rol</label>
+                <select name="role" id="role" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                    <option value="">-- Todos --</option>
+                    <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="entrenador" {{ request('role') == 'entrenador' ? 'selected' : '' }}>Entrenador
+                    </option>
+                    <option value="cliente" {{ request('role') == 'cliente' ? 'selected' : '' }}>Cliente</option>
+                    <option value="admin_entrenador" {{ request('role') == 'admin_entrenador' ? 'selected' : '' }}>Admin
+                        Entrenador</option>
+                </select>
+            </div>
+
+            <div class="self-end">
+                <button type="submit"
+                    class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+                    </svg>
+                    Filtrar
+                </button>
+            </div>
+        </form>
 
         <div class="overflow-x-auto bg-white shadow rounded-lg">
             <table class="min-w-full divide-y divide-gray-200">
@@ -166,7 +180,8 @@
 
                 <template x-if="modalType === 'edit'">
                     <form :action="/admin/users / $ { selectedUserId }
-                    /edit" method="GET" class="space-y-4">
+                    /edit" method="GET"
+                        class="space-y-4">
                         <h3 class="text-lg font-semibold">Editar usuario: <span x-text="selectedUserName"></span></h3>
 
                         <div>
@@ -191,7 +206,8 @@
 
                 <template x-if="modalType === 'reset'">
                     <form :action="/admin/users / $ { selectedUserId }
-                    /resetPassword" method="POST">
+                    /resetPassword"
+                        method="POST">
                         @csrf
                         <h3 class="text-lg font-semibold">Resetear contraseña de: <span
                                 x-text="selectedUserName"></span></h3>
@@ -208,7 +224,8 @@
 
                 <template x-if="modalType === 'changeStatus'">
                     <form :action="/admin/users / $ { selectedUserId }
-                    /changeStatus" method="POST">
+                    /changeStatus"
+                        method="POST">
                         @csrf
                         <h3 class="text-lg font-semibold">Cambiar estado de: <span x-text="selectedUserName"></span>
                         </h3>
