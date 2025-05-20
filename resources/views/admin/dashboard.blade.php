@@ -20,7 +20,7 @@
                 {{-- Tarjeta: Usuarios totales --}}
                 <div class="bg-white rounded-xl shadow p-5 flex flex-col justify-between">
                     <div>
-                        <p class="text-4xl font-bold text-indigo-600">{{ $totalUsuarios }}</p>
+                        <p class="text-4xl font-bold text-indigo-600">{{ $totalUsuarios ?? 0 }}</p>
                         <p class="text-gray-600 mt-1 flex items-center gap-1">👥 Usuarios totales</p>
                     </div>
                     <a href="{{ route('admin.users.index') }}" class="mt-4 inline-block text-indigo-500 hover:underline text-sm font-semibold">Ver más</a>
@@ -29,7 +29,7 @@
                 {{-- Tarjeta: Usuarios activos hoy --}}
                 <div class="bg-white rounded-xl shadow p-5 flex flex-col justify-between">
                     <div>
-                        <p class="text-4xl font-bold text-blue-600">{{ $usuariosActivosHoy }}</p>
+                        <p class="text-4xl font-bold text-blue-600">{{ $usuariosActivosHoy ?? 0 }}</p>
                         <p class="text-gray-600 mt-1 flex items-center gap-1">📈 Usuarios activos hoy</p>
                     </div>
                     <a href="{{ route('admin.users.index') }}" class="mt-4 inline-block text-blue-500 hover:underline text-sm font-semibold">Ver actividad</a>
@@ -38,10 +38,28 @@
                 {{-- Tarjeta: Inactivos +7 días --}}
                 <div class="bg-white rounded-xl shadow p-5 flex flex-col justify-between">
                     <div>
-                        <p class="text-4xl font-bold text-red-600">{{ $inactivosMas7Dias }}</p>
+                        <p class="text-4xl font-bold text-red-600">{{ $inactivosMas7Dias ?? 0 }}</p>
                         <p class="text-gray-600 mt-1 flex items-center gap-1">⏱️ Inactivos +7 días</p>
                     </div>
                     <a href="{{ route('admin.users.index') }}" class="mt-4 inline-block text-red-500 hover:underline text-sm font-semibold">Revisar</a>
+                </div>
+
+                {{-- Tarjeta: Entrenadores activos --}}
+                <div class="bg-white rounded-xl shadow p-5 flex flex-col justify-between">
+                    <div>
+                        <p class="text-4xl font-bold text-green-600">{{ $entrenadoresActivos ?? 0 }}</p>
+                        <p class="text-gray-600 mt-1 flex items-center gap-1">🏋️ Entrenadores activos</p>
+                    </div>
+                    <a href="{{ route('admin.users.index') }}" class="mt-4 inline-block text-green-500 hover:underline text-sm font-semibold">Ver entrenadores</a>
+                </div>
+
+                {{-- Tarjeta: Grupos creados --}}
+                <div class="bg-white rounded-xl shadow p-5 flex flex-col justify-between">
+                    <div>
+                        <p class="text-4xl font-bold text-yellow-600">{{ $gruposCreados ?? 0 }}</p>
+                        <p class="text-gray-600 mt-1 flex items-center gap-1">👥 Grupos creados</p>
+                    </div>
+                    <a href="{{ route('admin.users.index') }}" class="mt-4 inline-block text-yellow-500 hover:underline text-sm font-semibold">Ver grupos</a>
                 </div>
             </div>
         </section>
@@ -66,6 +84,15 @@
                    <span class="text-2xl">📤</span> Enviar anuncio
                 </a>
 
+                <a href="{{ route('admin.users.index') }}" 
+                   class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow">
+                   <span class="text-2xl">👥</span> Gestionar usuarios
+                </a>
+
+                <a href="{{ route('admin.users.index') }}" 
+                   class="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow">
+                   <span class="text-2xl">👨‍👩‍👧‍👦</span> Gestionar grupos
+                </a>
             </div>
         </section>
 
@@ -73,16 +100,12 @@
         <section>
             <h2 class="text-2xl font-semibold mb-4">Alertas / Notificaciones</h2>
             <ul class="bg-white shadow rounded-xl p-6 space-y-3 max-h-56 overflow-y-auto">
-                <li class="flex items-center gap-3 text-red-600 font-semibold">
-                    🔴 <span>Usuario <strong>Juan Pérez</strong> lleva 10 días inactivo</span>
-                </li>
-                <li class="flex items-center gap-3 text-yellow-600 font-semibold">
-                    ⚠️ <span>Grupo <strong>"Equipo Norte"</strong> sin entrenador asignado</span>
-                </li>
-                <li class="flex items-center gap-3 text-green-600 font-semibold">
-                    ✅ <span>Se completó la exportación del reporte de progreso</span>
-                </li>
-                {{-- Puedes agregar alertas dinámicas aquí --}}
+                @foreach ($alertas ?? [] as $alerta)
+                    <li class="flex items-center gap-3 font-semibold
+                        {{ str_starts_with($alerta, '⚠️') ? 'text-yellow-600' : (str_starts_with($alerta, '✅') ? 'text-green-600' : 'text-red-600') }}">
+                        {!! $alerta !!}
+                    </li>
+                @endforeach
             </ul>
         </section>
 
@@ -93,18 +116,17 @@
                 <div>
                     <h3 class="font-semibold">Usuarios registrados recientemente</h3>
                     <ul class="list-disc list-inside text-gray-700 mt-2">
-                        <li>María Gómez - 2025-05-18</li>
-                        <li>Carlos Ruiz - 2025-05-17</li>
-                        <li>Lucía Fernández - 2025-05-16</li>
-                        {{-- Reemplaza por datos dinámicos --}}
+                        @foreach($usuariosRecientes ?? [] as $user)
+                            <li>{{ $user->name }} - {{ $user->created_at->format('Y-m-d') }}</li>
+                        @endforeach
                     </ul>
                 </div>
                 <div>
                     <h3 class="font-semibold">Cambios hechos por otros admins</h3>
                     <ul class="list-disc list-inside text-gray-700 mt-2">
+                        {{-- Aquí podrías cargar datos dinámicos desde logs o auditoría --}}
                         <li>Juan Pérez actualizó el perfil de Ana López</li>
                         <li>María Gómez creó un nuevo grupo "Equipo Sur"</li>
-                        {{-- Reemplaza por datos dinámicos --}}
                     </ul>
                 </div>
                 <div>
@@ -112,7 +134,6 @@
                     <ul class="list-disc list-inside text-gray-700 mt-2">
                         <li>Nuevo entrenamiento HIIT - 2025-05-15</li>
                         <li>Blog: Alimentación saludable - 2025-05-14</li>
-                        {{-- Reemplaza por datos dinámicos --}}
                     </ul>
                 </div>
             </div>
