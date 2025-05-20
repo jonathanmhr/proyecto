@@ -11,22 +11,27 @@ use Bouncer;
 
 class UserController extends Controller
 {
+
+    public function dashboard()
+    {
+        return view('admin.dashboard');
+    }
     // Método para mostrar la lista de usuarios
     public function index(Request $request)
     {
         if (!auth()->check()) {
             return redirect()->route('login');
         }
-    
+
         $search = $request->search;
         $roleFilter = $request->role;
-    
+
         $users = User::with('roles')
             ->when($search, function ($query) use ($search) {
                 if (strlen($search) >= 3 && strlen($search) <= 100) {
                     return $query->where(function ($q) use ($search) {
                         $q->where('name', 'like', "%$search%")
-                          ->orWhere('email', 'like', "%$search%");
+                            ->orWhere('email', 'like', "%$search%");
                     });
                 }
             })
@@ -42,12 +47,12 @@ class UserController extends Controller
                     'entrenador' => 3,
                     'cliente' => 4,
                 ];
-    
+
                 $userRole = optional($user->roles->first())->name;
                 return $priority[$userRole] ?? 999;
             })
             ->values();
-    
+
         // Convertir a una colección paginada manual (ya que usamos get()->filter()->sortBy())
         $perPage = 10;
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
@@ -58,7 +63,7 @@ class UserController extends Controller
             $currentPage,
             ['path' => request()->url(), 'query' => request()->query()]
         );
-    
+
         return view('admin.users.index', ['users' => $paginatedUsers]);
     }
 

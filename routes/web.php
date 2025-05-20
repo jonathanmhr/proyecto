@@ -56,6 +56,7 @@ Route::middleware(['auth', 'verified', 'can:admin-access'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        Route::get('/', [UserController::class, 'dashboard'])->name('dashboard');
         Route::resource('users', UserController::class)->except(['create', 'show']);
         Route::post('users/{id}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
     });
