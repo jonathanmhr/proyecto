@@ -23,18 +23,11 @@ class UserController extends Controller
             $query->where('name', 'entrenador');
         })->count();
 
-        // Grupos creados (roles que consideramos "grupos" en Bouncer)
+        // Grupos creados (roles en Bouncer)
         $gruposCreados = Role::count();
 
-        // Usuarios activos hoy
-        $usuariosActivosHoy = User::whereDate('last_login_at', now()->toDateString())->count();
-
-        // Usuarios inactivos +7 días
-        $inactivosMas7Dias = User::where('last_login_at', '<', now()->subDays(7))->count();
-
-        // Alertas ejemplo
+        // ALERTAS: puedes adaptar o dejar estático si no tienes last_login_at
         $alertas = [
-            "🔴 Usuario Juan Pérez lleva 10 días inactivo",
             "⚠️ Grupo 'Equipo Norte' sin entrenador asignado",
             "✅ Se completó la exportación del reporte de progreso",
         ];
@@ -59,8 +52,6 @@ class UserController extends Controller
             'totalUsuarios',
             'entrenadoresActivos',
             'gruposCreados',
-            'usuariosActivosHoy',
-            'inactivosMas7Dias',
             'alertas',
             'accionesRapidas',
             'usuariosPorRol'
