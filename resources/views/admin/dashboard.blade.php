@@ -1,97 +1,172 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            Panel de Administración Total
-        </h2>
-    </x-slot>
+    <div class="container mx-auto px-4 py-6 space-y-10">
 
-    <div class="py-10 px-4 max-w-7xl mx-auto space-y-6">
-        
-        {{-- 🔐 Gestión de Usuarios --}}
-        <div class="bg-white shadow rounded-xl p-6">
-            <h3 class="text-lg font-bold mb-2">🔐 Gestión de Usuarios</h3>
-            <ul class="list-disc list-inside text-gray-700">
-                <li>Lista completa de usuarios (con filtros por rol, estado, etc.)</li>
-                <li>Creación, edición y eliminación de usuarios</li>
-                <li>Asignación y edición de roles (entrenador, admin parcial, etc.)</li>
-                <li>Acciones masivas sobre usuarios (cambiar roles, activar/desactivar cuentas)</li>
-                <li>Historial de actividad por usuario</li>
-                <li>Impersonar usuario (entrar como otro usuario para soporte)</li>
-            </ul>
-        </div>
+        {{-- Mensajes flash --}}
+        @if (session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                {{ session('error') }}
+            </div>
+        @endif
 
-        {{-- 🧑‍🏫 Gestión de Entrenadores / Admins --}}
-        <div class="bg-white shadow rounded-xl p-6">
-            <h3 class="text-lg font-bold mb-2">🧑‍🏫 Gestión de Entrenadores / Admins</h3>
-            <ul class="list-disc list-inside text-gray-700">
-                <li>Ver y editar entrenadores</li>
-                <li>Asignar entrenadores a grupos o usuarios</li>
-                <li>Ver estadísticas o rendimiento por entrenador</li>
-                <li>Ver qué usuarios están asignados a qué entrenador</li>
-            </ul>
-        </div>
+        {{-- 1. Resumen de Actividad --}}
+        <section>
+            <h1 class="text-3xl font-bold mb-6">Panel General - Admin Total</h1>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                {{-- Tarjeta: Usuarios totales --}}
+                <div class="bg-white rounded-xl shadow p-5 flex flex-col justify-between">
+                    <div>
+                        <p class="text-4xl font-bold text-indigo-600">{{ $totalUsuarios }}</p>
+                        <p class="text-gray-600 mt-1 flex items-center gap-1">👥 Usuarios totales</p>
+                    </div>
+                    <a href="{{ route('admin.usuarios.index') }}" class="mt-4 inline-block text-indigo-500 hover:underline text-sm font-semibold">Ver más</a>
+                </div>
 
-        {{-- 🗂️ Gestión de Contenidos / Recursos --}}
-        <div class="bg-white shadow rounded-xl p-6">
-            <h3 class="text-lg font-bold mb-2">🗂️ Gestión de Contenidos / Recursos</h3>
-            <ul class="list-disc list-inside text-gray-700">
-                <li>Crear, editar y eliminar recursos del sistema (ej. entrenamientos, módulos, tareas)</li>
-                <li>Subida de documentos, videos o archivos multimedia</li>
-                <li>Control de visibilidad y acceso por usuario o grupo</li>
-                <li>Versionado de contenido</li>
-            </ul>
-        </div>
+                {{-- Tarjeta: Entrenadores activos --}}
+                <div class="bg-white rounded-xl shadow p-5 flex flex-col justify-between">
+                    <div>
+                        <p class="text-4xl font-bold text-green-600">{{ $entrenadoresActivos }}</p>
+                        <p class="text-gray-600 mt-1 flex items-center gap-1">🧑‍🏫 Entrenadores activos</p>
+                    </div>
+                    <a href="{{ route('admin.entrenadores.index') }}" class="mt-4 inline-block text-green-500 hover:underline text-sm font-semibold">Gestionar</a>
+                </div>
 
-        {{-- 🏋️ Gestión de Grupos / Equipos --}}
-        <div class="bg-white shadow rounded-xl p-6">
-            <h3 class="text-lg font-bold mb-2">🏋️ Gestión de Grupos / Equipos</h3>
-            <ul class="list-disc list-inside text-gray-700">
-                <li>Crear y modificar grupos de usuarios</li>
-                <li>Asignar entrenadores y contenidos por grupo</li>
-                <li>Ver estadísticas agregadas por grupo</li>
-            </ul>
-        </div>
+                {{-- Tarjeta: Grupos creados --}}
+                <div class="bg-white rounded-xl shadow p-5 flex flex-col justify-between">
+                    <div>
+                        <p class="text-4xl font-bold text-yellow-600">{{ $gruposCreados }}</p>
+                        <p class="text-gray-600 mt-1 flex items-center gap-1">📂 Grupos creados</p>
+                    </div>
+                    <a href="{{ route('admin.grupos.index') }}" class="mt-4 inline-block text-yellow-500 hover:underline text-sm font-semibold">Ver grupos</a>
+                </div>
 
-        {{-- 📊 Panel de Estadísticas / Reportes --}}
-        <div class="bg-white shadow rounded-xl p-6">
-            <h3 class="text-lg font-bold mb-2">📊 Panel de Estadísticas / Reportes</h3>
-            <ul class="list-disc list-inside text-gray-700">
-                <li>Métricas generales (usuarios activos, progreso, uso por día/semana)</li>
-                <li>Reportes por usuario, grupo o entrenador</li>
-                <li>Exportación de datos (CSV, PDF)</li>
-                <li>Alertas de inactividad, retrasos o anomalías</li>
-            </ul>
-        </div>
+                {{-- Tarjeta: Usuarios activos hoy --}}
+                <div class="bg-white rounded-xl shadow p-5 flex flex-col justify-between">
+                    <div>
+                        <p class="text-4xl font-bold text-blue-600">{{ $usuariosActivosHoy }}</p>
+                        <p class="text-gray-600 mt-1 flex items-center gap-1">📈 Usuarios activos hoy</p>
+                    </div>
+                    <a href="{{ route('admin.usuarios.activos') }}" class="mt-4 inline-block text-blue-500 hover:underline text-sm font-semibold">Ver actividad</a>
+                </div>
 
-        {{-- 🛠️ Configuración del Sistema --}}
-        <div class="bg-white shadow rounded-xl p-6">
-            <h3 class="text-lg font-bold mb-2">🛠️ Configuración del Sistema</h3>
-            <ul class="list-disc list-inside text-gray-700">
-                <li>Personalización de la plataforma (logo, colores, textos)</li>
-                <li>Gestión de permisos por rol</li>
-                <li>Configuración de notificaciones (email, app)</li>
-                <li>Parámetros del sistema (fechas clave, umbrales, etc.)</li>
-            </ul>
-        </div>
+                {{-- Tarjeta: Inactivos +7 días --}}
+                <div class="bg-white rounded-xl shadow p-5 flex flex-col justify-between">
+                    <div>
+                        <p class="text-4xl font-bold text-red-600">{{ $inactivosMas7Dias }}</p>
+                        <p class="text-gray-600 mt-1 flex items-center gap-1">⏱️ Inactivos +7 días</p>
+                    </div>
+                    <a href="{{ route('admin.usuarios.inactivos') }}" class="mt-4 inline-block text-red-500 hover:underline text-sm font-semibold">Revisar</a>
+                </div>
+            </div>
+        </section>
 
-        {{-- 🔔 Sistema de Notificaciones y Alertas --}}
-        <div class="bg-white shadow rounded-xl p-6">
-            <h3 class="text-lg font-bold mb-2">🔔 Sistema de Notificaciones y Alertas</h3>
-            <ul class="list-disc list-inside text-gray-700">
-                <li>Ver notificaciones globales</li>
-                <li>Enviar mensajes o anuncios masivos</li>
-                <li>Alertas automáticas (usuarios inactivos, errores del sistema)</li>
-            </ul>
-        </div>
+        {{-- 2. Acciones rápidas --}}
+        <section>
+            <h2 class="text-2xl font-semibold mb-4">Acciones rápidas</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
 
-        {{-- 📝 Auditoría / Seguridad --}}
-        <div class="bg-white shadow rounded-xl p-6">
-            <h3 class="text-lg font-bold mb-2">📝 Auditoría / Seguridad</h3>
-            <ul class="list-disc list-inside text-gray-700">
-                <li>Registro de todas las acciones importantes (logs de actividad)</li>
-                <li>Gestión de accesos y sesiones</li>
-                <li>Control de cambios y trazabilidad</li>
+                <a href="{{ route('admin.usuarios.create') }}" 
+                   class="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow">
+                   <span class="text-2xl">➕</span> Crear nuevo usuario
+                </a>
+
+                <a href="{{ route('admin.entrenadores.asignar') }}" 
+                   class="bg-green-100 hover:bg-green-200 text-green-700 font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow">
+                   <span class="text-2xl">👨‍🏫</span> Asignar entrenador a usuarios
+                </a>
+
+                <a href="{{ route('admin.grupos.create') }}" 
+                   class="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow">
+                   <span class="text-2xl">🗃️</span> Crear nuevo grupo
+                </a>
+
+                <a href="{{ route('admin.reportes.generar') }}" 
+                   class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow">
+                   <span class="text-2xl">🧾</span> Generar reporte
+                </a>
+
+                <a href="{{ route('admin.anuncios.enviar') }}" 
+                   class="bg-pink-100 hover:bg-pink-200 text-pink-700 font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow">
+                   <span class="text-2xl">📤</span> Enviar anuncio
+                </a>
+
+            </div>
+        </section>
+
+        {{-- 3. Alertas / Notificaciones --}}
+        <section>
+            <h2 class="text-2xl font-semibold mb-4">Alertas / Notificaciones</h2>
+            <ul class="bg-white shadow rounded-xl p-6 space-y-3 max-h-56 overflow-y-auto">
+                <li class="flex items-center gap-3 text-red-600 font-semibold">
+                    🔴 <span>Usuario <strong>Juan Pérez</strong> lleva 10 días inactivo</span>
+                </li>
+                <li class="flex items-center gap-3 text-yellow-600 font-semibold">
+                    ⚠️ <span>Grupo <strong>"Equipo Norte"</strong> sin entrenador asignado</span>
+                </li>
+                <li class="flex items-center gap-3 text-green-600 font-semibold">
+                    ✅ <span>Se completó la exportación del reporte de progreso</span>
+                </li>
+                {{-- Agrega más aquí dinámicamente si quieres --}}
             </ul>
-        </div>
+        </section>
+
+        {{-- 4. Actividad reciente --}}
+        <section>
+            <h2 class="text-2xl font-semibold mb-4">Actividad reciente</h2>
+            <div class="bg-white shadow rounded-xl p-6 max-h-80 overflow-y-auto space-y-4">
+                <div>
+                    <h3 class="font-semibold">Usuarios registrados recientemente</h3>
+                    <ul class="list-disc list-inside text-gray-700 mt-2">
+                        <li>María Gómez - 2025-05-18</li>
+                        <li>Carlos Ruiz - 2025-05-17</li>
+                        <li>Lucía Fernández - 2025-05-16</li>
+                        {{-- Reemplaza por datos dinámicos --}}
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold">Cambios hechos por otros admins</h3>
+                    <ul class="list-disc list-inside text-gray-700 mt-2">
+                        <li>Juan Pérez actualizó el perfil de Ana López</li>
+                        <li>María Gómez creó un nuevo grupo "Equipo Sur"</li>
+                        {{-- Reemplaza por datos dinámicos --}}
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold">Últimos contenidos publicados</h3>
+                    <ul class="list-disc list-inside text-gray-700 mt-2">
+                        <li>Nuevo entrenamiento HIIT - 2025-05-15</li>
+                        <li>Blog: Alimentación saludable - 2025-05-14</li>
+                        {{-- Reemplaza por datos dinámicos --}}
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        {{-- 5. Gráficos --}}
+        <section>
+            <h2 class="text-2xl font-semibold mb-4">Gráficos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <div class="bg-white shadow rounded-xl p-6">
+                    <h3 class="font-semibold mb-3">Progreso promedio semanal</h3>
+                    <div class="bg-gray-100 rounded p-10 text-center text-gray-500">[Gráfico línea o barras aquí]</div>
+                </div>
+
+                <div class="bg-white shadow rounded-xl p-6">
+                    <h3 class="font-semibold mb-3">Actividad por grupo o entrenador</h3>
+                    <div class="bg-gray-100 rounded p-10 text-center text-gray-500">[Gráfico de barras aquí]</div>
+                </div>
+
+                <div class="bg-white shadow rounded-xl p-6">
+                    <h3 class="font-semibold mb-3">Distribución de usuarios por rol</h3>
+                    <div class="bg-gray-100 rounded p-10 text-center text-gray-500">[Gráfico circular o torta aquí]</div>
+                </div>
+
+            </div>
+        </section>
     </div>
 </x-app-layout>
