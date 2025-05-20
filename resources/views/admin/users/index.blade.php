@@ -22,21 +22,36 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roles</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Nombre
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Email
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Roles
+                        </th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Estado
+                        </th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Acciones
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @foreach ($users as $user)
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-gray-900 font-medium">{{ $user->name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 text-sm">{{ $user->email }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-900 font-medium">
+                                {{ $user->name }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-500 text-sm">
+                                {{ $user->email }}
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-sm">
                                 @foreach ($user->roles as $role)
-                                    <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold
+                                    <span
+                                        class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold
                                         {{ $role->name === 'admin' ? 'bg-red-200 text-red-800' : '' }}
                                         {{ $role->name === 'entrenador' ? 'bg-green-200 text-green-800' : '' }}
                                         {{ $role->name === 'cliente' ? 'bg-blue-200 text-blue-800' : '' }}
@@ -47,13 +62,19 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if ($user->is_active)
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
+                                    <span
+                                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        Activo
+                                    </span>
                                 @else
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Inactivo</span>
+                                    <span
+                                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        Inactivo
+                                    </span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-1">
-                                {{-- Editar --}}
+                                <!-- Editar -->
                                 <button
                                     @click="openModal('edit', {{ $user->id }}, '{{ addslashes($user->name) }}', '{{ addslashes($user->email) }}')"
                                     class="inline-flex items-center px-2 py-1 bg-yellow-400 hover:bg-yellow-500 text-white rounded-md"
@@ -67,7 +88,7 @@
                                     </svg>
                                 </button>
 
-                                {{-- Resetear --}}
+                                <!-- Resetear contraseña -->
                                 <button
                                     @click="openModal('reset', {{ $user->id }}, '{{ addslashes($user->name) }}')"
                                     class="inline-flex items-center px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-xs font-semibold transition-colors duration-200"
@@ -79,7 +100,7 @@
                                     </svg>
                                 </button>
 
-                                {{-- Cambiar estado --}}
+                                <!-- Cambiar estado -->
                                 <button
                                     @click="openModal('changeStatus', {{ $user->id }}, '{{ addslashes($user->name) }}')"
                                     class="inline-flex items-center px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-xs font-semibold transition-colors duration-200"
@@ -91,14 +112,15 @@
                                     </svg>
                                 </button>
 
-                                {{-- Eliminar --}}
+                                <!-- Eliminar -->
                                 <button
                                     @click="openModal('delete', {{ $user->id }}, '{{ addslashes($user->name) }}')"
                                     class="inline-flex items-center px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-xs font-semibold transition-colors duration-200"
                                     title="Eliminar usuario">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
                             </td>
@@ -108,27 +130,35 @@
             </table>
         </div>
 
+        <!-- Paginación -->
         <div class="mt-4">
             {{ $users->links() }}
         </div>
 
-        {{-- Modales --}}
-        <div x-show="isOpen" style="display: none" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <!-- Modales -->
+        <div
+            x-show="isOpen"
+            style="display: none"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        >
             <div @click.away="closeModal()" class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative">
                 <button @click="closeModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-900 text-2xl font-bold">&times;</button>
 
-                {{-- Editar --}}
                 <template x-if="modalType === 'edit'">
-                    <form :action="`/admin/users/${selectedUserId}/edit`" method="GET" class="space-y-4">
+                    <form :action="/admin/users/${selectedUserId}/edit" method="GET" class="space-y-4">
                         <h3 class="text-lg font-semibold">Editar usuario: <span x-text="selectedUserName"></span></h3>
+
                         <div>
                             <label for="name" class="block font-medium text-gray-700">Nombre</label>
-                            <input type="text" id="name" name="name" x-model="selectedUserName" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            <input type="text" id="name" name="name" x-model="selectedUserName" required
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                         </div>
                         <div>
                             <label for="email" class="block font-medium text-gray-700">Email</label>
-                            <input type="email" id="email" name="email" x-model="selectedUserEmail" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            <input type="email" id="email" name="email" x-model="selectedUserEmail" required
+                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                         </div>
+
                         <div class="flex justify-end space-x-2">
                             <button type="button" @click="closeModal()" class="px-4 py-2 bg-gray-300 rounded">Cancelar</button>
                             <button type="submit" class="px-4 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500">Guardar</button>
@@ -136,12 +166,12 @@
                     </form>
                 </template>
 
-                {{-- Reset --}}
                 <template x-if="modalType === 'reset'">
-                    <form :action="`/admin/users/${selectedUserId}/resetPassword`" method="POST">
+                    <form :action="/admin/users/${selectedUserId}/resetPassword" method="POST">
                         @csrf
                         <h3 class="text-lg font-semibold">Resetear contraseña de: <span x-text="selectedUserName"></span></h3>
                         <p class="my-4">¿Estás seguro que quieres resetear la contraseña?</p>
+
                         <div class="flex justify-end space-x-2">
                             <button type="button" @click="closeModal()" class="px-4 py-2 bg-gray-300 rounded">Cancelar</button>
                             <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Confirmar</button>
@@ -149,12 +179,12 @@
                     </form>
                 </template>
 
-                {{-- Cambiar estado --}}
                 <template x-if="modalType === 'changeStatus'">
-                    <form :action="`/admin/users/${selectedUserId}/changeStatus`" method="POST">
+                    <form :action="/admin/users/${selectedUserId}/changeStatus" method="POST">
                         @csrf
                         <h3 class="text-lg font-semibold">Cambiar estado de: <span x-text="selectedUserName"></span></h3>
                         <p class="my-4">¿Confirmas cambiar el estado del usuario?</p>
+
                         <div class="flex justify-end space-x-2">
                             <button type="button" @click="closeModal()" class="px-4 py-2 bg-gray-300 rounded">Cancelar</button>
                             <button type="submit" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Confirmar</button>
@@ -162,13 +192,13 @@
                     </form>
                 </template>
 
-                {{-- Eliminar --}}
                 <template x-if="modalType === 'delete'">
-                    <form :action="`/admin/users/${selectedUserId}`" method="POST">
+                    <form :action="/admin/users/${selectedUserId}" method="POST">
                         @csrf
                         @method('DELETE')
                         <h3 class="text-lg font-semibold text-red-600">Eliminar usuario: <span x-text="selectedUserName"></span></h3>
                         <p class="my-4 text-red-700">¿Estás seguro que quieres eliminar este usuario? Esta acción no se puede deshacer.</p>
+
                         <div class="flex justify-end space-x-2">
                             <button type="button" @click="closeModal()" class="px-4 py-2 bg-gray-300 rounded">Cancelar</button>
                             <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
