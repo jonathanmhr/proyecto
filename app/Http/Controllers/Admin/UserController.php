@@ -13,60 +13,60 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-
     public function dashboard()
-{
-    // Total usuarios
-    $totalUsuarios = User::count();
+    {
+        // Total usuarios
+        $totalUsuarios = User::count();
 
-    // Entrenadores activos (usuarios con rol 'entrenador')
-    $entrenadoresActivos = User::whereHas('roles', function ($query) {
-        $query->where('name', 'entrenador');
-    })->count();
+        // Entrenadores activos (usuarios con rol 'entrenador')
+        $entrenadoresActivos = User::whereHas('roles', function ($query) {
+            $query->where('name', 'entrenador');
+        })->count();
 
-    // Grupos creados (usando Bouncer groups)
-    $gruposCreados = Bouncer::group()->count();
+        // Grupos creados (roles que consideramos "grupos" en Bouncer)
+        $gruposCreados = Role::count();
 
-    // Usuarios activos hoy (usuarios con updated_at hoy)
-    $usuariosActivosHoy = User::whereDate('updated_at', now()->toDateString())->count();
+        // Usuarios activos hoy
+        $usuariosActivosHoy = User::whereDate('last_login_at', now()->toDateString())->count();
 
-    // Usuarios inactivos +7 días (usuarios con updated_at hace más de 7 días)
-    $inactivosMas7Dias = User::whereDate('updated_at', '<', now()->subDays(7))->count();
+        // Usuarios inactivos +7 días
+        $inactivosMas7Dias = User::where('last_login_at', '<', now()->subDays(7))->count();
 
-    // Alertas ejemplo (puedes personalizar según lógica)
-    $alertas = [
-        "🔴 Usuario Juan Pérez lleva 10 días inactivo",
-        "⚠️ Grupo 'Equipo Norte' sin entrenador asignado",
-        "✅ Se completó la exportación del reporte de progreso",
-    ];
+        // Alertas ejemplo
+        $alertas = [
+            "🔴 Usuario Juan Pérez lleva 10 días inactivo",
+            "⚠️ Grupo 'Equipo Norte' sin entrenador asignado",
+            "✅ Se completó la exportación del reporte de progreso",
+        ];
 
-    // Acciones rápidas con rutas definidas (ajusta según rutas reales)
-    $accionesRapidas = [
-        ['label' => 'Crear nuevo usuario', 'route' => route('admin.users.create'), 'icon' => 'user-plus', 'color' => 'blue'],
-        ['label' => 'Asignar entrenador a usuarios', 'route' => route('admin.entrenadores.asignar'), 'icon' => 'user-check', 'color' => 'green'],
-        ['label' => 'Crear nuevo grupo', 'route' => route('admin.groups.create'), 'icon' => 'layers', 'color' => 'yellow'],
-        ['label' => 'Generar reporte', 'route' => route('admin.reportes.index'), 'icon' => 'file-text', 'color' => 'indigo'],
-        ['label' => 'Enviar anuncio', 'route' => route('admin.anuncios.create'), 'icon' => 'send', 'color' => 'purple'],
-    ];
+        // Acciones rápidas
+        $accionesRapidas = [
+            ['label' => 'Crear nuevo usuario', 'route' => route('admin.users.create'), 'icon' => 'user-plus', 'color' => 'blue'],
+            ['label' => 'Asignar entrenador a usuarios', 'route' => route('admin.entrenadores.asignar'), 'icon' => 'user-check', 'color' => 'green'],
+            ['label' => 'Crear nuevo grupo', 'route' => route('admin.groups.create'), 'icon' => 'layers', 'color' => 'yellow'],
+            ['label' => 'Generar reporte', 'route' => route('admin.reportes.index'), 'icon' => 'file-text', 'color' => 'indigo'],
+            ['label' => 'Enviar anuncio', 'route' => route('admin.anuncios.create'), 'icon' => 'send', 'color' => 'purple'],
+        ];
 
-    // Datos para gráficos: usuarios por rol
-    $usuariosPorRol = User::selectRaw('roles.name as rol, count(users.id) as total')
-        ->join('assigned_roles', 'users.id', '=', 'assigned_roles.entity_id')
-        ->join('roles', 'roles.id', '=', 'assigned_roles.role_id')
-        ->groupBy('roles.name')
-        ->pluck('total', 'rol');
+        // Usuarios por rol
+        $usuariosPorRol = User::select(DB::raw('roles.name as rol'), DB::raw('count(users.id) as total'))
+            ->join('assigned_roles', 'users.id', '=', 'assigned_roles.entity_id')
+            ->join('roles', 'roles.id', '=', 'assigned_roles.role_id')
+            ->groupBy('roles.name')
+            ->pluck('total', 'rol');
 
-    return view('admin.dashboard', compact(
-        'totalUsuarios',
-        'entrenadoresActivos',
-        'gruposCreados',
-        'usuariosActivosHoy',
-        'inactivosMas7Dias',
-        'alertas',
-        'accionesRapidas',
-        'usuariosPorRol'
-    ));
-}
+        return view('admin.dashboard', compact(
+            'totalUsuarios',
+            'entrenadoresActivos',
+            'gruposCreados',
+            'usuariosActivosHoy',
+            'inactivosMas7Dias',
+            'alertas',
+            'accionesRapidas',
+            'usuariosPorRol'
+        ));
+    }
+
     // Método para mostrar la lista de usuarios
     public function index(Request $request)
     {
