@@ -49,6 +49,7 @@ class UserController extends Controller
             'entrenadoresActivos',
             'gruposCreados',
             'usuariosActivosHoy',
+            'inactivosMas7Dias',
             'alertas',
             'usuariosPorRol'
         ));
