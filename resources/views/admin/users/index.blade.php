@@ -1,21 +1,19 @@
-
 <x-app-layout>
-    @if(session('success'))
-    <div class="mb-4 px-4 py-3 rounded bg-green-100 text-green-800">
-        {{ session('success') }}
-    </div>
-@endif
+    @if (session('success'))
+        <div class="mb-6 p-4 rounded-lg bg-green-50 border border-green-300 text-green-800 shadow-sm">
+            <h2 class="font-semibold text-lg mb-1">¡Éxito!</h2>
+            <p>{{ session('success') }}</p>
+        </div>
+    @endif
 
-@if(session('error'))
-    <div class="mb-4 px-4 py-3 rounded bg-red-100 text-red-800">
-        {{ session('error') }}
-    </div>
-@endif
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Gestión de Usuarios') }}
-        </h2>
-    </x-slot>
+    @if (session('error'))
+        <div class="mb-6 p-4 rounded-lg bg-red-50 border border-red-300 text-red-800 shadow-sm">
+            <h2 class="font-semibold text-lg mb-1">Error</h2>
+            <p>{{ session('error') }}</p>
+        </div>
+    @endif
+
+    <h1 class="text-3xl font-bold mb-6">Panel de usuarios</h1>
 
     <div class="py-6 px-4 max-w-7xl mx-auto">
         <div class="mb-4 flex justify-between items-center">
