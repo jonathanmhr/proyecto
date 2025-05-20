@@ -32,15 +32,6 @@ class UserController extends Controller
             "✅ Se completó la exportación del reporte de progreso",
         ];
 
-        // Acciones rápidas
-        $accionesRapidas = [
-            ['label' => 'Crear nuevo usuario', 'route' => route('admin.users.create'), 'icon' => 'user-plus', 'color' => 'blue'],
-            ['label' => 'Asignar entrenador a usuarios', 'route' => route('admin.entrenadores.asignar'), 'icon' => 'user-check', 'color' => 'green'],
-            ['label' => 'Crear nuevo grupo', 'route' => route('admin.groups.create'), 'icon' => 'layers', 'color' => 'yellow'],
-            ['label' => 'Generar reporte', 'route' => route('admin.reportes.index'), 'icon' => 'file-text', 'color' => 'indigo'],
-            ['label' => 'Enviar anuncio', 'route' => route('admin.anuncios.create'), 'icon' => 'send', 'color' => 'purple'],
-        ];
-
         // Usuarios por rol
         $usuariosPorRol = User::select(DB::raw('roles.name as rol'), DB::raw('count(users.id) as total'))
             ->join('assigned_roles', 'users.id', '=', 'assigned_roles.entity_id')
