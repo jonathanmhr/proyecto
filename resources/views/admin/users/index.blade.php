@@ -52,16 +52,30 @@
                                     <span class="text-red-600 font-semibold">Inactivo</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-2 space-x-2">
+                            <td class="px-4 py-2 space-x-2 flex items-center">
                                 <button
                                     @click="isOpen = true; modalType = 'edit'; selectedUserId = {{ $user->id }}"
-                                    class="text-blue-600 hover:underline">Editar</button>
+                                    class="text-blue-600 hover:underline flex items-center space-x-1"
+                                    title="Editar">
+                                    <i data-feather="edit"></i>
+                                    <span>Editar</span>
+                                </button>
+
                                 <button
                                     @click="isOpen = true; modalType = 'reset'; selectedUserId = {{ $user->id }}"
-                                    class="text-yellow-600 hover:underline">Resetear</button>
+                                    class="text-yellow-600 hover:underline flex items-center space-x-1"
+                                    title="Resetear contraseña">
+                                    <i data-feather="refresh-ccw"></i>
+                                    <span>Resetear</span>
+                                </button>
+
                                 <button
                                     @click="isOpen = true; modalType = 'delete'; selectedUserId = {{ $user->id }}"
-                                    class="text-red-600 hover:underline">Eliminar</button>
+                                    class="text-red-600 hover:underline flex items-center space-x-1"
+                                    title="Eliminar">
+                                    <i data-feather="trash-2"></i>
+                                    <span>Eliminar</span>
+                                </button>
                             </td>
                         </tr>
                     @empty
@@ -110,7 +124,7 @@
                 <!-- ELIMINAR -->
                 <template x-if="modalType === 'delete'">
                     <div>
-                        <h2 class="text-xl font-bold mb-4">Eliminar Usuario</h2>
+                        <h2 class="text-xl font-bold mb-4 text-red-600">Eliminar Usuario</h2>
                         <p>¿Deseas eliminar al usuario con ID <span x-text="selectedUserId"></span>?</p>
                         <div class="mt-4 flex justify-end space-x-2">
                             <button @click="isOpen = false"
@@ -124,4 +138,13 @@
             </div>
         </div>
     </div>
+
+    <!-- Feather Icons -->
+    @push('scripts')
+        <script src="https://unpkg.com/feather-icons"></script>
+        <script>
+            document.addEventListener('alpine:initialized', () => feather.replace());
+            document.addEventListener('alpine:reinitialized', () => feather.replace());
+        </script>
+    @endpush
 </x-app-layout>
