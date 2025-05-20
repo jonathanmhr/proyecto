@@ -206,4 +206,19 @@ class UserController extends Controller
         $suscripciones = $user->clases;
         return view('admin.users.suscripciones', compact('user', 'suscripciones'));
     }
+    public function create()
+{
+    return view('admin.users.create');
+}
+
+public function generarReporte()
+{
+    return view('admin.reportes.generar');
+}
+
+public function enviarAnuncio()
+{
+    return view('admin.anuncios.enviar');
+}
+
 }

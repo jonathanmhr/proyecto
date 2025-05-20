@@ -56,14 +56,24 @@ Route::middleware(['auth', 'verified', 'can:admin-access'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::get('/', [UserController::class, 'dashboard'])->name('dashboard');
-        Route::view('usuarios', UserController::class)->name('usuarios.index');
-        Route::view('usuarios/activos', UserController::class)->name('usuarios.activos');
-        Route::view('usuarios/inactivos', UserController::class)->name('usuarios.inactivos');
-        Route::view('usuarios/crear', UserController::class)->name('usuarios.create');
-        Route::view('reportes/generar', UserController::class)->name('reportes.generar');
-        Route::view('anuncios/enviar', UserController::class)->name('anuncios.enviar');
+        // Gestión de usuarios
+        Route::get('usuarios', [UserController::class, 'index'])->name('usuarios.index');
+        Route::get('usuarios/activos', [UserController::class, 'index'])->name('usuarios.activos');
+        Route::get('usuarios/inactivos', [UserController::class, 'index'])->name('usuarios.inactivos');
+        Route::get('usuarios/crear', [UserController::class, 'create'])->name('usuarios.create');
+
+        // Reportes y anuncios (deben tener métodos en el controlador, incluso si devuelven solo una vista)
+        Route::get('reportes/generar', [UserController::class, 'generarReporte'])->name('reportes.generar');
+        Route::get('anuncios/enviar', [UserController::class, 'enviarAnuncio'])->name('anuncios.enviar');
+
+        // CRUD de usuarios (excepto create/show porque se manejan aparte)
         Route::resource('users', UserController::class)->except(['create', 'show']);
+
+        // Asignación de roles
+        Route::post('users/{id}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
+
+        // Suscripciones del usuario
+        Route::get('users/{id}/suscripciones', [UserController::class, 'suscripciones'])->name('users.suscripciones');
         Route::post('users/{id}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
     });
 
