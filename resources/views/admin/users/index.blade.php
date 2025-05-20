@@ -24,8 +24,7 @@
             <div class="w-full sm:w-auto flex-1">
                 <label for="search" class="block text-sm font-medium text-gray-700">Buscar</label>
                 <input type="text" name="search" id="search" value="{{ request('search') }}"
-                    placeholder="Nombre o email"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                    placeholder="Nombre o email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
 
             <div>
@@ -33,9 +32,11 @@
                 <select name="role" id="role" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                     <option value="">-- Todos --</option>
                     <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                    <option value="entrenador" {{ request('role') == 'entrenador' ? 'selected' : '' }}>Entrenador</option>
+                    <option value="entrenador" {{ request('role') == 'entrenador' ? 'selected' : '' }}>Entrenador
+                    </option>
                     <option value="cliente" {{ request('role') == 'cliente' ? 'selected' : '' }}>Cliente</option>
-                    <option value="admin_entrenador" {{ request('role') == 'admin_entrenador' ? 'selected' : '' }}>Admin Entrenador</option>
+                    <option value="admin_entrenador" {{ request('role') == 'admin_entrenador' ? 'selected' : '' }}>Admin
+                        Entrenador</option>
                 </select>
             </div>
 
@@ -66,7 +67,8 @@
                             <td class="px-6 py-4 text-gray-500">{{ $user->email }}</td>
                             <td class="px-6 py-4">
                                 @foreach ($user->roles as $role)
-                                    <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold
+                                    <span
+                                        class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold
                                         {{ $role->name === 'admin' ? 'bg-red-200 text-red-800' : '' }}
                                         {{ $role->name === 'entrenador' ? 'bg-green-200 text-green-800' : '' }}
                                         {{ $role->name === 'cliente' ? 'bg-blue-200 text-blue-800' : '' }}
@@ -77,9 +79,11 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if ($user->is_active)
-                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
+                                    <span
+                                        class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Activo</span>
                                 @else
-                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Inactivo</span>
+                                    <span
+                                        class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Inactivo</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center space-x-1">
@@ -87,38 +91,41 @@
                                 <a href="{{ route('admin.users.edit', $user->id) }}"
                                     class="inline-flex items-center px-2 py-1 bg-yellow-400 hover:bg-yellow-500 text-white rounded-md"
                                     title="Editar usuario">
-                                    ✏️
+                                    <x-icon name="edit" class="w-4 h-4" />
                                 </a>
 
                                 <!-- Resetear contraseña -->
-                                <form action="{{ route('admin.users.resetPassword', $user->id) }}" method="POST" class="inline">
+                                <form action="{{ route('admin.users.resetPassword', $user->id) }}" method="POST"
+                                    class="inline">
                                     @csrf
                                     <button type="submit"
                                         class="inline-flex items-center px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-md"
                                         title="Resetear contraseña">
-                                        🔄
+                                        <x-icon name="refresh-ccw" class="w-4 h-4" />
                                     </button>
                                 </form>
 
                                 <!-- Cambiar estado -->
-                                <form action="{{ route('admin.users.changeStatus', $user->id) }}" method="POST" class="inline">
+                                <form action="{{ route('admin.users.changeStatus', $user->id) }}" method="POST"
+                                    class="inline">
                                     @csrf
                                     <button type="submit"
                                         class="inline-flex items-center px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded-md"
                                         title="Cambiar estado">
-                                        ⚙️
+                                        <x-icon name="toggle-left" class="w-4 h-4" />
                                     </button>
                                 </form>
 
                                 <!-- Eliminar -->
-                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline"
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
+                                    class="inline"
                                     onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
                                         class="inline-flex items-center px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md"
                                         title="Eliminar usuario">
-                                        🗑️
+                                        <x-icon name="trash" class="w-4 h-4" />
                                     </button>
                                 </form>
                             </td>
