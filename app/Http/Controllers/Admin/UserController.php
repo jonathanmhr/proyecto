@@ -61,36 +61,24 @@ class UserController extends Controller
         $search = $request->search;
         $roleFilter = $request->role;
 
-        // Prioridad para ordenar roles
-        $rolePriority = [
-            'admin' => 1,
-            'admin_entrenador' => 2,
-            'entrenador' => 3,
-            'cliente' => 4,
-        ];
-
         $usersQuery = User::with('roles')
+            ->leftJoin('assigned_roles', 'users.id', '=', 'assigned_roles.entity_id')
+            ->leftJoin('roles', 'roles.id', '=', 'assigned_roles.role_id')
             ->when($search && strlen($search) >= 3 && strlen($search) <= 100, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%$search%")
-                        ->orWhere('email', 'like', "%$search%");
+                    $q->where('users.name', 'like', "%$search%")
+                        ->orWhere('users.email', 'like', "%$search%");
                 });
             })
             ->when($roleFilter, function ($query) use ($roleFilter) {
-                $query->whereHas('roles', function ($q) use ($roleFilter) {
-                    $q->where('name', $roleFilter);
-                });
-            });
-
-        // Aquí se agrega orden por prioridad de rol usando un CASE
-        $usersQuery->leftJoin('assigned_roles', 'users.id', '=', 'assigned_roles.entity_id')
-            ->leftJoin('roles', 'roles.id', '=', 'assigned_roles.role_id')
+                $query->where('roles.name', $roleFilter);
+            })
             ->select('users.*', DB::raw("CASE roles.name
-                WHEN 'admin' THEN 1
-                WHEN 'admin_entrenador' THEN 2
-                WHEN 'entrenador' THEN 3
-                WHEN 'cliente' THEN 4
-                ELSE 999 END as role_priority"))
+            WHEN 'admin' THEN 1
+            WHEN 'admin_entrenador' THEN 2
+            WHEN 'entrenador' THEN 3
+            WHEN 'cliente' THEN 4
+            ELSE 999 END as role_priority"))
             ->orderBy('role_priority')
             ->orderBy('users.name');
 
@@ -98,6 +86,7 @@ class UserController extends Controller
 
         return view('admin.users.index', ['users' => $users]);
     }
+
 
     // Método para asignar un rol a un usuario con validación
     public function assignRole(Request $request, $id)
