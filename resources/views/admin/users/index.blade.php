@@ -17,7 +17,7 @@
 
         {{-- Botones --}}
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <a href="{{ route('admin.usuarios.create') }}"
+            <a href="{{ route('atdmin.usuarios.creae') }}"
                 class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -103,53 +103,58 @@
                                         {{ ucfirst($role->name) }}
                                     </span>
                                 @endforeach
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <span
-                                    class="px-2 py-0.5 rounded-full text-xs font-medium
-                                    {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ $user->is_active ? 'Activo' : 'Inactivo' }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-center space-x-1">
-                                <a href="{{ route('admin.users.edit', $user->id) }}"
-                                    class="inline-flex items-center px-2 py-1 bg-yellow-400 hover:bg-yellow-500 text-white rounded-md"
-                                    title="Editar usuario">
-                                    <i data-feather="edit"></i>
-                                </a>
-                                <form action="{{ route('admin.users.resetPassword', $user->id) }}" method="POST"
-                                    class="inline"
-                                    onsubmit="event.preventDefault(); confirmAction('¿Deseas resetear la contraseña de este usuario?', this);">
-                                    @csrf
-                                    <button type="submit"
-                                        class="inline-flex items-center px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-md"
-                                        title="Resetear contraseña">
-                                        <i data-feather="refresh-ccw"></i>
-                                    </button>
-                                </form>
-                                <form action="{{ route('admin.users.changeStatus', $user->id) }}" method="POST"
-                                    class="inline"
-                                    onsubmit="event.preventDefault(); confirmAction('¿Deseas cambiar el estado de este usuario?', this);">
-                                    @csrf
-                                    <button type="submit"
-                                        class="inline-flex items-center px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded-md"
-                                        title="Cambiar estado">
-                                        <i data-feather="toggle-left"></i>
-                                    </button>
-                                </form>
-                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
-                                    class="inline"
-                                    onsubmit="event.preventDefault(); confirmAction('¿Estás seguro de eliminar este usuario?', this);">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="inline-flex items-center px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md"
-                                        title="Eliminar usuario">
-                                        <i data-feather="trash-2"></i>
-                                    </button>
-                                </form>
+                                @if ($users->isEmpty())
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-gray-500">
+                                No se encontraron usuarios con esos criterios.
                             </td>
                         </tr>
+                    @endif
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <span
+                            class="px-2 py-0.5 rounded-full text-xs font-medium
+                                    {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                            {{ $user->is_active ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-center space-x-1">
+                        <a href="{{ route('admin.users.edit', $user->id) }}"
+                            class="inline-flex items-center px-2 py-1 bg-yellow-400 hover:bg-yellow-500 text-white rounded-md"
+                            title="Editar usuario">
+                            <i data-feather="edit"></i>
+                        </a>
+                        <form action="{{ route('admin.users.resetPassword', $user->id) }}" method="POST"
+                            class="inline"
+                            onsubmit="event.preventDefault(); confirmAction('¿Deseas resetear la contraseña de este usuario?', this);">
+                            @csrf
+                            <button type="submit"
+                                class="inline-flex items-center px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded-md"
+                                title="Resetear contraseña">
+                                <i data-feather="refresh-ccw"></i>
+                            </button>
+                        </form>
+                        <form action="{{ route('admin.users.changeStatus', $user->id) }}" method="POST" class="inline"
+                            onsubmit="event.preventDefault(); confirmAction('¿Deseas cambiar el estado de este usuario?', this);">
+                            @csrf
+                            <button type="submit"
+                                class="inline-flex items-center px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded-md"
+                                title="Cambiar estado">
+                                <i data-feather="toggle-left"></i>
+                            </button>
+                        </form>
+                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline"
+                            onsubmit="event.preventDefault(); confirmAction('¿Estás seguro de eliminar este usuario?', this);">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="inline-flex items-center px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md"
+                                title="Eliminar usuario">
+                                <i data-feather="trash-2"></i>
+                            </button>
+                        </form>
+                    </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
