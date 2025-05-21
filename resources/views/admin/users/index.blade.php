@@ -11,68 +11,66 @@
             @endif
         @endforeach
 
-        {{-- Encabezado --}}
-        <div class="bg-white p-6 rounded-lg shadow space-y-4">
-            <div>
-                <h3 class="text-2xl font-bold text-gray-800">Usuarios</h3>
-                <p class="text-sm text-gray-500">Gestión de cuentas y roles de acceso.</p>
-            </div>
+        {{-- Título --}}
+        <h1 class="text-3xl font-bold text-gray-800">Usuarios</h1>
 
-            <div class="flex justify-between flex-col sm:flex-row gap-4">
-                <a href="{{ route('admin.usuarios.create') }}"
-                   class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-                         stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                    </svg>
-                    Nuevo Usuario
-                </a>
+        {{-- Botones --}}
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <a href="{{ route('admin.usuarios.create') }}"
+               class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Nuevo Usuario
+            </a>
 
-                <a href="{{ route('dashboard') }}"
-                   class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md text-sm font-medium transition-colors">
-                    ← Volver al Dashboard
-                </a>
-            </div>
+            <a href="{{ route('dashboard') }}"
+               class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md text-sm font-medium transition-colors">
+                ← Volver al Dashboard
+            </a>
         </div>
 
         {{-- Filtros --}}
-        <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="bg-white p-6 rounded-lg shadow-md w-full">
             <form method="GET" action="{{ route('admin.usuarios.index') }}"
-                  class="flex flex-col md:flex-row md:items-end gap-4 w-full">
-                <div class="w-full md:w-1/3">
+                  class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 w-full">
+                <div class="flex-1">
                     <label for="search" class="block text-sm font-medium text-gray-700">Buscar por nombre o email</label>
                     <input type="text" name="search" id="search" value="{{ request('search') }}"
                            class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                            placeholder="Ej: usuario@example.com">
                 </div>
 
-                <div class="w-full md:w-1/4">
-                    <label for="role" class="block text-sm font-medium text-gray-700">Rol</label>
-                    <select name="role" id="role"
-                            class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">-- Todos --</option>
-                        @foreach(['admin', 'entrenador', 'cliente', 'admin_entrenador'] as $role)
-                            <option value="{{ $role }}" {{ request('role') === $role ? 'selected' : '' }}>
-                                {{ ucfirst($role) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                <div class="flex flex-col md:flex-row md:items-end gap-2">
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-gray-700">Rol</label>
+                        <select name="role" id="role"
+                                class="mt-1 w-full md:w-40 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">-- Todos --</option>
+                            @foreach(['admin', 'entrenador', 'cliente', 'admin_entrenador'] as $role)
+                                <option value="{{ $role }}" {{ request('role') === $role ? 'selected' : '' }}>
+                                    {{ ucfirst($role) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <div class="flex gap-2">
-                    <button type="submit"
-                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
-                        🔍 Filtrar
-                    </button>
-                    <a href="{{ route('admin.usuarios.index') }}"
-                       class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md text-sm font-medium transition-colors">
-                        Limpiar
-                    </a>
+                    <div class="flex gap-2 mt-1 md:mt-6">
+                        <button type="submit"
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
+                            🔍 Filtrar
+                        </button>
+                        <a href="{{ route('admin.usuarios.index') }}"
+                           class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md text-sm font-medium transition-colors">
+                            Limpiar
+                        </a>
+                    </div>
                 </div>
             </form>
         </div>
 
-        {{-- Tabla --}}
+        {{-- Tabla de Usuarios --}}
         <div class="bg-white rounded-xl shadow overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50 text-xs font-semibold text-gray-500 uppercase">
@@ -156,7 +154,7 @@
             {{ $users->links() }}
         </div>
 
-        {{-- Modal de Confirmación --}}
+        {{-- Modal --}}
         <div id="confirm-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-40 flex items-center justify-center">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 <h2 class="text-lg font-bold mb-4 text-gray-800">Confirmar acción</h2>
@@ -170,7 +168,7 @@
             </div>
         </div>
 
-        {{-- Script del Modal --}}
+        {{-- Script modal --}}
         <script>
             let formToSubmit = null;
             function confirmAction(message, form) {
