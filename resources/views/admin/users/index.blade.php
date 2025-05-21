@@ -16,60 +16,56 @@
             </div>
         @endif
 
-        {{-- Título y volver --}}
-        <div class="flex items-center justify-between">
-            <h1 class="text-3xl font-bold text-gray-800">Gestión de usuarios</h1>
-            <a href="{{ route('admin.dashboard') }}"
-               class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md shadow">
-                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
-                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-                Volver al Dashboard
-            </a>
+        <div class="mb-4 bg-white p-4 rounded-lg shadow flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+    <h3 class="text-lg font-semibold text-gray-700">Usuarios</h3>
+
+    <!-- Formulario de Filtros -->
+    <form method="GET" action="{{ route('admin.usuarios.index') }}"
+        class="flex flex-col sm:flex-row items-stretch sm:items-end gap-2 w-full md:w-auto">
+
+        <div class="flex-1">
+            <label for="search" class="block text-sm font-medium text-gray-700">Buscar</label>
+            <input type="text" name="search" id="search" value="{{ request('search') }}"
+                placeholder="Nombre o email"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
         </div>
 
-        {{-- Filtros y botón crear --}}
-        <div class="flex flex-col md:flex-row justify-between md:items-end gap-4">
-            <form method="GET" action="{{ route('admin.usuarios.index') }}"
-                class="bg-white p-4 rounded-xl shadow-md flex flex-wrap gap-4 items-end w-full md:max-w-3xl">
+        <div>
+            <label for="role" class="block text-sm font-medium text-gray-700">Rol</label>
+            <select name="role" id="role"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <option value="">-- Todos --</option>
+                <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                <option value="entrenador" {{ request('role') == 'entrenador' ? 'selected' : '' }}>Entrenador</option>
+                <option value="cliente" {{ request('role') == 'cliente' ? 'selected' : '' }}>Cliente</option>
+                <option value="admin_entrenador" {{ request('role') == 'admin_entrenador' ? 'selected' : '' }}>
+                    Admin Entrenador
+                </option>
+            </select>
+        </div>
 
-                <div class="w-full md:w-1/2">
-                    <label for="search" class="block text-sm font-medium text-gray-700">Buscar</label>
-                    <input type="text" name="search" id="search" value="{{ request('search') }}"
-                        placeholder="Nombre o email"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200">
-                </div>
-
-                <div class="w-full md:w-1/2">
-                    <label for="role" class="block text-sm font-medium text-gray-700">Rol</label>
-                    <select name="role" id="role"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200">
-                        <option value="">-- Todos --</option>
-                        <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="entrenador" {{ request('role') == 'entrenador' ? 'selected' : '' }}>Entrenador</option>
-                        <option value="cliente" {{ request('role') == 'cliente' ? 'selected' : '' }}>Cliente</option>
-                        <option value="admin_entrenador" {{ request('role') == 'admin_entrenador' ? 'selected' : '' }}>Admin Entrenador</option>
-                    </select>
-                </div>
-
-                <div>
-                    <button type="submit"
-                        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
-                        🔍 Filtrar
-                    </button>
-                </div>
-            </form>
-
-            <a href="{{ route('admin.usuarios.create') }}"
-               class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium shadow">
-                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" stroke-width="2"
-                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-                Nuevo Usuario
+        <div class="flex gap-2 items-end">
+            <button type="submit"
+                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
+                🔍 Filtrar
+            </button>
+            <a href="{{ route('admin.usuarios.index') }}"
+                class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md text-sm font-medium transition-colors">
+                Limpiar
             </a>
         </div>
+    </form>
+
+    <!-- Botón nuevo usuario -->
+    <a href="{{ route('admin.usuarios.create') }}"
+        class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium transition-colors self-start md:self-end">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        Nuevo Usuario
+    </a>
+</div>
 
         {{-- Tabla --}}
         <div class="bg-white rounded-xl shadow overflow-x-auto">
