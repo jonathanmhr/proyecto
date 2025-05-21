@@ -16,6 +16,9 @@ use App\Http\Controllers\General\EntrenamientoController;
 use App\Http\Controllers\General\SolicitudClaseController;
 use App\Http\Controllers\General\SuscripcionController;
 
+// Middleware
+use App\Http\Middleware\VerificarUsuarioActivo;
+
 // ----------------------
 // RUTA DE BIENVENIDA
 // ----------------------
@@ -27,7 +30,8 @@ Route::get('/', fn() => view('welcome'));
 Route::middleware([
     'auth',
     config('jetstream.auth_session'),
-    'verified'
+    'verified',
+    VerificarUsuarioActivo::class,  // <--- Aquí agregas tu middleware
 ])->group(function () {
     Route::get('/dashboard', [PerfilController::class, 'index'])->name('dashboard');
 });
@@ -52,7 +56,7 @@ Route::middleware('auth')->group(function () {
 // ----------------------
 // RUTAS ADMINISTRATIVAS
 // ----------------------
-Route::middleware(['auth', 'verified', 'can:admin-access'])
+Route::middleware(['auth', 'verified', 'can:admin-access',VerificarUsuarioActivo::class])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -84,7 +88,7 @@ Route::middleware(['auth', 'verified', 'can:admin-access'])
 // ----------------------
 // RUTAS ADMIN ENTRENADOR
 // ----------------------
-Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
+Route::middleware(['auth', 'verified', 'can:admin_entrenador',VerificarUsuarioActivo::class])
     ->prefix('admin-entrenador')
     ->name('admin-entrenador.')
     ->group(function () {
@@ -141,7 +145,7 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
 // ----------------------
 // RUTAS DEL ENTRENADOR
 // ----------------------
-Route::middleware(['auth', 'verified', 'can:entrenador-access'])
+Route::middleware(['auth', 'verified', 'can:entrenador-access',VerificarUsuarioActivo::class])
     ->prefix('entrenador')
     ->name('entrenador.')
     ->group(function () {
@@ -162,7 +166,7 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access'])
 // ----------------------
 // RUTAS DEL CLIENTE
 // ----------------------
-Route::middleware('auth')
+Route::middleware('auth',VerificarUsuarioActivo::class)
     ->prefix('cliente')
     ->name('cliente.')
     ->group(function () {
@@ -177,7 +181,7 @@ Route::middleware('auth')
         Route::post('entrenamientos/{entrenamientoId}/unirse', [EntrenamientoController::class, 'unirseEntrenamiento'])->name('entrenamientos.unirse');
     });
 
-Route::middleware('auth')
+Route::middleware('auth',VerificarUsuarioActivo::class)
     ->prefix('perfil')
     ->name('perfil.')
     ->group(function () {

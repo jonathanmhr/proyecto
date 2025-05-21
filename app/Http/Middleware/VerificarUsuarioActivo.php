@@ -8,13 +8,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class VerificarUsuarioActivo
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
+        $usuario = Auth::user();
+
+        if ($usuario && !$usuario->is_active) {
+            Auth::logout();
+            return redirect()->route('login')
+                ->withErrors(['email' => 'Tu cuenta está desactivada. Si crees que esto es un error, contacta con soporte.']);
+        }
+
         return $next($request);
     }
 }
