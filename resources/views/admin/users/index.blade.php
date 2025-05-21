@@ -13,7 +13,15 @@
         </div>
     @endif
 
-    <h1 class="text-3xl font-bold mb-6">Panel de usuarios</h1>
+    <div class="mb-6 flex items-center justify-between">
+        <h1 class="text-3xl font-bold text-gray-800">Gestión de usuarios</h1>
+        <a href="{{ route('admin.dashboard') }}"
+            class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md shadow-sm transition-colors">
+            <i data-feather="arrow-left" class="mr-2"></i>
+            Volver al Dashboard
+        </a>
+    </div>
+
 
     <div class="py-6 px-4 max-w-7xl mx-auto">
         <div class="mb-4 flex justify-between items-center">
