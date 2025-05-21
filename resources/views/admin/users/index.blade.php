@@ -11,33 +11,33 @@
                 </div>
             @endif
         @endforeach
-        {{-- Encabezado y Filtros --}}
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Usuarios</h2>
-                    <p class="text-sm text-gray-500">Gestión de cuentas y roles de acceso.</p>
-                </div>
+        {{-- Encabezado --}}
+        <div class="bg-white p-6 rounded-lg shadow-md mb-4">
+            <h2 class="text-2xl font-bold text-gray-800">Usuarios</h2>
+            <p class="text-sm text-gray-500">Gestión de cuentas y roles de acceso.</p>
+        </div>
 
-                <div class="flex flex-wrap gap-2">
-                    <a href="{{ route('dashboard') }}"
-                        class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-sm font-medium">
-                        ← Volver al Dashboard
-                    </a>
-                    <a href="{{ route('admin.usuarios.create') }}"
-                        class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                        </svg>
-                        Nuevo Usuario
-                    </a>
-                </div>
-            </div>
+        {{-- Botones de acción --}}
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
+            <a href="{{ route('dashboard') }}"
+                class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-sm font-medium">
+                ← Volver al Dashboard
+            </a>
 
-            {{-- Filtros --}}
+            <a href="{{ route('admin.usuarios.create') }}"
+                class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Nuevo Usuario
+            </a>
+        </div>
+
+        {{-- Filtros --}}
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <form method="GET" action="{{ route('admin.usuarios.index') }}"
-                class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                     <label for="search" class="block text-sm font-medium text-gray-700">Buscar</label>
                     <input type="text" name="search" id="search" value="{{ request('search') }}"
@@ -70,7 +70,6 @@
                 </div>
             </form>
         </div>
-
 
 
         {{-- Tabla de usuarios --}}
