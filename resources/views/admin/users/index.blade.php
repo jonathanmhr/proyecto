@@ -4,53 +4,55 @@
         {{-- Flash Messages --}}
         @foreach (['success' => 'green', 'error' => 'red'] as $type => $color)
             @if (session($type))
-                <div
-                    class="p-4 rounded-lg bg-{{ $color }}-50 border border-{{ $color }}-300 text-{{ $color }}-800 shadow-sm">
+                <div class="p-4 rounded-lg bg-{{ $color }}-50 border border-{{ $color }}-300 text-{{ $color }}-800 shadow-sm">
                     <h2 class="font-semibold text-lg mb-1">{{ $type === 'success' ? '¡Éxito!' : 'Error' }}</h2>
                     <p>{{ session($type) }}</p>
                 </div>
             @endif
         @endforeach
-        {{-- Encabezado --}}
-        <div class="bg-white p-6 rounded-lg shadow-md mb-4">
-            <h2 class="text-2xl font-bold text-gray-800">Usuarios</h2>
-            <p class="text-sm text-gray-500">Gestión de cuentas y roles de acceso.</p>
-        </div>
 
-        {{-- Botones de acción --}}
-        <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
-            <a href="{{ route('dashboard') }}"
-                class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-sm font-medium">
-                ← Volver al Dashboard
-            </a>
+        {{-- Encabezado completo (Título + Botones + Filtros) --}}
+        <div class="bg-white p-6 rounded-xl shadow space-y-6">
 
-            <a href="{{ route('admin.usuarios.create') }}"
-                class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-                Nuevo Usuario
-            </a>
-        </div>
+            {{-- Título y descripción --}}
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">Usuarios</h2>
+                <p class="text-sm text-gray-500">Gestión de cuentas y roles de acceso dentro del sistema.</p>
+            </div>
 
-        {{-- Filtros --}}
-        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            {{-- Botones de acción --}}
+            <div class="flex flex-col sm:flex-row justify-between gap-4">
+                <a href="{{ route('dashboard') }}"
+                    class="inline-flex items-center justify-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-sm font-medium">
+                    ← Volver al Dashboard
+                </a>
+
+                <a href="{{ route('admin.usuarios.create') }}"
+                    class="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Nuevo Usuario
+                </a>
+            </div>
+
+            {{-- Filtros --}}
             <form method="GET" action="{{ route('admin.usuarios.index') }}"
                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                     <label for="search" class="block text-sm font-medium text-gray-700">Buscar</label>
                     <input type="text" name="search" id="search" value="{{ request('search') }}"
                         placeholder="Nombre o email"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
                 <div>
                     <label for="role" class="block text-sm font-medium text-gray-700">Rol</label>
                     <select name="role" id="role"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">-- Todos --</option>
-                        @foreach (['admin', 'entrenador', 'cliente', 'admin_entrenador'] as $role)
+                        @foreach(['admin', 'entrenador', 'cliente', 'admin_entrenador'] as $role)
                             <option value="{{ $role }}" {{ request('role') === $role ? 'selected' : '' }}>
                                 {{ ucfirst($role) }}
                             </option>
@@ -71,7 +73,6 @@
             </form>
         </div>
 
-
         {{-- Tabla de usuarios --}}
         <div class="bg-white rounded-xl shadow overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -86,13 +87,12 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200 text-sm">
                     @foreach ($users as $user)
-                        <tr>
+                        <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 font-medium text-gray-900">{{ $user->name }}</td>
                             <td class="px-6 py-4 text-gray-600">{{ $user->email }}</td>
                             <td class="px-6 py-4 space-x-1">
                                 @foreach ($user->roles as $role)
-                                    <span
-                                        class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold
+                                    <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold
                                         {{ match ($role->name) {
                                             'admin' => 'bg-red-200 text-red-800',
                                             'entrenador' => 'bg-green-200 text-green-800',
@@ -105,8 +105,7 @@
                                 @endforeach
                             </td>
                             <td class="px-6 py-4 text-center">
-                                <span
-                                    class="px-2 py-0.5 rounded-full text-xs font-medium
+                                <span class="px-2 py-0.5 rounded-full text-xs font-medium
                                     {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                     {{ $user->is_active ? 'Activo' : 'Inactivo' }}
                                 </span>
@@ -139,8 +138,7 @@
                                     </button>
                                 </form>
 
-                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
-                                    class="inline"
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline"
                                     onsubmit="event.preventDefault(); confirmAction('¿Estás seguro de eliminar este usuario?', this);">
                                     @csrf
                                     @method('DELETE')
@@ -163,8 +161,7 @@
         </div>
 
         {{-- Modal de Confirmación --}}
-        <div id="confirm-modal"
-            class="fixed inset-0 z-50 hidden bg-black bg-opacity-40 flex items-center justify-center">
+        <div id="confirm-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-40 flex items-center justify-center">
             <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
                 <h2 class="text-lg font-bold mb-4 text-gray-800">Confirmar acción</h2>
                 <p class="text-gray-600 mb-6" id="confirm-message">¿Estás seguro?</p>
