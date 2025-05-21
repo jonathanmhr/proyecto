@@ -17,7 +17,7 @@ use App\Http\Controllers\General\SolicitudClaseController;
 use App\Http\Controllers\General\SuscripcionController;
 
 // Middleware
-use App\Http\Middleware\VerificarUsuarioActivo;
+use App\Actions\VerificarUsuarioActivo;
 
 // ----------------------
 // RUTA DE BIENVENIDA
@@ -27,12 +27,13 @@ Route::get('/', fn() => view('welcome'));
 // ----------------------
 // RUTAS DEL DASHBOARD
 // ----------------------
-Route::middleware([
+$middlewares = [
     'auth',
     config('jetstream.auth_session'),
     'verified',
-    VerificarUsuarioActivo::class,  // <--- Aquí agregas tu middleware
-])->group(function () {
+    VerificarUsuarioActivo::class,
+];
+Route::middleware(array_filter($middlewares))->group(function () {
     Route::get('/dashboard', [PerfilController::class, 'index'])->name('dashboard');
 });
 
