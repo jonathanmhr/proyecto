@@ -27,7 +27,8 @@
                     :class="open ? 'justify-start' : 'justify-center'">
                     <i data-feather="briefcase" class="w-5 h-5"></i>
                     <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Admin Entrenador</span>
-                    <i data-feather="chevron-down" class="ml-auto" x-show="open"></i>
+                    <i data-feather="chevron-down" class="ml-auto" x-show="open && openAdminEntrenador"></i>
+
                 </button>
 
                 <div x-show="open && openAdminEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1">
@@ -44,7 +45,7 @@
                     :class="open ? 'justify-start' : 'justify-center'">
                     <i data-feather="briefcase" class="w-5 h-5"></i>
                     <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Entrenador</span>
-                    <i data-feather="chevron-down" class="ml-auto" x-show="open"></i>
+                    <i data-feather="chevron-down" class="ml-auto" x-show="open && openAdminEntrenador"></i>
                 </button>
 
                 <div x-show="open && openEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1 text-gray-600">
