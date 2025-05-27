@@ -35,12 +35,6 @@
     @stack('scripts')
     @livewireScripts
 
-    <!-- Feather Icons -->
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script>
-        document.addEventListener('alpine:initialized', () => feather.replace());
-        document.addEventListener('alpine:reinitialized', () => feather.replace());
-    </script>
 
 </body>
 
