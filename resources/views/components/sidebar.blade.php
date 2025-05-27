@@ -21,19 +21,19 @@
 
         {{-- ADMIN ENTRENADOR --}}
         @can('admin_entrenador')
-<div x-data="{ openAdminEntrenador: false }" class="w-full">
-    <button @click="openAdminEntrenador = !openAdminEntrenador"
-        class="flex items-center gap-3 w-full text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg text-sm transition-all"
-        :class="open ? 'justify-start' : 'justify-center'">
-        <i data-feather="briefcase" class="w-5 h-5"></i>
-        <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Admin Entrenador</span>
-        <i data-feather="chevron-down" class="ml-auto" x-show="open && openAdminEntrenador"></i>
-    </button>
+            <div x-data="{ openAdminEntrenador: false }" class="w-full">
+                <button @click="openAdminEntrenador = !openAdminEntrenador"
+                    class="flex items-center gap-3 w-full text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg text-sm transition-all"
+                    :class="open ? 'justify-start' : 'justify-center'">
+                    <i data-feather="briefcase" class="w-5 h-5"></i>
+                    <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Admin Entrenador</span>
+                    <i data-feather="chevron-down" class="ml-auto" x-show="open"></i>
+                </button>
 
-    <div x-show="open && openAdminEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1">
-        <x-sidebar-link icon="layout" route="admin-entrenador.dashboard" label="Panel General" />
-    </div>
-</div>
+                <div x-show="open && openAdminEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1">
+                    <x-sidebar-link icon="layout" route="admin-entrenador.dashboard" label="Panel General" />
+                </div>
+            </div>
         @endcan
 
         {{-- ENTRENADOR --}}
