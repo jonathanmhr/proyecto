@@ -87,7 +87,8 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Clases Inscritas -->
-            <div class="bg-gradient-to-r from-green-700 to-green-500 p-6 rounded-2xl hover:shadow-xl transition-all duration-500 group">
+            <div
+                class="bg-gradient-to-r from-green-700 to-green-500 p-6 rounded-2xl hover:shadow-xl transition-all duration-500 group">
                 <h2 class="text-xl font-semibold text-lime-100 mb-4 flex items-center gap-2">
                     <i data-feather="book-open" class="w-5 h-5"></i> Clases Inscritas
                 </h2>
@@ -95,7 +96,8 @@
                 @if ($clases->isEmpty())
                     <p class="text-white animate-fade-in">No estás inscrito en ninguna clase por ahora.</p>
                 @else
-                    <div class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100">
+                    <div
+                        class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100">
                         @foreach ($clases as $clase)
                             <div class="border-b border-teal-200 pb-2 mb-2">
                                 <div class="text-white font-medium">{{ $clase->nombre }}</div>
@@ -107,7 +109,8 @@
             </div>
 
             <!-- Entrenamientos -->
-            <div class="group bg-gradient-to-r from-purple-700 to-purple-500 p-6 rounded-2xl hover:shadow-xl transition-all duration-500">
+            <div
+                class="group bg-gradient-to-r from-purple-700 to-purple-500 p-6 rounded-2xl hover:shadow-xl transition-all duration-500">
                 <h2 class="text-xl font-semibold text-purple-200 mb-4 flex items-center gap-2">
                     <i data-feather="activity" class="w-5 h-5"></i> Entrenamientos
                 </h2>
@@ -115,7 +118,8 @@
                 @if ($entrenamientos->isEmpty())
                     <p class="text-white animate-fade-in">No tienes entrenamientos asignados.</p>
                 @else
-                    <div class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100">
+                    <div
+                        class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100">
                         @foreach ($entrenamientos as $entrenamiento)
                             <div class="border-b border-purple-200 pb-2 mb-2">
                                 <div class="text-white font-medium">{{ $entrenamiento->nombre }}</div>
@@ -127,7 +131,8 @@
             </div>
 
             <!-- Suscripciones -->
-            <div class="group bg-gradient-to-r from-pink-700 to-pink-500 p-6 rounded-2xl hover:shadow-xl transition-all duration-500">
+            <div
+                class="group bg-gradient-to-r from-pink-700 to-pink-500 p-6 rounded-2xl hover:shadow-xl transition-all duration-500">
                 <h2 class="text-xl font-semibold text-pink-200 mb-4 flex items-center gap-2">
                     <i data-feather="calendar" class="w-5 h-5"></i> Suscripciones Activas
                 </h2>
@@ -135,7 +140,8 @@
                 @if ($suscripciones->isEmpty())
                     <p class="text-white animate-fade-in">Aún no tienes suscripciones.</p>
                 @else
-                    <div class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100">
+                    <div
+                        class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100">
                         @foreach ($suscripciones as $suscripcion)
                             @if ($suscripcion->clase)
                                 <div class="border-b border-pink-200 pb-2 mb-2">
@@ -155,6 +161,76 @@
                     </div>
                 @endif
             </div>
+
+            <!-- Notificaciones -->
+
+            <div class="mt-8 bg-white p-6 rounded-lg shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+                        <i data-feather="bell" class="w-6 h-6 text-blue-600"></i>
+                        Notificaciones
+                    </h2>
+                    @if ($notificaciones->whereNull('read_at')->count() > 0)
+                        <form action="{{ route('perfil.notificaciones.marcarTodasLeidas') }}" method="POST">
+                            @csrf
+                            <button type="submit"
+                                class="text-sm bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                                Marcar todas como leídas
+                            </button>
+                        </form>
+                    @endif
+                </div>
+
+                @if ($notificaciones->isEmpty())
+                    <p class="text-gray-600">No tienes notificaciones recientes.</p>
+                @elseif ($notificaciones->whereNull('read_at')->count() === 0)
+                    <p class="text-green-700 bg-green-100 p-4 rounded-lg flex items-center gap-2">
+                        <i data-feather="check-circle" class="w-5 h-5"></i>
+                        No tienes notificaciones pendientes.
+                    </p>
+                @else
+                    <ul class="space-y-4">
+                        @foreach ($notificaciones as $notificacion)
+                            <li
+                                class="flex items-start justify-between gap-4 p-4 rounded-lg border {{ !$notificacion->read_at ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-200' }}">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <i data-feather="mail"
+                                            class="w-5 h-5 {{ !$notificacion->read_at ? 'text-blue-600' : 'text-gray-400' }}"></i>
+                                        <span class="font-medium text-gray-800">
+                                            {{ $notificacion->data['mensaje'] ?? 'Sin mensaje' }}
+                                        </span>
+                                    </div>
+                                    <p class="text-sm text-gray-500">
+                                        {{ $notificacion->created_at->format('d/m/Y H:i') }}
+                                    </p>
+                                </div>
+                                <div>
+                                    @if (!$notificacion->read_at)
+                                        <form
+                                            action="{{ route('perfil.notificaciones.marcarLeida', $notificacion->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            <button type="submit"
+                                                class="text-sm text-blue-600 hover:underline hover:text-blue-800">
+                                                Marcar como leída
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="inline-block text-xs bg-gray-300 text-white px-2 py-1 rounded">
+                                            Leída
+                                        </span>
+                                    @endif
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+
+
+
+
         </div>
     </div>
 

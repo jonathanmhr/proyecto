@@ -1,7 +1,6 @@
-<aside x-data="{ open: false }" x-bind="$el"
-    class="fixed top-4 left-4 h-[calc(100vh-2rem)] transition-all duration-300  bg-gray-100 rounded-xl shadow-md flex flex-col items-center py-4 z-50"
-    :class="open ? 'w-64 items-start' : 'w-20 items-center'" @mouseenter="open = true" @mouseleave="open = false"
-    x-init="$watch('open', () => feather.replace())">
+<aside x-data="{ open: false, hasNewNotification: false }" x-init="feather.replace()"
+    class="fixed top-4 left-4 h-[calc(100vh-2rem)] transition-all duration-300 bg-gray-100 rounded-xl shadow-md flex flex-col items-center py-4 z-50"
+    :class="open ? 'w-64 items-start' : 'w-20 items-center'" @mouseenter="open = true" @mouseleave="open = false">
 
     <!-- Logo -->
     <div class="mb-6">
@@ -13,13 +12,12 @@
     <!-- Navegación principal -->
     <nav class="flex-1 w-full space-y-2 px-2 text-gray-700">
 
-        <x-sidebar-link icon="user" route="dashboard" label="Perfil" />
+        <x-sidebar-link icon="user" route="dashboard" label="Mi Perfil" />
 
         {{-- ADMIN --}}
         @can('admin-access')
             <x-sidebar-link icon="shield" route="admin.dashboard" label="Panel de Admin" />
         @endcan
-
 
         {{-- ADMIN ENTRENADOR --}}
         @can('admin_entrenador')
@@ -34,7 +32,6 @@
 
                 <div x-show="open && openAdminEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1">
                     <x-sidebar-link icon="layout" route="admin-entrenador.dashboard" label="Panel General" />
-                    {{-- Puedes agregar accesos rápidos aquí si quieres --}}
                 </div>
             </div>
         @endcan
@@ -52,15 +49,6 @@
 
                 <div x-show="open && openEntrenador" x-cloak x-transition class="ml-6 mt-1 space-y-1 text-gray-600">
                     <x-sidebar-link icon="layout" route="entrenador.dashboard" label="Panel General" />
-                    <x-sidebar-link icon="file-text" route="entrenador.dashboard" label="Reportes" />
-                    {{--
-                    <x-sidebar-link icon="calendar" route="entrenador.clases.index" label="Mis Clases" />
-                    <x-sidebar-link icon="users" route="entrenador.usuarios.index" label="Alumnos" />
-                    <x-sidebar-link icon="bar-chart" route="entrenador.estadisticas.index" label="Estadísticas" />
-                    <x-sidebar-link icon="bell" route="entrenador.notificaciones.index" label="Notificaciones" />
-                    <x-sidebar-link icon="dollar-sign" route="entrenador.suscripciones.index" label="Suscripciones" />
-                    <x-sidebar-link icon="file-text" route="entrenador.reportes.index" label="Reportes" />
-                    --}}
                 </div>
             </div>
         @endcan
@@ -76,6 +64,33 @@
             <x-sidebar-link icon="message-circle" route="cliente.clases.index" label="Comunidad" />
         @endcan
     </nav>
+
+    <!-- Notificaciones simplificado (antes de Ajustes) -->
+    @php
+        $notificacionesNoLeidas = auth()->user()->unreadNotifications()->count();
+        $badgeCount = $notificacionesNoLeidas > 9 ? '+9' : $notificacionesNoLeidas;
+    @endphp
+
+    <div class="w-full px-2 mb-4" x-data>
+        <!-- Mostrar campana solo si hay notificaciones -->
+        <template x-if="{{ $notificacionesNoLeidas }} > 0">
+            <a href="{{ route('entrenador.dashboard') }}"
+                class="flex items-center gap-3 w-full text-gray-600 hover:bg-blue-100 hover:text-blue-600 px-3 py-2 rounded-lg text-sm transition-all relative"
+                :class="open ? 'justify-start' : 'justify-center'" title="Notificaciones">
+                <div class="relative">
+                    <i data-feather="bell" class="w-5 h-5"></i>
+
+                    <span
+                        class="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full"
+                        style="min-width: 1.25rem; height: 1.25rem; line-height: 1.25rem;"
+                        x-text="'{{ $badgeCount }}'"></span>
+                </div>
+
+                <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Notificaciones</span>
+            </a>
+        </template>
+    </div>
+
 
     <!-- Ajustes de perfil -->
     <div class="w-full px-2">
@@ -96,4 +111,5 @@
             </button>
         </form>
     </div>
+
 </aside>
