@@ -174,7 +174,7 @@
 
                 <div class="bg-white shadow rounded-xl p-6">
                     <h3 class="font-semibold mb-3">Progreso promedio semanal</h3>
-                    <div class="bg-gray-100 rounded p-10 text-center text-gray-500">[Gráfico línea o barras aquí]</div>
+                    <div class="bg-gray-100 rounded p-10 text-center text-gray-500"><livewire:users-per-month-chart/></div>
                 </div>
 
                 <div class="bg-white shadow rounded-xl p-6">
