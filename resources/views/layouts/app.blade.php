@@ -40,8 +40,7 @@
     document.addEventListener('alpine:initialized', () => feather.replace());
     document.addEventListener('alpine:reinitialized', () => feather.replace());
 </script>
-
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 
 
