@@ -42,11 +42,6 @@
         document.addEventListener('alpine:reinitialized', () => feather.replace());
     </script>
 
-    <!-- ApexCharts desde CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
-    <!-- Tu script personalizado para ApexCharts -->
-    <script src="{{ asset('js/app/components/apexcharts.js') }}"></script>
 </body>
 
 </html>
