@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use Akaunting\ApexCharts\Chart;
+use Akaunting\Apexcharts\Chart;
 
 class UsersPerMonthChart extends Component
 {

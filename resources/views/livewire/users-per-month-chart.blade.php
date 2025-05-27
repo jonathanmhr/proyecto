@@ -1,4 +1,10 @@
 <div>
+    {{-- Contenedor del gráfico --}}
     {!! $chart->container() !!}
-    {!! $chart->script() !!}
+
+    {{-- Script de ApexCharts CDN --}}
+    <script src="{{ $chart->cdn() }}"></script>
+
+    {{-- Script para renderizar el gráfico --}}
+    {{ $chart->script() }}
 </div>
