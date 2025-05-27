@@ -2,7 +2,7 @@
 
 namespace App\Livewire;
 
-use Ryangjchandler\FilamentApexCharts\Widgets\ApexChartWidget;
+use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
