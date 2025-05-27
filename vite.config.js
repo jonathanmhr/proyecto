@@ -4,6 +4,7 @@ import laravel from 'laravel-vite-plugin';
 export default defineConfig({
     server: {
         host: true, // Esto permite conexiones externas
+        cors: true,
         hmr: {
             host: '192.168.1.22', // Cambia esto a tu dirección IP si es necesario
         }
