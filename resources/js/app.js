@@ -1,8 +1,11 @@
 import './bootstrap';
 import '../css/app.css';
+
+// Alpine.js import y configuración
+import Alpine from 'alpinejs';
+
+window.Alpine = Alpine;
+Alpine.start();
+
+// Importación de scripts adicionales
 import './scripts/busqueda.js';
-
-import ApexCharts from 'apexcharts';
-
-// Exponer ApexCharts globalmente para que Livewire/Filament lo usen
-window.ApexCharts = ApexCharts;
