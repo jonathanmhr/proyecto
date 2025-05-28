@@ -18,11 +18,6 @@
     <!-- Styles y Vite CSS + JS Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-<<<<<<< Updated upstream
-   
-=======
-    <!-- Aquí van estilos adicionales que uses con @push('styles') -->
->>>>>>> Stashed changes
     @stack('styles')
 
     @livewireStyles
