@@ -68,7 +68,6 @@
         @endif
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Clases Inscritas -->
             <div class="bg-gray-800 p-6 rounded-2xl hover:shadow-xl transition-all duration-500 group">
                 <h2 class="text-xl font-semibold text-red-400 mb-4 flex items-center gap-2">
                     <i data-feather="book-open" class="w-5 h-5"></i> Clases Inscritas
@@ -88,7 +87,6 @@
                 @endif
             </div>
 
-            <!-- Entrenamientos -->
             <div class="group bg-gray-800 p-6 rounded-2xl hover:shadow-xl transition-all duration-500">
                 <h2 class="text-xl font-semibold text-red-400 mb-4 flex items-center gap-2">
                     <i data-feather="activity" class="w-5 h-5"></i> Entrenamientos
@@ -108,7 +106,6 @@
                 @endif
             </div>
 
-            <!-- Suscripciones -->
             <div class="group bg-gray-800 p-6 rounded-2xl hover:shadow-xl transition-all duration-500">
                 <h2 class="text-xl font-semibold text-red-400 mb-4 flex items-center gap-2">
                     <i data-feather="calendar" class="w-5 h-5"></i> Suscripciones Activas
@@ -138,6 +135,7 @@
                 @endif
             </div>
         </div>
+
         <div class="grid grid-cols-12 gap-4">
             <div class="col-span-12 md:col-span-5">
                 <a href="{{ route('tienda.index') }}" class="block mt-10 group">
@@ -157,45 +155,78 @@
                 </a>
             </div>
             <div class="col-span-12 md:col-span-7">
-                 @if ($datosCompletos)
+                {{-- Contenedor del calendario (solo uno para evitar duplicidad de IDs) --}}
+                @if ($datosCompletos)
                     <div class="mt-10 bg-gray-800 p-6 rounded-2xl shadow-lg">
                         <h2 class="text-xl font-semibold text-red-400 mb-4 flex items-center gap-2">
                             <i data-feather="calendar" class="w-5 h-5"></i> Calendario de Clases
                         </h2>
-                        <div id="calendar" class="bg-gray-100 rounded-lg p-4 text-gray-800"></div>
+                        {{-- ID único para el calendario --}}
+                        <div id="myFullCalendar" class="bg-gray-100 rounded-lg p-4 text-gray-800"></div>
                     </div>
                 @endif
             </div>
         </div>
 
-        @if ($datosCompletos)
-            <div class="mt-10 bg-gray-800 p-6 rounded-2xl shadow-lg">
-                <h2 class="text-xl font-semibold text-red-400 mb-4 flex items-center gap-2">
-                    <i data-feather="calendar" class="w-5 h-5"></i> Calendario de Clases
-                </h2>
-                <div id="calendar" class="bg-gray-100 rounded-lg p-4 text-gray-800"></div>
-            </div>
-        @endif
+        {{-- Eliminado el bloque de calendario duplicado que estaba aquí abajo --}}
     </div>
+
     @push('scripts')
-    <script id="eventos-clases-data" type="application/json">
+    {{-- Script para pasar los datos de las clases a JavaScript --}}
+    <script id="calendar-events-data" type="application/json">
         {!! json_encode($clases->map(function($clase) {
             return [
+                'id' => $clase->id ?? uniqid(), // Asegura un ID, si no lo tienes
                 'title' => $clase->nombre,
-                'start' => optional($clase->fecha_inicio)->toDateString() ?? null,
-                'tipo' => 'Clase Grupal',
+                // Formato ISO 8601 requerido por FullCalendar. Si tienes hora, mejor.
+                // Si fecha_fin existe, añádelo, si no, FullCalendar asume que el evento es puntual.
+                'start' => optional($clase->fecha_inicio)->format('Y-m-d H:i:s') ?? null,
+                'end' => optional($clase->fecha_fin)->format('Y-m-d H:i:s') ?? null, // Asume que tienes fecha_fin
                 'description' => $clase->descripcion,
+                'allDay' => false, // O true si el evento es de todo el día
+                'backgroundColor' => '#EF4444', // Ejemplo de color de evento (red-500)
+                'borderColor' => '#DC2626',
             ];
         })) !!}
     </script>
 
     <script>
-        try {
-            window.eventosClases = JSON.parse(document.getElementById('eventos-clases-data').textContent);
-        } catch (e) {
-            window.eventosClases = [];
-            console.error('Error parseando eventos clases JSON:', e);
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cierre del modal de perfil incompleto
+            window.closeModal = function() {
+                document.getElementById('profile-modal').style.display = 'none';
+            };
+
+            // Reemplazar iconos FeatherIcons
+            if (window.feather) {
+                window.feather.replace();
+            }
+
+            // 1. Obtener los datos de los eventos del script tag
+            let calendarEvents = [];
+            try {
+                const eventsDataElement = document.getElementById('calendar-events-data');
+                if (eventsDataElement) {
+                    calendarEvents = JSON.parse(eventsDataElement.textContent);
+                    console.log('Eventos cargados para FullCalendar:', calendarEvents);
+                } else {
+                    console.warn('Elemento "calendar-events-data" no encontrado. El calendario puede estar vacío.');
+                }
+            } catch (e) {
+                console.error('Error al parsear los eventos del calendario:', e);
+            }
+
+            // 2. Inicializar FullCalendar si la función está disponible
+            // Asegúrate que el ID 'myFullCalendar' coincide con el div de arriba
+            if (window.initFullCalendar) {
+                window.initFullCalendar('myFullCalendar', calendarEvents);
+            } else {
+                console.error("La función 'initFullCalendar' no está disponible. Asegúrate de que resources/js/scripts/fullcalendar.js se importó correctamente en app.js y que 'npm run dev' está corriendo.");
+            }
+
+            // Aquí irían tus scripts de ApexCharts si los reincorporas
+            // if (window.initApexCharts) { ... }
+        });
     </script>
-@endpush
+    @endpush
 </x-app-layout>
