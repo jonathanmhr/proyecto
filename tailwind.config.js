@@ -26,6 +26,7 @@ export default {
                 // Igual para amarillo y naranja si vas a usar gradientes mixtos
                 yellow: { ...colors.yellow },
                 orange: { ...colors.orange },
+                
             },
             animation: {
                 'fade-in': 'fadeIn 0.5s ease-out forwards',

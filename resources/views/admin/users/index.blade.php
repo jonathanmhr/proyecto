@@ -30,18 +30,22 @@
 
         <!-- Filtros -->
         <form method="GET" action="{{ route('admin.usuarios.index') }}"
-            class="mb-4 bg-white p-4 rounded-lg shadow flex flex-wrap items-center gap-4">
+            class="mb-4 bg-gray-800 p-4 rounded-lg shadow flex flex-wrap items-center gap-4">
             <div class="w-full sm:w-auto flex-1">
                 <label for="search" class="block text-sm font-medium text-gray-700">Buscar</label>
                 <input type="text" name="search" id="search" value="{{ request('search') }}"
                     placeholder="Nombre o email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
 
-            <div>
-                <label for="role" class="block text-sm font-medium text-gray-700">Rol</label>
-                <select name="role" id="role" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                    <option value="">-- Todos --</option>
-                    <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+            <div class="flex items-center gap-2">
+                <label for="role" class="text-sm font-medium text-gray-700">Filtrar por rol:</label>
+                <select name="role" id="role"
+                    class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
+                    onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Administrador</option>
+                    <option value="admin_entrenador" {{ request('role') == 'admin_entrenador' ? 'selected' : '' }}>Admin
+                        Entrenador</option>
                     <option value="entrenador" {{ request('role') == 'entrenador' ? 'selected' : '' }}>Entrenador
                     </option>
                     <option value="cliente" {{ request('role') == 'cliente' ? 'selected' : '' }}>Cliente</option>
@@ -52,16 +56,16 @@
 
             <div class="self-end">
                 <button type="submit"
-                    class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
+                    class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-md text-sm font-medium transition-all duration-300-colors">
                     🔍 Filtrar
                 </button>
             </div>
         </form>
 
         <!-- Tabla de usuarios -->
-        <div class="overflow-x-auto bg-white shadow rounded-lg">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+        <div class="overflow-x-auto bg-white shadow-xl rounded-lg">
+            <table class="min-w-full divide-y divide-gray-700">
+                <thead class="bg-red-500 text-white text-xs font-semibold uppercase tracking-wider">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
@@ -70,7 +74,7 @@
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody class="bg-gray-800 divide-y divide-gray-700">
                     @foreach ($users as $user)
                         <tr>
                             <td class="px-6 py-4 font-medium text-gray-900">{{ $user->name }}</td>
@@ -145,9 +149,13 @@
             </table>
         </div>
 
-        <!-- Paginación -->
-        <div class="mt-4">
-            {{ $users->links() }}
+            <!-- Paginación -->
+            <div class="py-6 bg-gray-700">
+                <div class="flex justify-center bg-gray-700">
+                    {{ $users->links() }}
+                </div>
+
+                
         </div>
     </div>
 </x-app-layout>

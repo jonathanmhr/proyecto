@@ -5,6 +5,10 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
 // Controladores
+use App\Http\Controllers\Compra\CompraController;
+use App\Http\Controllers\Compra\AlmacenController; // Asumiendo que tienes un controlador para productos
+use App\Http\Controllers\Compra\CarritoController;
+use App\Http\Controllers\Compra\CheckoutController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminEntrenador\AdminEntrenadorController;
 use App\Http\Controllers\AdminEntrenador\AdminEntrenamientoController;
@@ -187,3 +191,26 @@ Route::middleware('auth')
         Route::get('editar', [PerfilController::class, 'editar'])->name('editar');
         Route::put('actualizar', [PerfilController::class, 'actualizar'])->name('actualizar');
     });
+// ----------------------
+// RUTAS DE COMPRA
+// ----------------------
+// Rutas para las compras (podrían estar protegidas por middleware de autenticación y roles) // Ejemplo de protección general
+Route::get('/compra', [CompraController::class, 'index'])->name('compra.index');
+Route::get('/compra/{compra}', [CompraController::class, 'show'])->name('compra.show');
+    // Si necesitas crear, podrías tener:
+    // Route::get('/compras/crear', [CompraController::class, 'create'])->name('compras.create');
+    // Route::post('/compras', [CompraController::class, 'store'])->name('compras.store');
+
+
+// Vista de productos
+Route::get('/tienda', [AlmacenController::class, 'tiendaIndex'])->name('tienda.index');
+
+Route::post('/carrito/agregar/{almacen_id}', [CarritoController::class, 'agregar'])->name('carrito.agregar');
+Route::get('/carrito', [CarritoController::class, 'view'])->name('carrito.view');
+Route::post('/carrito/actualizar/{almacen_id}', [CarritoController::class, 'actualizar'])->name('carrito.actualizar');
+Route::post('/carrito/eliminar/{almacen_id}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
+Route::post('/carrito/vaciar', [CarritoController::class, 'vaciar'])->name('carrito.vaciar');
+
+// Ruta de Checkout
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index')->middleware('auth'); 
+Route::post('/checkout/procesar', [CheckoutController::class, 'procesar'])->name('checkout.procesar')->middleware('auth');

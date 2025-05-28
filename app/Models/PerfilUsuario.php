@@ -11,10 +11,17 @@ class PerfilUsuario extends Model
     protected $fillable = [
         'id_usuario', 'fecha_nacimiento', 'peso', 'altura', 'objetivo', 'id_nivel',
     ];
+    public $timestamps = false;
 
     // Relación inversa con el modelo User
     public function user()
     {
         return $this->belongsTo(User::class, 'id_usuario', 'id');
+    }
+
+    //compra//
+    public function compras()
+    {
+        return $this->hasMany(Compra::class);
     }
 }
