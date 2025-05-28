@@ -28,6 +28,7 @@
             </a>
         </div>
 
+<<<<<<< Updated upstream
         <!-- Filtros -->
         <form method="GET" action="{{ route('admin.usuarios.index') }}"
             class="mb-4 bg-gray-800 p-4 rounded-lg shadow flex flex-wrap items-center gap-4">
@@ -35,10 +36,32 @@
                 <label for="search" class="block text-sm font-medium text-gray-700">Buscar</label>
                 <input type="text" name="search" id="search" value="{{ request('search') }}"
                     placeholder="Nombre o email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+=======
+        @if (session('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded flex items-center mb-4">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                {{ session('error') }}
+            </div>
+        @endif
+
+        <!-- Buscador -->
+        <form method="GET" action="{{ route('admin.users.index') }}"
+            class="bg-gray-800 shadow-md rounded-lg mb-6 p-4 flex flex-col md:flex-row md:justify-between items-center gap-4">
+
+            <div class="relative w-full md:w-1/2">
+                <input type="text" name="search" id="search" placeholder="Buscar por nombre o email"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value="{{ request('search') }}">
+                <p id="error-message" class="text-red-500 text-sm mt-1 hidden">
+                    Por favor, ingresa entre 3 y 100 caracteres para la búsqueda.
+                </p>
+>>>>>>> Stashed changes
             </div>
 
             <div class="flex items-center gap-2">
-                <label for="role" class="text-sm font-medium text-gray-700">Filtrar por rol:</label>
+                <label for="role" class="text-sm font-medium text-gray-100">Filtrar por rol:</label>
                 <select name="role" id="role"
                     class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm"
                     onchange="this.form.submit()">
@@ -54,12 +77,18 @@
                 </select>
             </div>
 
+<<<<<<< Updated upstream
             <div class="self-end">
                 <button type="submit"
                     class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-gray-700 text-white rounded-md text-sm font-medium transition-all duration-300-colors">
                     🔍 Filtrar
                 </button>
             </div>
+=======
+            <button type="submit" class="bg-red-500 hover:bg-gray-600 text-white px-5 py-2 rounded-md transition-all duration-300">
+                Buscar
+            </button>
+>>>>>>> Stashed changes
         </form>
 
         <!-- Tabla de usuarios -->
@@ -76,6 +105,7 @@
                 </thead>
                 <tbody class="bg-gray-800 divide-y divide-gray-700">
                     @foreach ($users as $user)
+<<<<<<< Updated upstream
                         <tr>
                             <td class="px-6 py-4 font-medium text-gray-900">{{ $user->name }}</td>
                             <td class="px-6 py-4 text-gray-500">{{ $user->email }}</td>
@@ -90,6 +120,13 @@
                                         {{ ucfirst($role->name) }}
                                     </span>
                                 @endforeach
+=======
+                        <tr class="hover:bg-gray-600 transition">
+                            <td class="px-6 py-5 text-sm font-medium text-gray-100">{{ $user->id }}</td>
+                            <td class="px-6 py-5 text-sm text-gray-100">{{ $user->name }}</td>
+                            <td class="px-6 py-5 text-sm text-gray-100">{{ $user->email }}</td>
+                            <td class="px-6 py-5 text-sm text-gray-100">{{ $user->created_at->format('d/m/Y H:i') }}
+>>>>>>> Stashed changes
                             </td>
                             <td class="px-6 py-4 text-center">
                                 @if ($user->is_active)
@@ -100,6 +137,7 @@
                                         class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Inactivo</span>
                                 @endif
                             </td>
+<<<<<<< Updated upstream
                             <td class="px-6 py-4 text-center space-x-1">
                                 <!-- Editar -->
                                 <a href="{{ route('admin.users.edit', $user->id) }}"
@@ -107,6 +145,32 @@
                                     title="Editar usuario">
                                     <i data-feather="edit"></i>
                                 </a>
+=======
+                            <td class="px-6 py-5 text-sm text-gray-100">
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                                    <!-- Asignar rol -->
+                                    <form method="POST" action="{{ route('admin.users.assignRole', $user->id) }}"
+                                        class="flex gap-2 items-center">
+                                        @csrf
+                                        <select name="role"
+                                            class="border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm">
+                                            <option value="" disabled selected>Seleccionar</option>
+                                            <option value="admin">Administrador</option>
+                                            <option value="admin_entrenador">Admin Entrenador</option>
+                                            <option value="entrenador">Entrenador</option>
+                                            <option value="cliente">Cliente</option>
+                                        </select>
+                                        <button type="submit"
+                                            class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-md flex items-center gap-1 transition-transform transform hover:scale-105">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            Asignar
+                                        </button>
+                                    </form>
+>>>>>>> Stashed changes
 
                                 <!-- Resetear contraseña -->
                                 <form action="{{ route('admin.users.resetPassword', $user->id) }}" method="POST"

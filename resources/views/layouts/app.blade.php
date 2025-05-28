@@ -15,7 +15,11 @@
     <!-- Vite CSS + JS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+<<<<<<< Updated upstream
    
+=======
+    <!-- Aquí van estilos adicionales que uses con @push('styles') -->
+>>>>>>> Stashed changes
     @stack('styles')
 
     @livewireStyles
@@ -35,6 +39,7 @@
     </div>
 
     @stack('modals')
+    <!-- Scripts adicionales -->
     @stack('scripts')
 
     @livewireScripts

@@ -135,6 +135,7 @@
                 @endif
             </div>
         </div>
+<<<<<<< Updated upstream
         <div class="grid grid-cols-12 gap-4">
             <div class="col-span-12 md:col-span-5">
                 <a href="{{ route('tienda.index') }}" class="block mt-10 group">
@@ -164,6 +165,17 @@
                 @endif
             </div>
         </div>
+=======
+
+        @if ($datosCompletos)
+            <div class="mt-10 bg-gray-800 p-6 rounded-2xl shadow-lg">
+                <h2 class="text-xl font-semibold text-red-400 mb-4 flex items-center gap-2">
+                    <i data-feather="calendar" class="w-5 h-5"></i> Calendario de Clases
+                </h2>
+                <div id="calendar" class="bg-gray-100 rounded-lg p-4 text-gray-800"></div>
+            </div>
+        @endif
+>>>>>>> Stashed changes
     </div>
     @push('scripts')
     <script id="eventos-clases-data" type="application/json">
