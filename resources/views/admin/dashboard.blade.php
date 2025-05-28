@@ -167,14 +167,33 @@
         </section>
 
 
-        {{-- 5. Gráficos --}}
+        {{-- 5. Gráficos (Aquí es donde integraremos tus nuevos gráficos) --}}
         <section>
-            <h2 class="text-2xl font-semibold mb-4">Gráficos</h2>
+            <h2 class="text-2xl font-semibold mb-4">Gráficos de Actividad Mensual</h2> {{-- Título más descriptivo --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
+                {{-- Gráfico de Altas de Usuarios --}}
+                <div class="bg-white shadow rounded-xl p-6">
+                    <h3 class="font-semibold mb-3">Altas de Usuarios por Mes</h3>
+                    <div id="usersChart"></div> {{-- ID para el gráfico de usuarios --}}
+                </div>
+
+                {{-- Gráfico de Altas y Bajas de Suscripciones --}}
+                <div class="bg-white shadow rounded-xl p-6">
+                    <h3 class="font-semibold mb-3">Altas y Bajas de Suscripciones</h3>
+                    <div id="subscriptionsChart"></div> {{-- ID para el gráfico de suscripciones --}}
+                </div>
+
+                {{-- Gráfico de Creación de Clases --}}
+                <div class="bg-white shadow rounded-xl p-6">
+                    <h3 class="font-semibold mb-3">Creación de Clases por Mes</h3>
+                    <div id="classesChart"></div> {{-- ID para el gráfico de clases --}}
+                </div>
+
+                {{-- Aquí están tus otros gráficos que ya tenías. Mantén sus IDs si los tienes --}}
                 <div class="bg-white shadow rounded-xl p-6">
                     <h3 class="font-semibold mb-3">Progreso promedio semanal</h3>
-                    <div class="bg-gray-100 rounded p-10 text-center text-gray-500"><livewire:users-per-month-chart/></div>
+                    <div class="bg-gray-100 rounded p-10 text-center text-gray-500">[Gráfico de barras aquí]</div>
                 </div>
 
                 <div class="bg-white shadow rounded-xl p-6">
@@ -192,3 +211,21 @@
         </section>
     </div>
 </x-app-layout>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Asegúrate de que window.initApexCharts esté disponible desde tu archivo charts.js
+        if (window.initApexCharts) {
+            // Llama a la función para inicializar los gráficos, pasándole los datos de PHP
+            window.initApexCharts(
+                @json($usersChartData),
+                @json($subscriptionsChartData),
+                @json($classesChartData)
+            );
+        } else {
+            console.error("La función 'initApexCharts' no está disponible. ¿El archivo 'charts.js' se cargó correctamente y 'npm run dev' está funcionando?");
+        }
+    });
+</script>
+@endpush

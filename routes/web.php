@@ -18,6 +18,7 @@ use App\Http\Controllers\General\SolicitudClaseController;
 use App\Http\Controllers\General\SuscripcionController;
 use App\Http\Controllers\Admin\NotificacionController;
 use App\Http\Controllers\General\NotificacionesController;
+use App\Http\Controllers\ChartController;
 
 // Middleware
 use App\Actions\VerificarUsuarioActivo;
@@ -68,6 +69,7 @@ Route::middleware(['auth', 'verified', 'can:admin-access', VerificarUsuarioActiv
 
         // Dashboard principal
         Route::get('/', [UserController::class, 'dashboard'])->name('dashboard');
+        Route::get('/chart-data', [ChartController::class, 'index'])->name('chart.data');
 
         // Gestión de usuarios
         Route::get('usuarios', [UserController::class, 'index'])->name('usuarios.index');

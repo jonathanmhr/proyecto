@@ -1,6 +1,7 @@
 import './bootstrap';
 import '../css/app.css';
 import './scripts/busqueda.js';
+import './scripts/charts.js';
 
 import Alpine from 'alpinejs';
 import ApexCharts from 'apexcharts';
