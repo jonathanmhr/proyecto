@@ -215,21 +215,19 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Asegúrate de que window.initApexCharts esté disponible
         if (window.initApexCharts) {
-            // Realiza una petición fetch (AJAX) para obtener los datos de los gráficos
-            fetch('{{ route('admin.chart.data') }}') // Usa la ruta nombrada para mayor robustez
+            const chartDataUrl = '{{ route('admin.chart.data') }}';
+            console.log('Intentando obtener datos de gráficos de la URL:', chartDataUrl); // ¡Añade esta línea!
+
+            fetch(chartDataUrl) // Usa la variable
                 .then(response => {
                     if (!response.ok) {
-                        // Si la respuesta no es OK (ej. 404, 500), lanza un error
                         throw new Error('Error de red o servidor: ' + response.statusText + ' (' + response.status + ')');
                     }
-                    return response.json(); // Parsea la respuesta JSON
+                    return response.json();
                 })
                 .then(data => {
-                    // Verifica que los datos esperados existan en la respuesta
                     if (data.usersChartData && data.subscriptionsChartData && data.classesChartData) {
-                        // Llama a la función para inicializar los gráficos con los datos recibidos
                         window.initApexCharts(
                             data.usersChartData,
                             data.subscriptionsChartData,
@@ -237,16 +235,14 @@
                         );
                     } else {
                         console.error("Los datos de los gráficos no están en el formato esperado desde el servidor.");
-                        console.log("Datos recibidos:", data); // Para depuración
+                        console.log("Datos recibidos:", data);
                     }
                 })
                 .catch(error => {
                     console.error('Error al cargar los datos de los gráficos:', error);
-                    // Opcional: Mostrar un mensaje al usuario si los gráficos no cargan
-                    // document.getElementById('usersChart').innerHTML = '<p class="text-red-500">No se pudieron cargar los datos de usuarios.</p>';
                 });
         } else {
-            console.error("La función 'initApexCharts' no está disponible. ¿El archivo 'charts.js' se cargó correctamente y 'npm run dev' está funcionando?");
+            console.error("La función 'initApexCharts' no está disponible...");
         }
     });
 </script>
