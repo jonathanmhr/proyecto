@@ -177,7 +177,6 @@
             </div>
         @endif
     </div>
-    @push('scripts')
     <script id="eventos-clases-data" type="application/json">
         {!! json_encode($clases->map(function($clase) {
             return [
@@ -197,5 +196,4 @@
             console.error('Error parseando eventos clases JSON:', e);
         }
     </script>
-@endpush
 </x-app-layout>
