@@ -212,7 +212,6 @@
     </div>
 </x-app-layout>
 
-@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         if (window.initApexCharts) {
@@ -246,4 +245,3 @@
         }
     });
 </script>
-@endpush
