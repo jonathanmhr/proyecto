@@ -12,7 +12,10 @@
     <link rel="preconnect" href="https://fonts.bunny.net" />
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Vite CSS + JS -->
+    <!-- Feather Icons desde CDN -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- Styles y Vite CSS + JS Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 <<<<<<< Updated upstream

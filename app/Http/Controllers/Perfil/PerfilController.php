@@ -34,8 +34,11 @@ class PerfilController extends Controller
         // Obtener suscripciones del usuario (relación uno a muchos)
         $suscripciones = Suscripcion::where('id_usuario', $usuario->id)->get();
 
+        // Obtener notificaciones recientes del usuario (por ejemplo las últimas 10)
+        $notificaciones = $usuario->notifications()->latest()->take(10)->get();
+
         // Pasar los datos a la vista
-        return view('dashboard', compact('clases', 'entrenamientos', 'suscripciones', 'incompleteProfile', 'datosCompletos', 'perfil'));
+        return view('dashboard', compact('clases', 'entrenamientos', 'suscripciones', 'incompleteProfile', 'datosCompletos', 'perfil', 'notificaciones'));
     }
 
     public function completar()
@@ -85,7 +88,7 @@ class PerfilController extends Controller
             'fecha_nacimiento' => 'required|date',
             'peso' => 'required|numeric|max:300',
             'altura' => 'required|numeric|max:220',
-            'objetivo' => 'required|string|max:255', 
+            'objetivo' => 'required|string|max:255',
             'id_nivel' => 'required|integer',
         ]);
 
@@ -97,5 +100,23 @@ class PerfilController extends Controller
 
         // Redirigir al dashboard con una notificación
         return redirect()->route('dashboard')->with('status', 'Perfil completado con éxito')->with('status_type', 'success');
+    }
+
+    public function marcarNotificacionLeida($id)
+    {
+        $usuario = auth()->user();
+        $notificacion = $usuario->notifications()->where('id', $id)->firstOrFail();
+        $notificacion->markAsRead();
+
+        return redirect()->route('dashboard')->with('status', 'Notificación marcada como leída');
+    }
+
+    // Marcar todas las notificaciones como leídas
+    public function marcarTodasNotificacionesLeidas()
+    {
+        $usuario = auth()->user();
+        $usuario->unreadNotifications->markAsRead();
+
+        return redirect()->route('dashboard')->with('status', 'Todas las notificaciones marcadas como leídas');
     }
 }

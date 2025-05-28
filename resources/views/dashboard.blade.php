@@ -76,7 +76,8 @@
                 @if ($clases->isEmpty())
                     <p class="text-gray-100 animate-fade-in">No estás inscrito en ninguna clase por ahora.</p>
                 @else
-                    <div class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100">
+                    <div
+                        class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100">
                         @foreach ($clases as $clase)
                             <div class="border-b border-red-200 pb-2 mb-2">
                                 <div class="text-gray-100 font-medium">{{ $clase->nombre }}</div>
@@ -95,7 +96,8 @@
                 @if ($entrenamientos->isEmpty())
                     <p class="text-gray-100 animate-fade-in">No tienes entrenamientos asignados.</p>
                 @else
-                    <div class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100">
+                    <div
+                        class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100">
                         @foreach ($entrenamientos as $entrenamiento)
                             <div class="border-b border-red-200 pb-2 mb-2">
                                 <div class="text-gray-100 font-medium">{{ $entrenamiento->nombre }}</div>
@@ -114,7 +116,8 @@
                 @if ($suscripciones->isEmpty())
                     <p class="text-gray-100 animate-fade-in">Aún no tienes suscripciones.</p>
                 @else
-                    <div class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100">
+                    <div
+                        class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100">
                         @foreach ($suscripciones as $suscripcion)
                             @if ($suscripcion->clase)
                                 <div class="border-b border-red-200 pb-2 mb-2">

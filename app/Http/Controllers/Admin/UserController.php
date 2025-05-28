@@ -2,38 +2,112 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Pagination\LengthAwarePaginator;
+// Controlador base
 use App\Http\Controllers\Controller;
+
+// Request para manejar peticiones HTTP
 use Illuminate\Http\Request;
+
+// Modelos
 use App\Models\User;
+
+// Autorización y roles
 use Silber\Bouncer\Database\Role;
 use Bouncer;
+use Carbon\Carbon;
+
+// Facades y servicios de Laravel
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Auth;
+
+// Paginación
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserController extends Controller
 {
     public function dashboard()
     {
+        // Total de usuarios registrados en el sistema
         $totalUsuarios = User::count();
 
-        $entrenadoresActivos = User::whereHas('roles', function ($query) {
-            $query->where('name', 'entrenador');
+        // Total de entrenadores activos
+        $entrenadoresActivos = User::whereHas('roles', function ($consulta) {
+            $consulta->where('name', 'entrenador');
         })->count();
 
+        // Total de roles creados (grupos)
         $gruposCreados = Role::count();
 
-        $usuariosActivosHoy = User::where('is_active', true)->count();
+        // Usuarios que han iniciado sesión hoy (basado en la tabla de sesiones)
+        $inicioHoy = Carbon::today()->timestamp;
+        $manana = Carbon::tomorrow()->timestamp;
+
+        $usuariosActivosHoy = DB::table('sessions')
+            ->whereBetween('last_activity', [$inicioHoy, $manana])
+            ->whereNotNull('user_id')
+            ->distinct('user_id')
+            ->count('user_id');
+
+        // Usuarios inactivos desde hace más de 7 días
         $inactivosMas7Dias = User::where('is_active', false)
             ->where('updated_at', '<=', now()->subDays(7))
             ->count();
+
+        // Últimos 5 usuarios registrados
         $usuariosRecientes = User::orderBy('created_at', 'desc')->take(5)->get();
 
-        $alertas = [
-            "⚠️ Grupo 'Equipo Norte' sin entrenador asignado",
-            "✅ Se completó la exportación del reporte de progreso",
-        ];
+        // Notificaciones enviadas por el usuario actual, con título, remitente (él mismo) y fecha
+        $notificacionesEnviadas = DB::table('notifications')
+            ->where('data->remitente_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get()
+            ->map(function ($noti) {
+                $data = json_decode($noti->data);
+                return (object) [
+                    'titulo' => $data->titulo ?? 'Sin título',
+                    'fecha' => $noti->created_at,
+                    'remitente' => Auth::user()->name,  // quien envió soy yo (usuario actual)
+                ];
+            });
 
+        // Notificaciones recibidas para el usuario actual
+        $notificacionesRecibidas = DB::table('notifications')
+            ->where('notifiable_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        // Mapear notificaciones recibidas con icono y nombre remitente
+        $alertas = $notificacionesRecibidas->map(function ($noti) {
+            $data = json_decode($noti->data);
+
+            $icono = 'ℹ️'; // por defecto
+            if (stripos($data->titulo ?? '', 'error') !== false) {
+                $icono = '⚠️';
+            } elseif (stripos($data->titulo ?? '', 'exito') !== false) {
+                $icono = '✅';
+            }
+
+            // Obtener nombre remitente si existe
+            $remitenteNombre = 'Desconocido';
+            if (!empty($data->remitente_id)) {
+                $usuario = User::find($data->remitente_id);
+                if ($usuario) {
+                    $remitenteNombre = $usuario->name;
+                }
+            }
+
+            return (object) [
+                'icono' => $icono,
+                'titulo' => $data->titulo ?? 'Sin título',
+                'remitente' => $remitenteNombre,
+                'fecha' => $noti->created_at,
+            ];
+        });
+
+        // Total de usuarios por rol
         $usuariosPorRol = User::select(DB::raw('roles.name as rol'), DB::raw('count(users.id) as total'))
             ->join('assigned_roles', 'users.id', '=', 'assigned_roles.entity_id')
             ->join('roles', 'roles.id', '=', 'assigned_roles.role_id')
@@ -46,10 +120,13 @@ class UserController extends Controller
             'gruposCreados',
             'usuariosActivosHoy',
             'inactivosMas7Dias',
-            'alertas',
-            'usuariosPorRol'
+            'alertas',  // notificaciones recibidas con icono, remitente, título, fecha
+            'usuariosPorRol',
+            'notificacionesEnviadas',  // notificaciones enviadas con título, remitente (yo), fecha
+            'usuariosRecientes'
         ));
     }
+
 
     // Método para mostrar la lista de usuarios mejor optimizado
     public function index(Request $request)
@@ -61,36 +138,24 @@ class UserController extends Controller
         $search = $request->search;
         $roleFilter = $request->role;
 
-        // Prioridad para ordenar roles
-        $rolePriority = [
-            'admin' => 1,
-            'admin_entrenador' => 2,
-            'entrenador' => 3,
-            'cliente' => 4,
-        ];
-
         $usersQuery = User::with('roles')
+            ->leftJoin('assigned_roles', 'users.id', '=', 'assigned_roles.entity_id')
+            ->leftJoin('roles', 'roles.id', '=', 'assigned_roles.role_id')
             ->when($search && strlen($search) >= 3 && strlen($search) <= 100, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%$search%")
-                        ->orWhere('email', 'like', "%$search%");
+                    $q->where('users.name', 'like', "%$search%")
+                        ->orWhere('users.email', 'like', "%$search%");
                 });
             })
             ->when($roleFilter, function ($query) use ($roleFilter) {
-                $query->whereHas('roles', function ($q) use ($roleFilter) {
-                    $q->where('name', $roleFilter);
-                });
-            });
-
-        // Aquí se agrega orden por prioridad de rol usando un CASE
-        $usersQuery->leftJoin('assigned_roles', 'users.id', '=', 'assigned_roles.entity_id')
-            ->leftJoin('roles', 'roles.id', '=', 'assigned_roles.role_id')
+                $query->where('roles.name', $roleFilter);
+            })
             ->select('users.*', DB::raw("CASE roles.name
-                WHEN 'admin' THEN 1
-                WHEN 'admin_entrenador' THEN 2
-                WHEN 'entrenador' THEN 3
-                WHEN 'cliente' THEN 4
-                ELSE 999 END as role_priority"))
+            WHEN 'admin' THEN 1
+            WHEN 'admin_entrenador' THEN 2
+            WHEN 'entrenador' THEN 3
+            WHEN 'cliente' THEN 4
+            ELSE 999 END as role_priority"))
             ->orderBy('role_priority')
             ->orderBy('users.name');
 
@@ -214,6 +279,70 @@ class UserController extends Controller
                 ? ['success' => 'Enlace de restablecimiento enviado a ' . $user->email]
                 : ['error' => 'No se pudo enviar el enlace de restablecimiento.']
         );
+    }
+
+    public function conectados()
+    {
+        $inicioHoy = Carbon::today()->timestamp;
+        $manana = Carbon::tomorrow()->timestamp;
+
+        $sesiones = DB::table('sessions')
+            ->whereBetween('last_activity', [$inicioHoy, $manana])
+            ->whereNotNull('user_id')
+            ->orderByDesc('last_activity')
+            ->get();
+
+        $usuariosConectados = $sesiones->groupBy('user_id')->map(function ($sesionesUsuario) {
+            $ultimaSesion = $sesionesUsuario->first(); // la sesión más reciente
+            $usuario = User::find($ultimaSesion->user_id);
+
+            return [
+                'usuario' => $usuario,
+                'ultima_actividad' => Carbon::createFromTimestamp($ultimaSesion->last_activity)->format('H:i'),
+                'ip' => $ultimaSesion->ip_address,
+                'navegador' => $ultimaSesion->user_agent,
+            ];
+        });
+
+        return view('admin.users.conectados', compact('usuariosConectados'));
+    }
+
+    public function inactivos()
+    {
+        $inactivos = User::where('is_active', false)
+            ->where('updated_at', '<=', Carbon::now()->subDays(7))
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return view('admin.users.inactivos', compact('inactivos'));
+    }
+
+    public function entrenadores(Request $request)
+    {
+        $search = $request->search;
+
+        $entrenadoresQuery = User::with('roles')
+            ->leftJoin('assigned_roles', 'users.id', '=', 'assigned_roles.entity_id')
+            ->leftJoin('roles', 'roles.id', '=', 'assigned_roles.role_id')
+            ->when($search && strlen($search) >= 3 && strlen($search) <= 100, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('users.name', 'like', "%$search%")
+                        ->orWhere('users.email', 'like', "%$search%");
+                });
+            })
+            ->whereIn('roles.name', ['entrenador', 'admin_entrenador'])
+            ->select('users.*', DB::raw("CASE roles.name
+            WHEN 'admin' THEN 1
+            WHEN 'admin_entrenador' THEN 2
+            WHEN 'entrenador' THEN 3
+            WHEN 'cliente' THEN 4
+            ELSE 999 END as role_priority"))
+            ->orderBy('role_priority')
+            ->orderBy('users.name');
+
+        $entrenadores = $entrenadoresQuery->paginate(10)->withQueryString();
+
+        return view('admin.users.entrenadores', compact('entrenadores'));
     }
 
     public function suscripciones($id)
