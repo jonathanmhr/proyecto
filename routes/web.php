@@ -24,10 +24,19 @@ use App\Http\Controllers\ChartController;
 use App\Actions\VerificarUsuarioActivo;
 use Illuminate\Support\Facades\Auth;
 
+//Google
+use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\Auth\GoogleController;
+
+
 // ----------------------
 // RUTA DE BIENVENIDA
 // ----------------------
 Route::get('/', fn() => view('welcome'));
+
+Route::get('auth/google/redirect', [GoogleController::class, 'redirectToGoogle'])->name('auth.google.redirect');
+// Ruta a la que Google redirige después de iniciar sesión
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 
 // ----------------------
 // RUTAS DEL DASHBOARD

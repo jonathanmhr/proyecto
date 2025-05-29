@@ -6,7 +6,7 @@ export default defineConfig({
         host: true, // Esto permite conexiones externas
         cors: true,
         hmr: {
-            host: '192.168.1.22', // Cambia esto a tu dirección IP si es necesario
+            host: 'localhost', // Cambia esto a tu dirección IP si es necesario
         }
     },
     plugins: [
