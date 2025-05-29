@@ -10,8 +10,8 @@
         .header, .footer { text-align: center; margin-bottom: 20px; }
         .header h1 { margin: 0; font-size: 24px; color: #2c3e50; }
         .header p { margin: 5px 0; }
-        .company-details p, .customer-details p { margin: 2px 0; }
-        .details-section { margin-bottom: 25px; overflow: auto; /* Clearfix */ }
+        .company-details p, .customer-details p, .payment-details p { margin: 2px 0; line-height: 1.4; }
+        .details-section { margin-bottom: 25px; overflow: auto; }
         .company-details { float: left; width: 48%; }
         .customer-details { float: right; width: 48%; text-align: right; }
         .invoice-info { text-align: right; margin-bottom: 20px; }
@@ -23,6 +23,7 @@
         .totals { margin-top: 20px; float: right; width: 40%; }
         .totals table td { border: none; }
         .totals table td:first-child { font-weight: bold; }
+        .payment-details { margin-top: 20px; padding-top:10px; border-top: 1px solid #eee; }
         .footer { font-size: 10px; color: #777; border-top: 1px solid #eee; padding-top: 10px; position: fixed; bottom: 0; width:100%; text-align: center;}
         .clearfix::after { content: ""; clear: both; display: table; }
     </style>
@@ -31,22 +32,40 @@
     <div class="container">
         <div class="header">
             <h1>FACTURA</h1>
-            <p>Gimnasio GYMSIS</p>
-            <p>Tu Dirección, Ciudad</p>
-            <p>Teléfono: (123) 456-7890 | Email: info@gymsis.com</p>
+            <p>POWE-CORE</p>
+            <p>Teléfono: +34 659 12 34 56 | Email: info@powercore.es</p>
         </div>
 
         <div class="details-section clearfix">
             <div class="company-details">
                 <p><strong>Facturar a:</strong></p>
-                <p>{{ $info_cliente['nombre_facturacion'] ?? $compra->user->name }}</p>
-                <p>{{ $info_cliente['email_facturacion'] ?? $compra->user->email }}</p>
-                {{-- <p>Dirección del Cliente</p> --}}
+                <p>{{ $info_cliente['nombre_facturacion'] ?? ($compra->user->name ?? 'N/D') }}</p>
+                @if(!empty($info_cliente['direccion_facturacion']))
+                    <p>{{ $info_cliente['direccion_facturacion'] }}</p>
+                @endif
+                <p>
+                    @if(!empty($info_cliente['ciudad_facturacion']))
+                        {{ $info_cliente['ciudad_facturacion'] }}
+                    @endif
+                    @if(!empty($info_cliente['codigo_postal_facturacion']))
+                        ({{ $info_cliente['codigo_postal_facturacion'] }})
+                    @endif
+                </p>
+                @if(!empty($info_cliente['pais_facturacion']))
+                    <p>{{ $info_cliente['pais_facturacion'] }}</p>
+                @endif
+                <p>Email: {{ $info_cliente['email_facturacion'] ?? ($compra->user->email ?? 'N/D') }}</p>
+                @if(!empty($info_cliente['telefono_facturacion']))
+                    <p>Tel: {{ $info_cliente['telefono_facturacion'] }}</p>
+                @endif
             </div>
             <div class="customer-details">
                 <p><strong>Número de Factura:</strong> {{ $factura->numero_factura }}</p>
                 <p><strong>Fecha de Emisión:</strong> {{ $factura->fecha_emision->format('d/m/Y') }}</p>
                 <p><strong>ID Compra:</strong> #{{ $compra->id }}</p>
+                @if(isset($metodo_envio) && !empty($metodo_envio))
+                    <p><strong>Método de Envío:</strong> {{ ucfirst(str_replace('_', ' ', $metodo_envio)) }}</p>
+                @endif
             </div>
         </div>
 
@@ -78,7 +97,7 @@
                     <td class="text-right">{{ number_format($compra->total_compra, 2, ',', '.') }} €</td>
                 </tr>
                 <tr>
-                    <td>Impuestos (IVA 0% Ejemplo):</td> {{-- Ajusta según tus impuestos --}}
+                    <td>Impuestos (IVA 0% Ejemplo):</td>
                     <td class="text-right">0.00 €</td>
                 </tr>
                 <tr>
@@ -89,8 +108,21 @@
         </div>
         <div class="clearfix"></div>
 
+        <div class="payment-details">
+            <p><strong>Método de Pago:</strong>
+                @if($compra->metodo_pago === 'simulado_tarjeta')
+                    Tarjeta (Simulado)
+                    @if(!empty($ultimos_digitos_tarjeta))
+                        <span>- terminada en {{ $ultimos_digitos_tarjeta }}</span>
+                    @endif
+                @else
+                    {{ ucfirst(str_replace('_', ' ', $compra->metodo_pago)) }}
+                @endif
+            </p>
+        </div>
+
         @if($factura->notas)
-        <div style="margin-top: 30px;">
+        <div style="margin-top: 15px;">
             <strong>Notas Adicionales:</strong>
             <p>{{ $factura->notas }}</p>
         </div>
@@ -98,7 +130,7 @@
 
         <div class="footer">
             <p>Gracias por su compra.</p>
-            <p>GYMSIS © {{ date('Y') }}</p>
+            <p>POWER_CORE © {{ date('Y') }}</p>
         </div>
     </div>
 </body>

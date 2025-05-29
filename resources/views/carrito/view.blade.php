@@ -32,7 +32,6 @@
                 </div>
             </div>
         @else
-            {{-- CORRECCIÓN AQUÍ: Añadido el > --}}
             <div class="flex flex-col lg:flex-row gap-8">
                 <div class="w-full lg:w-2/3">
                     <div class="bg-white shadow-md rounded-lg">

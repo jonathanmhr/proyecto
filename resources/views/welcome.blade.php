@@ -20,7 +20,6 @@
         </h1>
       </div>
 
-<<<<<<< Updated upstream
       <div class="-mr-2 -my-2 md:hidden">
         <button id="menu-toggle" type="button"
           class="bg-neutral-900 rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-white hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500"
@@ -49,80 +48,9 @@
           Iniciar sesión
         </a>
       </div>
-=======
-    <!-- Header -->
-    <header class="bg-gray-950 fixed w-full z-10 shadow-md">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-3xl font-extrabold "><span class="text-white-500">Power</span><span class="text-red-500">Core</span></h1>
-            <nav class="space-x-6 text-lg">
-                <a href="#inicio" class="hover:text-red-400 transition">Inicio</a>
-                <a href="#clases" class="hover:text-red-400 transition">Clases</a>
-                <a href="#entrenadores" class="hover:text-red-400 transition">Entrenadores</a>
-                <a href="#contacto" class="hover:text-red-400 transition">Contacto</a>
-            </nav>
-            <!-- Login -->
-            <div class="flex items-center space-x-4">
-                <a href="/login"
-                    class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg text-sm transition">Iniciar
-                    sesión</a>
-            </div>
-        </div>
-    </header>
-    <section id="inicio" class="h-screen flex items-center justify-center bg-cover bg-center relative"
-        style="background-image: url('{{ asset('images/pesas.png') }}');">
-        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
-        <div class="relative text-center p-10 hover:text-red-500 transition-all duration-300">
-            <h2 class="text-5xl font-extrabold mb-4">Supera tus límites, alcanza tus metas</h2>
-            <p class="text-xl mb-6">Únete a PowerCore y transforma tu cuerpo con los mejores entrenadores y clases.</p>
-            <a href="#clases"
-                class="bg-red-500 hover:bg-red-600 text-white py-3 px-8 rounded-full text-lg transition">Descubre
-                más</a>
-        </div>
-    </section>
-    <div class="group transition-all duration-2000">
-        <section id="clases" class="py-20 text-center bg-gradient-to-r from-red-800 to-gray-800">
-            <h3 class="text-4xl font-bold mb-10">Nuestras Clases</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 group-hover:grid-cols-1 gap-8 max-w-6xl mx-auto transition-all duration-500">
-                <div class="relative bg-gray-800 rounded-xl shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-500 group">
-                    <div class="flex items-center p-8 transition-all duration-500 group-hover:pl-4 text-left">
-                        <div class="w-full">
-                            <h4 class="text-2xl font-semibold mb-2">HIIT Intensivo</h4>
-                            <p>Quema grasa y mejora resistencia con entrenamientos de alta intensidad.</p>
-                        </div>
-                    </div>
-                    <div class="absolute top-0 right-0 h-full w-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <img src="{{ asset('images/cardio.jpg') }}" alt="HIIT" class="object-cover h-full w-full">
-                    </div>
-                </div>
-                <div class="relative bg-gray-800 rounded-xl shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-500 group">
-                    <div class="flex items-center p-8 transition-all duration-500 group-hover:pl-4 text-left">
-                        <div class="w-full">
-                            <h4 class="text-2xl font-semibold mb-2">Funcional</h4>
-                            <p>Mejora tu movilidad y fuerza con ejercicios adaptativos.</p>
-                        </div>
-                    </div>
-                    <div class="absolute top-0 right-0 h-full w-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <img src="{{ asset('images/fuerza.jpg') }}" alt="Funcional" class="object-cover h-full w-full">
-                    </div>
-                </div>
-                <div class="relative bg-gray-800 rounded-xl shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-500 group">
-                    <div class="flex items-center p-8 transition-all duration-500 group-hover:pl-4 text-left">
-                        <div class="w-full">
-                            <h4 class="text-2xl font-semibold mb-2">Yoga & Relajación</h4>
-                            <p>Conéctate contigo mismo y mejora tu flexibilidad.</p>
-                        </div>
-                    </div>
-                <div class="absolute top-0 right-0 h-full w-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <img src="{{ asset('images/yoga.jpg') }}" alt="Yoga" class="object-cover h-full w-full">
-                </div>
-            </div>
-      
-        </section>
->>>>>>> Stashed changes
     </div>
   </div>
 
-<<<<<<< Updated upstream
   <nav id="menu"
     class="absolute top-full inset-x-0 p-2 transition transform origin-top-right md:hidden opacity-0 scale-95 pointer-events-none">
     <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-neutral-800 divide-y-2 divide-neutral-700">
@@ -622,84 +550,6 @@
             </div>
 
             
-=======
-    <section
-  id="beneficios"
-  class="py-20 bg-gray-800 text-center text-white"
-  style="background-image: url('{{ asset('images/proteina.png') }}'); background-repeat: no-repeat; background-size: cover; background-position: center;"
->
-  <div class="bg-gray-900 bg-opacity-80 p-8 rounded-xl max-w-4xl mx-auto mb-12">
-    <h3 class="text-4xl font-bold mb-4">¿Por qué elegir PowerCore?</h3>
-    <p class="text-gray-300">Descubre las ventajas que te harán alcanzar tus objetivos.</p>
-  </div>
-
-  <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
-    <div class="bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-2xl hover:bg-red-500 hover:text-white transition-all duration-300 transform hover:scale-105">
-      <h4 class="text-2xl font-semibold mb-2">Entrenadores Certificados</h4>
-      <p>Expertos en fitness que te guiarán en todo momento.</p>
-    </div>
-    <div class="bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-2xl hover:bg-red-500 hover:text-white transition-all duration-300 transform hover:scale-105">
-      <h4 class="text-2xl font-semibold mb-2">Equipamiento de Última Generación</h4>
-      <p>Instalaciones modernas y máquinas avanzadas.</p>
-    </div>
-    <div class="bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-2xl hover:bg-red-500 hover:text-white transition-all duration-300 transform hover:scale-105">
-      <h4 class="text-2xl font-semibold mb-2">Planes Personalizados</h4>
-      <p>Adaptamos el entrenamiento según tus necesidades.</p>
-    </div>
-  </div>
-</section>
-    <section id="testimonios" class="py-20 text-center bg-gradient-to-r from-red-800 to-gray-800">
-        <h3 class="text-4xl font-bold mb-10">Lo que dicen nuestros clientes</h3>
-        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
-            <div class="bg-gray-800 p-6 rounded-xl">
-                <p class="italic">"PowerCore cambió mi vida. Los entrenadores son increíbles y el ambiente es
-                        motivador."</p>
-                <h4 class="mt-4 font-semibold">- Laura G.</h4>
-            </div>
-            <div class="bg-gray-800 p-6 rounded-xl">
-                <p class="italic">"Nunca había visto un gimnasio con equipos tan buenos y clases tan dinámicas. ¡Lo
-                        recomiendo!"</p>
-                <h4 class="mt-4 font-semibold">- Pedro R.</h4>
-            </div>
-        </div>
-    </section>
-    <section
-  id="membresias"
-  class="py-20 bg-gray-800 text-center text-white"
-  style="background-image: url('{{ asset('images/pesas2.png') }}'); background-repeat: no-repeat; background-size: cover; background-position: center;"
->
-  <div class="bg-gray-900 bg-opacity-80 p-8 rounded-xl max-w-4xl mx-auto mb-12">
-    <h3 class="text-4xl font-bold mb-4">Elige tu plan de entrenamiento</h3>
-    <p class="text-gray-300">Encuentra el plan que se adapta a tus objetivos.</p>
-  </div>
-
-  <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
-    <!-- Plan Básico -->
-    <div class="bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-2xl hover:bg-red-500 transition-all duration-300">
-      <h4 class="text-2xl font-semibold mb-2">Básico</h4>
-      <p>Acceso al gimnasio y equipos esenciales.</p>
-      <p class="text-xl font-bold mt-4">€29/mes</p>
-    </div>
-
-    <!-- Plan Premium -->
-    <div class="bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-2xl hover:bg-red-500 transition-all duration-300">
-      <h4 class="text-2xl font-semibold mb-2">Premium</h4>
-      <p>Clases grupales y asesoramiento personalizado.</p>
-      <p class="text-xl font-bold mt-4">€49/mes</p>
-    </div>
-
-    <!-- Plan Elite -->
-    <div class="bg-gray-700 p-6 rounded-xl shadow-lg hover:shadow-2xl hover:bg-red-500 transition-all duration-300">
-      <h4 class="text-2xl font-semibold mb-2">Elite</h4>
-      <p>Acceso VIP, entrenadores privados y nutrición personalizada.</p>
-      <p class="text-xl font-bold mt-4">€79/mes</p>
-    </div>
-  </div>
-</section>
-
-    <section id="contacto" class="py-20 text-center bg-gray-800">
-        <div class="grid md:grid-cols-3 gap-2 max-w-6xl mx-auto">
->>>>>>> Stashed changes
             <div>
     <h1 class="text-5xl sm:text-6xl lg:text-8xl font-extrabold tracking-tight mb-10 md:mb-12">
         POR QUÉ<br>

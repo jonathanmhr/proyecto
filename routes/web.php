@@ -19,13 +19,6 @@ use App\Http\Controllers\General\ClaseGrupalController;
 use App\Http\Controllers\General\EntrenamientoController;
 use App\Http\Controllers\General\SolicitudClaseController;
 use App\Http\Controllers\General\SuscripcionController;
-use App\Http\Controllers\Admin\NotificacionController;
-use App\Http\Controllers\General\NotificacionesController;
-use App\Http\Controllers\ChartController;
-
-// Middleware
-use App\Actions\VerificarUsuarioActivo;
-use Illuminate\Support\Facades\Auth;
 
 // ----------------------
 // RUTA DE BIENVENIDA
@@ -35,13 +28,11 @@ Route::get('/', fn() => view('welcome'));
 // ----------------------
 // RUTAS DEL DASHBOARD
 // ----------------------
-$middlewares = [
+Route::middleware([
     'auth',
     config('jetstream.auth_session'),
-    'verified',
-    VerificarUsuarioActivo::class,
-];
-Route::middleware(array_filter($middlewares))->group(function () {
+    'verified'
+])->group(function () {
     Route::get('/dashboard', [PerfilController::class, 'index'])->name('dashboard');
 });
 
@@ -65,50 +56,31 @@ Route::middleware('auth')->group(function () {
 // ----------------------
 // RUTAS ADMINISTRATIVAS
 // ----------------------
-Route::middleware(['auth', 'verified', 'can:admin-access', VerificarUsuarioActivo::class])
+Route::middleware(['auth', 'verified', 'can:admin-access'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
 
         // Dashboard principal
         Route::get('/', [UserController::class, 'dashboard'])->name('dashboard');
-        Route::get('/chart-data', [ChartController::class, 'index'])->name('chart.data');
 
         // Gestión de usuarios
         Route::get('usuarios', [UserController::class, 'index'])->name('usuarios.index');
-        Route::get('usuarios/activos', [UserController::class, 'activos'])->name('usuarios.activos');
-        Route::get('usuarios/inactivos', [UserController::class, 'inactivos'])->name('usuarios.inactivos');
+        Route::get('usuarios/activos', [UserController::class, 'index'])->name('usuarios.activos');
+        Route::get('usuarios/inactivos', [UserController::class, 'index'])->name('usuarios.inactivos');
         Route::get('usuarios/crear', [UserController::class, 'create'])->name('usuarios.create');
-        Route::get('usuarios/conectados', [UserController::class, 'conectados'])->name('usuarios.conectados');
 
-        // 
-        Route::get('entrenadores', [UserController::class, 'entrenadores'])->name('entrenadores');
-
-        // 
-        Route::get('grupos', [UserController::class, 'indexRoles'])->name('admin.roles.index');
-
-        // anuncios
-        Route::get('notificaciones', [NotificacionController::class, 'index'])->name('notificaciones.index');
-        Route::get('notificaciones/create', [NotificacionController::class, 'create'])->name('notificaciones.create');
-        Route::post('notificaciones/enviar', [NotificacionController::class, 'send'])->name('notificaciones.send');
-
+        // Reportes y anuncios
+        Route::get('reportes/generar', [UserController::class, 'generarReporte'])->name('reportes.generar');
+        Route::get('anuncios/enviar', [UserController::class, 'enviarAnuncio'])->name('anuncios.enviar');
 
         // CRUD de usuarios (excepto create/show)
         Route::resource('users', UserController::class)->except(['create', 'show']);
-
-        // Gestión de roles (grupos)
-        Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
-        Route::get('roles/crear', [RoleController::class, 'create'])->name('roles.create');
-        Route::post('roles', [RoleController::class, 'store'])->name('roles.store');
-        Route::get('roles/{id}/editar', [RoleController::class, 'edit'])->name('roles.edit');
-        Route::put('roles/{id}', [RoleController::class, 'update'])->name('roles.update');
-        Route::delete('roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
         // Asignación de roles y cambios de estado
         Route::post('users/{id}/assign-role', [UserController::class, 'assignRole'])->name('users.assignRole');
         Route::post('users/{id}/change-status', [UserController::class, 'changeStatus'])->name('users.changeStatus');
         Route::post('users/{id}/reset-password', [UserController::class, 'resetPassword'])->name('users.resetPassword');
-
         // Suscripciones de usuario
         Route::get('users/{id}/suscripciones', [UserController::class, 'suscripciones'])->name('users.suscripciones');
     });
@@ -116,7 +88,7 @@ Route::middleware(['auth', 'verified', 'can:admin-access', VerificarUsuarioActiv
 // ----------------------
 // RUTAS ADMIN ENTRENADOR
 // ----------------------
-Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioActivo::class])
+Route::middleware(['auth', 'verified', 'can:admin_entrenador'])
     ->prefix('admin-entrenador')
     ->name('admin-entrenador.')
     ->group(function () {
@@ -173,7 +145,7 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
 // ----------------------
 // RUTAS DEL ENTRENADOR
 // ----------------------
-Route::middleware(['auth', 'verified', 'can:entrenador-access', VerificarUsuarioActivo::class])
+Route::middleware(['auth', 'verified', 'can:entrenador-access'])
     ->prefix('entrenador')
     ->name('entrenador.')
     ->group(function () {
@@ -194,7 +166,7 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access', VerificarUsuario
 // ----------------------
 // RUTAS DEL CLIENTE
 // ----------------------
-Route::middleware('auth', VerificarUsuarioActivo::class)
+Route::middleware('auth')
     ->prefix('cliente')
     ->name('cliente.')
     ->group(function () {
@@ -209,7 +181,7 @@ Route::middleware('auth', VerificarUsuarioActivo::class)
         Route::post('entrenamientos/{entrenamientoId}/unirse', [EntrenamientoController::class, 'unirseEntrenamiento'])->name('entrenamientos.unirse');
     });
 
-Route::middleware('auth', VerificarUsuarioActivo::class)
+Route::middleware('auth')
     ->prefix('perfil')
     ->name('perfil.')
     ->group(function () {
