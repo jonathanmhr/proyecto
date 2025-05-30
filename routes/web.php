@@ -5,6 +5,10 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
 // Controladores
+use App\Http\Controllers\Compra\CompraController;
+use App\Http\Controllers\Compra\AlmacenController;
+use App\Http\Controllers\Compra\CarritoController;
+use App\Http\Controllers\Compra\CheckoutController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminEntrenador\AdminEntrenadorController;
@@ -218,3 +222,46 @@ Route::middleware('auth', VerificarUsuarioActivo::class)
         Route::post('notificaciones/{id}/marcar-leida', [PerfilController::class, 'marcarNotificacionLeida'])->name('notificaciones.marcarLeida');
         Route::post('notificaciones/marcar-todas-leidas', [PerfilController::class, 'marcarTodasNotificacionesLeidas'])->name('notificaciones.marcarTodasLeidas');
     });
+// ----------------------
+// RUTAS DE COMPRA
+// ----------------------
+Route::middleware(['auth'])->group(function () {
+    Route::get('/mis-compras', [CompraController::class, 'index'])->name('compras.index');
+    Route::get('/compras/{compra}', [CompraController::class, 'show'])->name('compras.show');
+    Route::get('/compras/{compra}/factura', [CompraController::class, 'downloadFactura'])->name('compras.factura.download');
+
+    // Para Admins y Admin-Entrenadores (podrías usar un middleware de rol aquí)
+    Route::prefix('admin/compras')->name('admin.compras.')->group(function () {
+        // Si 'admin-entrenador' es un rol que también usa esto, ajusta el middleware
+        Route::get('/', [CompraController::class, 'adminIndex'])->name('index')->middleware('can:viewAny,App\Models\Compra'); // O un rol específico
+        Route::get('/{compra}', [CompraController::class, 'adminShow'])->name('show')->middleware('can:view,compra'); // O un rol específico
+        // Podrías añadir rutas para editar estado, etc.
+        // Route::get('/{compra}/edit', [CompraController::class, 'adminEdit'])->name('edit');
+        // Route::put('/{compra}', [CompraController::class, 'adminUpdate'])->name('update');
+    });
+});
+Route::middleware('auth') 
+    ->prefix('tienda')
+    ->name('tienda.')
+    ->group(function () {
+        Route::get('/', [AlmacenController::class, 'tiendaIndex'])->name('index');
+    });
+Route::middleware('auth')
+    ->prefix('carrito') 
+    ->name('carrito.')   
+    ->controller(CarritoController::class) 
+    ->group(function(){
+        Route::post('/agregar/{almacen_id}', 'agregar')->name('agregar');
+        Route::get('/', 'view')->name('view'); // Cambiado de /carrito a /
+        Route::post('/actualizar/{almacen_id}', 'actualizar')->name('actualizar');
+        Route::post('/eliminar/{almacen_id}', 'eliminar')->name('eliminar');
+        Route::post('/vaciar', 'vaciar')->name('vaciar');
+    });
+Route::middleware('auth')
+    ->prefix('checkout')          
+    ->name('checkout.')          
+    ->group(function () {
+        Route::get('/', [CheckoutController::class, 'index'])->name('index'); // checkout.index
+        Route::post('/procesar', [CheckoutController::class, 'procesar'])->name('procesar'); // checkout.procesar
+    });
+

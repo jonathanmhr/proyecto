@@ -55,7 +55,10 @@
 
         {{-- CLIENTE --}}
         @can('cliente-access')
-            <x-sidebar-link icon="shopping-bag" route="entrenador.clases.index" label="Mis Suscripciones" />
+            <x-sidebar-link icon="shopping-bag" route="tienda.index" label="Tienda" />
+        @endcan
+          @can('cliente-access')
+            <x-sidebar-link icon="shopping-bag" route="compras.index" label="Mis pedidos" />
         @endcan
 
         {{-- COMÚN A VARIOS ROLES --}}
