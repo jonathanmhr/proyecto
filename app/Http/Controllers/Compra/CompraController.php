@@ -77,9 +77,6 @@ class CompraController extends Controller
     public function adminIndex()
     {
         $user = Auth::user();
-        if (!Bouncer::is($user)->an('admin') && !Bouncer::is($user)->an('admin-entrenador')) {
-            abort(403);
-        }
 
         $compras = Compra::with(['user', 'factura'])
                          ->orderBy('fecha_compra', 'desc')
@@ -91,9 +88,6 @@ class CompraController extends Controller
     public function adminShow(Compra $compra)
     {
         $user = Auth::user();
-        if (!Bouncer::is($user)->an('admin') && !Bouncer::is($user)->an('admin-entrenador')) {
-            abort(403);
-        }
 
         $compra->load('user', 'itemsAlmacen.almacen', 'factura');
 
@@ -113,6 +107,6 @@ class CompraController extends Controller
             }
         }
 
-        return view('compras.admin.show', compact('compra', 'facturaPdfUrl', 'datosCheckout'));
+        return view('admin.compras.show', compact('compra', 'facturaPdfUrl', 'datosCheckout'));
     }
 }

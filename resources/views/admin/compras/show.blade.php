@@ -1,4 +1,4 @@
-<x-app-layout> {{-- O tu layout de admin --}}
+<x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Detalle de Compra #{{ $compra->id }} - Cliente: {{ $compra->user->name }}
@@ -81,7 +81,7 @@
                                      <div class="flex items-center">
                                         @if($item->imagen)
                                         <div class="flex-shrink-0 h-10 w-10">
-                                            <img class="h-10 w-10 rounded-full" src="{{ Storage::url('almacen_imagenes/' . $item->imagen) }}" alt="{{ $item->nombre }}">
+                                            <img class="h-10 w-10 rounded-full" src="{{ asset('images/' . $item->imagen) }}" alt="{{ $item->nombre }}">
                                         </div>
                                         @endif
                                         <div class="ml-4">

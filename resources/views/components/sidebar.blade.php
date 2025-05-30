@@ -17,6 +17,7 @@
         {{-- ADMIN --}}
         @can('admin-access')
             <x-sidebar-link icon="shield" route="admin.dashboard" label="Panel de Admin" />
+            <x-sidebar-link icon="shopping-bag" route="admin.compras.index" label="Pedidos Usuarios" />
         @endcan
 
         {{-- ADMIN ENTRENADOR --}}
@@ -34,6 +35,7 @@
                     <x-sidebar-link icon="layout" route="admin-entrenador.dashboard" label="Panel General" />
                 </div>
             </div>
+            
         @endcan
 
         {{-- ENTRENADOR --}}
@@ -57,7 +59,8 @@
         @can('cliente-access')
             <x-sidebar-link icon="shopping-bag" route="tienda.index" label="Tienda" />
         @endcan
-          @can('cliente-access')
+        
+        @can('cliente-access')
             <x-sidebar-link icon="shopping-bag" route="compras.index" label="Mis pedidos" />
         @endcan
 
