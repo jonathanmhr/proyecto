@@ -26,6 +26,7 @@
         .header-section {
             margin-bottom: 20px;
             overflow: hidden; /* Clearfix */
+            color: #333;
         }
         .logo-container {
             float: left;

@@ -29,7 +29,7 @@ class ChartController extends Controller
             ->get()
             ->pluck('count', 'month')
             ->toArray();
-        $usersByMonth = array_merge($months, $usersData);
+        $usersByMonth = $usersData + $months; // usar + para preservar claves
         ksort($usersByMonth);
 
         $subscriptionsCreatedData = Suscripcion::select(
@@ -41,7 +41,7 @@ class ChartController extends Controller
             ->get()
             ->pluck('count', 'month')
             ->toArray();
-        $subscriptionsCreatedByMonth = array_merge($months, $subscriptionsCreatedData);
+        $subscriptionsCreatedByMonth = $subscriptionsCreatedData + $months;
         ksort($subscriptionsCreatedByMonth);
 
         $subscriptionsCancelledData = Suscripcion::select(
@@ -54,7 +54,7 @@ class ChartController extends Controller
             ->get()
             ->pluck('count', 'month')
             ->toArray();
-        $subscriptionsCancelledByMonth = array_merge($months, $subscriptionsCancelledData);
+        $subscriptionsCancelledByMonth = $subscriptionsCancelledData + $months;
         ksort($subscriptionsCancelledByMonth);
 
         $classesData = ClaseGrupal::select(
@@ -66,8 +66,20 @@ class ChartController extends Controller
             ->get()
             ->pluck('count', 'month')
             ->toArray();
-        $classesByMonth = array_merge($months, $classesData);
+        $classesByMonth = $classesData + $months;
         ksort($classesByMonth);
+
+        // Función para filtrar claves que no tengan formato YYYY-MM válido
+        $filterValidMonths = function($array) {
+            return array_filter($array, function($key) {
+                return preg_match('/^\d{4}-\d{2}$/', $key);
+            }, ARRAY_FILTER_USE_KEY);
+        };
+
+        $usersByMonth = $filterValidMonths($usersByMonth);
+        $subscriptionsCreatedByMonth = $filterValidMonths($subscriptionsCreatedByMonth);
+        $subscriptionsCancelledByMonth = $filterValidMonths($subscriptionsCancelledByMonth);
+        $classesByMonth = $filterValidMonths($classesByMonth);
 
         $usersChartData = [
             'labels' => array_map(function($month) {
@@ -88,12 +100,12 @@ class ChartController extends Controller
 
         $classesChartData = [
             'labels' => array_map(function($month) {
-                return Carbon::createFromFormat('Y-m', $month)->translatedFormat('F Y');
+                return Carbon::createFromFormat('Y-m', $month)->format('F Y');
             }, array_keys($classesByMonth)),
             'series' => [array_values($classesByMonth)],
         ];
 
-        // Retorna los datos como una respuesta JSON
+        // Retorna los datos como JSON
         return response()->json([
             'usersChartData' => $usersChartData,
             'subscriptionsChartData' => $subscriptionsChartData,

@@ -1,7 +1,7 @@
 import './bootstrap';
 import '../css/app.css';
 import './scripts/busqueda.js';
-import './scripts/charts.js';
+import './scripts/dashboardCharts.js';
 import './scripts/calendario.js'
 import './scripts/mapa.js'
 

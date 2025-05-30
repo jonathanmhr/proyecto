@@ -189,59 +189,7 @@
                     <h3 class="font-semibold mb-3">Creación de Clases por Mes</h3>
                     <div id="classesChart"></div> {{-- ID para el gráfico de clases --}}
                 </div>
-
-                {{-- Aquí están tus otros gráficos que ya tenías. Mantén sus IDs si los tienes --}}
-                <div class="bg-white shadow rounded-xl p-6">
-                    <h3 class="font-semibold mb-3">Progreso promedio semanal</h3>
-                    <div class="bg-gray-100 rounded p-10 text-center text-gray-500">[Gráfico de barras aquí]</div>
-                </div>
-
-                <div class="bg-white shadow rounded-xl p-6">
-                    <h3 class="font-semibold mb-3">Actividad por grupo o entrenador</h3>
-                    <div class="bg-gray-100 rounded p-10 text-center text-gray-500">[Gráfico de barras aquí]</div>
-                </div>
-
-                <div class="bg-white shadow rounded-xl p-6">
-                    <h3 class="font-semibold mb-3">Distribución de usuarios por rol</h3>
-                    <div class="bg-gray-100 rounded p-10 text-center text-gray-500">[Gráfico circular o torta aquí]
-                    </div>
-                </div>
-
             </div>
         </section>
     </div>
 </x-app-layout>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        if (window.initApexCharts) {
-            const chartDataUrl = '{{ route('admin.chart.data') }}';
-            console.log('Intentando obtener datos de gráficos de la URL:', chartDataUrl); // ¡Añade esta línea!
-
-            fetch(chartDataUrl) // Usa la variable
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error de red o servidor: ' + response.statusText + ' (' + response.status + ')');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.usersChartData && data.subscriptionsChartData && data.classesChartData) {
-                        window.initApexCharts(
-                            data.usersChartData,
-                            data.subscriptionsChartData,
-                            data.classesChartData
-                        );
-                    } else {
-                        console.error("Los datos de los gráficos no están en el formato esperado desde el servidor.");
-                        console.log("Datos recibidos:", data);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al cargar los datos de los gráficos:', error);
-                });
-        } else {
-            console.error("La función 'initApexCharts' no está disponible...");
-        }
-    });
-</script>
