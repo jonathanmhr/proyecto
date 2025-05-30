@@ -8,7 +8,6 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                {{-- Contenido idéntico a compras.cliente.show.blade.php desde aquí --}}
                 @if(session('success'))
                     <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
                         {{ session('success') }}
@@ -82,8 +81,6 @@
                                      <div class="flex items-center">
                                         @if($item->imagen)
                                         <div class="flex-shrink-0 h-10 w-10">
-                                            {{-- Asumiendo que las imágenes están en public/storage/almacen_imagenes --}}
-                                            {{-- Y que creaste el symlink con `php artisan storage:link` --}}
                                             <img class="h-10 w-10 rounded-full" src="{{ Storage::url('almacen_imagenes/' . $item->imagen) }}" alt="{{ $item->nombre }}">
                                         </div>
                                         @endif
@@ -101,8 +98,6 @@
                         </tbody>
                     </table>
                 </div>
-                {{-- Hasta aquí el contenido idéntico --}}
-
                 <div class="mt-6">
                     <a href="{{ route('admin.compras.index') }}" class="text-indigo-600 hover:text-indigo-900">Volver al Listado de Compras</a>
                 </div>

@@ -5,8 +5,8 @@
     <!-- Logo -->
     <div class="mb-6">
         <a href="{{ route('dashboard') }}">
-            <x-application-mark class="h-8 w-auto" />
-        </a>
+            <img src="{{ asset('images/logo.png') }}"  width="150px" alt="logo">
+        </a> 
     </div>
 
     <!-- Navegación principal -->

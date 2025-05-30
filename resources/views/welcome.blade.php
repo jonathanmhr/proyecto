@@ -15,7 +15,7 @@
       <div class="flex justify-start lg:w-0 lg:flex-1">
         <h1 class="font-bold font-Figtree text-xl md:text-2xl">
           <a href="/">
-            <span class="text-white">Power-</span><span class="text-red-500">Core</span>
+            <img src="{{ asset('images/logoRojo.png') }}" width="120px" alt="">
           </a>
         </h1>
       </div>
