@@ -12,8 +12,6 @@ window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;
 
 document.addEventListener('DOMContentLoaded', () => {
-    Alpine.start();
-
     if (window.feather) {
         window.feather.replace();
     }

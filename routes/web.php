@@ -219,7 +219,9 @@ Route::middleware('auth', VerificarUsuarioActivo::class)
         // Entrenamientos
         Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
         Route::post('entrenamientos/{entrenamientoId}/unirse', [EntrenamientoController::class, 'unirseEntrenamiento'])->name('entrenamientos.unirse');
-        Route::get('/charts', [ChartController::class, 'index'])->name('charts.index');
+        Route::get('perfil-historial', function () {
+            return view('perfil.historial');
+        })->name('perfil.historial');
     });
 
 Route::middleware('auth', VerificarUsuarioActivo::class)

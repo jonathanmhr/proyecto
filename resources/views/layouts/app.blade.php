@@ -6,30 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Power-Core') }}</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net" />
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-    <!-- Feather Icons desde CDN -->
-    <script src="https://unpkg.com/feather-icons"></script>
-
-    <!-- Styles y Scripts Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    <script src="https://unpkg.com/feather-icons"></script>
     @livewireStyles
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased bg-gray-900 m-0 p-0">
     <x-banner />
 
-    <div x-data="{ sidebarOpen: false }" class="flex min-h-screen bg-white">
-        <!-- Sidebar -->
+    <div class="min-h-screen bg-gray-900">
+
         <x-sidebar />
 
-        <!-- Contenido principal -->
-        <main :class="sidebarOpen ? 'ml-64' : 'ml-20'" class="transition-all duration-300 w-full p-6">
+        <main class="min-h-screen p-6 transition-all duration-300 pl-24 lg:pl-72">
             {{ $slot }}
         </main>
     </div>
@@ -37,8 +30,6 @@
     @stack('modals')
     @stack('scripts')
     @livewireScripts
-
-
 </body>
 
 </html>
