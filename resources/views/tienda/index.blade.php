@@ -6,7 +6,32 @@
     </x-slot>
 
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-red-600 mb-6">Nuestros Productos</h1>
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-red-600 mb-4 md:mb-0">Nuestros Productos</h1>
+
+            {{-- Formulario de Búsqueda --}}
+            <form method="GET" action="{{ route('tienda.index') }}" class="w-full md:w-auto">
+                <div class="flex items-center">
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Buscar por nombre..."
+                        value="{{ $searchTerm ?? '' }}" {{-- Usamos $searchTerm pasado desde el controller --}}
+                        class="px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-full md:w-64"
+                    >
+                    <button
+                        type="submit"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r-md"
+                    >
+                        Buscar
+                    </button>
+                    @if(isset($searchTerm) && $searchTerm)
+                        <a href="{{ route('tienda.index') }}" class="ml-2 text-sm text-gray-600 hover:text-gray-800 underline">Limpiar</a>
+                    @endif
+                </div>
+            </form>
+        </div>
+
 
         @if(session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -20,11 +45,15 @@
         @endif
 
         @if($productos->isEmpty())
-            <p class="text-gray-600">No hay productos disponibles en este momento.</p>
+            @if(isset($searchTerm) && $searchTerm)
+                <p class="text-gray-600 text-center py-10">No se encontraron productos que coincidan con "<strong>{{ $searchTerm }}</strong>".</p>
+            @else
+                <p class="text-gray-600 text-center py-10">No hay productos disponibles en este momento.</p>
+            @endif
         @else
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @foreach ($productos as $producto)
-                    <div 
+                    <div
                         class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl cursor-pointer"
                         @click="$dispatch('open-product-modal', {{ json_encode($producto) }})"
                     >
@@ -71,6 +100,7 @@
                 @endforeach
             </div>
             <div class="mt-8">
+                {{-- Esto asegura que la paginación mantenga el filtro de búsqueda --}}
                 {{ $productos->links() }}
             </div>
         @endif
@@ -101,14 +131,14 @@
         role="dialog"
         aria-modal="true"
     >
-        <div 
-            @click.outside="closeModal()" 
+        <div
+            @click.outside="closeModal()"
             x-show="showModal"
             x-transition
             class="bg-white rounded-2xl shadow-xl max-w-3xl w-full p-6 mx-4 overflow-hidden text-left transform transition-all"
         >
             <div class="flex justify-between items-start mb-4">
-                <h3 class="text-2xl font-bold text-gray-900" tabindex="-1" x-text="product.nombre"></h3>
+                <h3 class="text-2xl font-bold text-gray-900" id="modal-title" tabindex="-1" x-text="product.nombre"></h3>
                 <button type="button" @click="closeModal()" class="text-gray-400 hover:text-gray-600">
                     <span class="sr-only">Cerrar modal</span>
                     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -119,7 +149,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="md:order-1">
-                    <img 
+                    <img
                         :src="product.imagen ? '{{ asset('images') }}/' + product.imagen : 'https://via.placeholder.com/400x300?text=Producto'"
                         :alt="product.nombre"
                         class="w-full h-auto max-h-[400px] object-contain rounded-lg shadow"
@@ -143,11 +173,11 @@
                             @csrf
                             <div class="flex items-center mb-3">
                                 <label :for="`modal-cantidad-${product.id}`" class="mr-2 text-sm text-gray-700">Cant:</label>
-                                <input 
-                                    type="number" 
-                                    name="cantidad" 
-                                    :id="`modal-cantidad-${product.id}`" 
-                                    value="1" min="1" 
+                                <input
+                                    type="number"
+                                    name="cantidad"
+                                    :id="`modal-cantidad-${product.id}`"
+                                    value="1" min="1"
                                     :max="product.cantidad_disponible > 0 ? product.cantidad_disponible : 1"
                                     class="w-20 px-2 py-1 border border-gray-300 rounded-md text-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 >
@@ -183,7 +213,6 @@
                     this.product = productData;
                     this.showModal = true;
                     this.$nextTick(() => {
-                        // Puedes manejar el foco aquí si quieres
                         const modalTitle = document.getElementById('modal-title');
                         if(modalTitle) modalTitle.focus();
                     });

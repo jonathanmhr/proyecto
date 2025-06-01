@@ -85,7 +85,7 @@
                 </a>
 
                 {{-- Nuevo acceso rápido para pedidos de usuarios --}}
-                <a href="#"
+                <a href="{{ route('admin.compras.index') }}"
                     class="bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-500 hover:to-purple-300 text-white font-bold py-4 px-6 rounded-xl flex justify-center items-center gap-4 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                     <span class="text-3xl">📦</span> Pedidos de usuarios
                 </a>

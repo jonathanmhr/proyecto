@@ -74,15 +74,43 @@ class CompraController extends Controller
         return Storage::disk('public')->download($path);
     }
 
-    public function adminIndex()
+   public function adminIndex(Request $request) 
     {
-        $user = Auth::user();
+        $user = Auth::user(); 
 
-        $compras = Compra::with(['user', 'factura'])
-                         ->orderBy('fecha_compra', 'desc')
+        $searchTerm = $request->input('search'); 
+
+        $query = Compra::with(['user', 'factura']);
+
+        if ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
+                
+                if (is_numeric($searchTerm)) {
+                    $q->where('id', '=', $searchTerm);
+                } else {
+                    $q->orWhere('id', 'LIKE', '%' . $searchTerm . '%');
+                }
+
+                $q->orWhereHas('factura', function ($facturaQuery) use ($searchTerm) {
+                    $facturaQuery->where('numero_factura', 'LIKE', '%' . $searchTerm . '%');
+                });
+
+                
+                $q->orWhereHas('user', function ($userQuery) use ($searchTerm) {
+                     $userQuery->where('name', 'LIKE', '%' . $searchTerm . '%')
+                               ->orWhere('email', 'LIKE', '%' . $searchTerm . '%');
+                 });
+            });
+        }
+
+        $compras = $query->orderBy('fecha_compra', 'desc')
                          ->paginate(15);
 
-        return view('admin.compras.index', compact('compras'));
+       
+        $compras->appends(['search' => $searchTerm]);
+
+        
+        return view('admin.compras.index', compact('compras', 'searchTerm'));
     }
 
     public function adminShow(Compra $compra)
