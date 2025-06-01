@@ -22,7 +22,8 @@ use App\Http\Controllers\General\SolicitudClaseController;
 use App\Http\Controllers\General\SuscripcionController;
 use App\Http\Controllers\Admin\NotificacionController;
 use App\Http\Controllers\General\NotificacionesController;
-use App\Http\Controllers\ChartController;
+use App\Http\Controllers\Charts\ChartController;
+use App\Http\Controllers\Charts\TrainerChartController;
 
 // Middleware
 use App\Actions\VerificarUsuarioActivo;
@@ -81,7 +82,6 @@ Route::middleware(['auth', 'verified', 'can:admin-access', VerificarUsuarioActiv
 
         // Dashboard principal
         Route::get('/', [UserController::class, 'dashboard'])->name('dashboard');
-        Route::get('/chart-data', [ChartController::class, 'index'])->name('chart.data');
 
         // Gestión de usuarios
         Route::get('usuarios', [UserController::class, 'index'])->name('usuarios.index');
@@ -122,6 +122,7 @@ Route::middleware(['auth', 'verified', 'can:admin-access', VerificarUsuarioActiv
         Route::get('users/{id}/suscripciones', [UserController::class, 'suscripciones'])->name('users.suscripciones');
 
         // Gestión de charts
+        Route::get('/chart-data', [ChartController::class, 'index'])->name('chart.data');
         Route::get('/charts', [ChartController::class, 'index'])->name('charts.index');
     });
 
@@ -180,6 +181,7 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
 
         // Suscripciones de usuarios
         Route::get('users/{id}/suscripciones', [SuscripcionController::class, 'index'])->name('users.suscripciones');
+        Route::get('/charts', [ChartController::class, 'index'])->name('charts');
     });
 
 // ----------------------

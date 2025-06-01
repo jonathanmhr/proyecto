@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Charts;
 
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -8,6 +8,7 @@ use App\Models\Suscripcion;
 use App\Models\ClaseGrupal;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Routing\Controller;
 
 class ChartController extends Controller
 {
