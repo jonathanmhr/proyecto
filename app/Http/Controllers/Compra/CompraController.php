@@ -13,15 +13,30 @@ use Bouncer;
 
 class CompraController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $compras = Compra::where('user_id', $user->id)
-                         ->with('factura')
-                         ->orderBy('fecha_compra', 'desc')
-                         ->paginate(10);
 
-        return view('cliente.compras.index', compact('compras'));
+        $fecha_desde = $request->input('fecha_desde');
+        $fecha_hasta = $request->input('fecha_hasta');
+
+        $query = Compra::where('user_id', $user->id)
+                       ->with('factura');
+
+        if ($fecha_desde) {
+            $query->whereDate('fecha_compra', '>=', $fecha_desde);
+        }
+
+        if ($fecha_hasta) {
+            $query->whereDate('fecha_compra', '<=', $fecha_hasta);
+        }
+
+        $compras = $query->orderBy('fecha_compra', 'desc')
+                         ->paginate(10);
+        $compras->appends($request->only(['fecha_desde', 'fecha_hasta']));
+
+       
+        return view('cliente.compras.index', compact('compras', 'fecha_desde', 'fecha_hasta'));
     }
 
     public function show(Compra $compra)
