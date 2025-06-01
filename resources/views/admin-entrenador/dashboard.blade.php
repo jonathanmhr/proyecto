@@ -69,12 +69,14 @@
 
                 <a href="{{ route('admin-entrenador.entrenadores.index') }}"
                     class="bg-yellow-700 hover:bg-yellow-600 text-white font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow-md">
-                    <span class="text-2xl"><i data-feather="user-check" class="w-6 h-6"></i></span> Gestionar Entrenadores
+                    <span class="text-2xl"><i data-feather="user-check" class="w-6 h-6"></i></span> Gestionar
+                    Entrenadores
                 </a>
 
                 <a href="{{ route('admin-entrenador.entrenamientos.index') }}"
                     class="bg-indigo-700 hover:bg-indigo-600 text-white font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow-md">
-                    <span class="text-2xl"><i data-feather="activity" class="w-6 h-6"></i></span> Gestionar Entrenamientos
+                    <span class="text-2xl"><i data-feather="activity" class="w-6 h-6"></i></span> Gestionar
+                    Entrenamientos
                 </a>
 
                 <a href="{{ route('admin-entrenador.alumnos.index') }}"
@@ -92,7 +94,8 @@
         <div class="mt-10">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-semibold text-white">Desempeño General</h2>
-                <button id="refreshTrainerCharts" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition duration-200">
+                <button id="refreshTrainerCharts"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition duration-200">
                     <i data-feather="refresh-ccw" class="w-5 h-5"></i>
                     <span>Actualizar Gráficos</span>
                 </button>
@@ -110,4 +113,9 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        @vite('resources/js/scripts/trainercharts.js')
+    @endpush
+
 </x-app-layout>

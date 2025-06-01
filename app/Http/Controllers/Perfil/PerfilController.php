@@ -6,8 +6,10 @@ use App\Models\ClaseGrupal;
 use App\Models\Entrenamiento;
 use App\Models\Suscripcion;
 use App\Models\PerfilUsuario;
+use App\Models\DietaYPlanNutricional;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 
 class PerfilController extends Controller
 {
@@ -37,8 +39,19 @@ class PerfilController extends Controller
         // Obtener notificaciones recientes del usuario (por ejemplo las últimas 10)
         $notificaciones = $usuario->notifications()->latest()->take(10)->get();
 
+        $dietasRecomendadas = Cache::remember('dietas_recomendadas_' . auth()->id(), now()->addMinutes(30), function () use ($usuario) {
+            return DietaYPlanNutricional::where(function ($query) use ($usuario) {
+                $query->whereNull('id_usuario')
+                    ->orWhere('id_usuario', $usuario->id);
+            })
+                ->inRandomOrder()
+                ->limit(5)
+                ->get();
+        });
+
+
         // Pasar los datos a la vista
-        return view('dashboard', compact('clases', 'entrenamientos', 'suscripciones', 'incompleteProfile', 'datosCompletos', 'perfil', 'notificaciones'));
+        return view('dashboard', compact('clases', 'entrenamientos', 'suscripciones', 'incompleteProfile', 'datosCompletos', 'perfil', 'notificaciones', 'dietasRecomendadas'));
     }
 
     public function completar()

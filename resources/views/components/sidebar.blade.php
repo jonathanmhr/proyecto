@@ -16,7 +16,6 @@
         {{-- ADMIN --}}
         @can('admin-access')
             <x-sidebar-link icon="shield" route="admin.dashboard" label="Panel de Admin" />
-            <x-sidebar-link icon="shopping-bag" route="admin.compras.index" label="Pedidos Usuarios" />
         @endcan
 
         {{-- ADMIN ENTRENADOR --}}

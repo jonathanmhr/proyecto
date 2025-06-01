@@ -1,44 +1,59 @@
 <x-app-layout>
-    <div class="container mx-auto px-4 py-6">
-        <!-- Botón para volver al Dashboard -->
-        <div class="flex justify-end mb-4">
-            <a href="{{ route('admin-entrenador.dashboard') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
-                Volver
+    {{-- Contenedor principal con fondo oscuro --}}
+    <div class="container mx-auto px-4 py-8 bg-gray-900 text-gray-100 min-h-screen">
+        <div class="flex justify-end mb-6">
+            <a href="{{ route('admin-entrenador.dashboard') }}"
+                class="inline-flex items-center bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
+                <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver al Dashboard
             </a>
         </div>
 
-        <h1 class="text-2xl font-bold mb-6">Solicitudes Pendientes de Clase</h1>
+        <h1 class="text-3xl font-bold text-white mb-6">Solicitudes Pendientes de Clase</h1>
+
+        @if (session('success'))
+            <div class="mb-4 bg-green-700 text-white px-4 py-3 rounded-lg shadow-md border border-green-800 animate-fade-in">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="mb-4 bg-red-700 text-white px-4 py-3 rounded-lg shadow-md border border-red-800 animate-fade-in">
+                {{ session('error') }}
+            </div>
+        @endif
 
         @if ($solicitudesPendientes->isEmpty())
-            <p>No hay solicitudes pendientes.</p>
+            <p class="text-gray-400 text-center py-8">No hay solicitudes pendientes en este momento.</p>
         @else
-            <table class="min-w-full bg-white shadow rounded-lg">
-                <thead>
-                    <tr>
-                        <th class="py-2 px-4 border-b">Nombre del Usuario</th>
-                        <th class="py-2 px-4 border-b">Clase</th>
-                        <th class="py-2 px-4 border-b">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($solicitudesPendientes as $solicitud)
+            <div class="bg-gray-800 shadow-lg rounded-xl overflow-hidden border border-gray-700">
+                <table class="min-w-full divide-y divide-gray-700">
+                    <thead class="bg-gray-700">
                         <tr>
-                            <td class="py-2 px-4 border-b">{{ $solicitud->usuario->name }}</td>
-                            <td class="py-2 px-4 border-b">{{ $solicitud->clase->nombre }}</td>
-                            <td class="py-2 px-4 border-b">
-                                <form action="{{ route('admin-entrenador.solicitudes.aceptar', ['claseId' => $solicitud->id_clase, 'usuarioId' => $solicitud->id_usuario]) }}" method="POST" class="inline">
-                                    @csrf
-                                    <button type="submit" class="text-green-500 hover:text-green-700">Aceptar</button>
-                                </form>
-                                <form action="{{ route('admin-entrenador.solicitudes.rechazar', ['claseId' => $solicitud->id_clase, 'usuarioId' => $solicitud->id_usuario]) }}" method="POST" class="inline ml-4">
-                                    @csrf
-                                    <button type="submit" class="text-red-500 hover:text-red-700">Rechazar</button>
-                                </form>
-                            </td>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Nombre del Usuario</th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Clase</th>
+                            <th class="px-4 py-3 text-center text-xs font-semibold text-gray-300 uppercase tracking-wider">Acciones</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700">
+                        @foreach ($solicitudesPendientes as $solicitud)
+                            <tr class="hover:bg-gray-700 transition duration-150 ease-in-out">
+                                <td class="px-4 py-3 text-white">{{ $solicitud->usuario->name }}</td>
+                                <td class="px-4 py-3 text-gray-300">{{ $solicitud->clase->nombre }}</td>
+                                <td class="px-4 py-3 text-center space-x-4">
+                                    <form action="{{ route('admin-entrenador.solicitudes.aceptar', ['claseId' => $solicitud->id_clase, 'usuarioId' => $solicitud->id_usuario]) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="text-green-400 hover:text-green-500 font-medium transition duration-200">Aceptar</button>
+                                    </form>
+                                    <form action="{{ route('admin-entrenador.solicitudes.rechazar', ['claseId' => $solicitud->id_clase, 'usuarioId' => $solicitud->id_usuario]) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="text-red-400 hover:text-red-500 font-medium transition duration-200">Rechazar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         @endif
     </div>
 </x-app-layout>

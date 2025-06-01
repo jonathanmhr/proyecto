@@ -69,35 +69,36 @@
                 </div>
             </div>
         </section>
-
         {{-- 2. Acciones rápidas --}}
         <section>
             <h2 class="text-2xl font-semibold mb-4 text-white">Acciones rápidas</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
 
-                <a href="{{ route('admin.users.index') }}"
-                    class="bg-indigo-700 hover:bg-indigo-600 text-white font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow-md">
-                    <span class="text-2xl">➕</span> Crear nuevo usuario
-                </a>
-
                 <a href="{{ route('admin.charts.index') }}"
-                    class="bg-blue-700 hover:bg-blue-600 text-white font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow-md">
-                    <span class="text-2xl">🧾</span> Generar reporte
+                    class="bg-gradient-to-r from-indigo-600 to-indigo-400 hover:from-indigo-500 hover:to-indigo-300 text-white font-bold py-4 px-6 rounded-xl flex justify-center items-center gap-4 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                    <span class="text-3xl">🧾</span> Generar reporte
                 </a>
 
                 <a href="{{ route('admin.notificaciones.create') }}"
-                    class="bg-pink-700 hover:bg-pink-600 text-white font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow-md">
-                    <span class="text-2xl">📤</span> Enviar anuncio
+                    class="bg-gradient-to-r from-pink-600 to-pink-400 hover:from-pink-500 hover:to-pink-300 text-white font-bold py-4 px-6 rounded-xl flex justify-center items-center gap-4 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                    <span class="text-3xl">📤</span> Enviar anuncio
+                </a>
+
+                {{-- Nuevo acceso rápido para pedidos de usuarios --}}
+                <a href="#"
+                    class="bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-500 hover:to-purple-300 text-white font-bold py-4 px-6 rounded-xl flex justify-center items-center gap-4 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                    <span class="text-3xl">📦</span> Pedidos de usuarios
                 </a>
 
                 <a href="{{ route('admin.users.index') }}"
-                    class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow-md">
-                    <span class="text-2xl">👥</span> Gestionar usuarios
+                    class="bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300 text-white font-bold py-4 px-6 rounded-xl flex justify-center items-center gap-4 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                    <span class="text-3xl">👥</span> Gestionar usuarios
                 </a>
 
+
                 <a href="{{ route('admin.roles.index') }}"
-                    class="bg-yellow-700 hover:bg-yellow-600 text-white font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow-md">
-                    <span class="text-2xl">👨‍👩‍👧‍👦</span> Gestionar grupos
+                    class="bg-gradient-to-r from-yellow-600 to-yellow-400 hover:from-yellow-500 hover:to-yellow-300 text-white font-bold py-4 px-6 rounded-xl flex justify-center items-center gap-4 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                    <span class="text-3xl">👨‍👩‍👧‍👦</span> Gestionar grupos
                 </a>
             </div>
         </section>
@@ -109,7 +110,8 @@
                 @foreach ($alertas ?? [] as $alerta)
                     <li
                         class="flex items-center gap-3 font-semibold {{ str_starts_with($alerta->icono, '⚠️') ? 'text-yellow-400' : (str_starts_with($alerta->icono, '✅') ? 'text-green-400' : 'text-red-400') }}">
-                        {!! $alerta->icono !!} <span class="text-gray-300">{{ $alerta->titulo }}</span> - <small class="text-gray-400">de {{ $alerta->remitente }}</small>
+                        {!! $alerta->icono !!} <span class="text-gray-300">{{ $alerta->titulo }}</span> - <small
+                            class="text-gray-400">de {{ $alerta->remitente }}</small>
                     </li>
                 @endforeach
             </ul>
@@ -124,7 +126,8 @@
                     <h3 class="font-semibold text-white">Usuarios registrados recientemente</h3>
                     <ul class="list-disc list-inside text-gray-300 mt-2">
                         @foreach ($usuariosRecientes ?? [] as $user)
-                            <li>{{ $user->name }} - <span class="text-gray-400">{{ $user->created_at->format('Y-m-d') }}</span></li>
+                            <li>{{ $user->name }} - <span
+                                    class="text-gray-400">{{ $user->created_at->format('Y-m-d') }}</span></li>
                         @endforeach
                     </ul>
                 </div>
@@ -152,7 +155,8 @@
                         @foreach ($notificacionesEnviadas ?? [] as $notificacion)
                             <li>
                                 <span class="text-gray-300">{{ $notificacion->titulo }}</span> -
-                                <span class="text-gray-400 text-sm">{{ \Carbon\Carbon::parse($notificacion->fecha)->format('Y-m-d H:i') }}</span>
+                                <span
+                                    class="text-gray-400 text-sm">{{ \Carbon\Carbon::parse($notificacion->fecha)->format('Y-m-d H:i') }}</span>
                                 -
                                 <em class="text-gray-400">Enviado por: {{ $notificacion->remitente }}</em>
                             </li>
@@ -167,7 +171,8 @@
         <section>
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-semibold text-white">Gráficos de Actividad Mensual</h2>
-                <button id="refreshCharts" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition duration-200">
+                <button id="refreshCharts"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition duration-200">
                     <i data-feather="refresh-ccw" class="w-5 h-5"></i>
                     <span>Actualizar Gráficos</span>
                 </button>
@@ -195,8 +200,8 @@
         </section>
     </div>
 
-    {{-- Ya no necesitamos @push('scripts') si dashboardcharts.js se importa en app.js --}}
-    {{-- @push('scripts')
-        <script src="{{ asset('js/dashboardcharts.js') }}" defer></script>
-    @endpush --}}
+    @push('scripts')
+        @vite('resources/js/scripts/dashboardCharts.js')
+    @endpush
+
 </x-app-layout>

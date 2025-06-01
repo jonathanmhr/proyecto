@@ -13,12 +13,10 @@
         @endforeach
 
         {{-- Título --}}
-        {{-- Cambiado a texto blanco para el fondo oscuro --}}
         <h1 class="text-3xl font-bold text-white">Usuarios</h1>
 
         {{-- Botones --}}
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            {{-- Botón Nuevo Usuario - Usando indigo-500/600 para un look más moderno o blue-500/600 si prefieres azul primario --}}
             <a href="{{ route('admin.usuarios.create') }}"
                 class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors shadow">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
@@ -28,38 +26,34 @@
                 Nuevo Usuario
             </a>
 
-            {{-- Botón Volver al dashboard - Mismo azul que arriba para coherencia --}}
             <a href="{{ route('admin.dashboard') }}"
-               class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md shadow transition">
+                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md shadow transition">
                 ← Volver al dashboard
             </a>
         </div>
 
         {{-- Filtros --}}
-        {{-- Fondo oscuro, texto claro, bordes sutiles --}}
         <div class="bg-gray-800 p-6 rounded-lg shadow-md w-full border border-gray-700">
-            <form method="GET" action="{{ route('admin.usuarios.index') }}"
+            <form method="GET" action="{{ route('admin.usuarios.index') }}" id="searchForm"
                 class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 w-full">
                 <div class="flex-1">
-                    {{-- Etiquetas de texto claro --}}
-                    <label for="search" class="block text-sm font-medium text-gray-300">Buscar por nombre o
+                    <label for="searchInput" class="block text-sm font-medium text-gray-300">Buscar por nombre o
                         email</label>
-                    {{-- Input oscuro con borde y foco acorde --}}
-                    <input type="text" name="search" id="search" value="{{ request('search') }}"
-                        class="mt-1 w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+                    <input type="text" name="search" id="searchInput" value="{{ request('search') }}"
+                        class="mt-1 w-full bg-gray-700 border border-gray-600 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
                         placeholder="Ej: usuario@example.com">
+                    <p id="searchError" class="text-red-500 text-sm mt-1 hidden"></p>
                 </div>
 
-                <div class="flex flex-col md:flex-row md:items-end gap-2">
+                <div class="flex flex-col md:flex-row md:items-end gap-4">
                     <div>
-                        {{-- Etiquetas de texto claro --}}
                         <label for="role" class="block text-sm font-medium text-gray-300">Rol</label>
-                        {{-- Select oscuro con borde y foco acorde --}}
                         <select name="role" id="role"
-                            class="mt-1 w-full md:w-40 bg-gray-700 border-gray-600 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            class="mt-1 w-full md:w-40 bg-gray-700 border border-gray-600 text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                             <option value="" class="bg-gray-700 text-white">-- Todos --</option>
                             @foreach (['admin', 'entrenador', 'cliente', 'admin_entrenador'] as $role)
-                                <option value="{{ $role }}" {{ request('role') === $role ? 'selected' : '' }} class="bg-gray-700 text-white">
+                                <option value="{{ $role }}" {{ request('role') === $role ? 'selected' : '' }}
+                                    class="bg-gray-700 text-white">
                                     {{ ucfirst($role) }}
                                 </option>
                             @endforeach
@@ -67,12 +61,10 @@
                     </div>
 
                     <div class="flex gap-2 mt-1 md:mt-6">
-                        {{-- Botones de acción - Mismo azul primario --}}
-                        <button type="submit"
+                        <button type="submit" id="searchButton"
                             class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors shadow">
                             🔍 Filtrar
                         </button>
-                        {{-- Botón Limpiar - Gris oscuro para contraste --}}
                         <a href="{{ route('admin.usuarios.index') }}"
                             class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-sm font-medium transition-colors shadow">
                             Limpiar
@@ -81,6 +73,7 @@
                 </div>
             </form>
         </div>
+
 
         {{-- Tabla de Usuarios --}}
         {{-- Fondo oscuro para la tabla --}}
@@ -107,9 +100,9 @@
                                     <span
                                         class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold
                                         {{ match ($role->name) {
-                                            'admin' => 'bg-red-700 text-red-100',       // Rojo oscuro para admin
+                                            'admin' => 'bg-red-700 text-red-100', // Rojo oscuro para admin
                                             'entrenador' => 'bg-green-700 text-green-100', // Verde oscuro para entrenador
-                                            'cliente' => 'bg-blue-700 text-blue-100',    // Azul oscuro para cliente
+                                            'cliente' => 'bg-blue-700 text-blue-100', // Azul oscuro para cliente
                                             'admin_entrenador' => 'bg-purple-700 text-purple-100', // Morado oscuro
                                             default => 'bg-gray-600 text-gray-100',
                                         } }}">
@@ -143,7 +136,8 @@
                                         <i data-feather="refresh-ccw"></i>
                                     </button>
                                 </form>
-                                <form action="{{ route('admin.users.changeStatus', $user->id) }}" method="POST" class="inline"
+                                <form action="{{ route('admin.users.changeStatus', $user->id) }}" method="POST"
+                                    class="inline"
                                     onsubmit="event.preventDefault(); confirmAction('¿Deseas cambiar el estado de este usuario?', this);">
                                     @csrf
                                     <button type="submit"
@@ -152,7 +146,8 @@
                                         <i data-feather="toggle-left"></i>
                                     </button>
                                 </form>
-                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline"
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
+                                    class="inline"
                                     onsubmit="event.preventDefault(); confirmAction('¿Estás seguro de eliminar este usuario?', this);">
                                     @csrf
                                     @method('DELETE')
@@ -186,8 +181,10 @@
         {{-- Modal --}}
         {{-- Fondo del modal y texto adaptados --}}
         <div id="confirm-modal"
-            class="fixed inset-0 z-50 hidden bg-black bg-opacity-70 flex items-center justify-center"> {{-- Opacidad más alta para el fondo --}}
-            <div class="bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full border border-gray-700"> {{-- Fondo oscuro, borde sutil --}}
+            class="fixed inset-0 z-50 hidden bg-black bg-opacity-70 flex items-center justify-center">
+            {{-- Opacidad más alta para el fondo --}}
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full border border-gray-700">
+                {{-- Fondo oscuro, borde sutil --}}
                 <h2 class="text-lg font-bold mb-4 text-white">Confirmar acción</h2> {{-- Texto blanco --}}
                 <p class="text-gray-300 mb-6" id="confirm-message">¿Estás seguro?</p> {{-- Texto más claro --}}
                 <div class="flex justify-end gap-2">
@@ -225,4 +222,7 @@
             });
         </script>
     </div>
+    @push('scripts')
+        @vite('resources/js/scripts/busqueda.js')
+    @endpush
 </x-app-layout>
