@@ -20,12 +20,9 @@ class DashboardController extends Controller
             $clases = ClaseGrupal::where('entrenador_id', $user->id)->latest()->take(6)->get();
             $entrenamientos = Entrenamiento::where('entrenador_id', $user->id)->latest()->take(6)->get();
         } else {
-            $clases = ClaseGrupal::whereDate('fecha_inicio', '>=', now())
-                ->where('cupos_maximos', '>', 0)
-                ->latest()->take(6)->get();
+            $clases = ClaseGrupal::latest()->take(6)->get();
 
-            $entrenamientos = Entrenamiento::whereDate('fecha', '>=', now())
-                ->latest()->take(6)->get();
+            $entrenamientos = Entrenamiento::latest()->take(6)->get();
         }
 
         return view('cliente.dashboard', compact('clases', 'entrenamientos'));

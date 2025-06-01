@@ -8,10 +8,12 @@ use App\Models\Entrenamiento;
 
 class EntrenamientoController extends Controller
 {
-    // Mostrar entrenamientos según el rol
+    // Mostrar entrenamientos ordenados por fecha más reciente
     public function index()
     {
-        $entrenamientos = Entrenamiento::with('usuarios')->get();
+        $entrenamientos = Entrenamiento::with('usuarios')
+            ->orderBy('fecha', 'desc')
+            ->get();
 
         return view('clases.index', compact('entrenamientos'));
     }
