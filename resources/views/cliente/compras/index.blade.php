@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+            <div class="bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
                 @if(session('success'))
                     <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
                         {{ session('success') }}
@@ -21,16 +21,16 @@
                 @endif
 
                 {{-- Formulario de Filtro por Fechas --}}
-                <form method="GET" action="{{ route('compras.index') }}" class="mb-6"> {{-- Asegúrate que el nombre de la ruta es correcto --}}
+                <form method="GET" action="{{ route('compras.index') }}" class="mb-6">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                         <div>
-                            <label for="fecha_desde" class="block text-sm font-medium text-gray-700">Desde Fecha:</label>
+                            <label for="fecha_desde" class="block text-sm font-medium text-gray-100">Desde Fecha:</label>
                             <input type="date" name="fecha_desde" id="fecha_desde"
                                    value="{{ $fecha_desde ?? '' }}"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         </div>
                         <div>
-                            <label for="fecha_hasta" class="block text-sm font-medium text-gray-700">Hasta Fecha:</label>
+                            <label for="fecha_hasta" class="block text-sm font-medium text-gray-100">Hasta Fecha:</label>
                             <input type="date" name="fecha_hasta" id="fecha_hasta"
                                    value="{{ $fecha_hasta ?? '' }}"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -59,7 +59,7 @@
                     @endif
                     <a href="{{ route('tienda.index') }}" class="mt-2 inline-block text-indigo-600 hover:text-indigo-900">Ir a la tienda</a>
                 @else
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto rounded">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -74,7 +74,7 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($compras as $compra)
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#{{ $compra->id }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $compra->id }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $compra->fecha_compra->format('d/m/Y H:i') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($compra->total_compra, 2, ',', '.') }} €</td>
                                         <td class="px-6 py-4 whitespace-nowrap">

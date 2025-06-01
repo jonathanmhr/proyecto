@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+            <div class="bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
                 @if(session('success'))
                     <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
                         {{ session('success') }}
@@ -50,7 +50,7 @@
                         <p class="text-gray-600">No hay compras registradas.</p>
                     @endif
                 @else
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto rounded">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -89,7 +89,6 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <a href="{{ route('admin.compras.show', $compra->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Ver Detalles</a>
                                             @if($compra->factura && $compra->factura->ruta_pdf)
-                                                {{-- Asumiendo que tienes una ruta para descargar la factura --}}
                                                 <a href="{{ route('compras.factura.download', $compra->id) }}" class="text-blue-600 hover:text-blue-900">Descargar PDF</a>
                                             @endif
                                         </td>
@@ -99,7 +98,7 @@
                         </table>
                     </div>
                     <div class="mt-4">
-                        {{ $compras->links() }} {{-- La paginación ya incluye el 'search' por el appends en el controller --}}
+                        {{ $compras->links() }}
                     </div>
                 @endif
             </div>

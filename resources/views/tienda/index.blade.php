@@ -8,8 +8,6 @@
     <div class="container mx-auto px-4 py-8">
         <div class="flex flex-col md:flex-row justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-red-600 mb-4 md:mb-0">Nuestros Productos</h1>
-
-            {{-- Formulario de Búsqueda --}}
             <form method="GET" action="{{ route('tienda.index') }}" class="w-full md:w-auto">
                 <div class="flex items-center">
                     <input

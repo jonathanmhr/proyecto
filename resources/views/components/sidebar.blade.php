@@ -65,7 +65,7 @@
         {{-- COMÚN A VARIOS ROLES --}}
         @canany(['cliente-access', 'entrenador-access', 'admin_entrenador'])
             <x-sidebar-link icon="calendar" route="cliente.dashboard" label="Clases Disponibles" />
-            <x-sidebar-link icon="message-circle" route="cliente.clases.index" label="Comunidad" />
+            <x-sidebar-link icon="message-circle" route="chat.index" label="Mensajes" />
         @endcan
     </nav>
 
