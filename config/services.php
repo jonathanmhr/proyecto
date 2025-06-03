@@ -40,5 +40,9 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+'recaptcha' => [
+    'sitekey' => env('RECAPTCHA_SITE_KEY'),
+    'secret' => env('RECAPTCHA_SECRET_KEY'),
+],
 
 ];
