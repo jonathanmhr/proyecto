@@ -15,6 +15,7 @@ class ClaseGrupalController extends Controller
         if ($user->can('admin_entrenador') || $user->can('admin')) {
             // Todos ven todas las clases ordenadas por fecha_inicio descendente, paginadas
             $clases = ClaseGrupal::orderBy('fecha_inicio', 'desc')->paginate(10);
+            $clasesParaEventos = $user->clases;
         } elseif ($user->can('entrenador')) {
             // Entrenador solo sus clases
             $clases = ClaseGrupal::where('entrenador_id', $user->id)
@@ -37,23 +38,43 @@ class ClaseGrupalController extends Controller
                 $clase->estado_color = 'bg-red-600 text-white';
             }
 
-            $clase->inscrito = $clase->usuarios()->wherePivot('estado', 'aceptado')->where('id_usuario', $user->id)->exists();
-            $clase->solicitud_pendiente = $clase->solicitudes()->where('user_id', $user->id)->where('estado', 'pendiente')->exists();
-            $clase->revocado = $clase->usuarios()->wherePivot('estado', 'revocado')->where('id_usuario', $user->id)->exists();
+            $clase->inscrito = $clase->usuarios()->where('users.id', $user->id)->wherePivot('estado', 'aceptado')->exists();
+            $clase->solicitud_pendiente = $clase->solicitudes()->where('id_usuario', $user->id)->where('estado', 'pendiente')->exists();
+            $clase->revocado = $clase->usuarios()->where('users.id', $user->id)->wherePivot('estado', 'revocado')->exists();
+
 
             $clase->expirada = $clase->fecha_inicio < now();
         }
+        $eventos = $clasesParaEventos->map(function ($clase) {
+            return [
+                'title' => $clase->nombre,
+                'start' => $clase->fecha_inicio->toDateTimeString(),
+                'end' => $clase->fecha_fin ? $clase->fecha_fin->toDateTimeString() : null,
+                'tipo' => 'Clase Grupal',
+                'description' => $clase->descripcion ?? '',
+            ];
+        });
 
-        return view('cliente.clases.index', compact('clases'));
+        return view('cliente.clases.index', compact('clases', 'eventos'));
     }
-
 
 
     public function unirse(Request $request, ClaseGrupal $clase)
     {
         $user = auth()->user();
 
-        $yaInscrito = $clase->usuarios()->where('user_id', $user->id)->exists();
+        // Contar inscritos activos (puedes ajustar el estado si tienes otro nombre)
+        $inscritosCount = $clase->suscripciones()->where('estado', 'activa')->count();
+
+        // Calcular cupos restantes
+        $cuposRestantes = $clase->cupos_maximos - $inscritosCount;
+
+        if ($cuposRestantes <= 0) {
+            return redirect()->back()->with('error', 'No quedan cupos disponibles en esta clase.');
+        }
+
+        // Validaciones previas
+        $yaInscrito = $clase->usuarios()->where('users.id', $user->id)->exists();
         if ($yaInscrito) {
             return redirect()->back()->with('error', 'Ya estás inscrito en esta clase.');
         }
@@ -68,6 +89,7 @@ class ClaseGrupalController extends Controller
             return redirect()->back()->with('error', 'Te han rechazado de esta clase.');
         }
 
+        // Crear la solicitud
         $clase->solicitudes()->create([
             'user_id' => $user->id,
             'estado' => 'pendiente',

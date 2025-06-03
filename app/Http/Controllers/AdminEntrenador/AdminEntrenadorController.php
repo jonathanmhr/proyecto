@@ -279,62 +279,54 @@ class AdminEntrenadorController extends Controller
 
     public function verSolicitudesClases()
     {
-        $solicitudesPendientes = ReservaDeClase::with(['usuario', 'clase'])
-            ->where('estado', 'pendiente')
+        // Traemos las clases con cambios pendientes
+        $solicitudesPendientes = ClaseGrupal::where('cambio_pendiente', 1)
+            ->whereNotNull('id_clase')
             ->get();
 
         return view('admin-entrenador.solicitudes.index', compact('solicitudesPendientes'));
     }
 
-    public function aceptarSolicitud($claseId, $usuarioId)
+    public function aceptarSolicitud($id)
     {
-        $this->autorizarAdmin(); // Verificación centralizada
+        $this->autorizarAdmin();
 
-        $suscripcion = Suscripcion::where('id_clase', $claseId)
-            ->where('id_usuario', $usuarioId)
-            ->where('estado', 'pendiente')
-            ->first();
+        $clase = ClaseGrupal::find($id);
 
-        if (!$suscripcion) {
-            return redirect()->back()->with('error', 'No se encontró la solicitud pendiente.');
+        if (!$clase || !$clase->cambio_pendiente) {
+            return redirect()->back()->with('error', 'No se encontró ninguna solicitud pendiente para esta clase.');
         }
 
-        $suscripcion->update([
-            'estado' => 'activo',
-            'fecha_inicio' => now(),
-            'fecha_fin' => now()->addMonth(),
-        ]);
-
-        return redirect()->back()->with('success', 'Solicitud aceptada correctamente.');
-    }
-
-    public function rechazarSolicitud($claseId, $usuarioId)
-    {
-        $this->autorizarAdmin(); // Verificación centralizada
-
-        $suscripcion = Suscripcion::where('id_clase', $claseId)
-            ->where('id_usuario', $usuarioId)
-            ->where('estado', 'pendiente')
-            ->first();
-
-        if (!$suscripcion) {
-            return redirect()->back()->with('error', 'No se encontró la solicitud pendiente.');
+        // Si tienes un campo con los datos del cambio pendiente en JSON, aplicarlo
+        if ($clase->cambios_pendientes) {
+            $cambios = json_decode($clase->cambios_pendientes, true);
+            $clase->fill($cambios);
         }
 
-        $suscripcion->delete();
-
-        return redirect()->back()->with('success', 'Solicitud rechazada correctamente.');
-    }
-
-    public function aprobarCambios($id)
-    {
-        $clase = ClaseGrupal::findOrFail($id);
-
-        // Marcar que los cambios fueron aprobados
-        $clase->cambio_pendiente = false; // Asegúrate de que este campo exista en la base de datos
+        // Marcar que ya no hay cambio pendiente y limpiar cambios temporales
+        $clase->cambio_pendiente = 0;
+        $clase->cambios_pendientes = null;
         $clase->save();
 
-        return redirect()->route('admin-entrenador.clases.index')->with('success', 'Cambios aprobados exitosamente.');
+        return redirect()->back()->with('success', 'Solicitud aceptada y cambios aplicados correctamente.');
+    }
+
+    public function rechazarSolicitud($id)
+    {
+        $this->autorizarAdmin();
+
+        $clase = ClaseGrupal::find($id);
+
+        if (!$clase || !$clase->cambio_pendiente) {
+            return redirect()->back()->with('error', 'No se encontró ninguna solicitud pendiente para esta clase.');
+        }
+
+        // Simplemente descartamos el cambio pendiente
+        $clase->cambio_pendiente = 0;
+        $clase->cambios_pendientes = null;
+        $clase->save();
+
+        return redirect()->back()->with('success', 'Solicitud rechazada y cambios descartados correctamente.');
     }
 
     // Método centralizado para verificar permisos

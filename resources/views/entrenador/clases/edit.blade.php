@@ -2,8 +2,10 @@
     {{-- Contenedor principal con fondo oscuro --}}
     <div class="container mx-auto px-4 py-8 bg-gray-900 text-gray-100 min-h-screen">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-white">Editar Clase: <span class="text-red-500">{{ $clase->nombre }}</span></h1>
-            <a href="{{ route('admin-entrenador.clases.index') }}" {{-- Asumiendo que esta es la ruta correcta para volver al listado de clases --}}
+            <h1 class="text-3xl font-bold text-white">
+                Editar Clase: <span class="text-red-500">{{ $clase->nombre }}</span>
+            </h1>
+            <a href="{{ route('entrenador.clases.index') }}" {{-- Ruta corregida para volver al listado --}}
                 class="inline-flex items-center px-4 py-2 bg-blue-700 text-white hover:bg-blue-800 font-semibold rounded-lg transition duration-200 shadow-md">
                 <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
             </a>
@@ -51,19 +53,22 @@
 
                 <div>
                     <label for="nivel" class="block text-white font-semibold mb-2">Nivel</label>
-                    <select id="nivel" name="nivel" class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-red-500 focus:ring-red-500 transition duration-200 appearance-none">
-                        <option value="principiante" {{ (old('nivel', $clase->nivel) == 'principiante') ? 'selected' : '' }}>Principiante</option>
-                        <option value="intermedio" {{ (old('nivel', $clase->nivel) == 'intermedio') ? 'selected' : '' }}>Intermedio</option>
-                        <option value="avanzado" {{ (old('nivel', $clase->nivel) == 'avanzado') ? 'selected' : '' }}>Avanzado</option>
+                    <select id="nivel" name="nivel" 
+                        class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-red-500 focus:ring-red-500 transition duration-200 appearance-none">
+                        <option value="principiante" {{ old('nivel', $clase->nivel) == 'principiante' ? 'selected' : '' }}>Principiante</option>
+                        <option value="intermedio" {{ old('nivel', $clase->nivel) == 'intermedio' ? 'selected' : '' }}>Intermedio</option>
+                        <option value="avanzado" {{ old('nivel', $clase->nivel) == 'avanzado' ? 'selected' : '' }}>Avanzado</option>
                     </select>
                 </div>
 
                 <div class="text-center mt-8">
-                    <button type="submit" class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 shadow-md transition duration-200 transform hover:scale-105">
+                    <button type="submit" 
+                        class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 shadow-md transition duration-200 transform hover:scale-105">
                         Guardar cambios
                     </button>
                 </div>
             </div>
         </form>
     </div>
-</x-app-layo
+
+</x-app-layout>

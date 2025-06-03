@@ -5,59 +5,91 @@
         </h2>
     </x-slot>
 
-    {{-- Contenedor principal con fondo oscuro --}}
-    <div class="container mx-auto px-4 py-8 bg-gray-900 text-gray-100 min-h-screen">
-        <div class="flex items-center justify-between mb-6">
-            <h1 class="text-3xl font-bold text-white">Mis Clases</h1>
-            <a href="{{ route('admin-entrenador.dashboard') }}" {{-- Assuming this is the correct route for the trainer's dashboard --}}
-                class="inline-flex items-center px-4 py-2 bg-blue-700 text-white hover:bg-blue-800 font-semibold rounded-lg transition duration-200 shadow-md">
-                <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
+    <main class="container mx-auto px-4 py-8 bg-gray-900 text-gray-100 min-h-screen">
+        <div class="flex flex-col sm:flex-row items-center justify-between mb-8">
+            <h1 class="text-4xl font-extrabold text-red-400 tracking-tight mb-4 sm:mb-0">Mis Clases</h1>
+            <a href="{{ route('entrenador.dashboard') }}"
+               class="inline-flex items-center px-5 py-2 bg-blue-700 hover:bg-blue-800 rounded-lg shadow-md transition-colors duration-200 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+                Volver
             </a>
         </div>
 
-        <div class="space-y-6">
+        <section class="space-y-8">
             @forelse ($clases as $clase)
-                <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:shadow-xl hover:bg-gray-700 transition-all duration-300 transform hover:-translate-y-1">
-                    <h3 class="text-xl font-bold text-red-400 mb-2">{{ $clase->nombre }}</h3>
-                    <p class="text-sm text-gray-300 mb-2">{{ $clase->descripcion }}</p>
-                    <div class="text-sm text-gray-400 mb-2">
-                        <strong>Fecha:</strong> {{ \Carbon\Carbon::parse($clase->fecha_inicio)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($clase->fecha_fin)->format('d/m/Y') }}
-                    </div>
-                    <div class="text-sm text-gray-400 mb-2">
-                        <strong>Ubicación:</strong> {{ $clase->ubicacion }}
-                    </div>
-                    <div class="text-sm text-gray-400 mb-2">
-                        <strong>Cupos disponibles:</strong> {{ $clase->cupos_maximos }}
-                    </div>
-                    <div class="text-sm text-gray-400 mb-4">
-                        <strong>Duración estimada:</strong> {{ $clase->duracion }} minutos
+                <article
+                    class="bg-gray-800 border border-gray-700 rounded-2xl p-6 hover:shadow-xl hover:bg-gray-700 transition-transform duration-300 transform hover:-translate-y-1">
+                    <header>
+                        <h3 class="text-2xl font-bold text-red-400 mb-2">{{ $clase->nombre }}</h3>
+                    </header>
+
+                    <p class="text-gray-300 mb-4 leading-relaxed">{{ $clase->descripcion }}</p>
+
+                    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm text-gray-400 mb-6">
+                        <div>
+                            <dt class="font-semibold text-gray-200">Fecha</dt>
+                            <dd>
+                                {{ \Carbon\Carbon::parse($clase->fecha_inicio)->format('d/m/Y') }} - 
+                                {{ \Carbon\Carbon::parse($clase->fecha_fin)->format('d/m/Y') }}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="font-semibold text-gray-200">Ubicación</dt>
+                            <dd>{{ $clase->ubicacion }}</dd>
+                        </div>
+                        <div>
+                            <dt class="font-semibold text-gray-200">Cupos disponibles</dt>
+                            <dd>{{ $clase->cupos_maximos }}</dd>
+                        </div>
+                        <div>
+                            <dt class="font-semibold text-gray-200">Duración estimada</dt>
+                            <dd>{{ $clase->duracion }} minutos</dd>
+                        </div>
+                    </dl>
+
+                    <div>
+                        @if ($clase->cambio_pendiente)
+                            <span
+                                class="inline-block bg-yellow-600 text-yellow-100 px-3 py-1 rounded-full text-xs font-bold mb-4">
+                                Cambios pendientes de aprobación
+                            </span>
+                        @else
+                            <span
+                                class="inline-block bg-green-600 text-green-100 px-3 py-1 rounded-full text-xs font-bold mb-4">
+                                Clase Aceptada
+                            </span>
+                        @endif
                     </div>
 
-                    @if ($clase->cambio_pendiente)
-                        <div class="text-yellow-100 bg-yellow-600 rounded-full px-3 py-1 text-xs font-bold inline-block mb-4">
-                            <strong>Estado:</strong> Cambios pendientes de aprobación
-                        </div>
-                    @else
-                        <div class="text-green-100 bg-green-600 rounded-full px-3 py-1 text-xs font-bold inline-block mb-4">
-                            <strong>Estado:</strong> Clase Aceptada
-                        </div>
-                    @endif
-
-                    <div class="flex flex-wrap gap-3 mt-4"> {{-- Use flex-wrap and gap for buttons --}}
-                        <a href="{{ route('admin-entrenador.clases.edit', $clase->id_clase) }}" {{-- Changed to admin-entrenador route --}}
-                            class="inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
+                    <footer class="flex flex-wrap gap-4 mt-4">
+                        <a href="{{ route('entrenador.clases.edit', $clase->id_clase) }}"
+                           class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M15.232 5.232l3.536 3.536M9 11l3 3L21 5l-3-3L9 11z" />
+                            </svg>
                             Editar Clase
                         </a>
 
-                        <a href="{{ route('admin-entrenador.clases.alumnos', $clase->id_clase) }}" {{-- Changed to admin-entrenador route --}}
-                            class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
+                        <a href="{{ route('entrenador.clases.alumnos', $clase->id_clase) }}"
+                           class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 20h5v-2a4 4 0 0 0-3-3.87M9 20h6M4 20h5v-2a4 4 0 0 0-3-3.87M12 7a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" />
+                            </svg>
                             Gestionar Alumnos
                         </a>
-                    </div>
-                </div>
+                    </footer>
+                </article>
             @empty
-                <p class="text-gray-400 text-center py-8">No tienes clases programadas en este momento.</p>
+                <p class="text-center text-gray-400 text-lg py-16">
+                    No tienes clases programadas en este momento.
+                </p>
             @endforelse
-        </div>
-    </div>
+        </section>
+    </main>
 </x-app-layout>

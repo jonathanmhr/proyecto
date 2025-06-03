@@ -438,6 +438,9 @@
                 updateSlider();
             });
         </script>
-            @vite('resources/js/scripts/calendario.js')
+        @vite('resources/js/scripts/calendario.js')
+        <script>
+            window.eventosClases = @json($eventos ?? []);
+        </script>
     @endpush
 </x-app-layout>

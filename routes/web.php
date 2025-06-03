@@ -161,8 +161,9 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
 
         // Solicitudes de clases
         Route::get('solicitudes', [AdminEntrenadorController::class, 'verSolicitudesClases'])->name('solicitudes.index');
-        Route::post('solicitudes/{claseId}/aceptar/{usuarioId}', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('solicitudes.aceptar');
-        Route::post('solicitudes/{claseId}/rechazar/{usuarioId}', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
+        Route::post('solicitudes/{id}/aceptar', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('solicitudes.aceptar');
+        Route::post('solicitudes/{id}/rechazar', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
+
 
         // Gestión de entrenamientos
         Route::get('entrenamientos', [AdminEntrenamientoController::class, 'index'])->name('entrenamientos.index');
@@ -195,11 +196,14 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access', VerificarUsuario
 
         // Gestión de clases
         Route::get('clases', [EntrenadorController::class, 'misClases'])->name('clases.index');
+        Route::post('clases', [EntrenadorController::class, 'store'])->name('clases.store');
+        Route::get('clases/create', [EntrenadorController::class, 'create'])->name('clases.create');
         Route::get('clases/{clase}/alumnos', [EntrenadorController::class, 'verAlumnos'])->name('clases.alumnos');
         Route::get('clases/{clase}/edit', [EntrenadorController::class, 'edit'])->name('clases.edit');
         Route::put('clases/{clase}', [EntrenadorController::class, 'updateClase'])->name('clases.update');
-        Route::delete('clases/{clase}/quitar/{userId}', [EntrenadorController::class, 'quitarUsuario'])->name('clases.quitarUsuario');
+        Route::delete('clases/{clase}/eliminar-alumno/{alumnoId}', [EntrenadorController::class, 'eliminarAlumno'])->name('clases.eliminarAlumno');
 
+        // Solicitudes
         Route::get('solicitudes', [EntrenadorController::class, 'verSolicitudesPendientes'])->name('solicitudes.index');
         Route::post('solicitudes/aceptar/{id}', [EntrenadorController::class, 'aceptarSolicitud'])->name('solicitudes.aceptar');
         Route::post('solicitudes/rechazar/{id}', [EntrenadorController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
@@ -252,19 +256,18 @@ Route::middleware(['auth'])
 
         //Compras admin
         Route::prefix('admin/compras')
-        ->name('admin.compras.')
-        ->group(function () {
-            //Compras de usuarios
-            Route::get('/', [CompraController::class, 'adminIndex'])->name('index')->middleware('can:admin-access'); 
-            //Detalles de compra para admin
-            Route::get('/{compra}', [CompraController::class, 'adminShow'])->name('show')->middleware('can:admin-access'); 
-       
+            ->name('admin.compras.')
+            ->group(function () {
+                //Compras de usuarios
+                Route::get('/', [CompraController::class, 'adminIndex'])->name('index')->middleware('can:admin-access');
+                //Detalles de compra para admin
+                Route::get('/{compra}', [CompraController::class, 'adminShow'])->name('show')->middleware('can:admin-access');
+            });
     });
-});
 // ----------------------
 // RUTAS DE TIENDA
 // ----------------------
-Route::middleware('auth') 
+Route::middleware('auth')
     ->prefix('tienda')
     ->name('tienda.')
     ->group(function () {
@@ -276,10 +279,10 @@ Route::middleware('auth')
 // RUTAS DE CARRITO
 // ----------------------
 Route::middleware('auth')
-    ->prefix('carrito') 
-    ->name('carrito.')   
-    ->controller(CarritoController::class) 
-    ->group(function(){
+    ->prefix('carrito')
+    ->name('carrito.')
+    ->controller(CarritoController::class)
+    ->group(function () {
         //Añadir producto al carrito
         Route::post('/agregar/{almacen_id}', 'agregar')->name('agregar');
         //ver productos de almacen
@@ -295,12 +298,11 @@ Route::middleware('auth')
 // RUTAS DE CONFIRMACION DE COMPRA
 // ----------------------
 Route::middleware('auth')
-    ->prefix('checkout')          
-    ->name('checkout.')          
+    ->prefix('checkout')
+    ->name('checkout.')
     ->group(function () {
         //vista de validacion de compra
         Route::get('/', [CheckoutController::class, 'index'])->name('index');
         //proceso de compra
-        Route::post('/procesar', [CheckoutController::class, 'procesar'])->name('procesar'); 
+        Route::post('/procesar', [CheckoutController::class, 'procesar'])->name('procesar');
     });
-

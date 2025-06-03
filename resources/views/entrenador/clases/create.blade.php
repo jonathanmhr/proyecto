@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4 py-8 bg-gray-900 text-gray-100 min-h-screen">
         <div class="mb-6 flex justify-between items-center">
             <h2 class="text-3xl font-bold text-white">Crear Nueva Clase</h2>
-            <a href="{{ route('admin-entrenador.clases.index') }}" {{-- Cambiado a ruta de Listado de Clases --}}
+            <a href="{{ route('entrenador.clases.index') }}" {{-- Cambiado a ruta de Listado de Clases --}}
                class="inline-flex items-center px-4 py-2 bg-blue-700 text-white hover:bg-blue-800 font-semibold rounded-lg transition duration-200 shadow-md">
                 <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver al listado
             </a>
@@ -33,17 +33,6 @@
                     <label for="descripcion" class="block text-white font-semibold mb-2">Descripción</label>
                     <textarea name="descripcion" id="descripcion" rows="4"
                         class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-red-500 focus:ring-red-500 transition duration-200" required>{{ old('descripcion') }}</textarea>
-                </div>
-
-                <div>
-                    <label for="entrenador_id" class="block text-white font-semibold mb-2">Entrenador</label>
-                    <select name="entrenador_id" id="entrenador_id"
-                        class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-red-500 focus:ring-red-500 transition duration-200 appearance-none" required>
-                        <option value="" class="text-gray-400">Seleccionar Entrenador</option>
-                        @foreach ($entrenadores as $entrenador)
-                            <option value="{{ $entrenador->id }}" @selected(old('entrenador_id') == $entrenador->id)>{{ $entrenador->name }}</option>
-                        @endforeach
-                    </select>
                 </div>
 
                 <div>
