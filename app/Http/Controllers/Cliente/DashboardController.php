@@ -27,4 +27,5 @@ class DashboardController extends Controller
 
         return view('cliente.dashboard', compact('clases', 'entrenamientos'));
     }
+    
 }
