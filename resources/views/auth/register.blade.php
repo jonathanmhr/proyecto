@@ -1,7 +1,10 @@
 <x-guest-layout>
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full bg-white p-8 rounded-2xl shadow-xl space-y-8">
-            
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <div
+        class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-white px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full bg-white p-8 rounded-2xl shadow-xl space-y-8">
+
             {{-- Logo --}}
             <div class="flex justify-center">
                 <x-authentication-card-logo />
@@ -52,15 +55,15 @@
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 11c1.657 0 3 1.343 3 3v1H9v-1c0-1.657 1.343-3 3-3z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 11h14v10H5z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11h14v10H5z" />
                         </svg>
                     </div>
                     <input id="password" name="password" type="password" required
                         class="pl-10 pr-10 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         placeholder="********">
                     {{-- Eye Toggle --}}
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onclick="togglePassword('password')">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                        onclick="togglePassword('password')">
                         <svg id="icon-password" class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -78,17 +81,17 @@
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 11c1.657 0 3 1.343 3 3v1H9v-1c0-1.657 1.343-3 3-3z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 11h14v10H5z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11h14v10H5z" />
                         </svg>
                     </div>
                     <input id="password_confirmation" name="password_confirmation" type="password" required
                         class="pl-10 pr-10 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         placeholder="********">
                     {{-- Eye Toggle --}}
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onclick="togglePassword('password_confirmation')">
-                        <svg id="icon-password_confirmation" class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                        onclick="togglePassword('password_confirmation')">
+                        <svg id="icon-password_confirmation" class="w-5 h-5 text-gray-400" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -96,6 +99,16 @@
                         </svg>
                     </div>
                 </div>
+
+                {{-- reCAPTCHA --}}
+                <div class="flex justify-center"> {{-- Añadido para centrar el reCAPTCHA --}}
+                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.sitekey') }}" data-theme="light">
+                        {{-- Puedes cambiar "light" por "dark" si tu diseño lo requiere --}}
+                    </div>
+                </div>
+                @if ($errors->has('g-recaptcha-response'))
+                    <span class="text-sm text-red-600 text-center block">{{ $errors->first('g-recaptcha-response') }}</span>
+                @endif
 
                 {{-- Botón Registrar --}}
                 <div>
@@ -108,8 +121,9 @@
 
             {{-- Link a login --}}
             <div class="text-center mt-4 text-sm">
-                ¿Ya tienes cuenta? 
-                <a href="{{ route('login') }}" class="text-indigo-600 font-semibold hover:underline">Iniciar sesión</a>
+                ¿Ya tienes cuenta?
+                <a href="{{ route('login') }}" class="text-indigo-600 font-semibold hover:underline">Iniciar
+                    sesión</a>
             </div>
 
             {{-- Botón Google --}}
