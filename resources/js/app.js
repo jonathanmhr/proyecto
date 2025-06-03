@@ -12,4 +12,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-Alpine.start();
+//Alpine.start();//

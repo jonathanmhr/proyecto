@@ -20,6 +20,7 @@ class Almacen extends Model
         'precio_unitario',
         'proveedor',
         'imagen',
+        'tipo',
         'fecha_ultima_entrada',
     ];
 

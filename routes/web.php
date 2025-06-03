@@ -243,40 +243,64 @@ Route::middleware('auth', VerificarUsuarioActivo::class)
 // ----------------------
 Route::middleware(['auth'])
     ->group(function () {
+        //Mis compras
         Route::get('/mis-compras', [CompraController::class, 'index'])->name('compras.index');
+        //Detalles de compra
         Route::get('/compras/{compra}', [CompraController::class, 'show'])->name('compras.show');
+        //factura pdf de compra
         Route::get('/compras/{compra}/factura', [CompraController::class, 'downloadFactura'])->name('compras.factura.download');
 
+        //Compras admin
         Route::prefix('admin/compras')
         ->name('admin.compras.')
         ->group(function () {
+            //Compras de usuarios
             Route::get('/', [CompraController::class, 'adminIndex'])->name('index')->middleware('can:admin-access'); 
+            //Detalles de compra para admin
             Route::get('/{compra}', [CompraController::class, 'adminShow'])->name('show')->middleware('can:admin-access'); 
        
     });
 });
+// ----------------------
+// RUTAS DE TIENDA
+// ----------------------
 Route::middleware('auth') 
     ->prefix('tienda')
     ->name('tienda.')
     ->group(function () {
+        //Ver tienda
         Route::get('/', [AlmacenController::class, 'tiendaIndex'])->name('index');
     });
+
+// ----------------------
+// RUTAS DE CARRITO
+// ----------------------
 Route::middleware('auth')
     ->prefix('carrito') 
     ->name('carrito.')   
     ->controller(CarritoController::class) 
     ->group(function(){
+        //Añadir producto al carrito
         Route::post('/agregar/{almacen_id}', 'agregar')->name('agregar');
-        Route::get('/', 'view')->name('view'); 
+        //ver productos de almacen
+        Route::get('/', 'view')->name('view');
+        //actualizar productos en carrito
         Route::post('/actualizar/{almacen_id}', 'actualizar')->name('actualizar');
+        //eliminar productos de carrito
         Route::post('/eliminar/{almacen_id}', 'eliminar')->name('eliminar');
+        //vaciar productos de carrito
         Route::post('/vaciar', 'vaciar')->name('vaciar');
     });
+// ----------------------
+// RUTAS DE CONFIRMACION DE COMPRA
+// ----------------------
 Route::middleware('auth')
     ->prefix('checkout')          
     ->name('checkout.')          
     ->group(function () {
-        Route::get('/', [CheckoutController::class, 'index'])->name('index'); 
+        //vista de validacion de compra
+        Route::get('/', [CheckoutController::class, 'index'])->name('index');
+        //proceso de compra
         Route::post('/procesar', [CheckoutController::class, 'procesar'])->name('procesar'); 
     });
 

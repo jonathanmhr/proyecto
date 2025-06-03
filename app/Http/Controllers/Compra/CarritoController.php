@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Compra;
 
 use App\Http\Controllers\Controller;
-use App\Models\Almacen;
+use App\Models\Almacen; // Asegúrate que el modelo Almacen exista y esté correctamente referenciado
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -11,7 +11,6 @@ class CarritoController extends Controller
 {
     public function __construct()
     {
-        
         if (!Session::has('carrito')) {
             Session::put('carrito', []);
         }
@@ -20,8 +19,8 @@ class CarritoController extends Controller
     public function agregar(Request $request, $almacen_id)
     {
         $producto = Almacen::findOrFail($almacen_id);
-        $cantidadSolicitada = (int) $request->input('cantidad', 1);
-
+        $cantidadSolicitada = (int) $request->input('cantidad', 1); 
+       
         if ($cantidadSolicitada <= 0) {
             return back()->with('error', 'La cantidad debe ser al menos 1.');
         }
@@ -31,29 +30,25 @@ class CarritoController extends Controller
         }
 
         $carrito = Session::get('carrito');
-
-       
         if (isset($carrito[$almacen_id])) {
             $nuevaCantidad = $carrito[$almacen_id]['cantidad'] + $cantidadSolicitada;
             if ($producto->cantidad_disponible < $nuevaCantidad) {
-                 return back()->with('error', 'No hay suficiente stock para añadir más unidades de ' . $producto->nombre);
+                 return back()->with('error', 'No hay suficiente stock para añadir más unidades de ' . $producto->nombre . '. Disponibles: ' . $producto->cantidad_disponible . '. En carrito ya tienes: ' . $carrito[$almacen_id]['cantidad']);
             }
             $carrito[$almacen_id]['cantidad'] = $nuevaCantidad;
         } else {
-           
             $carrito[$almacen_id] = [
-                "id_producto" => $producto->id,
+                "id_producto" => $producto->id, 
                 "nombre" => $producto->nombre,
                 "cantidad" => $cantidadSolicitada,
                 "precio_unitario" => $producto->precio_unitario,
-                "imagen_url"=>$producto->imagen,
-                "sku" => $producto->sku,
-                
+                "imagen_url" => $producto->imagen, 
+                "sku" => $producto->sku, 
             ];
         }
 
         Session::put('carrito', $carrito);
-        return redirect()->route('carrito.view')->with('success', $producto->nombre . ' añadido al carrito!');
+        return back()->with('success', $producto->nombre . ' añadido al carrito!');
     }
 
     public function view()
@@ -62,7 +57,9 @@ class CarritoController extends Controller
         $totalCarrito = 0;
         if ($carrito) {
             foreach ($carrito as $item) {
-                $totalCarrito += $item['precio_unitario'] * $item['cantidad'];
+                $precio = is_numeric($item['precio_unitario']) ? (float)$item['precio_unitario'] : 0;
+                $cantidad = is_numeric($item['cantidad']) ? (int)$item['cantidad'] : 0;
+                $totalCarrito += $precio * $cantidad;
             }
         }
         return view('carrito.view', compact('carrito', 'totalCarrito'));

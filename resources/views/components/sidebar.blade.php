@@ -29,7 +29,7 @@
         @can('admin_entrenador')
             <div x-data="{ openAdminEntrenador: false }" class="w-full">
                 <button @click="openAdminEntrenador = !openAdminEntrenador"
-                    class="flex items-center gap-3 w-full text-gray-300 hover:bg-orange-700 hover:text-red-500 px-3 py-2 rounded-lg text-sm transition-all"
+                    class="flex items-center gap-3 w-full text-gray-300 hover:bg-blue-100 hover:text-white px-3 py-2 rounded-lg text-sm transition-all"
                     :class="open ? 'justify-start' : 'justify-center'">
                     <i data-feather="briefcase" class="w-5 h-5"></i>
                     <span x-show="open" x-cloak class="ml-2 transition-opacity duration-200">Admin Entrenador</span>
