@@ -40,8 +40,8 @@ class AdminEntrenadorController extends Controller
             return Bouncer::role()->where('name', 'cliente')->first()->users()->count();
         });
 
-        $totalSolicitudesPendientes = Cache::remember('total_solicitudes_pendientes', 60, function () {
-            return ReservaDeClase::where('estado', 'pendiente')->count();
+        $totalSolicitudesClasesPendientes = Cache::remember('total_solicitudes_clases_pendientes', 60, function () {
+            return ClaseGrupal::where('cambio_pendiente', 1)->count();
         });
 
         $totalEntrenamientos = Cache::remember('total_entrenamientos', 60, function () {
@@ -52,7 +52,7 @@ class AdminEntrenadorController extends Controller
             'totalClases',
             'totalEntrenadores',
             'totalAlumnos',
-            'totalSolicitudesPendientes',
+            'totalSolicitudesClasesPendientes',
             'totalEntrenamientos'
         ));
     }
