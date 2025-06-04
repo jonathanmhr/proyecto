@@ -117,6 +117,22 @@
             </ul>
         </section>
 
+        {{-- Sección de Configuración de Vista de Inicio --}}
+        <section>
+            <h2 class="text-2xl font-semibold mb-4 text-white">Configuración de Vista de Inicio</h2>
+            <div class="bg-gray-700 shadow-md rounded-xl p-6">
+                <div>
+                    <label for="welcomeViewSelect" class="block text-sm font-medium text-gray-300 mb-1">Seleccionar vista para la página de inicio :</label>
+                    <select id="welcomeViewSelect" name="welcome_view_selector" class="block w-full sm:w-1/2 md:w-1/3 bg-gray-600 border border-gray-500 text-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2">
+                        <option value="welcome" {{ ($currentWelcomeViewDb ?? 'welcome') == 'welcome' ? 'selected' : '' }}>Bienvenida 1</option>
+                        <option value="welcome2" {{ ($currentWelcomeViewDb ?? 'welcome') == 'welcome2' ? 'selected' : '' }}>Bienvenida 2</option>
+                        <option value="welcome3" {{ ($currentWelcomeViewDb ?? 'welcome') == 'welcome3' ? 'selected' : '' }}>Bienvenida 3</option>
+                    </select>
+                    <small id="updateWelcomeViewStatus" class="mt-2 text-sm text-gray-400"></small>
+                </div>
+            </div>
+        </section>
+
         {{-- Actividad reciente --}}
         <section>
             <h2 class="text-2xl font-semibold mb-4 text-white">Actividad reciente</h2>
@@ -202,6 +218,68 @@
 
     @push('scripts')
         @vite('resources/js/scripts/dashboardCharts.js')
+
+        {{-- Script para el selector de vista de bienvenida --}}
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectElement = document.getElementById('welcomeViewSelect');
+            const statusElement = document.getElementById('updateWelcomeViewStatus');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+            if (selectElement && csrfToken) {
+                selectElement.addEventListener('change', function () {
+                    const selectedView = this.value;
+                    if (statusElement) {
+                        statusElement.textContent = 'Actualizando...';
+                        statusElement.className = 'mt-2 text-sm text-blue-400'; 
+                    }
+
+                    fetch("{{ route('admin.settings.updateWelcomeView') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ view_name: selectedView })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => { throw err; });
+                        }
+                        return response.json(); 
+                    })
+                    .then(data => {
+                        if (statusElement) {
+                            if (data.success) {
+                                statusElement.textContent = data.message;
+                                statusElement.className = 'mt-2 text-sm text-green-400'; 
+                            } else {
+                                statusElement.textContent = 'Error: ' + (data.message || 'No se pudo actualizar.');
+                                statusElement.className = 'mt-2 text-sm text-red-400'; 
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al actualizar vista de bienvenida:', error);
+                        if (statusElement) {
+                            let errorMessage = 'Error de conexión o respuesta inesperada del servidor.';
+                            if (error && error.message) {
+                                 errorMessage = 'Error: ' + error.message;
+                            } else if (typeof error === 'string') { 
+                                errorMessage = 'Error: ' + error;
+                            }
+                            statusElement.textContent = errorMessage;
+                            statusElement.className = 'mt-2 text-sm text-red-400'; 
+                        }
+                    });
+                });
+            } else {
+                if (!selectElement) console.error('Elemento select #welcomeViewSelect no encontrado.');
+                if (!csrfToken) console.error('Meta tag CSRF no encontrado. Asegúrate de que tu layout principal (<head>) lo incluya: <meta name="csrf-token" content="{{ csrf_token() }}">');
+            }
+        });
+        </script>
     @endpush
 
 </x-app-layout>

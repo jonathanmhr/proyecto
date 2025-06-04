@@ -38,7 +38,7 @@
 
       <nav class="hidden md:flex space-x-8 items-center">
         <a href="#inicio" class="text-base font-medium text-white hover:text-red-500 transition">Inicio</a>
-        <a href="#clases" class="text-base font-medium text-white hover:text-red-500 transition">Productos</a>
+        <a href="{{ route('tienda.index') }}" class="text-base font-medium text-white hover:text-red-500 transition">Productos</a>
         <a href="#entrenadores" class="text-base font-medium text-white hover:text-red-500 transition">Entrenadores</a>
       </nav>
 
@@ -57,7 +57,7 @@
       <div class="pt-5 pb-6 px-5">
         <div class="space-y-6">
           <a href="#inicio" class="block text-base font-medium text-white hover:text-red-500 transition mobile-nav-link">Inicio</a>
-          <a href="#clases" class="block text-base font-medium text-white hover:text-red-500 transition mobile-nav-link">Productos</a>
+          <a href="{{ route('tienda.index') }}" class="block text-base font-medium text-white hover:text-red-500 transition mobile-nav-link">Productos</a>
           <a href="#entrenadores" class="block text-base font-medium text-white hover:text-red-500 transition mobile-nav-link">Entrenadores</a>
         </div>
       </div>
@@ -618,9 +618,9 @@
             </p>
            
             <div class="mt-2">
-                <a href="/terms" class="text-xs text-gray-500 hover:text-red-600 transition-all duration-300 mx-2">Política de Privacidad</a>
+                <a href="{{ route('policy') }}" class="text-xs text-gray-500 hover:text-red-600 transition-all duration-300 mx-2">Política de Privacidad</a>
                 <span class="text-gray-600">|</span>
-                <a href="/policy" class="text-xs text-gray-500 hover:text-red-600 transition-all duration-300 mx-2">Términos de Servicio</a>
+                <a  href="{{ route('terms') }}" class="text-xs text-gray-500 hover:text-red-600 transition-all duration-300 mx-2">Términos de Servicio</a>
             </div>
         </div>
     </div>

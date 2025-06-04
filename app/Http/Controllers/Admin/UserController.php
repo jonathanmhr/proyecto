@@ -24,6 +24,9 @@ use Illuminate\Support\Facades\Auth;
 // Paginación
 use Illuminate\Pagination\LengthAwarePaginator;
 
+//Settings
+use App\Models\Setting;
+
 class UserController extends Controller
 {
     public function dashboard()
@@ -106,6 +109,10 @@ class UserController extends Controller
                 'fecha' => $noti->created_at,
             ];
         });
+        
+        //Settings
+        $currentWelcomeViewDb = Setting::getValue('preferred_welcome_view', 'welcome');
+
 
         // Total de usuarios por rol
         $usuariosPorRol = User::select(DB::raw('roles.name as rol'), DB::raw('count(users.id) as total'))
@@ -123,7 +130,8 @@ class UserController extends Controller
             'alertas',  // notificaciones recibidas con icono, remitente, título, fecha
             'usuariosPorRol',
             'notificacionesEnviadas',  // notificaciones enviadas con título, remitente (yo), fecha
-            'usuariosRecientes'
+            'usuariosRecientes',
+            'currentWelcomeViewDb' //Settings
         ));
     }
 

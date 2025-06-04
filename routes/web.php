@@ -33,10 +33,27 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Auth\GoogleController;
 
+//Setting
+use App\Models\Setting;
+use App\Http\Controllers\Admin\SettingsController; 
+
+// ----------------------
+// TERM Y POLICY
+// ----------------------
+Route::view('/terms', 'terms')->name('terms');
+Route::view('/policy', 'policy')->name('policy'); 
 // ----------------------
 // RUTA DE BIENVENIDA
 // ----------------------
-Route::get('/', fn() => view('welcome'));
+Route::get('/', function () {
+    $preferredWelcomeView = Setting::getValue('preferred_welcome_view', 'welcome');
+
+    if (!View::exists($preferredWelcomeView)) {
+        $preferredWelcomeView = 'welcome';
+    }
+
+    return view($preferredWelcomeView);
+})->name('home');
 
 Route::get('auth/google/redirect', [GoogleController::class, 'redirectToGoogle'])->name('auth.google.redirect');
 // Ruta a la que Google redirige después de iniciar sesión
@@ -124,6 +141,10 @@ Route::middleware(['auth', 'verified', 'can:admin-access', VerificarUsuarioActiv
         // Gestión de charts
         Route::get('/chart-data', [ChartController::class, 'index'])->name('chart.data');
         Route::get('/charts', [ChartController::class, 'index'])->name('charts.index');
+
+        //settings
+        Route::post('settings/update-welcome-view', [SettingsController::class, 'updateWelcomeView'])
+             ->name('settings.updateWelcomeView');
     });
 
 // ----------------------
