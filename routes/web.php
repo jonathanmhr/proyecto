@@ -273,7 +273,7 @@ Route::middleware(['auth'])
         //Detalles de compra
         Route::get('/compras/{compra}', [CompraController::class, 'show'])->name('compras.show');
         //factura pdf de compra
-        Route::get('/compras/{compra}/factura', [CompraController::class, 'downloadFactura'])->name('compras.factura.download');
+       Route::get('/compras/{compra}/factura/pdf', [CheckoutController::class, 'generarFacturaPdf'])->name('factura.pdf.generar');
 
         //Compras admin
         Route::prefix('admin/compras')
@@ -288,14 +288,11 @@ Route::middleware(['auth'])
 // ----------------------
 // RUTAS DE TIENDA
 // ----------------------
-Route::middleware('auth')
-    ->prefix('tienda')
+Route::prefix('tienda')
     ->name('tienda.')
     ->group(function () {
-        //Ver tienda
         Route::get('/', [AlmacenController::class, 'tiendaIndex'])->name('index');
     });
-
 // ----------------------
 // RUTAS DE CARRITO
 // ----------------------

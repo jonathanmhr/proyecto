@@ -112,9 +112,9 @@
 
                     <h2 class="text-2xl sm:text-3xl font-bold text-red-500 mb-6">Términos y Condiciones de Servicio de PowerCore</h2>
 
-                    <p class="text-sm text-gray-400 mb-6"><strong>Última actualización: [Fecha de la última actualización, ej: 24 de julio de 2024]</strong></p>
+                    <p class="text-sm text-gray-400 mb-6"><strong>Última actualización:  24 de julio de 2024</strong></p>
 
-                    <p class="leading-relaxed">Bienvenido/a a PowerCore ("nosotros", "nuestro", o "PowerCore"). Al acceder y utilizar nuestro sitio web (powercore.com o el dominio que utilices, en adelante el "Sitio Web"), nuestras instalaciones físicas, aplicaciones móviles (si las hubiera) y los servicios ofrecidos (colectivamente, los "Servicios"), aceptas cumplir y estar legalmente obligado/a por los siguientes términos y condiciones ("Términos"). Si no estás de acuerdo con estos Términos, no debes utilizar nuestros Servicios.</p>
+                    <p class="leading-relaxed">Bienvenido/a a PowerCore. Al acceder y utilizar nuestro sitio web, nuestras instalaciones físicas, aplicaciones móviles (si las hubiera) y los servicios ofrecidos (colectivamente, los "Servicios"), aceptas cumplir y estar legalmente obligado/a por los siguientes términos y condiciones ("Términos"). Si no estás de acuerdo con estos Términos, no debes utilizar nuestros Servicios.</p>
 
                     <p class="leading-relaxed">Por favor, lee estos Términos detenidamente, así como nuestra <a href="{{ route('policy') }}" class="text-red-500 hover:text-red-400 underline font-medium transition-colors">Política de Privacidad</a>, que también rige tu uso de nuestros Servicios.</p>
 

@@ -12,7 +12,7 @@
                     <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
                         {{ session('success') }}
                         @if(session('factura_pdf_url') || $facturaPdfUrl)
-                            <a href="{{ session('factura_pdf_url') ?: $facturaPdfUrl }}" target="_blank" class="font-bold underline ml-2">Ver Factura PDF</a>
+                            <a href="{{ route('factura.pdf.generar', $compra->id) }}" target="_blank" class="font-bold underline ml-2">Ver Factura PDF</a>
                         @endif
                     </div>
                 @endif
@@ -49,11 +49,11 @@
                             @endif
                             
                             @if ($facturaPdfUrl)
-                                <a href="{{ $facturaPdfUrl }}" target="_blank" class="mt-2 inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 disabled:opacity-25 transition">
+                                <a href="{{ route('factura.pdf.generar', $compra->id) }}" target="_blank" class="mt-2 inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 disabled:opacity-25 transition">
                                     Ver Factura PDF
                                 </a>
                             @elseif($compra->factura->ruta_pdf)
-                                 <a href="{{ route('compras.factura.download', $compra->id) }}" class="mt-2 inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 disabled:opacity-25 transition">
+                                 <a href="{{ route('factura.pdf.generar', $compra->id) }}" class="mt-2 inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 disabled:opacity-25 transition">
                                     Descargar Factura PDF
                                 </a>
                             @endif

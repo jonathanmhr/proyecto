@@ -9,109 +9,109 @@
 </head>
 
 <body class="bg-gray-900 text-white font-sans">
-   <header class="fixed w-full z-30">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center py-4 md:justify-start md:space-x-10">
-      <div class="flex justify-start lg:w-0 lg:flex-1">
-        <h1 class="font-bold font-Figtree text-xl md:text-2xl">
-          <a href="/">
-            <img src="{{ asset('images/logoRojo.png') }}" width="120px" alt="">
-          </a>
-        </h1>
-      </div>
+   <header class="fixed w-full z-30 bg-gray-800 bg-opacity-60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4 md:justify-start md:space-x-10">
+            <div class="flex justify-start lg:w-0 lg:flex-1">
+                <h1 class="font-bold font-Figtree text-xl md:text-2xl">
+                <a href="/">
+                    <img src="{{ asset('images/logoRojo.png') }}" width="120px" alt="">
+                </a>
+                </h1>
+            </div>
 
-      <div class="-mr-2 -my-2 md:hidden">
-        <button id="menu-toggle" type="button"
-          class="bg-neutral-900 rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-white hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500"
-          aria-expanded="false" aria-controls="menu">
-          <span class="sr-only">Abrir menú</span>
-          <svg id="menu-icon-open" class="h-6 w-6 block" xmlns="http://www.w3.org/2000/svg" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-          <svg id="menu-icon-close" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
+            <div class="-mr-2 -my-2 md:hidden">
+                <button id="menu-toggle" type="button"
+                class="bg-neutral-900 rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-white hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500"
+                aria-expanded="false" aria-controls="menu">
+                <span class="sr-only">Abrir menú</span>
+                <svg id="menu-icon-open" class="h-6 w-6 block" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg id="menu-icon-close" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                </button>
+            </div>
 
-      <nav class="hidden md:flex space-x-8 items-center">
-        <a href="#inicio" class="text-base font-medium text-white hover:text-red-500 transition">Inicio</a>
-        <a href="{{ route('tienda.index') }}" class="text-base font-medium text-white hover:text-red-500 transition">Productos</a>
-        <a href="#entrenadores" class="text-base font-medium text-white hover:text-red-500 transition">Entrenadores</a>
-      </nav>
+            <nav class="hidden md:flex space-x-8 items-center">
+                <a href="#inicio" class="text-base font-medium text-white hover:text-red-500 transition">Inicio</a>
+                <a href="{{ route('tienda.index') }}" class="text-base font-medium text-white hover:text-red-500 transition">Productos</a>
+                <a href="#entrenadores" class="text-base font-medium text-white hover:text-red-500 transition">Entrenadores</a>
+            </nav>
 
-      <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-        <a href="/login"
-          class="whitespace-nowrap text-base font-medium text-white hover:text-white border-2 border-white hover:bg-red-600 py-2 px-4 transition-all duration-300 rounded-md">
-          Iniciar sesión
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <nav id="menu"
-    class="absolute top-full inset-x-0 p-2 transition transform origin-top-right md:hidden opacity-0 scale-95 pointer-events-none">
-    <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-neutral-800 divide-y-2 divide-neutral-700">
-      <div class="pt-5 pb-6 px-5">
-        <div class="space-y-6">
-          <a href="#inicio" class="block text-base font-medium text-white hover:text-red-500 transition mobile-nav-link">Inicio</a>
-          <a href="{{ route('tienda.index') }}" class="block text-base font-medium text-white hover:text-red-500 transition mobile-nav-link">Productos</a>
-          <a href="#entrenadores" class="block text-base font-medium text-white hover:text-red-500 transition mobile-nav-link">Entrenadores</a>
+            <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
+                <a href="/login"
+                class="whitespace-nowrap text-base font-medium text-white hover:text-white border-2 border-white hover:bg-red-600 py-2 px-4 transition-all duration-300 rounded-md">
+                Iniciar sesión
+                </a>
+            </div>
+            </div>
         </div>
-      </div>
-      <div class="py-6 px-5">
-        <a href="/login"
-          class="block w-full text-center px-5 py-3 border-2 font-bold border-white hover:bg-red-600 text-sm transition-all duration-300 rounded-md mobile-nav-link">
-          Iniciar sesión
-        </a>
-      </div>
-    </div>
-  </nav>
-</header>
-<script>
-  const menuToggle = document.getElementById('menu-toggle');
-  const menu = document.getElementById('menu');
-  const menuIconOpen = document.getElementById('menu-icon-open');
-  const menuIconClose = document.getElementById('menu-icon-close');
-  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
 
-  function toggleMenu(isOpen) {
-    menu.classList.toggle('opacity-0', !isOpen);
-    menu.classList.toggle('scale-95', !isOpen);
-    menu.classList.toggle('opacity-100', isOpen);
-    menu.classList.toggle('scale-100', isOpen);
-    menu.classList.toggle('pointer-events-none', !isOpen);
-    menu.classList.toggle('pointer-events-auto', isOpen);
+        <nav id="menu"
+            class="absolute top-full inset-x-0 p-2 transition transform origin-top-right md:hidden opacity-0 scale-95 pointer-events-none">
+            <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-neutral-800 divide-y-2 divide-neutral-700">
+            <div class="pt-5 pb-6 px-5">
+                <div class="space-y-6">
+                <a href="#inicio" class="block text-base font-medium text-white hover:text-red-500 transition mobile-nav-link">Inicio</a>
+                <a href="{{ route('tienda.index') }}" class="block text-base font-medium text-white hover:text-red-500 transition mobile-nav-link">Productos</a>
+                <a href="#entrenadores" class="block text-base font-medium text-white hover:text-red-500 transition mobile-nav-link">Entrenadores</a>
+                </div>
+            </div>
+            <div class="py-6 px-5">
+                <a href="/login"
+                class="block w-full text-center px-5 py-3 border-2 font-bold border-white hover:bg-red-600 text-sm transition-all duration-300 rounded-md mobile-nav-link">
+                Iniciar sesión
+                </a>
+            </div>
+            </div>
+        </nav>
+    </header>
+    <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('menu');
+    const menuIconOpen = document.getElementById('menu-icon-open');
+    const menuIconClose = document.getElementById('menu-icon-close');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
 
-    menuIconOpen.classList.toggle('hidden', isOpen);
-    menuIconOpen.classList.toggle('block', !isOpen);
-    menuIconClose.classList.toggle('hidden', !isOpen);
-    menuIconClose.classList.toggle('block', isOpen);
+    function toggleMenu(isOpen) {
+        menu.classList.toggle('opacity-0', !isOpen);
+        menu.classList.toggle('scale-95', !isOpen);
+        menu.classList.toggle('opacity-100', isOpen);
+        menu.classList.toggle('scale-100', isOpen);
+        menu.classList.toggle('pointer-events-none', !isOpen);
+        menu.classList.toggle('pointer-events-auto', isOpen);
 
-    menuToggle.setAttribute('aria-expanded', isOpen.toString());
+        menuIconOpen.classList.toggle('hidden', isOpen);
+        menuIconOpen.classList.toggle('block', !isOpen);
+        menuIconClose.classList.toggle('hidden', !isOpen);
+        menuIconClose.classList.toggle('block', isOpen);
 
-    if (isOpen) {
-      document.body.classList.add('overflow-hidden');
-    } else {
-      document.body.classList.remove('overflow-hidden');
+        menuToggle.setAttribute('aria-expanded', isOpen.toString());
+
+        if (isOpen) {
+        document.body.classList.add('overflow-hidden');
+        } else {
+        document.body.classList.remove('overflow-hidden');
+        }
     }
-  }
 
-  if (menuToggle && menu && menuIconOpen && menuIconClose) {
-    menuToggle.addEventListener('click', () => {
-      const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
-      toggleMenu(!isExpanded);
-    });
+    if (menuToggle && menu && menuIconOpen && menuIconClose) {
+        menuToggle.addEventListener('click', () => {
+        const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+        toggleMenu(!isExpanded);
+        });
 
-    mobileNavLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        toggleMenu(false);
-      });
-    });
-  }
-</script>
+        mobileNavLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            toggleMenu(false);
+        });
+        });
+    }
+    </script>
     <section id="inicio" class="min-h-screen flex items-center justify-center bg-cover bg-center relative">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
     <div class="grid grid-cols-1 md:grid-cols-2 md:gap-12 items-center">
@@ -439,14 +439,11 @@
     </div>
 </section>
 
-    <!-- Primera Fila de Miembros (Fondo Oscuro) -->
-<section class="bg-gray-900 text-white py-12 md:py-16">
+<section class="bg-gray-900 text-white py-12 md:py-16" id="entrenadores">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Título General de la Sección (Opcional, si quieres uno arriba de todo) -->
-        <!-- Si solo es "MIEMBROS" para todo, puedes ponerlo aquí -->
         <div class="text-center mb-12 md:mb-16">
             <h2 class="text-4xl sm:text-5xl font-extrabold tracking-tight">
-               MIEMBROS
+               ENTRENADORES
             </h2>
         </div>
 

@@ -93,7 +93,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <a href="{{ route('compras.show', $compra->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Ver Detalles</a>
                                             @if($compra->factura && $compra->factura->ruta_pdf)
-                                                <a href="{{ route('compras.factura.download', $compra->id) }}" class="text-blue-600 hover:text-blue-900">Descargar PDF</a>
+                                                <a href="{{ route('factura.pdf.generar', $compra->id) }}" class="text-blue-600 hover:text-blue-900">Descargar PDF</a>
                                             @endif
                                         </td>
                                     </tr>
