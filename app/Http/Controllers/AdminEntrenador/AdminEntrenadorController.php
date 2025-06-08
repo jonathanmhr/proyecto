@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminEntrenador;
 // Modelos  
 use App\Models\User;
 use App\Models\ClaseGrupal;
+use App\Models\ClaseIndividual;
 use App\Models\Suscripcion;
 use App\Models\ReservaDeClase;
 use App\Models\Entrenamiento;
@@ -30,7 +31,7 @@ class AdminEntrenadorController extends Controller
 
     public function dashboard()
     {
-        $totalClases = ClaseGrupal::count();
+        $totalClases = ClaseGrupal::count() + ClaseIndividual::count();
 
         $totalEntrenadores = Cache::remember('total_entrenadores', 60, function () {
             return Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
@@ -58,11 +59,14 @@ class AdminEntrenadorController extends Controller
     }
 
     public function verClases()
+
     {
-        // Obtener las clases con su respectivo entrenador
-        $clases = ClaseGrupal::with('entrenador')->get();
-        return view('admin-entrenador.clases.index', compact('clases'));
+
+        $clasesGrupales = ClaseGrupal::with('entrenador')->get();
+        $clasesIndividuales = ClaseIndividual::with('entrenador', 'usuario')->get();
+        return view('admin-entrenador.clases.index', compact('clasesGrupales', 'clasesIndividuales'));
     }
+
 
 
     public function verEntrenadores()
@@ -191,48 +195,74 @@ class AdminEntrenadorController extends Controller
                 ->with('error', 'No hay entrenadores disponibles para asignar a la clase.');
         }
 
-        return view('admin-entrenador.clases.create', compact('entrenadores'));
+        return view('admin-entrenador.clases.grupales.create', compact('entrenadores'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string|max:500',
-            'fecha_inicio' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
-            'fecha_fin' => ['required', 'date', 'after:' . $request->fecha_inicio, 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
-            'duracion' => 'nullable|integer|min:1',
-            'ubicacion' => 'nullable|string|max:100',
-            'nivel' => 'nullable|in:principiante,intermedio,avanzado',
-            'cupos_maximos' => 'required|integer|min:5|max:20',
-            'entrenador_id' => 'required|exists:users,id',
+public function store(Request $request)
+{
+    // Guardamos la fecha de inicio desde el formulario para poder usarla en las reglas
+    $fechaInicio = $request->input('fecha_inicio');
+
+    // Definimos las reglas de validación
+    $rules = [
+        'nombre' => 'required|string|max:255',
+        'descripcion' => 'nullable|string|max:500',
+        'fecha_inicio' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
+        'fecha_fin' => ['required', 'date', 'after_or_equal:' . $fechaInicio, 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
+        'hora_inicio' => ['required', 'date_format:H:i'],
+        'duracion' => 'nullable|integer|min:1',
+        'ubicacion' => 'nullable|string|max:100',
+        'nivel' => 'nullable|in:principiante,intermedio,avanzado',
+        'cupos_maximos' => 'required|integer|min:5|max:20',
+        'entrenador_id' => 'required|exists:users,id',
+        'frecuencia' => 'required|in:dia,semana,mes',
+    ];
+
+    // Reglas adicionales según la frecuencia seleccionada
+    if (in_array($request->frecuencia, ['semana', 'mes'])) {
+        $rules['dias_semana'] = 'required|array|min:1';
+        $rules['dias_semana.*'] = 'in:lunes,martes,miércoles,jueves,viernes,sábado,domingo';
+    } elseif ($request->frecuencia === 'dia') {
+        $rules['fecha_fin'] = 'same:fecha_inicio'; // misma fecha para clases de un solo día
+    }
+
+    // Validamos los datos con las reglas definidas
+    $validatedData = $request->validate($rules);
+
+    // Aseguramos que fecha_fin sea igual a fecha_inicio si es una clase de un día
+    if ($validatedData['frecuencia'] === 'dia') {
+        $validatedData['fecha_fin'] = $validatedData['fecha_inicio'];
+    }
+
+    try {
+        // Creamos la clase grupal
+        ClaseGrupal::create([
+            'nombre' => $validatedData['nombre'],
+            'descripcion' => $validatedData['descripcion'] ?? null,
+            'fecha_inicio' => $validatedData['fecha_inicio'],
+            'fecha_fin' => $validatedData['fecha_fin'],
+            'fecha' => now(), // Fecha de creación (puede omitirse si no se usa)
+            'hora_inicio' => $validatedData['hora_inicio'],
+            'duracion' => $validatedData['duracion'] ?? null,
+            'ubicacion' => $validatedData['ubicacion'] ?? null,
+            'nivel' => $validatedData['nivel'] ?? null,
+            'cupos_maximos' => $validatedData['cupos_maximos'],
+            'entrenador_id' => $validatedData['entrenador_id'],
+            'frecuencia' => $validatedData['frecuencia'],
+            'dias_semana' => $validatedData['dias_semana'] ?? null,
         ]);
 
-        $fechaInicio = Carbon::parse($request->fecha_inicio)->format('Y-m-d');
-        $fechaFin = Carbon::parse($request->fecha_fin)->format('Y-m-d');
+        // Redirigimos con mensaje de éxito
+        return redirect()->route('admin-entrenador.clases.index')
+            ->with('success', 'Clase creada exitosamente.');
+    } catch (\Exception $e) {
+        // Si ocurre un error, lo registramos y redirigimos con mensaje de error
+        Log::error('Error al crear la clase grupal: ' . $e->getMessage());
 
-        try {
-            ClaseGrupal::create([
-                'nombre' => $request->nombre,
-                'descripcion' => $request->descripcion,
-                'fecha_inicio' => $fechaInicio,
-                'fecha_fin' => $fechaFin,
-                'fecha' => now(),
-                'duracion' => $request->duracion,
-                'ubicacion' => $request->ubicacion,
-                'nivel' => $request->nivel,
-                'cupos_maximos' => $request->cupos_maximos,
-                'entrenador_id' => $request->entrenador_id,
-            ]);
-
-            return redirect()->route('admin-entrenador.dashboard')
-                ->with('success', 'Clase creada exitosamente.');
-        } catch (\Exception $e) {
-            Log::error('Error al crear la clase grupal: ' . $e->getMessage());
-            return redirect()->route('admin-entrenador.dashboard')
-                ->with('error', 'Hubo un error al crear la clase. Intenta nuevamente.');
-        }
+        return redirect()->route('admin-entrenador.clases.index')
+            ->with('error', 'Hubo un error al crear la clase. Intenta nuevamente.');
     }
+}
 
     public function destroy(ClaseGrupal $clase)
     {
@@ -251,7 +281,7 @@ class AdminEntrenadorController extends Controller
             $query->where('name', 'entrenador');
         })->get();
 
-        return view('admin-entrenador.clases.edit', compact('clase', 'entrenadores'));
+        return view('admin-entrenador.clases.gupales.edit', compact('clase', 'entrenadores'));
     }
 
     public function update(Request $request, ClaseGrupal $clase)
@@ -260,18 +290,46 @@ class AdminEntrenadorController extends Controller
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string|max:500',
             'fecha_inicio' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:' . Carbon::now()->addMonths(3)->format('Y-m-d')],
-            'fecha_fin' => ['required', 'date', 'after:' . $request->fecha_inicio, 'before_or_equal:' . Carbon::now()->addMonths(3)->format('Y-m-d')],
+            'fecha_fin' => ['required', 'date', 'after_or_equal:' . $request->fecha_inicio, 'before_or_equal:' . Carbon::now()->addMonths(3)->format('Y-m-d')],
+            'hora_inicio' => ['required', 'date_format:H:i'],
             'duracion' => 'nullable|integer|min:1',
             'ubicacion' => 'nullable|string|max:100',
             'nivel' => 'nullable|in:principiante,intermedio,avanzado',
             'cupos_maximos' => 'required|integer|min:5|max:30',
             'entrenador_id' => 'required|exists:users,id',
+            'frecuencia' => 'required|in:dia,semana,mes',
         ]);
 
-        $clase->update($request->all());
+        // Validaciones condicionales para dias_semana según frecuencia
+        if (in_array($request->frecuencia, ['semana', 'mes'])) {
+            $request->validate([
+                'dias_semana' => 'required|array|min:1',
+                'dias_semana.*' => 'in:lunes,martes,miercoles,jueves,viernes,sabado,domingo',
+            ]);
+        } elseif ($request->frecuencia === 'dia') {
+            $request->validate([
+                'fecha_fin' => 'same:fecha_inicio',
+            ]);
+        }
+
+        $clase->update([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'fecha_inicio' => $request->fecha_inicio,
+            'fecha_fin' => $request->fecha_fin,
+            'hora_inicio' => $request->hora_inicio,
+            'duracion' => $request->duracion,
+            'ubicacion' => $request->ubicacion,
+            'nivel' => $request->nivel,
+            'cupos_maximos' => $request->cupos_maximos,
+            'entrenador_id' => $request->entrenador_id,
+            'frecuencia' => $request->frecuencia,
+            'dias_semana' => $request->dias_semana ?? null,
+        ]);
 
         return redirect()->route('admin-entrenador.clases.index')->with('success', 'Clase actualizada correctamente.');
     }
+
 
     // ========================================
     // Gestión de Solicitudes

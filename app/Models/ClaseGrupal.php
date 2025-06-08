@@ -22,11 +22,18 @@ class ClaseGrupal extends Model
         'cupos_maximos',
         'fecha_inicio',
         'fecha_fin',
+        'hora_inicio',
         'fecha',
         'duracion',
         'ubicacion',
         'nivel',
         'entrenador_id',
+        'frecuencia',
+        'dias_semana',
+    ];
+
+    protected $casts = [
+        'dias_semana' => 'array',
     ];
 
     // Definir la clave de ruta personalizada
@@ -56,7 +63,7 @@ class ClaseGrupal extends Model
     {
         return $this->hasMany(SolicitudClase::class, 'id_clase'); // Relación con las solicitudes
     }
-    
+
     public function suscripciones()
     {
         return $this->hasMany(Suscripcion::class, 'id_clase');

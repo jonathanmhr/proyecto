@@ -17,6 +17,7 @@ use App\Http\Controllers\Entrenador\EntrenadorController;
 use App\Http\Controllers\Perfil\PerfilController;
 use App\Http\Controllers\Cliente\DashboardController;
 use App\Http\Controllers\General\ClaseGrupalController;
+use App\Http\Controllers\General\ClaseIndividualController;
 use App\Http\Controllers\General\EntrenamientoController;
 use App\Http\Controllers\General\SolicitudClaseController;
 use App\Http\Controllers\General\SuscripcionController;
@@ -164,6 +165,13 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
         Route::put('clases/{clase}', [AdminEntrenadorController::class, 'update'])->name('clases.update');
         Route::delete('clases/{clase}', [AdminEntrenadorController::class, 'destroy'])->name('clases.destroy');
         Route::put('clase/{id}/aprobar', [AdminEntrenadorController::class, 'aprobarCambios'])->name('clases.aprobar');
+
+        Route::get('clases-individuales', [ClaseIndividualController::class, 'index'])->name('clases-individuales.index');
+        Route::get('clases-individuales/create', [ClaseIndividualController::class, 'create'])->name('clases-individuales.create');
+        Route::post('clases-individuales', [ClaseIndividualController::class, 'store'])->name('clases-individuales.store');
+        Route::get('clases-individuales/{claseIndividual}/edit', [ClaseIndividualController::class, 'edit'])->name('clases-individuales.edit');
+        Route::put('clases-individuales/{claseIndividual}', [ClaseIndividualController::class, 'update'])->name('clases-individuales.update');
+        Route::delete('clases-individuales/{claseIndividual}', [ClaseIndividualController::class, 'destroy'])->name('clases-individuales.destroy');
 
         // Gestión de entrenadores
         Route::get('entrenadores', [AdminEntrenadorController::class, 'verEntrenadores'])->name('entrenadores.index');
