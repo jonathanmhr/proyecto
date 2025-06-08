@@ -208,7 +208,6 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
         Route::delete('entrenamientos/{entrenamiento}/usuarios/{usuario}', [AdminEntrenamientoController::class, 'quitarUsuario'])->name('entrenamientos.usuarios.quitar');
         Route::post('entrenamientos/{entrenamiento}/usuarios/agregar-masivos', [AdminEntrenamientoController::class, 'agregarUsuariosMasivos'])->name('entrenamientos.usuarios.agregar-masivos');
 
-
         // Suscripciones de usuarios
         Route::get('users/{id}/suscripciones', [SuscripcionController::class, 'index'])->name('users.suscripciones');
         Route::get('/charts', [ChartController::class, 'index'])->name('charts');
@@ -241,19 +240,22 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access', VerificarUsuario
 // ----------------------
 // RUTAS DEL CLIENTE
 // ----------------------
-Route::middleware('auth', VerificarUsuarioActivo::class)
+Route::middleware(['auth', VerificarUsuarioActivo::class])
     ->prefix('cliente')
     ->name('cliente.')
     ->group(function () {
-        // Nueva ruta del dashboard principal
+        // Dashboard principal
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        // Clases
-        Route::get('clases', [ClaseGrupalController::class, 'index'])->name('clases.index');
-        Route::post('clases/{clase}/unirse', [ClaseGrupalController::class, 'unirse'])->name('clases.unirse');
+        // Clases usando DashboardController
+        Route::get('clases', [DashboardController::class, 'index'])->name('clases.index');
+        Route::post('clases/{clase}/unirse', [DashboardController::class, 'unirse'])->name('clases.unirse');
+
         // Entrenamientos
         Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
         Route::post('entrenamientos/{entrenamientoId}/unirse', [EntrenamientoController::class, 'unirseEntrenamiento'])->name('entrenamientos.unirse');
+
+        // Perfil historial
         Route::get('perfil-historial', function () {
             return view('perfil.historial');
         })->name('perfil.historial');

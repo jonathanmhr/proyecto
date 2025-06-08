@@ -9,7 +9,7 @@
     <div class="container mx-auto px-4 py-8 bg-gray-900 text-gray-100 min-h-screen">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-white">Solicitudes de Inscripción a tus Clases</h1>
-            <a href="{{ route('admin-entrenador.dashboard') }}" {{-- Assuming this route is correct for the trainer's dashboard --}}
+            <a href="{{ route('entrenador.dashboard') }}" {{-- Assuming this route is correct for the trainer's dashboard --}}
                 class="inline-flex items-center px-4 py-2 bg-blue-700 text-white hover:bg-blue-800 font-semibold rounded-lg transition duration-200 shadow-md">
                 <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
             </a>

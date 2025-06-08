@@ -56,7 +56,7 @@
                                     </p>
                                     <p class="flex items-center gap-2">
                                         <i data-feather="users" class="w-4 h-4 text-red-600"></i>
-                                        Cupos: <span class="font-semibold">{{ $clase->usuarios()->wherePivot('estado', 'aceptado')->count() }} / {{ $clase->cupos_maximos }}</span>
+                                        Cupos: <span class="font-semibold">{{ $clase->usuarios()->wherePivot('estado', 'aceptada')->count() }} / {{ $clase->cupos_maximos }}</span>
                                     </p>
                                     <p class="flex items-center gap-2">
                                         <i data-feather="monitor" class="w-4 h-4 text-red-600"></i>
@@ -67,17 +67,17 @@
                                 <div class="mt-auto pt-4 border-t border-gray-700 flex justify-between items-center">
                                     {{-- Etiqueta de estado de cupos. Esta sí usa el verde para "Disponible" --}}
                                     <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full
-                                        @if (($clase->cupos_maximos - $clase->usuarios()->wherePivot('estado', 'aceptado')->count()) > ($clase->cupos_maximos / 2))
+                                        @if (($clase->cupos_maximos - $clase->usuarios()->wherePivot('estado', 'aceptada')->count()) > ($clase->cupos_maximos / 2))
                                             bg-green-700 text-green-100
-                                        @elseif (($clase->cupos_maximos - $clase->usuarios()->wherePivot('estado', 'aceptado')->count()) > 0)
+                                        @elseif (($clase->cupos_maximos - $clase->usuarios()->wherePivot('estado', 'aceptada')->count()) > 0)
                                             bg-yellow-600 text-yellow-100
                                         @else
                                             bg-red-700 text-red-100
                                         @endif
                                     ">
-                                        @if (($clase->cupos_maximos - $clase->usuarios()->wherePivot('estado', 'aceptado')->count()) > ($clase->cupos_maximos / 2))
+                                        @if (($clase->cupos_maximos - $clase->usuarios()->wherePivot('estado', 'aceptada')->count()) > ($clase->cupos_maximos / 2))
                                             Disponible
-                                        @elseif (($clase->cupos_maximos - $clase->usuarios()->wherePivot('estado', 'aceptado')->count()) > 0)
+                                        @elseif (($clase->cupos_maximos - $clase->usuarios()->wherePivot('estado', 'aceptada')->count()) > 0)
                                             Pocos cupos
                                         @else
                                             Cupo Lleno
@@ -106,7 +106,7 @@
                                                 <i data-feather="x-circle" class="w-4 h-4"></i>
                                                 Acceso revocado
                                             </span>
-                                        @elseif(($clase->cupos_maximos - $clase->usuarios()->wherePivot('estado', 'aceptado')->count()) <= 0)
+                                        @elseif(($clase->cupos_maximos - $clase->usuarios()->wherePivot('estado', 'aceptada')->count()) <= 0)
                                             <span class="text-red-500 font-semibold flex items-center gap-1">
                                                 <i data-feather="slash" class="w-4 h-4"></i>
                                                 Sin cupos

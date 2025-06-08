@@ -43,11 +43,12 @@ class ClaseGrupal extends Model
     }
 
     // Relaciones
-    public function usuarios()
-    {
-        return $this->belongsToMany(User::class, 'suscripciones', 'id_clase', 'id_usuario')
-            ->withPivot('estado', 'fecha_inicio', 'fecha_fin'); // Datos adicionales de la suscripción
-    }
+public function usuarios()
+{
+    return $this->belongsToMany(User::class, 'solicitud_clases', 'id_clase', 'user_id')
+        ->withPivot('estado')
+        ->withTimestamps();
+}
 
     public function entrenador()
     {

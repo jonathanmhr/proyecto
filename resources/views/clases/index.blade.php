@@ -36,7 +36,7 @@
                                 $usuarioId = auth()->id();
                                 $estaInscrito = $clase
                                     ->usuarios()
-                                    ->wherePivot('estado', 'aceptado')
+                                    ->wherePivot('estado', 'aceptada')
                                     ->where('id_usuario', $usuarioId)
                                     ->exists();
                                 $solicitud = $clase->solicitudes()->where('user_id', $usuarioId)->first();
@@ -50,7 +50,7 @@
                                 <span
                                     class="inline-block bg-blue-100 text-blue-800 text-sm font-medium py-1 px-3 rounded-full mb-4">
                                     Cupos disponibles:
-                                    {{ $clase->cupos_maximos - $clase->usuarios->where('pivot.estado', 'aceptado')->count() }}
+                                    {{ $clase->cupos_maximos - $clase->usuarios->where('pivot.estado', 'aceptada')->count() }}
                                 </span>
 
                                 @if (!$estaInscrito && !$solicitud)
@@ -64,7 +64,7 @@
                                     @if ($solicitud->estado === 'pendiente')
                                         <p class="text-yellow-600 font-semibold mt-2">Tu solicitud está pendiente de
                                             aprobación por el entrenador.</p>
-                                    @elseif ($solicitud->estado === 'aceptado')
+                                    @elseif ($solicitud->estado === 'aceptada')
                                         <p class="text-green-600 font-semibold mt-2">Tu solicitud ha sido aceptada.</p>
                                     @elseif ($solicitud->estado === 'rechazado')
                                         <p class="text-red-600 font-semibold mt-2">Tu solicitud ha sido rechazada.</p>

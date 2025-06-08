@@ -71,11 +71,26 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
     // RELACIONES
-    public function clases()
+    //public function clases()
+    //{
+    //    return $this->belongsToMany(ClaseGrupal::class, 'suscripciones', 'id_usuario', 'id_clase')
+    //        ->wherePivot('estado', Suscripcion::ESTADO_ACTIVO)  // Filtrar solo suscripciones activas
+    //        ->wherePivot('fecha_fin', '>', now());  // Filtrar suscripciones con fecha de fin futura
+    //}
+public function clasesAceptadas()
+{
+    return $this->belongsToMany(ClaseGrupal::class, 'solicitud_clases', 'user_id', 'id_clase')
+        ->wherePivot('estado', 'aceptada')
+        ->withTimestamps();
+}
+
+    public function getCuposRestantesAttribute()
     {
-        return $this->belongsToMany(ClaseGrupal::class, 'suscripciones', 'id_usuario', 'id_clase')
-            ->wherePivot('estado', Suscripcion::ESTADO_ACTIVO)  // Filtrar solo suscripciones activas
-            ->wherePivot('fecha_fin', '>', now());  // Filtrar suscripciones con fecha de fin futura
+        $cuposUsados = $this->usuarios()
+            ->wherePivot('estado', 'aceptada')
+            ->count();
+
+        return max(0, $this->cupos_maximos - $cuposUsados);
     }
 
     // Relación: Clases grupales asociadas al entrenador

@@ -68,7 +68,7 @@ class EntrenadorController extends Controller
     {
         // Obtener los usuarios que han solicitado unirse a la clase y han sido aceptados
         $alumnos = SolicitudClase::where('id_clase', $clase->id_clase)
-            ->where('estado', 'aceptado')
+            ->where('estado', 'aceptada')
             ->with('usuario')  // Asegúrate de cargar la relación de usuario
             ->get();
 
@@ -84,53 +84,68 @@ class EntrenadorController extends Controller
     // Método para aceptar una solicitud de un alumno
     public function aceptarSolicitud($id)
     {
-        // Buscar la solicitud pendiente por su id
         $solicitud = SolicitudClase::findOrFail($id);
-    
-        // Asegúrate de que la solicitud esté pendiente
+
+        // Asegurarse de que la solicitud esté pendiente
         if ($solicitud->estado !== 'pendiente') {
-            return redirect()->route('entrenador.solicitudes.index')->with('error', 'La solicitud no está pendiente.');
+            return redirect()->route('entrenador.solicitudes.index')
+                ->with('error', 'La solicitud no está pendiente.');
         }
-    
-        // Buscar la clase asociada a la solicitud
+
         $clase = $solicitud->clase;
-    
+
         // Verificar que la clase pertenece al entrenador
         if ($clase->entrenador_id != auth()->id()) {
-            return redirect()->route('entrenador.solicitudes.index')->with('error', 'No puedes aceptar solicitudes para esta clase.');
+            return redirect()->route('entrenador.solicitudes.index')
+                ->with('error', 'No puedes aceptar solicitudes para esta clase.');
         }
-    
-        // Cambiar el estado de la solicitud a 'aceptado'
-        $solicitud->estado = 'aceptado';
+
+        // ❗️ Verificar que hay cupos disponibles
+        $inscritosCount = $clase->usuarios()->wherePivot('estado', 'aceptada')->count();
+        if ($inscritosCount >= $clase->cupos_maximos) {
+            return redirect()->route('entrenador.solicitudes.index')
+                ->with('error', 'La clase ya está llena.');
+        }
+
+        // Cambiar el estado de la solicitud a aceptada
+        $solicitud->estado = 'aceptada';
         $solicitud->save();
-    
-        return redirect()->route('entrenador.solicitudes.index')->with('success', 'La solicitud ha sido aceptada.');
+
+        // ✅ Añadir al usuario como inscrito en la clase (evita duplicados)
+        $clase->usuarios()->syncWithoutDetaching([
+            $solicitud->user_id => ['estado' => 'aceptada']
+        ]);
+
+        return redirect()->route('entrenador.solicitudes.index')
+            ->with('success', 'La solicitud ha sido aceptada.');
     }
+
+
 
     public function rechazarSolicitud($id)
     {
         // Buscar la solicitud pendiente por su id
         $solicitud = SolicitudClase::findOrFail($id);
-    
+
         // Asegúrate de que la solicitud esté pendiente
         if ($solicitud->estado !== 'pendiente') {
             return redirect()->route('entrenador.solicitudes.index')->with('error', 'La solicitud no está pendiente.');
         }
-    
+
         // Buscar la clase asociada a la solicitud
         $clase = $solicitud->clase;
-    
+
         // Verificar que la clase pertenece al entrenador
         if ($clase->entrenador_id != auth()->id()) {
             return redirect()->route('entrenador.solicitudes.index')->with('error', 'No puedes rechazar solicitudes para esta clase.');
         }
-    
+
         // Cambiar el estado de la solicitud a 'rechazado'
         $solicitud->estado = 'rechazado';
         $solicitud->save();
-    
+
         return redirect()->route('entrenador.solicitudes.index')->with('success', 'La solicitud ha sido rechazada.');
-    }    
+    }
 
     public function eliminarAlumno($claseId, $alumnoId)
     {
@@ -141,7 +156,7 @@ class EntrenadorController extends Controller
         // Eliminar la suscripción
         $solicitud = SolicitudClase::where('id_clase', $clase->id_clase)
             ->where('user_id', $alumno->id)
-            ->where('estado', 'aceptado')
+            ->where('estado', 'aceptada')
             ->first();
 
         if ($solicitud) {

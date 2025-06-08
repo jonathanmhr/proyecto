@@ -57,10 +57,8 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                         @foreach ($clases as $clase)
                             @php
-                                // Contar inscritos activos
-                                $inscritosActivos = $clase->suscripciones()->where('estado', 'activa')->count();
-                                $cuposRestantes = $clase->cupos_maximos - $inscritosActivos;
-                                // Para mostrar status cupos
+                                $cuposRestantes = $clase->cupos_restantes;
+
                                 if ($cuposRestantes > 5) {
                                     $colorBg = 'bg-green-600';
                                     $colorText = 'text-green-100';
@@ -125,7 +123,7 @@
                                             disabled>
                                             <i data-feather="x-circle" class="w-4 h-4 inline-block mr-1"></i> Revocado
                                         </button>
-                                    @elseif ($cuposRestantes <= 0)
+                                    @elseif ($clase->cupos_restantes <= 0)
                                         <button
                                             class="bg-red-700 text-red-100 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-sm opacity-75"
                                             disabled>
