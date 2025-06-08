@@ -7,8 +7,11 @@
 
     <div class="py-6">
         <div class="max-w-4xl mx-auto bg-gray-800 p-6 rounded-lg shadow">
-            <form action="{{ route('clases-individuales.update', $claseIndividual) }}" method="POST"
-                x-data="{ frecuencia: '{{ old('frecuencia', $claseIndividual->frecuencia ?? 'dia') }}' }">
+            <form action="{{ route('admin-entrenador.clases-individuales.update', $claseIndividual) }}" method="POST"
+                x-data="{
+                    frecuencia: '{{ old('frecuencia', $claseIndividual->frecuencia ?? 'dia') }}',
+                    fechaInicio: '{{ old('fecha_inicio', $claseIndividual->fecha_inicio) }}'
+                }">
                 @csrf
                 @method('PUT')
 
@@ -41,6 +44,60 @@
                     </select>
                 </div>
 
+                {{-- Entrenador --}}
+                <div class="mb-4">
+                    <label class="block text-white font-semibold mb-2">Entrenador</label>
+                    <select name="entrenador_id"
+                        class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg">
+                        <option value="">-- Seleccione entrenador --</option>
+                        @foreach ($entrenadores as $entrenador)
+                            <option value="{{ $entrenador->id }}"
+                                {{ old('entrenador_id', $claseIndividual->entrenador_id) == $entrenador->id ? 'selected' : '' }}>
+                                {{ $entrenador->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Lugar --}}
+                <div class="mb-4">
+                    <label class="block text-white font-semibold mb-2">Lugar</label>
+                    <select name="lugar" id="lugar" required
+                        class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition duration-200 appearance-none">
+                        <option value="" disabled {{ old('lugar') == '' ? 'selected' : '' }}>
+                            Seleccionar Sala/Zona
+                        </option>
+                        <option value="Sala Principal" {{ old('lugar') == 'Sala Principal' ? 'selected' : '' }}>
+                            Sala Principal
+                        </option>
+                        <option value="Sala de Spinning" {{ old('lugar') == 'Sala de Spinning' ? 'selected' : '' }}>
+                            Sala de Spinning
+                        </option>
+                        <option value="Zona de Yoga" {{ old('lugar') == 'Zona de Yoga' ? 'selected' : '' }}>Zona de Yoga
+                        </option>
+                        <option value="Sala de Pesas" {{ old('lugar') == 'Sala de Pesas' ? 'selected' : '' }}>Sala de Pesas
+                        </option>
+                    </select>
+                </div>
+
+                {{-- Nivel --}}
+                @php
+                    $niveles = ['Básico', 'Intermedio', 'Avanzado'];
+                @endphp
+                <div class="mb-4">
+                    <label class="block text-white font-semibold mb-2">Nivel</label>
+                    <select name="nivel"
+                        class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg">
+                        <option value="">Seleccione nivel</option>
+                        @foreach ($niveles as $nivel)
+                            <option value="{{ $nivel }}"
+                                {{ old('nivel', $claseIndividual->nivel) == $nivel ? 'selected' : '' }}>
+                                {{ $nivel }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 {{-- Frecuencia --}}
                 <div class="mb-4">
                     <label class="block text-white font-semibold mb-2">Frecuencia</label>
@@ -52,25 +109,28 @@
                     </select>
                 </div>
 
-                {{-- fecha_hora --}}
+                {{-- Fecha y hora (para frecuencia dia) --}}
                 <div class="mb-4" x-show="frecuencia === 'dia'" x-cloak>
                     <label class="block text-white font-semibold mb-2">Fecha y Hora</label>
                     <input type="datetime-local" name="fecha_hora"
                         value="{{ old('fecha_hora', optional($claseIndividual->fecha_hora)->format('Y-m-d\TH:i')) }}"
+                        min="{{ optional($claseIndividual->fecha_hora)->format('Y-m-d\TH:i') }}"
                         class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg">
                 </div>
 
-                {{-- Fecha inicio / fin, hora y duración --}}
+                {{-- Fecha inicio / fin, hora y duración (para frecuencia semana o mes) --}}
                 <div x-show="frecuencia !== 'dia'" x-cloak>
                     <div class="mb-4">
                         <label class="block text-white font-semibold mb-2">Fecha de inicio</label>
-                        <input type="date" name="fecha_inicio"
+                        <input type="date" name="fecha_inicio" x-model="fechaInicio"
                             value="{{ old('fecha_inicio', $claseIndividual->fecha_inicio) }}"
+                            min="{{ $claseIndividual->fecha_inicio }}"
                             class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg">
                     </div>
                     <div class="mb-4">
                         <label class="block text-white font-semibold mb-2">Fecha de fin</label>
                         <input type="date" name="fecha_fin"
+                            :min="fechaInicio"
                             value="{{ old('fecha_fin', $claseIndividual->fecha_fin) }}"
                             class="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg">
                     </div>
@@ -88,7 +148,7 @@
                     </div>
                 </div>
 
-                {{-- Días de la semana --}}
+                {{-- Días de la semana (solo si frecuencia es semana) --}}
                 <div class="mb-4" x-show="frecuencia === 'semana'" x-cloak>
                     <label class="block text-white font-semibold mb-2">Días de la semana</label>
                     @php
@@ -107,7 +167,7 @@
                     </div>
                 </div>
 
-                {{-- Día del mes --}}
+                {{-- Día del mes (solo si frecuencia es mes) --}}
                 <div class="mb-4" x-show="frecuencia === 'mes'" x-cloak>
                     <label class="block text-white font-semibold mb-2">Día del mes (1–31)</label>
                     @php
@@ -120,7 +180,7 @@
                     </select>
                 </div>
 
-                {{-- Botón --}}
+                {{-- Botón de enviar --}}
                 <div class="mt-6">
                     <button type="submit"
                         class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200">
