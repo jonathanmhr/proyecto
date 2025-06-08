@@ -2,34 +2,43 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Entrenamiento extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_entrenamiento';
-
-    protected $table = 'entrenamientos';
-    public $timestamps = false;
-
     protected $fillable = [
-        'id_usuario',
-        'nombre',
-        'tipo',
-        'duracion',
-        'fecha',
+        'titulo',
+        'descripcion',
+        'duracion_total',
+        'kcal_total',
+        'zona_muscular',
+        'nivel',
+        'equipamiento',
+        'creado_por',
+        'es_individual',
     ];
 
-    public function usuario()
+    public function fases()
     {
-        return $this->belongsTo(User::class, 'id_usuario');
+        return $this->hasMany(FaseEntrenamiento::class);
     }
+
+    public function creador()
+    {
+        return $this->belongsTo(User::class, 'creado_por');
+    }
+
     public function usuarios()
     {
-        return $this->belongsToMany(User::class, 'entrenamientos_usuarios', 'entrenamiento_id', 'usuario_id')
-            ->withPivot('estado')
-            ->withTimestamps();
+        return $this->belongsToMany(User::class, 'usuario_entrenamiento')
+                    ->withPivot('fecha_inicio', 'semanas_duracion', 'dias_entrenamiento')
+                    ->withTimestamps();
     }
+    public function usuariosGuardaron()
+{
+    return $this->belongsToMany(User::class, 'entrenamiento_user', 'entrenamiento_id', 'user_id')->withTimestamps();
+}
 }

@@ -36,13 +36,13 @@ use App\Http\Controllers\Auth\GoogleController;
 
 //Setting
 use App\Models\Setting;
-use App\Http\Controllers\Admin\SettingsController; 
+use App\Http\Controllers\Admin\SettingsController;
 
 // ----------------------
 // TERM Y POLICY
 // ----------------------
 Route::view('/terms', 'terms')->name('terms');
-Route::view('/policy', 'policy')->name('policy'); 
+Route::view('/policy', 'policy')->name('policy');
 // ----------------------
 // RUTA DE BIENVENIDA
 // ----------------------
@@ -145,7 +145,7 @@ Route::middleware(['auth', 'verified', 'can:admin-access', VerificarUsuarioActiv
 
         //settings
         Route::post('settings/update-welcome-view', [SettingsController::class, 'updateWelcomeView'])
-             ->name('settings.updateWelcomeView');
+            ->name('settings.updateWelcomeView');
     });
 
 // ----------------------
@@ -193,20 +193,14 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
         Route::post('solicitudes/{id}/aceptar', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('solicitudes.aceptar');
         Route::post('solicitudes/{id}/rechazar', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
 
-
         // Gestión de entrenamientos
-        Route::get('entrenamientos', [AdminEntrenamientoController::class, 'index'])->name('entrenamientos.index');
-        Route::get('entrenamientos/create', [AdminEntrenamientoController::class, 'create'])->name('entrenamientos.create');
-        Route::post('entrenamientos', [AdminEntrenamientoController::class, 'store'])->name('entrenamientos.store');
-        Route::get('entrenamientos/{entrenamiento}/edit', [AdminEntrenamientoController::class, 'edit'])->name('entrenamientos.edit');
-        Route::put('entrenamientos/{entrenamiento}', [AdminEntrenamientoController::class, 'update'])->name('entrenamientos.update');
-        Route::delete('entrenamientos/{entrenamiento}', [AdminEntrenamientoController::class, 'destroy'])->name('entrenamientos.destroy');
-
-        // Gestión de usuarios en los entrenamientos
-        Route::get('entrenamientos/{entrenamiento}/usuarios', [AdminEntrenamientoController::class, 'usuarios'])->name('entrenamientos.usuarios');
-        Route::post('entrenamientos/{entrenamiento}/usuarios/agregar', [AdminEntrenamientoController::class, 'agregarUsuario'])->name('entrenamientos.usuarios.agregar');
-        Route::delete('entrenamientos/{entrenamiento}/usuarios/{usuario}', [AdminEntrenamientoController::class, 'quitarUsuario'])->name('entrenamientos.usuarios.quitar');
-        Route::post('entrenamientos/{entrenamiento}/usuarios/agregar-masivos', [AdminEntrenamientoController::class, 'agregarUsuariosMasivos'])->name('entrenamientos.usuarios.agregar-masivos');
+        Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
+        Route::get('entrenamientos/{id}/usuarios', [EntrenamientoController::class, 'usuariosGuardaron'])->name('entrenamientos.usuarios');
+        Route::delete('entrenamientos/{id}', [EntrenamientoController::class, 'destroy'])->name('entrenamientos.destroy');
+        Route::get('entrenamientos/create', [EntrenamientoController::class, 'create'])->name('entrenamientos.create');
+        Route::post('entrenamientos', [EntrenamientoController::class, 'store'])->name('entrenamientos.store');
+        Route::get('entrenamientos/{id}/edit', [EntrenamientoController::class, 'edit'])->name('entrenamientos.edit');
+        Route::put('entrenamientos/{id}', [EntrenamientoController::class, 'update'])->name('entrenamientos.update');
 
         // Suscripciones de usuarios
         Route::get('users/{id}/suscripciones', [SuscripcionController::class, 'index'])->name('users.suscripciones');
@@ -252,8 +246,13 @@ Route::middleware(['auth', VerificarUsuarioActivo::class])
         Route::post('clases/{clase}/unirse', [DashboardController::class, 'unirse'])->name('clases.unirse');
 
         // Entrenamientos
-        Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
-        Route::post('entrenamientos/{entrenamientoId}/unirse', [EntrenamientoController::class, 'unirseEntrenamiento'])->name('entrenamientos.unirse');
+        //Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
+        //Route::get('entrenamientos/create', [EntrenamientoController::class, 'create'])->name('entrenamientos.create');
+        //Route::post('entrenamientos', [EntrenamientoController::class, 'store'])->name('entrenamientos.store');
+        //Route::get('entrenamientos/{id}/edit', [EntrenamientoController::class, 'edit'])->name('entrenamientos.edit');
+        //Route::put('entrenamientos/{id}', [EntrenamientoController::class, 'update'])->name('entrenamientos.update');
+        //Route::delete('entrenamientos/{id}', [EntrenamientoController::class, 'destroy'])->name('entrenamientos.destroy');
+        //Route::get('entrenamientos/{id}/usuarios', [EntrenamientoController::class, 'usuariosGuardaron'])->name('entrenamientos.usuarios');
 
         // Perfil historial
         Route::get('perfil-historial', function () {
@@ -283,7 +282,7 @@ Route::middleware(['auth'])
         //Detalles de compra
         Route::get('/compras/{compra}', [CompraController::class, 'show'])->name('compras.show');
         //factura pdf de compra
-       Route::get('/compras/{compra}/factura/pdf', [CheckoutController::class, 'generarFacturaPdf'])->name('factura.pdf.generar');
+        Route::get('/compras/{compra}/factura/pdf', [CheckoutController::class, 'generarFacturaPdf'])->name('factura.pdf.generar');
 
         //Compras admin
         Route::prefix('admin/compras')

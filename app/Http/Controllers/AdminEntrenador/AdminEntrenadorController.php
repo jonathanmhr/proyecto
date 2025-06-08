@@ -198,71 +198,71 @@ class AdminEntrenadorController extends Controller
         return view('admin-entrenador.clases.grupales.create', compact('entrenadores'));
     }
 
-public function store(Request $request)
-{
-    // Guardamos la fecha de inicio desde el formulario para poder usarla en las reglas
-    $fechaInicio = $request->input('fecha_inicio');
+    public function store(Request $request)
+    {
+        // Guardamos la fecha de inicio desde el formulario para poder usarla en las reglas
+        $fechaInicio = $request->input('fecha_inicio');
 
-    // Definimos las reglas de validación
-    $rules = [
-        'nombre' => 'required|string|max:255',
-        'descripcion' => 'nullable|string|max:500',
-        'fecha_inicio' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
-        'fecha_fin' => ['required', 'date', 'after_or_equal:' . $fechaInicio, 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
-        'hora_inicio' => ['required', 'date_format:H:i'],
-        'duracion' => 'nullable|integer|min:1',
-        'ubicacion' => 'nullable|string|max:100',
-        'nivel' => 'nullable|in:principiante,intermedio,avanzado',
-        'cupos_maximos' => 'required|integer|min:5|max:20',
-        'entrenador_id' => 'required|exists:users,id',
-        'frecuencia' => 'required|in:dia,semana,mes',
-    ];
+        // Definimos las reglas de validación
+        $rules = [
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string|max:500',
+            'fecha_inicio' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
+            'fecha_fin' => ['required', 'date', 'after_or_equal:' . $fechaInicio, 'before_or_equal:' . now()->addMonths(3)->format('Y-m-d')],
+            'hora_inicio' => ['required', 'date_format:H:i'],
+            'duracion' => 'nullable|integer|min:1',
+            'ubicacion' => 'nullable|string|max:100',
+            'nivel' => 'nullable|in:principiante,intermedio,avanzado',
+            'cupos_maximos' => 'required|integer|min:5|max:20',
+            'entrenador_id' => 'required|exists:users,id',
+            'frecuencia' => 'required|in:dia,semana,mes',
+        ];
 
-    // Reglas adicionales según la frecuencia seleccionada
-    if (in_array($request->frecuencia, ['semana', 'mes'])) {
-        $rules['dias_semana'] = 'required|array|min:1';
-        $rules['dias_semana.*'] = 'in:lunes,martes,miércoles,jueves,viernes,sábado,domingo';
-    } elseif ($request->frecuencia === 'dia') {
-        $rules['fecha_fin'] = 'same:fecha_inicio'; // misma fecha para clases de un solo día
+        // Reglas adicionales según la frecuencia seleccionada
+        if (in_array($request->frecuencia, ['semana', 'mes'])) {
+            $rules['dias_semana'] = 'required|array|min:1';
+            $rules['dias_semana.*'] = 'in:lunes,martes,miércoles,jueves,viernes,sábado,domingo';
+        } elseif ($request->frecuencia === 'dia') {
+            $rules['fecha_fin'] = 'same:fecha_inicio'; // misma fecha para clases de un solo día
+        }
+
+        // Validamos los datos con las reglas definidas
+        $validatedData = $request->validate($rules);
+
+        // Aseguramos que fecha_fin sea igual a fecha_inicio si es una clase de un día
+        if ($validatedData['frecuencia'] === 'dia') {
+            $validatedData['fecha_fin'] = $validatedData['fecha_inicio'];
+        }
+
+        try {
+            // Creamos la clase grupal
+            ClaseGrupal::create([
+                'nombre' => $validatedData['nombre'],
+                'descripcion' => $validatedData['descripcion'] ?? null,
+                'fecha_inicio' => $validatedData['fecha_inicio'],
+                'fecha_fin' => $validatedData['fecha_fin'],
+                'fecha' => now(), // Fecha de creación (puede omitirse si no se usa)
+                'hora_inicio' => $validatedData['hora_inicio'],
+                'duracion' => $validatedData['duracion'] ?? null,
+                'ubicacion' => $validatedData['ubicacion'] ?? null,
+                'nivel' => $validatedData['nivel'] ?? null,
+                'cupos_maximos' => $validatedData['cupos_maximos'],
+                'entrenador_id' => $validatedData['entrenador_id'],
+                'frecuencia' => $validatedData['frecuencia'],
+                'dias_semana' => $validatedData['dias_semana'] ?? null,
+            ]);
+
+            // Redirigimos con mensaje de éxito
+            return redirect()->route('admin-entrenador.clases.index')
+                ->with('success', 'Clase creada exitosamente.');
+        } catch (\Exception $e) {
+            // Si ocurre un error, lo registramos y redirigimos con mensaje de error
+            Log::error('Error al crear la clase grupal: ' . $e->getMessage());
+
+            return redirect()->route('admin-entrenador.clases.index')
+                ->with('error', 'Hubo un error al crear la clase. Intenta nuevamente.');
+        }
     }
-
-    // Validamos los datos con las reglas definidas
-    $validatedData = $request->validate($rules);
-
-    // Aseguramos que fecha_fin sea igual a fecha_inicio si es una clase de un día
-    if ($validatedData['frecuencia'] === 'dia') {
-        $validatedData['fecha_fin'] = $validatedData['fecha_inicio'];
-    }
-
-    try {
-        // Creamos la clase grupal
-        ClaseGrupal::create([
-            'nombre' => $validatedData['nombre'],
-            'descripcion' => $validatedData['descripcion'] ?? null,
-            'fecha_inicio' => $validatedData['fecha_inicio'],
-            'fecha_fin' => $validatedData['fecha_fin'],
-            'fecha' => now(), // Fecha de creación (puede omitirse si no se usa)
-            'hora_inicio' => $validatedData['hora_inicio'],
-            'duracion' => $validatedData['duracion'] ?? null,
-            'ubicacion' => $validatedData['ubicacion'] ?? null,
-            'nivel' => $validatedData['nivel'] ?? null,
-            'cupos_maximos' => $validatedData['cupos_maximos'],
-            'entrenador_id' => $validatedData['entrenador_id'],
-            'frecuencia' => $validatedData['frecuencia'],
-            'dias_semana' => $validatedData['dias_semana'] ?? null,
-        ]);
-
-        // Redirigimos con mensaje de éxito
-        return redirect()->route('admin-entrenador.clases.index')
-            ->with('success', 'Clase creada exitosamente.');
-    } catch (\Exception $e) {
-        // Si ocurre un error, lo registramos y redirigimos con mensaje de error
-        Log::error('Error al crear la clase grupal: ' . $e->getMessage());
-
-        return redirect()->route('admin-entrenador.clases.index')
-            ->with('error', 'Hubo un error al crear la clase. Intenta nuevamente.');
-    }
-}
 
     public function destroy(ClaseGrupal $clase)
     {
@@ -394,4 +394,11 @@ public function store(Request $request)
             abort(403, 'No tienes permisos para realizar esta acción.');
         }
     }
+
+    // ========================================
+    // Gestión de Entrenamientos
+    // ========================================
+
+    
+
 }

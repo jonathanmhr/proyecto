@@ -9,11 +9,16 @@ use App\Models\User;
 
 class AdminEntrenamientoController extends Controller
 {
-    public function index()
-    {
-        $entrenamientos = Entrenamiento::all();
-        return view('admin-entrenador.entrenamientos.index', compact('entrenamientos'));
-    }
+public function index()
+{
+    $usuario = auth()->user();
+
+    $entrenamientos = Entrenamiento::where('creado_por', $usuario->id)
+        ->latest()
+        ->paginate(10); // o cualquier cantidad que quieras por página
+
+    return view('admin-entrenador.entrenamientos.index', compact('entrenamientos'));
+}
 
     public function create()
     {

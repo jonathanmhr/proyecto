@@ -77,12 +77,12 @@ class User extends Authenticatable implements MustVerifyEmail
     //        ->wherePivot('estado', Suscripcion::ESTADO_ACTIVO)  // Filtrar solo suscripciones activas
     //        ->wherePivot('fecha_fin', '>', now());  // Filtrar suscripciones con fecha de fin futura
     //}
-public function clasesAceptadas()
-{
-    return $this->belongsToMany(ClaseGrupal::class, 'solicitud_clases', 'user_id', 'id_clase')
-        ->wherePivot('estado', 'aceptada')
-        ->withTimestamps();
-}
+    public function clasesAceptadas()
+    {
+        return $this->belongsToMany(ClaseGrupal::class, 'solicitud_clases', 'user_id', 'id_clase')
+            ->wherePivot('estado', 'aceptada')
+            ->withTimestamps();
+    }
 
     public function getCuposRestantesAttribute()
     {
@@ -126,7 +126,7 @@ public function clasesAceptadas()
     // Relación: Solicitudes de clases asociadas al usuario
     public function entrenamientos()
     {
-        return $this->belongsToMany(Entrenamiento::class, 'entrenamientos_usuarios', 'usuario_id', 'entrenamiento_id');
+        return $this->hasMany(Entrenamiento::class, 'creado_por');
     }
 
     public function clasesIndividualesAsignadas()

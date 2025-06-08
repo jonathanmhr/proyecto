@@ -39,7 +39,7 @@ public function index()
     }
 
     // Cargar entrenamientos
-    $entrenamientos = Entrenamiento::latest()->take(6)->get();
+    $entrenamientos = Entrenamiento::latest()->paginate(6);
 
     // Añadir estados extra a cada clase
     $clases = $clases->map(function ($clase) use ($user) {

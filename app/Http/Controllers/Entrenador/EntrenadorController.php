@@ -15,6 +15,7 @@ class EntrenadorController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
         // Obtener las clases del entrenador con su estado de cambio pendiente
         $clases = ClaseGrupal::where('entrenador_id', auth()->id())
             ->select('id_clase', 'nombre', 'fecha_inicio', 'fecha_fin', 'cambio_pendiente')
@@ -24,7 +25,7 @@ class EntrenadorController extends Controller
         $reservas = ReservaDeClase::whereIn('id_clase', $clases->pluck('id_clase'))->get();
 
         // Obtener los entrenamientos del entrenador
-        $entrenamientos = Entrenamiento::where('id_usuario', auth()->id())->get();
+        $entrenamientos = Entrenamiento::where('creado_por', $user->id)->latest()->paginate(6);
 
         // Obtener las suscripciones activas
         $suscripciones = Suscripcion::where('id_usuario', auth()->id())->where('estado', 'activo')->get();

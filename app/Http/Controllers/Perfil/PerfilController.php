@@ -28,10 +28,10 @@ class PerfilController extends Controller
         session(['profile_modal_shown' => true]); // Se marca que ya se mostró
 
         // Obtener clases inscritas por el usuario a través de la relación muchos a muchos
-        $clases = $usuario->clases; // Relación ya definida en el modelo User
+        $clases = $usuario->clasesAceptadas; // Relación ya definida en el modelo User
 
         // Obtener entrenamientos del usuario (relación uno a muchos)
-        $entrenamientos = Entrenamiento::where('id_usuario', $usuario->id)->get();
+        $entrenamientos = Entrenamiento::where('creado_por', $usuario->id)->get();
 
         // Obtener suscripciones del usuario (relación uno a muchos)
         $suscripciones = Suscripcion::where('id_usuario', $usuario->id)->get();
