@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ActividadEntrenamiento extends Model
 {
     use HasFactory;
+    
+    protected $table ='actividades_entrenamiento';
 
     protected $fillable = [
         'fase_entrenamiento_id',

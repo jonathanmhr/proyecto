@@ -8,6 +8,8 @@ class FaseEntrenamiento extends Model
 {
     use HasFactory;
 
+    protected $table = 'fases_entrenamiento';
+
     protected $fillable = [
         'entrenamiento_id',
         'nombre',

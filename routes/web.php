@@ -165,7 +165,7 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
     ->group(function () {
         Route::get('/', [AdminEntrenadorController::class, 'dashboard'])->name('dashboard');
 
-        // Gestión de clases
+        // Gestión de clases grupales
         Route::get('clases', [AdminEntrenadorController::class, 'verClases'])->name('clases.index');
         Route::get('clases/create', [AdminEntrenadorController::class, 'create'])->name('clases.create');
         Route::post('clases', [AdminEntrenadorController::class, 'store'])->name('clases.store');
@@ -174,6 +174,7 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
         Route::delete('clases/{clase}', [AdminEntrenadorController::class, 'destroy'])->name('clases.destroy');
         Route::put('clase/{id}/aprobar', [AdminEntrenadorController::class, 'aprobarCambios'])->name('clases.aprobar');
 
+        // Gestión de clases individuales
         Route::get('clases-individuales', [ClaseIndividualController::class, 'index'])->name('clases-individuales.index');
         Route::get('clases-individuales/create', [ClaseIndividualController::class, 'create'])->name('clases-individuales.create');
         Route::post('clases-individuales', [ClaseIndividualController::class, 'store'])->name('clases-individuales.store');
@@ -209,6 +210,7 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
         Route::post('entrenamientos', [EntrenamientoController::class, 'store'])->name('entrenamientos.store');
         Route::get('entrenamientos/{id}/edit', [EntrenamientoController::class, 'edit'])->name('entrenamientos.edit');
         Route::put('entrenamientos/{id}', [EntrenamientoController::class, 'update'])->name('entrenamientos.update');
+        
 
         // Suscripciones de usuarios
         Route::get('users/{id}/suscripciones', [SuscripcionController::class, 'index'])->name('users.suscripciones');
@@ -255,13 +257,9 @@ Route::middleware(['auth', VerificarUsuarioActivo::class])
         Route::post('clases/{clase}/unirse', [DashboardController::class, 'unirse'])->name('clases.unirse');
 
         // Entrenamientos
-        //Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
-        //Route::get('entrenamientos/create', [EntrenamientoController::class, 'create'])->name('entrenamientos.create');
-        //Route::post('entrenamientos', [EntrenamientoController::class, 'store'])->name('entrenamientos.store');
-        //Route::get('entrenamientos/{id}/edit', [EntrenamientoController::class, 'edit'])->name('entrenamientos.edit');
-        //Route::put('entrenamientos/{id}', [EntrenamientoController::class, 'update'])->name('entrenamientos.update');
-        //Route::delete('entrenamientos/{id}', [EntrenamientoController::class, 'destroy'])->name('entrenamientos.destroy');
-        //Route::get('entrenamientos/{id}/usuarios', [EntrenamientoController::class, 'usuariosGuardaron'])->name('entrenamientos.usuarios');
+        Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
+        Route::post('entrenamientos/{id}/guardar', [DashboardController::class, 'guardarEntrenamiento'])->name('entrenamientos.guardar');
+        Route::post('entrenamientos/{id}/quitar', [DashboardController::class, 'quitarEntrenamiento'])->name('entrenamientos.quitar');
 
         // Perfil historial
         Route::get('perfil-historial', function () {

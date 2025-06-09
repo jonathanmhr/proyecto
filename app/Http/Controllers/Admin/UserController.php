@@ -243,66 +243,66 @@ class UserController extends Controller
         $clases = $user->clases;
         return view('admin.users.edit', compact('user', 'clases'));
     }
-public function update(Request $request, $id)
-{
-    $user = User::findOrFail($id);
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
 
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-        'role' => 'required|in:admin,admin_entrenador,entrenador,cliente',
-    ]);
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'role' => 'required|in:admin,admin_entrenador,entrenador,cliente',
+        ]);
 
-    // Actualizar datos básicos
-    $user->update([
-        'name' => $validatedData['name'],
-        'email' => $validatedData['email'],
-    ]);
+        // Actualizar datos básicos
+        $user->update([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+        ]);
 
-    // Quitar roles anteriores y asignar el nuevo con Bouncer
-    $user->roles()->detach();
-    $role = Bouncer::role()->where('name', $validatedData['role'])->first();
-    $user->assign($role);
+        // Quitar roles anteriores y asignar el nuevo con Bouncer
+        $user->roles()->detach();
+        $role = Bouncer::role()->where('name', $validatedData['role'])->first();
+        $user->assign($role);
 
-    // Asignar permisos según el rol
-    Bouncer::disallow($role)->everything(); // Limpieza opcional
-    switch ($role->name) {
-        case 'admin':
-            $perms = [
-                ['name' => 'admin-access', 'title' => 'Acceso al panel de administración'],
-                ['name' => 'admin_entrenador', 'title' => 'Acceso al panel de administracion de entrenadores'],
-                ['name' => 'entrenador-access', 'title' => 'Acceso al panel de entrenador'],
-                ['name' => 'cliente-access', 'title' => 'Acceso para clientes'],
-            ];
-            break;
-        case 'admin_entrenador':
-            $perms = [
-                ['name' => 'admin_entrenador', 'title' => 'Acceso al panel de administracion de entrenadores'],
-            ];
-            break;
-        case 'entrenador':
-            $perms = [
-                ['name' => 'entrenador-access', 'title' => 'Acceso al panel de entrenador'],
-            ];
-            break;
-        case 'cliente':
-            $perms = [
-                ['name' => 'cliente-access', 'title' => 'Acceso para clientes'],
-            ];
-            break;
-        default:
-            $perms = [];
+        // Asignar permisos según el rol
+        Bouncer::disallow($role)->everything(); // Limpieza opcional
+        switch ($role->name) {
+            case 'admin':
+                $perms = [
+                    ['name' => 'admin-access', 'title' => 'Acceso al panel de administración'],
+                    ['name' => 'admin_entrenador', 'title' => 'Acceso al panel de administracion de entrenadores'],
+                    ['name' => 'entrenador-access', 'title' => 'Acceso al panel de entrenador'],
+                    ['name' => 'cliente-access', 'title' => 'Acceso para clientes'],
+                ];
+                break;
+            case 'admin_entrenador':
+                $perms = [
+                    ['name' => 'admin_entrenador', 'title' => 'Acceso al panel de administracion de entrenadores'],
+                ];
+                break;
+            case 'entrenador':
+                $perms = [
+                    ['name' => 'entrenador-access', 'title' => 'Acceso al panel de entrenador'],
+                ];
+                break;
+            case 'cliente':
+                $perms = [
+                    ['name' => 'cliente-access', 'title' => 'Acceso para clientes'],
+                ];
+                break;
+            default:
+                $perms = [];
+        }
+
+        foreach ($perms as $perm) {
+            $ability = Bouncer::ability()->firstOrCreate($perm);
+            Bouncer::allow($role)->to($ability);
+        }
+
+        Bouncer::refresh($user);
+
+        return redirect()->route('admin.users.index')->with('success', 'Usuario actualizado correctamente.');
     }
-
-    foreach ($perms as $perm) {
-        $ability = Bouncer::ability()->firstOrCreate($perm);
-        Bouncer::allow($role)->to($ability);
-    }
-
-    Bouncer::refresh($user);
-
-    return redirect()->route('admin.users.index')->with('success', 'Usuario actualizado correctamente.');
-}
 
 
     public function resetPassword($id)

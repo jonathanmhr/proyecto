@@ -281,7 +281,7 @@ class AdminEntrenadorController extends Controller
             $query->where('name', 'entrenador');
         })->get();
 
-        return view('admin-entrenador.clases.gupales.edit', compact('clase', 'entrenadores'));
+        return view('admin-entrenador.clases.grupales.edit', compact('clase', 'entrenadores'));
     }
 
     public function update(Request $request, ClaseGrupal $clase)
@@ -399,6 +399,6 @@ class AdminEntrenadorController extends Controller
     // Gestión de Entrenamientos
     // ========================================
 
-    
+
 
 }

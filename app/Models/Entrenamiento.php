@@ -33,12 +33,12 @@ class Entrenamiento extends Model
 
     public function usuarios()
     {
-        return $this->belongsToMany(User::class, 'usuario_entrenamiento')
-                    ->withPivot('fecha_inicio', 'semanas_duracion', 'dias_entrenamiento')
-                    ->withTimestamps();
+        return $this->belongsToMany(User::class, 'usuario_entrenamiento', 'entrenamiento_id', 'user_id')
+            ->withPivot('fecha_inicio', 'semanas_duracion', 'dias_entrenamiento')
+            ->withTimestamps();
     }
     public function usuariosGuardaron()
-{
-    return $this->belongsToMany(User::class, 'entrenamiento_user', 'entrenamiento_id', 'user_id')->withTimestamps();
-}
+    {
+        return $this->belongsToMany(User::class, 'usuario_entrenamiento', 'entrenamiento_id', 'user_id')->withTimestamps();
+    }
 }

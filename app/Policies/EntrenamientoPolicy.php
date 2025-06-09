@@ -31,7 +31,7 @@ class EntrenamientoPolicy
 
     public function delete(User $user, Entrenamiento $entrenamiento): bool
     {
-        return $user->rol === 'admin-entrenador';
+       return in_array($user->rol, ['admin-entrenador', 'entrenador']);
     }
 
     public function restore(User $user, Entrenamiento $entrenamiento): bool
