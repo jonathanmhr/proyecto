@@ -21,6 +21,7 @@ class Almacen extends Model
         'proveedor',
         'imagen',
         'tipo',
+        'valoracion',
         'fecha_ultima_entrada',
     ];
 

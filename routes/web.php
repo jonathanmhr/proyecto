@@ -146,6 +146,23 @@ Route::middleware(['auth', 'verified', 'can:admin-access', VerificarUsuarioActiv
         //settings
         Route::post('settings/update-welcome-view', [SettingsController::class, 'updateWelcomeView'])
             ->name('settings.updateWelcomeView');
+        //Almacen
+        Route::get('almacen', [AlmacenController::class, 'adminIndex'])->name('almacen.index');
+        Route::get('almacen/crear', [AlmacenController::class, 'create'])->name('almacen.create');
+        Route::post('almacen', [AlmacenController::class, 'store'])->name('almacen.store');
+        Route::get('almacen/{almacen}/editar', [AlmacenController::class, 'edit'])->name('almacen.edit');
+        Route::put('almacen/{almacen}', [AlmacenController::class, 'update'])->name('almacen.update');
+        Route::delete('almacen/{almacen}', [AlmacenController::class, 'destroy'])->name('almacen.destroy');
+
+        //Compras admin
+        Route::prefix('admin/compras')
+            ->name('admin.compras.')
+            ->group(function () {
+                //Compras de usuarios
+                Route::get('/', [CompraController::class, 'adminIndex'])->name('index');
+                //Detalles de compra para admin
+                Route::get('/{compra}', [CompraController::class, 'adminShow'])->name('show');
+            });
     });
 
 // ----------------------
@@ -205,6 +222,7 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
         // Suscripciones de usuarios
         Route::get('users/{id}/suscripciones', [SuscripcionController::class, 'index'])->name('users.suscripciones');
         Route::get('/charts', [ChartController::class, 'index'])->name('charts');
+    
     });
 
 // ----------------------
@@ -284,15 +302,6 @@ Route::middleware(['auth'])
         //factura pdf de compra
         Route::get('/compras/{compra}/factura/pdf', [CheckoutController::class, 'generarFacturaPdf'])->name('factura.pdf.generar');
 
-        //Compras admin
-        Route::prefix('admin/compras')
-            ->name('admin.compras.')
-            ->group(function () {
-                //Compras de usuarios
-                Route::get('/', [CompraController::class, 'adminIndex'])->name('index')->middleware('can:admin-access');
-                //Detalles de compra para admin
-                Route::get('/{compra}', [CompraController::class, 'adminShow'])->name('show')->middleware('can:admin-access');
-            });
     });
 // ----------------------
 // RUTAS DE TIENDA
