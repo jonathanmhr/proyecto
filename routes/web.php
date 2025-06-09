@@ -150,19 +150,10 @@ Route::middleware(['auth', 'verified', 'can:admin-access', VerificarUsuarioActiv
         Route::get('almacen', [AlmacenController::class, 'adminIndex'])->name('almacen.index');
         Route::get('almacen/crear', [AlmacenController::class, 'create'])->name('almacen.create');
         Route::post('almacen', [AlmacenController::class, 'store'])->name('almacen.store');
-        Route::get('almacen/{almacen}/editar', [AlmacenController::class, 'edit'])->name('almacen.edit');
+        Route::get('almacen/{producto}/editar', [AlmacenController::class, 'edit'])->name('almacen.edit');
         Route::put('almacen/{almacen}', [AlmacenController::class, 'update'])->name('almacen.update');
         Route::delete('almacen/{almacen}', [AlmacenController::class, 'destroy'])->name('almacen.destroy');
 
-        //Compras admin
-        Route::prefix('admin/compras')
-            ->name('admin.compras.')
-            ->group(function () {
-                //Compras de usuarios
-                Route::get('/', [CompraController::class, 'adminIndex'])->name('index');
-                //Detalles de compra para admin
-                Route::get('/{compra}', [CompraController::class, 'adminShow'])->name('show');
-            });
     });
 
 // ----------------------
@@ -303,6 +294,15 @@ Route::middleware(['auth'])
         Route::get('/compras/{compra}/factura/pdf', [CheckoutController::class, 'generarFacturaPdf'])->name('factura.pdf.generar');
 
     });
+//Compras admin
+        Route::prefix('admin/compras')
+            ->name('admin.compras.')
+            ->group(function () {
+                //Compras de usuarios
+                Route::get('/', [CompraController::class, 'adminIndex'])->name('index');
+                //Detalles de compra para admin
+                Route::get('/{compra}', [CompraController::class, 'adminShow'])->name('show');
+            });
 // ----------------------
 // RUTAS DE TIENDA
 // ----------------------

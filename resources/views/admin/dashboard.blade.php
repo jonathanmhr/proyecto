@@ -72,7 +72,7 @@
         {{-- 2. Acciones rápidas --}}
         <section>
             <h2 class="text-2xl font-semibold mb-4 text-white">Acciones rápidas</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
 
                 <a href="{{ route('admin.charts.index') }}"
                     class="bg-gradient-to-r from-indigo-600 to-indigo-400 hover:from-indigo-500 hover:to-indigo-300 text-white font-bold py-4 px-6 rounded-xl flex justify-center items-center gap-4 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
@@ -95,10 +95,14 @@
                     <span class="text-3xl">👥</span> Gestionar usuarios
                 </a>
 
-
                 <a href="{{ route('admin.roles.index') }}"
                     class="bg-gradient-to-r from-yellow-600 to-yellow-400 hover:from-yellow-500 hover:to-yellow-300 text-white font-bold py-4 px-6 rounded-xl flex justify-center items-center gap-4 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                     <span class="text-3xl">👨‍👩‍👧‍👦</span> Gestionar grupos
+                </a>
+
+                <a href="{{ route('admin.almacen.index') }}"
+                    class="bg-gradient-to-r from-cyan-600 to-cyan-400 hover:from-cyan-500 hover:to-cyan-300 text-white font-bold py-4 px-6 rounded-xl flex justify-center items-center gap-4 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                    <span class="text-3xl">📦</span> Gestionar Productos
                 </a>
             </div>
         </section>

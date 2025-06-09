@@ -11,57 +11,88 @@ use Illuminate\Validation\Rule;
 
 class AlmacenController extends Controller
 {
-    // Definir constantes para valores fijos
-    const TIPOS_FIJOS = ['CONSUMICION', 'EQUIPAMIENTO'];
+    // CORRECCIÓN: Constantes actualizadas con los nuevos tipos.
+    const TIPOS_FIJOS = ['EQUIPO_DEPORTIVO','NUTRICIONISMO','ENERGIZANTE','PESO/FUERZA','RESISTENCIA','ALIMENTACION','SUPLEMENTACION'];
     const VALORACIONES_FIJAS = ['1', '2', '3', '4', '5'];
 
     /**
-     * Muestra la tienda pública para los clientes.
+     * Muestra la tienda pública para los clientes con filtros avanzados.
      */
     public function tiendaIndex(Request $request)
     {
+        // 1. Validar todos los posibles filtros de entrada
         $validated = $request->validate([
             'search' => 'nullable|string|max:255',
+            // Re-instauramos la validación con la nueva lista de tipos fijos.
             'tipo' => ['nullable', 'string', Rule::in(self::TIPOS_FIJOS)],
+            'valoracion_minima' => 'nullable|integer|min:0|max:5',
         ]);
 
+        // 2. Extraer las variables de los filtros
         $searchTerm = $validated['search'] ?? null;
         $selectedTipo = $validated['tipo'] ?? null;
+        $selectedRating = $validated['valoracion_minima'] ?? 0;
+        
+        // Usamos la constante actualizada para asegurar que los filtros sean consistentes.
         $tiposDisponibles = self::TIPOS_FIJOS;
 
+        // 3. Construir la consulta base
         $query = Almacen::where('cantidad_disponible', '>', 0);
 
-        if ($searchTerm) {
-            $query->where('nombre', 'LIKE', '%' . $searchTerm . '%');
-        }
-        if ($selectedTipo) {
-            $query->where('tipo', $selectedTipo);
-        }
+        // 4. Aplicar los filtros de forma condicional
+        $query->when($searchTerm, function ($query, $searchTerm) {
+            return $query->where('nombre', 'LIKE', '%' . $searchTerm . '%');
+        });
 
+        $query->when($selectedTipo, function ($query, $selectedTipo) {
+            return $query->where('tipo', $selectedTipo);
+        });
+        
+        $query->when($selectedRating, function ($query, $ratingValue) {
+            return $query->where('valoracion', '>=', $ratingValue);
+        });
+
+        // 5. Ejecutar la consulta y paginar
         $productos = $query->orderBy('nombre')->paginate(12);
         
-        $queryParams = [];
-        if ($searchTerm) $queryParams['search'] = $searchTerm;
-        if ($selectedTipo) $queryParams['tipo'] = $selectedTipo;
-        $productos->appends($queryParams);
+        // 6. Mantener los filtros en los enlaces de paginación
+        $productos->appends($request->query());
 
+        // 7. Obtener datos adicionales
         $cartItemCount = collect(Session::get('carrito', []))->sum('cantidad');
 
+        // 8. Devolver la vista con todas las variables
         return view('tienda.index', compact(
             'productos',
             'cartItemCount',
             'searchTerm',
             'tiposDisponibles',
-            'selectedTipo'
+            'selectedTipo',
+            'selectedRating'
         ));
     }
+
+    // --- El resto de los métodos del controlador permanecen sin cambios ---
+
     /**
      * Muestra la lista de productos para el administrador.
      */
-    public function adminIndex()
+    public function adminIndex(Request $request)
     {
-        $productos = Almacen::orderBy('nombre')->paginate(15);
-        return view('admin.almacen.index', compact('productos'));
+        $searchTerm = $request->input('search');
+        $query = Almacen::query();
+
+        if ($searchTerm) {
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('nombre', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('sku', 'LIKE', '%' . $searchTerm . '%');
+            });
+        }
+
+        $productos = $query->orderBy('nombre')->paginate(15);
+        $productos->appends(['search' => $searchTerm]);
+        
+        return view('admin.almacen.index', compact('productos', 'searchTerm'));
     }
 
     /**
@@ -73,11 +104,7 @@ class AlmacenController extends Controller
         $valoracionesDisponibles = self::VALORACIONES_FIJAS;
         $producto = new Almacen();
         
-        return view('admin.almacen.create', compact(
-            'producto',
-            'tiposDisponibles',
-            'valoracionesDisponibles'
-        ));
+        return view('admin.almacen.create', compact('producto', 'tiposDisponibles', 'valoracionesDisponibles'));
     }
 
     /**
@@ -110,17 +137,12 @@ class AlmacenController extends Controller
     /**
      * Muestra el formulario para editar un producto existente.
      */
-    public function edit(Almacen $almacen)
+    public function edit(Almacen $producto)
     {
         $tiposDisponibles = self::TIPOS_FIJOS;
         $valoracionesDisponibles = self::VALORACIONES_FIJAS;
         
-        // El modelo $almacen se pasa automáticamente por la inyección de dependencias
-        return view('admin.almacen.edit', compact(
-            'producto',
-            'tiposDisponibles',
-            'valoracionesDisponibles'
-        ));
+        return view('admin.almacen.edit', compact('producto', 'tiposDisponibles', 'valoracionesDisponibles'));
     }
 
     /**

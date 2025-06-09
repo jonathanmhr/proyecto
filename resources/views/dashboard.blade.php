@@ -13,7 +13,8 @@
             </h2>
             <div id="dietSlider" class="relative overflow-hidden rounded-lg">
                 <div class="flex transition-transform duration-500 ease-in-out" id="sliderContainer">
-                    @forelse ($dietasRecomendadas as $dieta)
+                    {{-- FIX: Use the null coalescing operator to provide an empty array if $dietasRecomendadas is null --}}
+                    @forelse (($dietasRecomendadas ?? []) as $dieta)
                         @php
                             $totalMacros = $dieta->carbohidratos_g + $dieta->proteinas_g + $dieta->grasas_g;
 
@@ -176,7 +177,8 @@
                     <i data-feather="book-open"
                         class="w-7 h-7 text-green-300 group-hover:scale-110 transition-transform"></i> Clases
                 </h2>
-                @if ($clases->isEmpty())
+                {{-- FIX: Check if $clases is null before calling isEmpty() --}}
+                @if (!$clases || $clases->isEmpty())
                     <p class="text-white opacity-80 mb-6 text-sm animate-pulse">No estás inscrito en clases.</p>
                 @else
                     <div
@@ -200,7 +202,8 @@
                         class="w-7 h-7 text-purple-300 group-hover:animate-bounce-icon transition-transform"></i>
                     Entrenamientos
                 </h2>
-                @if ($entrenamientos->isEmpty())
+                {{-- FIX: Check if $entrenamientos is null before calling isEmpty() --}}
+                @if (!$entrenamientos || $entrenamientos->isEmpty())
                     <p class="text-white opacity-80 mb-6 text-sm animate-pulse">No tienes entrenamientos asignados.</p>
                 @else
                     <div
@@ -224,7 +227,8 @@
                     <i data-feather="dollar-sign"
                         class="w-7 h-7 text-pink-300 group-hover:rotate-3 transition-transform"></i> Suscripciones
                 </h2>
-                @if ($suscripciones->isEmpty())
+                {{-- FIX: Check if $suscripciones is null before calling isEmpty() --}}
+                @if (!$suscripciones || $suscripciones->isEmpty())
                     <p class="text-white opacity-80 mb-6 text-sm animate-pulse">Aún no tienes suscripciones activas.
                     </p>
                 @else
@@ -242,7 +246,7 @@
                             @else
                                 {{-- ESTE ES EL NUEVO CAMBIO para una visibilidad aún mayor --}}
                                 <div
-                                    class="text-sm **text-white** **bg-red-700** p-3 rounded mb-3 border border-red-500 font-bold flex items-center gap-2">
+                                    class="text-sm text-white bg-red-700 p-3 rounded mb-3 border border-red-500 font-bold flex items-center gap-2">
                                     <span class="text-lg">❌</span> Clase eliminada de una suscripción anterior.
                                 </div>
                             @endif
@@ -253,7 +257,6 @@
                         para ver tus suscripciones.</p>
                 @endif
             </div>
-
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
@@ -263,7 +266,8 @@
                         <h2 class="text-2xl font-bold text-blue-400 flex items-center gap-3">
                             <i data-feather="bell" class="w-7 h-7 text-blue-500"></i> Notificaciones
                         </h2>
-                        @if ($notificaciones->whereNull('read_at')->count() > 0)
+                        {{-- FIX: Check if $notificaciones is not null before using it --}}
+                        @if ($notificaciones && $notificaciones->whereNull('read_at')->count() > 0)
                             <form action="{{ route('perfil.notificaciones.marcarTodasLeidas') }}" method="POST">
                                 {{-- RUTA CORRECTA --}}
                                 @csrf
@@ -275,7 +279,8 @@
                         @endif
                     </div>
 
-                    @if ($notificaciones->isEmpty())
+                    {{-- FIX: Check if $notificaciones is null before calling isEmpty() --}}
+                    @if (!$notificaciones || $notificaciones->isEmpty())
                         <p class="text-gray-400 text-center py-4">No tienes notificaciones recientes.</p>
                     @elseif ($notificaciones->whereNull('read_at')->count() === 0)
                         <div
@@ -373,12 +378,12 @@
                 const prevButton = document.getElementById('prevSlide');
                 const nextButton = document.getElementById('nextSlide');
                 let currentIndex = 0;
-                const slides = Array.from(sliderContainer.children);
+                const slides = Array.from(sliderContainer.children).filter(child => child.tagName.toLowerCase() !== 'template'); // Filter out template tags
                 const totalSlides = slides.length;
 
                 if (totalSlides === 0) {
-                    prevButton.style.display = 'none';
-                    nextButton.style.display = 'none';
+                    if(prevButton) prevButton.style.display = 'none';
+                    if(nextButton) nextButton.style.display = 'none';
                     return;
                 }
 
@@ -387,12 +392,13 @@
                     if (slides.length === 0) return 1;
                     const firstSlideWidth = slides[0].offsetWidth;
                     if (firstSlideWidth === 0) return 1;
-                    return Math.floor(sliderWrapperWidth / firstSlideWidth);
+                    return Math.max(1, Math.floor(sliderWrapperWidth / firstSlideWidth)); // Ensure at least 1
                 }
 
                 function updateSlider() {
                     const visibleSlidesCount = getVisibleSlidesCount();
-                    const slideWidth = slides[0].offsetWidth;
+                    const slideWidth = slides.length > 0 ? slides[0].offsetWidth : 0;
+                    if (slideWidth === 0) return;
 
                     const maxIndex = totalSlides - visibleSlidesCount;
                     if (currentIndex > maxIndex) {
@@ -431,11 +437,13 @@
                 });
 
                 window.addEventListener('resize', () => {
-                    currentIndex = 0;
+                    // Resetting to 0 on resize might be jarring, recalculating is better
                     updateSlider();
                 });
 
-                updateSlider();
+                // Initial setup
+                // A small delay can help if images are loading and changing dimensions
+                setTimeout(updateSlider, 100);
             });
         </script>
         @vite('resources/js/scripts/calendario.js')
