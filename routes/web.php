@@ -20,6 +20,7 @@ use App\Http\Controllers\General\ClaseGrupalController;
 use App\Http\Controllers\General\ClaseIndividualController;
 use App\Http\Controllers\General\EntrenamientoController;
 use App\Http\Controllers\General\SolicitudClaseController;
+use App\Http\Controllers\General\FaseEntrenamientoController;
 use App\Http\Controllers\General\SuscripcionController;
 use App\Http\Controllers\Admin\NotificacionController;
 use App\Http\Controllers\General\NotificacionesController;
@@ -153,7 +154,6 @@ Route::middleware(['auth', 'verified', 'can:admin-access', VerificarUsuarioActiv
         Route::get('almacen/{producto}/editar', [AlmacenController::class, 'edit'])->name('almacen.edit');
         Route::put('almacen/{almacen}', [AlmacenController::class, 'update'])->name('almacen.update');
         Route::delete('almacen/{almacen}', [AlmacenController::class, 'destroy'])->name('almacen.destroy');
-
     });
 
 // ----------------------
@@ -210,12 +210,11 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
         Route::post('entrenamientos', [EntrenamientoController::class, 'store'])->name('entrenamientos.store');
         Route::get('entrenamientos/{id}/edit', [EntrenamientoController::class, 'edit'])->name('entrenamientos.edit');
         Route::put('entrenamientos/{id}', [EntrenamientoController::class, 'update'])->name('entrenamientos.update');
-        
+
 
         // Suscripciones de usuarios
         Route::get('users/{id}/suscripciones', [SuscripcionController::class, 'index'])->name('users.suscripciones');
         Route::get('/charts', [ChartController::class, 'index'])->name('charts');
-    
     });
 
 // ----------------------
@@ -242,30 +241,42 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access', VerificarUsuario
         Route::post('solicitudes/rechazar/{id}', [EntrenadorController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
     });
 
+    
 // ----------------------
-// RUTAS DEL CLIENTE
+// RUTAS DEL Cliente
 // ----------------------
 Route::middleware(['auth', VerificarUsuarioActivo::class])
     ->prefix('cliente')
     ->name('cliente.')
     ->group(function () {
-        // Dashboard principal
+
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        // Clases usando DashboardController
+        // Clases
         Route::get('clases', [DashboardController::class, 'index'])->name('clases.index');
         Route::post('clases/{clase}/unirse', [DashboardController::class, 'unirse'])->name('clases.unirse');
 
-        // Entrenamientos
-        Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
+        // Entrenamientos - listado, guardar, quitar, planificar
+        Route::get('entrenamientos', [FaseEntrenamientoController::class, 'index'])->name('entrenamientos.index');
         Route::post('entrenamientos/{id}/guardar', [DashboardController::class, 'guardarEntrenamiento'])->name('entrenamientos.guardar');
         Route::post('entrenamientos/{id}/quitar', [DashboardController::class, 'quitarEntrenamiento'])->name('entrenamientos.quitar');
+        Route::get('entrenamientos/{entrenamiento}/planificar', [FaseEntrenamientoController::class, 'planificar'])->name('entrenamientos.planificar');
+
+        // Fases dentro de entrenamiento (días con fases)
+        Route::prefix('entrenamientos/{entrenamiento}')->group(function () {
+            Route::get('fases-dias', [FaseEntrenamientoController::class, 'index'])->name('entrenamientos.fases-dias');
+            Route::post('fases-dias', [FaseEntrenamientoController::class, 'store'])->name('entrenamientos.fases-dias.store');
+        });
+
+        // Actualizar estado fase
+        Route::patch('fases-dias/{dia}', [FaseEntrenamientoController::class, 'updateEstado'])->name('entrenamientos.fases-dias.updateEstado');
 
         // Perfil historial
         Route::get('perfil-historial', function () {
             return view('perfil.historial');
         })->name('perfil.historial');
     });
+
 
 Route::middleware('auth', VerificarUsuarioActivo::class)
     ->prefix('perfil')
@@ -290,17 +301,16 @@ Route::middleware(['auth'])
         Route::get('/compras/{compra}', [CompraController::class, 'show'])->name('compras.show');
         //factura pdf de compra
         Route::get('/compras/{compra}/factura/pdf', [CheckoutController::class, 'generarFacturaPdf'])->name('factura.pdf.generar');
-
     });
 //Compras admin
-        Route::prefix('admin/compras')
-            ->name('admin.compras.')
-            ->group(function () {
-                //Compras de usuarios
-                Route::get('/', [CompraController::class, 'adminIndex'])->name('index');
-                //Detalles de compra para admin
-                Route::get('/{compra}', [CompraController::class, 'adminShow'])->name('show');
-            });
+Route::prefix('admin/compras')
+    ->name('admin.compras.')
+    ->group(function () {
+        //Compras de usuarios
+        Route::get('/', [CompraController::class, 'adminIndex'])->name('index');
+        //Detalles de compra para admin
+        Route::get('/{compra}', [CompraController::class, 'adminShow'])->name('show');
+    });
 // ----------------------
 // RUTAS DE TIENDA
 // ----------------------

@@ -123,14 +123,6 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Suscripcion::class, 'id_clase');
     }
-    // Relación: Solicitudes de clases asociadas al usuario
-public function entrenamientos()
-{
-    return $this->belongsToMany(Entrenamiento::class, 'usuario_entrenamiento', 'user_id', 'entrenamiento_id')
-        ->withPivot('fecha_inicio', 'semanas_duracion', 'dias_entrenamiento')
-        ->withTimestamps();
-}
-
     public function clasesIndividualesAsignadas()
     {
         return $this->hasMany(ClaseIndividual::class, 'usuario_id');
@@ -139,5 +131,31 @@ public function entrenamientos()
     public function clasesIndividualesCreadas()
     {
         return $this->hasMany(ClaseIndividual::class, 'creado_por');
+    }
+
+    public function entrenamientosGuardados()
+    {
+        return $this->belongsToMany(Entrenamiento::class, 'usuario_entrenamiento', 'user_id', 'entrenamiento_id')
+            ->wherePivotNull('fecha_inicio')
+            ->withTimestamps();
+    }
+
+    public function entrenamientos()
+    {
+        return $this->belongsToMany(Entrenamiento::class, 'usuario_entrenamiento', 'user_id', 'entrenamiento_id')
+            ->withPivot('fecha_inicio', 'semanas_duracion', 'dias_entrenamiento')
+            ->withTimestamps();
+    }
+
+    public function guardarEntrenamiento($entrenamientoId)
+    {
+        // Añadir registro con fecha_inicio = NULL para indicar guardado
+        $this->entrenamientosGuardados()->syncWithoutDetaching([$entrenamientoId]);
+    }
+
+    public function quitarEntrenamiento($entrenamientoId)
+    {
+        // Quitar registro con fecha_inicio NULL (guardado)
+        $this->entrenamientosGuardados()->detach($entrenamientoId);
     }
 }

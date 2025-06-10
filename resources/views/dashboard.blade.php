@@ -378,12 +378,13 @@
                 const prevButton = document.getElementById('prevSlide');
                 const nextButton = document.getElementById('nextSlide');
                 let currentIndex = 0;
-                const slides = Array.from(sliderContainer.children).filter(child => child.tagName.toLowerCase() !== 'template'); // Filter out template tags
+                const slides = Array.from(sliderContainer.children).filter(child => child.tagName.toLowerCase() !==
+                    'template'); // Filter out template tags
                 const totalSlides = slides.length;
 
                 if (totalSlides === 0) {
-                    if(prevButton) prevButton.style.display = 'none';
-                    if(nextButton) nextButton.style.display = 'none';
+                    if (prevButton) prevButton.style.display = 'none';
+                    if (nextButton) nextButton.style.display = 'none';
                     return;
                 }
 

@@ -38,14 +38,10 @@ class DashboardController extends Controller
             ])->latest()->take(6)->get();
         }
 
-        // Cargar entrenamientos
-        $entrenamientos = Entrenamiento::latest()->paginate(6);
-
         // Añadir estados extra a cada clase
         $clases = $clases->map(function ($clase) use ($user) {
             $solicitud = $clase->solicitudes->first();
 
-            // Contar usuarios aceptados desde la colección precargada
             $inscritosAceptadosCount = $clase->usuarios->filter(function ($usuario) {
                 return $usuario->pivot->estado === 'aceptada';
             })->count();
@@ -55,14 +51,21 @@ class DashboardController extends Controller
             $clase->inscrito = $solicitud && $solicitud->estado === 'aceptada';
             $clase->solicitud_pendiente = $solicitud && $solicitud->estado === 'pendiente';
             $clase->revocado = $solicitud && $solicitud->estado === 'rechazada';
-            $clase->expirada = \Carbon\Carbon::parse($clase->fecha_inicio)->isPast();
+            $clase->expirada = Carbon::parse($clase->fecha_inicio)->isPast();
             $clase->cupos_restantes = $cuposRestantes;
 
             return $clase;
         });
 
-        return view('cliente.dashboard', compact('clases', 'entrenamientos'));
+        // Cargar entrenamientos paginados
+        $entrenamientos = Entrenamiento::latest()->paginate(6);
+
+        // Obtener IDs de entrenamientos guardados por el usuario actual
+        $entrenamientosGuardadosIds = $user->entrenamientos()->pluck('entrenamiento_id')->toArray();
+
+        return view('cliente.dashboard', compact('clases', 'entrenamientos', 'entrenamientosGuardadosIds'));
     }
+
 
     public function unirse(Request $request, ClaseGrupal $clase)
     {
@@ -103,30 +106,20 @@ class DashboardController extends Controller
         return redirect()->back()->with('success', 'Tu solicitud ha sido enviada y está pendiente de aprobación.');
     }
 
-    // Guardar entrenamiento para el usuario autenticado
     public function guardarEntrenamiento($id)
     {
-        $user = Auth::user();
+        $user = auth()->user();
+        $user->guardarEntrenamiento($id);
 
-        // Verificar que el entrenamiento exista
-        $entrenamiento = Entrenamiento::findOrFail($id);
-
-        // Añadir sin eliminar otros guardados
-        $user->entrenamientos()->syncWithoutDetaching([$id]);
-
-        return back()->with('success', 'Entrenamiento guardado correctamente.');
+        return redirect()->route('cliente.entrenamientos.fases-dias', ['entrenamiento' => $id])
+            ->with('success', 'Entrenamiento guardado. Ahora puedes planificarlo.');
     }
 
-    // Quitar entrenamiento guardado por el usuario
+
     public function quitarEntrenamiento($id)
     {
-        $user = Auth::user();
-
-        $entrenamiento = Entrenamiento::findOrFail($id);
-
-        // Quitar de la relación
-        $user->entrenamientos()->detach($id);
-
-        return back()->with('success', 'Entrenamiento quitado correctamente.');
+        $user = auth()->user();
+        $user->quitarEntrenamiento($id);
+        return back()->with('success', 'Entrenamiento quitado.');
     }
 }

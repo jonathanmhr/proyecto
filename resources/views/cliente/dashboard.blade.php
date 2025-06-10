@@ -17,8 +17,8 @@
 
             {{-- Mensajes de estado (success/error) --}}
             @if (session('success'))
-                <div class="bg-green-700 border-l-4 border-green-500 text-green-100 p-4 rounded-lg shadow-md flex items-center mb-6 animate-fade-in" role="alert"
-                    x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
+                <div class="bg-green-700 border-l-4 border-green-500 text-green-100 p-4 rounded-lg shadow-md flex items-center mb-6 animate-fade-in"
+                    role="alert" x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
                     x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100"
                     x-transition:leave-end="opacity-0">
                     <i data-feather="check-circle" class="w-6 h-6 mr-3"></i>
@@ -27,8 +27,8 @@
             @endif
 
             @if (session('error'))
-                <div class="bg-red-700 border-l-4 border-red-500 text-red-100 p-4 rounded-lg shadow-md flex items-center mb-6 animate-fade-in" role="alert"
-                    x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
+                <div class="bg-red-700 border-l-4 border-red-500 text-red-100 p-4 rounded-lg shadow-md flex items-center mb-6 animate-fade-in"
+                    role="alert" x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
                     x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100"
                     x-transition:leave-end="opacity-0">
                     <i data-feather="alert-triangle" class="w-6 h-6 mr-3"></i>
@@ -39,7 +39,8 @@
             {{-- Sección de Clases --}}
             <section
                 class="bg-gray-800 p-6 sm:p-8 rounded-3xl shadow-2xl border border-gray-700 transition-all duration-500 transform hover:scale-[1.01] hover:shadow-glow">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-gray-700 pb-4">
+                <div
+                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-gray-700 pb-4">
                     <h3 class="text-3xl font-extrabold text-red-400 flex items-center gap-4 mb-3 sm:mb-0">
                         <i data-feather="users" class="w-8 h-8 text-red-300 animate-pulse"></i> Clases Grupales
                     </h3>
@@ -107,7 +108,7 @@
                                         <button
                                             class="bg-gray-600 text-gray-300 font-medium py-2 px-4 rounded-lg cursor-not-allowed text-sm opacity-75"
                                             disabled>
-                                            <i data-feather="calendar-off" class="w-4 h-4 inline-block mr-1"></i> Clase
+                                            <i data-feather="calendar" class="w-4 h-4 inline-block mr-1"></i> Clase
                                             Expirada
                                         </button>
                                     @elseif ($clase->inscrito)
@@ -150,150 +151,291 @@
                         @endforeach
                     </div>
                 @endif
+
+            </section>
+            {{-- Sección de Entrenamientos --}}
+            <section
+                class="bg-gray-800 p-6 sm:p-8 rounded-3xl shadow-2xl border border-gray-700 transition-all duration-500 transform hover:scale-[1.01] hover:shadow-glow section-trainings">
+
+                <div
+                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-gray-700 pb-4">
+                    <h3 class="text-3xl font-extrabold text-green-400 flex items-center gap-4 mb-3 sm:mb-0">
+                        <i data-feather="zap" class="w-8 h-8 text-green-300 animate-pulse"></i> Entrenamientos
+                    </h3>
+
+
+                    <a href="{{ route('cliente.entrenamientos.index') }}"
+                        class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out shadow-md hover:shadow-lg">
+                        Planificar entrenamientos
+                    </a>
+
+                </div>
+
+                @if ($entrenamientos->isEmpty())
+                    <div class="bg-gray-700 p-8 rounded-xl text-center border border-gray-600 animate-pulse-slow">
+                        <i data-feather="activity" class="w-16 h-16 text-gray-400 mx-auto mb-6"></i>
+                        <p class="text-gray-400 text-xl font-medium">No hay entrenamientos disponibles en este momento.
+                        </p>
+                        <p class="text-gray-500 text-md mt-3">¡Mantente atento a nuevas rutinas personalizadas y
+                            desafíos!</p>
+                    </div>
+                @else
+                    @php
+                        $entrenamientosGuardadosIds = auth()->check()
+                            ? auth()->user()->entrenamientosGuardados()->pluck('entrenamiento_id')->toArray()
+                            : [];
+                    @endphp
+
+                    <div x-data="{
+                        showTrainingModal: false,
+                        selectedTraining: null,
+                        guardados: @json($entrenamientosGuardadosIds),
+                    
+                        openTrainingModal(training) {
+                            this.selectedTraining = training;
+                            this.showTrainingModal = true;
+                            if (window.feather) {
+                                window.feather.replace();
+                            }
+                        },
+                    
+                        estaGuardado() {
+                            return this.guardados.includes(this.selectedTraining.id);
+                        },
+                    
+                        guardarEntrenamiento() {
+                            $refs.formGuardar.submit();
+                        },
+                    
+                        quitarEntrenamiento() {
+                            $refs.formQuitar.submit();
+                        }
+                    }">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            @foreach ($entrenamientos as $entrenamiento)
+                                <div class="bg-gray-700 rounded-2xl shadow-xl border border-gray-600 flex flex-col cursor-pointer hover:bg-gray-600 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl overflow-hidden"
+                                    @click="openTrainingModal({{ json_encode($entrenamiento->load('fases.actividades')) }})">
+
+                                    <div class="w-full h-40 overflow-hidden rounded-t-2xl">
+                                        <img src="{{ $entrenamiento->zona_muscular ? asset('storage/' . $entrenamiento->zona_muscular) : 'https://via.placeholder.com/400x250?text=Entrenamiento' }}"
+                                            alt="Imagen de {{ $entrenamiento->titulo }}"
+                                            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
+                                    </div>
+
+                                    <div class="p-4 flex flex-col gap-2">
+                                        <h4 class="text-2xl font-bold text-white">{{ $entrenamiento->titulo }}</h4>
+                                        <p class="text-gray-300 font-semibold">Nivel: {{ $entrenamiento->nivel }}</p>
+                                        <p class="text-gray-400 flex items-center gap-1">
+                                            <i data-feather="calendar" class="w-4 h-4"></i>
+                                            Duración: {{ $entrenamiento->duracion_dias ?? 'N/A' }} días
+                                        </p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div x-show="showTrainingModal"
+                            class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
+                            x-transition.opacity @click.away="showTrainingModal = false" style="display: none;">
+                            <div class="bg-gray-800 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-auto p-6 relative shadow-2xl"
+                                @click.stop @keydown.window.escape="showTrainingModal = false">
+
+                                <button
+                                    class="absolute top-4 right-4 text-gray-400 hover:text-gray-200 p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500"
+                                    @click="showTrainingModal = false" aria-label="Cerrar modal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+
+                                <template x-if="selectedTraining">
+                                    <div>
+                                        <h2 class="text-3xl font-extrabold text-green-400 mb-4"
+                                            x-text="selectedTraining.titulo"></h2>
+                                        <p class="text-gray-300 mb-4 text-lg" x-text="selectedTraining.descripcion">
+                                        </p>
+
+                                        <div
+                                            class="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-gray-400 text-lg font-medium">
+                                            <p class="flex items-center gap-2">
+                                                <i data-feather="bar-chart-2" class="w-5 h-5 text-green-300"></i>
+                                                <strong>Nivel:</strong> <span x-text="selectedTraining.nivel"></span>
+                                            </p>
+                                            <p class="flex items-center gap-2">
+                                                <i data-feather="clock" class="w-5 h-5 text-green-300"></i>
+                                                <strong>Duración total:</strong> <span
+                                                    x-text="selectedTraining.duracion"></span> min
+                                            </p>
+                                            <p class="flex items-center gap-2">
+                                                <i data-feather="calendar" class="w-5 h-5 text-green-300"></i>
+                                                <strong>Días:</strong> <span
+                                                    x-text="selectedTraining.duracion_dias ?? 'N/A'"></span>
+                                            </p>
+                                        </div>
+
+                                        <img :src="selectedTraining.zona_muscular ? '{{ asset('storage') }}/' + selectedTraining
+                                            .zona_muscular : 'https://via.placeholder.com/600x400?text=Entrenamiento'"
+                                            :alt="'Imagen de ' + selectedTraining.titulo"
+                                            class="rounded-lg mb-6 w-full object-cover max-h-80 shadow-lg">
+
+                                        <div>
+                                            <h3
+                                                class="text-2xl font-bold mb-4 text-white border-b border-gray-700 pb-2 flex items-center gap-2">
+                                                <i data-feather="list" class="w-6 h-6 text-green-400"></i> Fases y
+                                                Ejercicios
+                                            </h3>
+
+                                            <template
+                                                x-if="selectedTraining.fases && selectedTraining.fases.length > 0">
+                                                <template x-for="fase in selectedTraining.fases"
+                                                    :key="fase.id">
+                                                    <div
+                                                        class="mb-6 p-4 bg-gray-700 rounded-lg shadow-inner border border-gray-600">
+                                                        <h4
+                                                            class="text-xl font-bold text-green-400 mb-2 flex items-center gap-2">
+                                                            <i data-feather="chevrons-right"
+                                                                class="w-5 h-5 text-green-300"></i>
+                                                            <span x-text="fase.nombre"></span>
+                                                        </h4>
+                                                        <p class="text-gray-300 mb-3" x-show="fase.descripcion"
+                                                            x-text="fase.descripcion"></p>
+
+                                                        <template
+                                                            x-if="fase.actividades && fase.actividades.length > 0">
+                                                            <ul class="space-y-4 pt-2">
+                                                                <template x-for="actividad in fase.actividades"
+                                                                    :key="actividad.id">
+                                                                    <li
+                                                                        class="flex items-center gap-4 bg-gray-600 p-3 rounded-lg shadow-sm">
+                                                                        <img :src="actividad.imagen ? '{{ asset('storage') }}/' +
+                                                                            actividad.imagen :
+                                                                            'https://placehold.co/80x60?text=Actividad'"
+                                                                            :alt="'Actividad ' + actividad.nombre"
+                                                                            class="w-24 h-20 object-cover rounded flex-shrink-0 border border-gray-500">
+                                                                        <div>
+                                                                            <p class="font-semibold text-white text-lg"
+                                                                                x-text="actividad.nombre"></p>
+                                                                            <p class="text-sm text-gray-300"
+                                                                                x-show="actividad.descripcion"
+                                                                                x-text="actividad.descripcion"></p>
+                                                                            <p
+                                                                                class="text-xs text-gray-400 flex items-center gap-2 mt-1">
+                                                                                <span><strong>Series:</strong> <span
+                                                                                        x-text="actividad.series"></span></span>
+                                                                                <template
+                                                                                    x-if="actividad.repeticiones">
+                                                                                    <span><strong>Reps:</strong> <span
+                                                                                            x-text="actividad.repeticiones"></span></span>
+                                                                                </template>
+                                                                            </p>
+                                                                        </div>
+                                                                    </li>
+                                                                </template>
+                                                            </ul>
+                                                        </template>
+                                                        <template
+                                                            x-if="!fase.actividades || fase.actividades.length === 0">
+                                                            <p class="text-sm text-gray-400">No hay actividades en esta
+                                                                fase.</p>
+                                                        </template>
+                                                    </div>
+                                                </template>
+                                            </template>
+                                            <template
+                                                x-if="!selectedTraining.fases || selectedTraining.fases.length === 0">
+                                                <p class="text-gray-400">Este entrenamiento aún no tiene fases
+                                                    definidas.</p>
+                                            </template>
+                                        </div>
+
+                                        <div class="mt-8 flex justify-center gap-4">
+                                            <template x-if="!estaGuardado()">
+                                                <form x-ref="formGuardar" method="POST"
+                                                    :action="`/cliente/entrenamientos/${selectedTraining.id}/guardar`">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-300 flex items-center gap-2">
+                                                        <i data-feather="plus-circle" class="w-5 h-5"></i> Guardar
+                                                        entrenamiento
+                                                    </button>
+                                                </form>
+                                            </template>
+
+                                            <template x-if="estaGuardado()">
+                                                <form x-ref="formQuitar" method="POST"
+                                                    :action="`/cliente/entrenamientos/${selectedTraining.id}/quitar`">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-300 flex items-center gap-2">
+                                                        <i data-feather="trash-2" class="w-5 h-5"></i> Quitar
+                                                        entrenamiento
+                                                    </button>
+                                                </form>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </section>
 
-
-           {{-- Sección de Entrenamientos --}}
-<section
-    class="bg-gray-800 p-6 sm:p-8 rounded-3xl shadow-2xl border border-gray-700 transition-all duration-500 transform hover:scale-[1.01] hover:shadow-glow section-trainings"> {{-- Añadido 'section-trainings' para posible personalización de hover-glow --}}
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-gray-700 pb-4">
-        <h3 class="text-3xl font-extrabold text-green-400 flex items-center gap-4 mb-3 sm:mb-0">
-            <i data-feather="zap" class="w-8 h-8 text-green-300 animate-pulse"></i> Entrenamientos
-        </h3>
-    </div>
-
-    @if ($entrenamientos->isEmpty())
-        <div class="bg-gray-700 p-8 rounded-xl text-center border border-gray-600 animate-pulse-slow">
-            <i data-feather="activity" class="w-16 h-16 text-gray-400 mx-auto mb-6"></i>
-            <p class="text-gray-400 text-xl font-medium">No hay entrenamientos disponibles en este momento.</p>
-            <p class="text-gray-500 text-md mt-3">¡Mantente atento a nuevas rutinas personalizadas y desafíos!</p>
-        </div>
-    @else
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @foreach ($entrenamientos as $entrenamiento)
-                <div class="bg-gray-700 rounded-2xl shadow-xl border border-gray-600 flex flex-col cursor-pointer hover:bg-gray-600 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl overflow-hidden"
-                    x-data="{ open: false }">
-                    <div @click="open = true" class="flex flex-col flex-grow">
-                        {{-- Imagen --}}
-                        <div class="w-full h-40 overflow-hidden rounded-t-2xl">
-                            <img src="{{ $entrenamiento->zona_muscular ? asset('storage/' . $entrenamiento->zona_muscular) : 'https://via.placeholder.com/400x250?text=Entrenamiento' }}"
-                                alt="Imagen de {{ $entrenamiento->nombre }}"
-                                class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
-                        </div>
-
-                        {{-- Info básica --}}
-                        <div class="p-4 flex flex-col gap-2">
-                            <h4 class="text-2xl font-bold text-white">{{ $entrenamiento->nombre }}</h4>
-                            <p class="text-gray-300 font-semibold">Nivel: {{ $entrenamiento->nivel }}</p>
-                            <p class="text-gray-400 flex items-center gap-1">
-                                <i data-feather="calendar" class="w-4 h-4"></i>
-                                Duración: {{ $entrenamiento->duracion_dias ?? 'N/A' }} días
-                            </p>
-                        </div>
-                    </div>
-
-                    {{-- Modal con detalles completos --}}
-                    <div x-show="open"
-                        class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
-                        x-transition.opacity @click.away="open = false" style="display: none;">
-                        <div class="bg-gray-800 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-auto p-6 relative shadow-2xl"
-                            @keydown.window.escape="open = false">
-                            <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-200 p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500"
-                                @click="open = false" aria-label="Cerrar modal">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-
-                            {{-- Contenido del modal --}}
-                            <h2 class="text-3xl font-extrabold text-green-400 mb-4">{{ $entrenamiento->nombre }}
-                            </h2>
-                            <p class="text-gray-300 mb-4 text-lg">{{ $entrenamiento->descripcion }}</p>
-
-                            <div class="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-gray-400 text-lg font-medium">
-                                <p class="flex items-center gap-2"><i data-feather="bar-chart-2" class="w-5 h-5 text-green-300"></i><strong>Nivel:</strong> {{ $entrenamiento->nivel }}</p>
-                                <p class="flex items-center gap-2"><i data-feather="clock" class="w-5 h-5 text-green-300"></i><strong>Duración total:</strong> {{ $entrenamiento->duracion }} min</p>
-                                <p class="flex items-center gap-2"><i data-feather="calendar" class="w-5 h-5 text-green-300"></i><strong>Días:</strong> {{ $entrenamiento->duracion_dias ?? 'N/A' }}</p>
-                            </div>
-
-                            {{-- Imagen general --}}
-                            <img src="{{ $entrenamiento->zona_muscular ? asset('storage/' . $entrenamiento->zona_muscular) : 'https://via.placeholder.com/600x400?text=Entrenamiento' }}"
-                                alt="Imagen de {{ $entrenamiento->nombre }}"
-                                class="rounded-lg mb-6 w-full object-cover max-h-80 shadow-lg">
-
-                            {{-- Fases y ejercicios --}}
-                            <div>
-                                <h3 class="text-2xl font-bold mb-4 text-white border-b border-gray-700 pb-2 flex items-center gap-2">
-                                    <i data-feather="list" class="w-6 h-6 text-green-400"></i> Fases y Ejercicios
-                                </h3>
-                                @forelse ($entrenamiento->fases as $fase)
-                                    <div class="mb-6 p-4 bg-gray-700 rounded-lg shadow-inner border border-gray-600">
-                                        <h4 class="text-xl font-bold text-green-400 mb-2 flex items-center gap-2">
-                                            <i data-feather="chevrons-right" class="w-5 h-5 text-green-300"></i> {{ $fase->nombre }}
-                                        </h4>
-                                        @if($fase->descripcion)<p class="text-gray-300 mb-3">{{ $fase->descripcion }}</p>@endif
-
-                                        @if($fase->actividades->isEmpty())
-                                            <p class="text-gray-500 italic">No hay actividades para esta fase.</p>
-                                        @else
-                                            <ul class="space-y-4 pt-2">
-                                                @foreach ($fase->actividades as $actividad)
-                                                    <li class="flex items-center gap-4 bg-gray-600 p-3 rounded-lg shadow-sm">
-                                                        <img src="{{ $actividad->imagen ?? 'https://via.placeholder.com/80x60?text=Actividad' }}"
-                                                            alt="Actividad {{ $actividad->nombre }}"
-                                                            class="w-24 h-20 object-cover rounded flex-shrink-0 border border-gray-500">
-                                                        <div>
-                                                            <p class="font-semibold text-white text-lg">{{ $actividad->nombre }}</p>
-                                                            @if($actividad->descripcion)<p class="text-sm text-gray-300">{{ Str::limit($actividad->descripcion, 80) }}</p>@endif
-                                                            <p class="text-xs text-gray-400 flex items-center gap-1 mt-1">
-                                                                <i data-feather="clock" class="w-3 h-3"></i> Duración:
-                                                                {{ $actividad->duracion_minutos ?? ($actividad->duracion_min ?? 'N/A') }}
-                                                                min
-                                                            </p>
-                                                        </div>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        @endif
-                                    </div>
-                                @empty
-                                    <p class="text-gray-500 italic">Este entrenamiento no tiene fases definidas.</p>
-                                @endforelse
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    @endif
-</section>
-
         </div>
     </div>
-        <style>
+    <style>
         @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .animate-fade-in-down { animation: fadeInDown 0.8s ease-out forwards; }
+
+        .animate-fade-in-down {
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
-        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
 
         @keyframes pulseSlow {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
         }
-        .animate-pulse-slow { animation: pulseSlow 4s infinite ease-in-out; }
+
+        .animate-pulse-slow {
+            animation: pulseSlow 4s infinite ease-in-out;
+        }
 
         /* Efecto de brillo en hover específico para esta sección */
         .section-trainings:hover {
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5), 0 0 30px rgba(16, 185, 129, 0.3); /* green-500 */
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5), 0 0 30px rgba(16, 185, 129, 0.3);
+            /* green-500 */
         }
 
         /* Ajustes para scrollbar en modales */
@@ -302,14 +444,17 @@
         }
 
         .max-h-[90vh]::-webkit-scrollbar-track {
-            background: #374151; /* gray-700 */
+            background: #374151;
+            /* gray-700 */
             border-radius: 10px;
         }
 
         .max-h-[90vh]::-webkit-scrollbar-thumb {
-            background-color: #6b7280; /* gray-500 */
+            background-color: #6b7280;
+            /* gray-500 */
             border-radius: 10px;
-            border: 2px solid #374151; /* gray-700 */
+            border: 2px solid #374151;
+            /* gray-700 */
         }
-        </style>
+    </style>
 </x-app-layout>
