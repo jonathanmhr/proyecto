@@ -8,6 +8,8 @@ use App\Models\FaseEntrenamientoDia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Notifications\NotificacionPersonalizada;
+use Illuminate\Support\Facades\Notification;
 
 class FaseEntrenamientoController extends Controller
 {
@@ -16,9 +18,9 @@ class FaseEntrenamientoController extends Controller
         $user = Auth::user();
 
         // Traemos solo los entrenamientos guardados sin cargar fases planificadas
-            $entrenamientos = $user->entrenamientosGuardados()
-        ->with('fases.actividades')
-        ->get();
+        $entrenamientos = $user->entrenamientosGuardados()
+            ->with('fases.actividades')
+            ->get();
 
         return view('cliente.entrenamientos.index', compact('entrenamientos'));
     }
@@ -62,7 +64,6 @@ class FaseEntrenamientoController extends Controller
 
         $user = Auth::user();
 
-        // Verificar que no exista ya la asignación para esa fase y fecha y usuario
         $existe = FaseEntrenamientoDia::where('entrenamiento_id', $entrenamiento->id)
             ->where('fase_entrenamiento_id', $fase->id)
             ->where('fecha', $request->fecha)
@@ -70,7 +71,9 @@ class FaseEntrenamientoController extends Controller
             ->first();
 
         if ($existe) {
-            return response()->json(['message' => 'Ya existe esta asignación para esa fecha'], 409);
+            return redirect()
+                ->back()
+                ->with('error', 'Ya existe esta asignación para esa fecha');
         }
 
         $faseDia = FaseEntrenamientoDia::create([
@@ -81,8 +84,28 @@ class FaseEntrenamientoController extends Controller
             'user_id' => $user->id,
         ]);
 
-        return response()->json($faseDia, 201);
+        // Crear la notificación
+        $titulo = '¡Tienes un entrenamiento programado para hoy!';
+        $mensaje = "Recuerda realizar tu entrenamiento '{$entrenamiento->titulo}' hoy, fase: '{$fase->nombre}'.";
+
+        $fechaEnvio = Carbon::parse($request->fecha)->startOfDay()->addHours(8); // se enviará a las 08:00
+
+        $notificacion = new NotificacionPersonalizada(
+            $titulo,
+            $mensaje,
+            'entrenamiento',
+            ['database', 'mail'],
+            Auth::user() // remitente: el mismo usuario que planifica
+        );
+
+        // Programar el envío
+        $user->notify($notificacion->delay($fechaEnvio));
+
+        return redirect()
+            ->route('cliente.entrenamientos.index')
+            ->with('success', 'Entrenamiento planificado correctamente. Recibirás una notificación el día correspondiente.');
     }
+
 
     public function updateEstado(Request $request, FaseEntrenamientoDia $dia)
     {
@@ -96,5 +119,18 @@ class FaseEntrenamientoController extends Controller
         $dia->save();
 
         return response()->json(['message' => 'Estado actualizado', 'dia' => $dia]);
+    }
+
+    public function destroy(FaseEntrenamientoDia $dia)
+    {
+        $user = Auth::user();
+
+        if ($dia->user_id !== $user->id) {
+            return redirect()->back()->with('error', 'No autorizado.');
+        }
+
+        $dia->delete();
+
+        return redirect()->back()->with('success', 'Fase eliminada correctamente.');
     }
 }

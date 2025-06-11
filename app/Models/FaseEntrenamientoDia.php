@@ -33,4 +33,8 @@ class FaseEntrenamientoDia extends Model
     {
         return $this->hasMany(FaseEntrenamientoDia::class, 'fase_entrenamiento_id');
     }
+    public function faseEntrenamiento()
+    {
+        return $this->belongsTo(FaseEntrenamiento::class, 'fase_entrenamiento_id');
+    }
 }

@@ -2,8 +2,8 @@ import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction'; 
 import esLocale from '@fullcalendar/core/locales/es';
-import Tooltip from 'tooltip.js';
 import Swal from 'sweetalert2';
+import '../../css/calendario.css';
 
 document.addEventListener('DOMContentLoaded', () => {
   const calendarEl = document.getElementById('calendar');
@@ -20,12 +20,13 @@ document.addEventListener('DOMContentLoaded', () => {
       right: 'prev,next today'
     },
 
-    // Combinas clases, entrenamientos y fases
+    // Eventos combinados
     events: [
       ...(window.eventosClases || []),
       ...(window.eventosFases || [])
     ],
 
+    // Clases CSS para eventos según tipo y estado
     eventClassNames: ({ event }) => {
       const tipo = event.extendedProps.tipo;
       if (tipo === 'Clase Grupal') {
@@ -42,37 +43,35 @@ document.addEventListener('DOMContentLoaded', () => {
       return ['bg-gray-600', 'text-white', 'rounded-lg', 'cursor-pointer', 'shadow-md'];
     },
 
-    eventDidMount: ({ el, event }) => {
-      if (event.extendedProps.description) {
-        new Tooltip(el, {
-          title: event.extendedProps.description,
-          placement: 'top',
-          trigger: 'hover',
-          offset: '0, 10',
-          container: 'body',
-        });
-      }
-    },
+    // NO mostrar tooltip ni efecto hover
 
     dayMaxEvents: true,
 
-    // Maneja click en eventos
     eventClick: function(info) {
       const event = info.event;
-      const tipo = event.extendedProps.tipo;
 
-      if (tipo === 'Fase Entrenamiento') {
-        if (event.extendedProps.estado === 'completado') {
-          Swal.fire('Fase completada', 'Ya has completado esta fase.', 'success');
-          return;
-        }
+      // Construir contenido modal
+      const titulo = event.title || 'Sin título';
+      const descripcion = event.extendedProps.description || 'Sin descripción';
+      const tipo = event.extendedProps.tipo || 'Tipo desconocido';
+      const estado = event.extendedProps.estado || 'Estado no definido';
 
+      // Si es fase entrenamiento y no completada, ofrezco marcar completada
+      if (tipo === 'Fase Entrenamiento' && estado !== 'completado') {
         Swal.fire({
-          title: `¿Marcar fase "${event.title}" como completada?`,
+          title: titulo,
+          html: `
+            <p><strong>Descripción:</strong> ${descripcion}</p>
+            <p><strong>Tipo:</strong> ${tipo}</p>
+            <p><strong>Estado:</strong> ${estado}</p>
+            <hr>
+            <p>¿Marcar esta fase como completada?</p>
+          `,
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Sí, marcar completada',
-          cancelButtonText: 'Cancelar'
+          cancelButtonText: 'Cancelar',
+          customClass: { popup: 'text-left' }
         }).then((result) => {
           if (result.isConfirmed) {
             fetch(`/cliente/entrenamientos/fases-dias/${event.id}`, {
@@ -88,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
               if (!res.ok) throw new Error('Error al actualizar');
               return res.json();
             })
-            .then(data => {
+            .then(() => {
               Swal.fire('¡Perfecto!', 'Fase marcada como completada.', 'success');
               event.setExtendedProp('estado', 'completado');
               info.view.calendar.refetchEvents();
@@ -99,30 +98,23 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       } else {
-        // Mostrar lista eventos por fecha (como tenías)
-        const date = event.startStr;
-        const eventos = info.view.calendar.getEvents().filter(e => e.startStr === date);
-        if (eventos.length === 0) {
-          Swal.fire('Sin eventos', 'No tienes clases ni entrenamientos este día.', 'info');
-          return;
-        }
-        const detallesHtml = eventos.map(e => `
-          <li class="mb-1">
-            <strong>${e.title}</strong><br>
-            <span class="text-sm text-gray-500">${e.extendedProps.tipo}</span>
-          </li>
-        `).join('');
+        // Solo mostrar info básica en modal sin acciones
         Swal.fire({
-          title: `Eventos del ${date}`,
-          html: `<ul class="text-left list-disc pl-5">${detallesHtml}</ul>`,
+          title: titulo,
+          html: `
+            <p><strong>Descripción:</strong> ${descripcion}</p>
+            <p><strong>Tipo:</strong> ${tipo}</p>
+            <p><strong>Estado:</strong> ${estado}</p>
+          `,
           icon: 'info',
           confirmButtonText: 'Cerrar',
-          customClass: { popup: 'text-gray-800 dark:text-gray-100' }
+          customClass: { popup: 'text-left' }
         });
       }
     },
 
   });
+  
 
   calendar.render();
 });

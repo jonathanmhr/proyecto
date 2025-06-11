@@ -1,0 +1,105 @@
+/* Contenedor principal del calendario */
+.fc .fc-view-harness {
+    background-color: #202938; /* Azul medio para resaltar en el fondo azul oscuro */
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.2);
+}
+
+/* Celdas del calendario */
+.fc .fc-daygrid-day {
+    background-color: #111828; /* Fondo azul oscuro como el fondo general */
+    border: 1px solid #1e293b; /* Azul oscuro medio para los bordes */
+    transition: background-color 0.2s ease-in-out;
+}
+
+.fc .fc-daygrid-day:hover {
+    background-color: #202938; /* Azul medio más claro al hover */
+}
+
+.fc .fc-daygrid-day.fc-day-other-month {
+    background-color: #0f172a; /* Un poco más oscuro para otros meses */
+    opacity: 0.7;
+}
+
+/* Números de los días */
+.fc .fc-daygrid-day-number {
+    color: #f8f9fb; /* Blanco muy claro */
+    font-weight: 600;
+    padding: 0.5rem;
+    transition: color 0.2s ease-in-out;
+}
+
+.fc .fc-daygrid-day-number:hover {
+    color: #da2627; /* Rojo para destacar el número al pasar el ratón */
+}
+
+/* Encabezados de los días */
+.fc .fc-col-header-cell {
+    background-color: #202938; /* Fondo azul medio */
+    color: #da2627; /* Rojo para títulos */
+    font-weight: 700;
+    padding: 0.75rem 0;
+    border: 1px solid #1e293b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Botones de navegación */
+.fc .fc-button-group .fc-button {
+    background-color: #da2627; /* rojo principal */
+    color: #f8f9fb; /* texto blanco */
+    border: 1px solid #b71c1c;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-weight: 700;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.fc .fc-button-group .fc-button:hover {
+    background-color: #b71c1c;
+    border-color: #991b1b;
+}
+
+.fc .fc-button-group .fc-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(218, 38, 39, 0.5);
+}
+
+.fc .fc-button-group .fc-button.fc-button-active {
+    background-color: #991b1b;
+    border-color: #7f1d1d;
+}
+
+/* Título del calendario */
+.fc .fc-toolbar-title {
+    color: #da2627;
+    font-size: 1.875rem;
+    font-weight: 800;
+}
+
+/* Eventos */
+.fc-event {
+    border-radius: 0.375rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #f8f9fb; /* Texto blanco para eventos */
+}
+
+/* Opcional: puedes darle color distinto a eventos según tipo usando clases o atributos data */
+.fc-event[data-tipo="Clase Grupal"] {
+    background-color: #b91c1c; /* rojo oscuro */
+}
+
+.fc-event[data-tipo="Clase Individual"] {
+    background-color: #dc2626; /* rojo normal */
+}
+
+.fc-event[data-tipo="Fase Entrenamiento"] {
+    background-color: #2563eb; /* azul para diferenciarlos */
+}

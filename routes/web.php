@@ -223,7 +223,6 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
         Route::get('dietas/{dieta}/editar', [AdminEntrenadorController::class, 'editDieta'])->name('dietas.edit');
         Route::put('dietas/{dieta}', [AdminEntrenadorController::class, 'updateDieta'])->name('dietas.update');
         Route::delete('dietas/{dieta}', [AdminEntrenadorController::class, 'destroyDieta'])->name('dietas.destroy');
-
     });
 
 // ----------------------
@@ -250,7 +249,7 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access', VerificarUsuario
         Route::post('solicitudes/rechazar/{id}', [EntrenadorController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
     });
 
-    
+
 // ----------------------
 // RUTAS DEL Cliente
 // ----------------------
@@ -270,16 +269,16 @@ Route::middleware(['auth', VerificarUsuarioActivo::class])
         Route::post('entrenamientos/{id}/guardar', [DashboardController::class, 'guardarEntrenamiento'])->name('entrenamientos.guardar');
         Route::post('entrenamientos/{id}/quitar', [DashboardController::class, 'quitarEntrenamiento'])->name('entrenamientos.quitar');
         Route::get('entrenamientos/{entrenamiento}/planificar', [FaseEntrenamientoController::class, 'planificar'])->name('entrenamientos.planificar');
-
-        // Fases dentro de entrenamiento (días con fases)
-        Route::prefix('entrenamientos/{entrenamiento}')->group(function () {
-            Route::get('fases-dias', [FaseEntrenamientoController::class, 'index'])->name('entrenamientos.fases-dias');
-            Route::post('fases-dias', [FaseEntrenamientoController::class, 'store'])->name('entrenamientos.fases-dias.store');
+        
+        // Fases de entrenamiento
+        Route::prefix('entrenamientos/{entrenamiento}/fases-dias')->group(function () {
+            Route::get('/', [FaseEntrenamientoController::class, 'index'])->name('entrenamientos.fases-dias');
+            Route::post('/', [FaseEntrenamientoController::class, 'store'])->name('entrenamientos.fases-dias.store');
         });
 
-        // Actualizar estado fase
+        // Operaciones sobre un día específico (fuera del grupo anterior)
         Route::patch('fases-dias/{dia}', [FaseEntrenamientoController::class, 'updateEstado'])->name('entrenamientos.fases-dias.updateEstado');
-
+        Route::delete('fases-dias/{dia}', [FaseEntrenamientoController::class, 'destroy'])->name('entrenamientos.fases-dias.destroy');
         // Perfil historial
         Route::get('perfil-historial', function () {
             return view('perfil.historial');

@@ -177,16 +177,22 @@
                     <i data-feather="book-open"
                         class="w-7 h-7 text-green-300 group-hover:scale-110 transition-transform"></i> Clases
                 </h2>
-                {{-- FIX: Check if $clases is null before calling isEmpty() --}}
+
                 @if (!$clases || $clases->isEmpty())
-                    <p class="text-white opacity-80 mb-6 text-sm animate-pulse">No estás inscrito en clases.</p>
+                    <p class="text-white opacity-80 mb-6 text-sm animate-pulse">No estás inscrito en clases para hoy.
+                    </p>
                 @else
                     <div
                         class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100 mt-4">
                         @foreach ($clases as $clase)
                             <div class="border-b border-green-600 pb-3 mb-3 last:border-b-0">
-                                <div class="text-white font-semibold text-lg">{{ $clase->nombre }}</div>
-                                <div class="text-sm text-green-100 opacity-90">{{ $clase->descripcion }}</div>
+                                {{-- Si existe nombre lo mostramos, sino título --}}
+                                <div class="text-white font-semibold text-lg">
+                                    {{ $clase->nombre ?? $clase->titulo }}
+                                </div>
+                                <div class="text-sm text-green-100 opacity-90">
+                                    {{ $clase->descripcion ?? '' }}
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -200,26 +206,30 @@
                 <h2 class="text-2xl font-bold text-purple-200 mb-4 flex items-center gap-3">
                     <i data-feather="activity"
                         class="w-7 h-7 text-purple-300 group-hover:animate-bounce-icon transition-transform"></i>
-                    Entrenamientos
+                    Entrenamientos para hoy
                 </h2>
-                {{-- FIX: Check if $entrenamientos is null before calling isEmpty() --}}
-                @if (!$entrenamientos || $entrenamientos->isEmpty())
-                    <p class="text-white opacity-80 mb-6 text-sm animate-pulse">No tienes entrenamientos asignados.</p>
+
+                @if (!$entrenamientosHoy || $entrenamientosHoy->isEmpty())
+                    <p class="text-white opacity-80 mb-6 text-sm animate-pulse">No tienes entrenamientos para hoy.</p>
                 @else
                     <div
                         class="transition-all duration-500 ease-in-out max-h-0 overflow-hidden opacity-0 group-hover:max-h-96 group-hover:opacity-100 mt-4">
-                        @foreach ($entrenamientos as $entrenamiento)
+                        @foreach ($entrenamientosHoy as $faseDia)
                             <div class="border-b border-purple-600 pb-3 mb-3 last:border-b-0">
-                                <div class="text-white font-semibold text-lg">{{ $entrenamiento->nombre }}</div>
-                                <div class="text-sm text-purple-100 opacity-90">{{ $entrenamiento->descripcion }}
-                                </div>
+                                <div class="text-white font-semibold text-lg">
+                                    {{ $faseDia->entrenamiento->titulo ?? 'Entrenamiento sin nombre' }}</div>
+                                <div class="text-sm text-purple-100 opacity-90">Fase:
+                                    {{ $faseDia->faseEntrenamiento->nombre ?? 'Fase sin nombre' }}</div>
+                                <div class="text-xs text-purple-300 opacity-80 mt-1">Recuerda realizar tu entrenamiento
+                                    hoy.</div>
                             </div>
                         @endforeach
                     </div>
                     <p class="text-purple-100 mt-4 text-xs opacity-90 group-hover:hidden animate-fade-in-up">Pasa el
-                        ratón para ver tus entrenamientos.</p>
+                        ratón para ver tus entrenamientos para hoy.</p>
                 @endif
             </div>
+
 
             <div
                 class="bg-gradient-to-br from-pink-900 to-pink-700 p-8 rounded-3xl shadow-xl border border-pink-800 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 group">
@@ -350,21 +360,39 @@
             <div class="lg:col-span-8">
                 @if ($datosCompletos)
                     <div class="bg-gray-800 p-8 rounded-3xl shadow-xl border border-gray-700 h-full flex flex-col">
-                        <h2 class="text-2xl font-bold text-red-400 mb-6 flex items-center gap-3">
-                            <i data-feather="calendar" class="w-7 h-7 text-red-500"></i> Calendario de Clases
+                        <h2 class="text-3xl font-extrabold text-red-500 mb-6 flex items-center gap-4">
+                            {{-- Increased font size, weight, and gap --}}
+                            <i data-feather="calendar" class="w-8 h-8 text-red-600"></i> {{-- Increased icon size and slightly darker red --}}
+                            Tu Calendario de Actividades
                         </h2>
                         <div id="calendar"
-                            class="bg-gray-900 rounded-xl p-6 text-gray-200 shadow-inner border border-gray-700 flex-grow">
-                            <p class="text-gray-500 text-center py-12">Cargando calendario...</p>
-                            {{-- Placeholder mientras FullCalendar carga --}}
+                            class="bg-gray-900 rounded-2xl p-6 text-gray-100 shadow-inner border border-gray-700 flex-grow transition duration-300 ease-in-out hover:shadow-2xl">
+                            {{-- Increased rounded, adjusted text color, added transition and hover effect --}}
+                            <div class="flex justify-center items-center h-full"> {{-- Centered loading message --}}
+                                <p class="text-gray-500 text-lg animate-pulse">Cargando calendario...</p>
+                                {{-- Added pulse animation --}}
+                            </div>
                         </div>
                     </div>
                 @else
                     <div
-                        class="bg-red-900 bg-opacity-30 p-8 rounded-3xl shadow-xl border border-red-700 flex items-center justify-center h-full text-center">
-                        <p class="text-red-400 text-xl font-semibold leading-relaxed">
-                            Completa tu perfil para acceder al calendario de clases y mucho más.
+                        class="bg-gradient-to-br from-red-900 to-red-800 bg-opacity-70 p-10 rounded-3xl shadow-2xl border border-red-700 flex flex-col items-center justify-center h-full text-center space-y-4">
+                        {{-- Enhanced placeholder styling with gradient and more shadow --}}
+                        <i data-feather="alert-circle" class="w-16 h-16 text-red-300 mb-4 animate-bounce"></i>
+                        {{-- Added a larger icon and bounce animation --}}
+                        <p class="text-red-200 text-2xl font-bold leading-relaxed">
+                            ¡Atención!
                         </p>
+                        <p class="text-red-300 text-lg font-medium leading-relaxed max-w-2xl">
+                            Para desbloquear tu calendario personalizado de clases y entrenamientos, por favor, completa
+                            tu perfil.
+                            ¡Es rápido y te ayudará a sacar el máximo provecho de tu experiencia!
+                        </p>
+                        {{-- Puedes añadir un botón para dirigir al usuario a la página de perfil --}}
+                        <a href="{{ route('profile.edit') }}"
+                            class="mt-6 inline-flex items-center px-8 py-3 border border-transparent text-base font-semibold rounded-full shadow-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-300 transform hover:scale-105">
+                            <i data-feather="user" class="w-5 h-5 mr-2"></i> Completar Perfil Ahora
+                        </a>
                     </div>
                 @endif
             </div>
@@ -447,9 +475,11 @@
                 setTimeout(updateSlider, 100);
             });
         </script>
-        @vite('resources/js/scripts/calendario.js')
         <script>
-            window.eventosClases = @json($eventos ?? []);
+            window.eventosClases = @json($eventosClases ?? []);
+            window.eventosFases = @json($eventosFases ?? []);
+            window.csrfToken = '{{ csrf_token() }}';
         </script>
+        @vite('resources/js/scripts/calendario.js')
     @endpush
 </x-app-layout>

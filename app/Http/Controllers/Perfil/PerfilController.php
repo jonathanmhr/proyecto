@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Perfil;
 
 use App\Models\ClaseGrupal;
+use App\Models\ClaseIndividual;
 use App\Models\Entrenamiento;
 use App\Models\Suscripcion;
 use App\Models\PerfilUsuario;
@@ -10,42 +11,130 @@ use App\Models\DietaYPlanNutricional;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
+use App\Models\FaseEntrenamientoDia;
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\NotificacionPersonalizada;
+use Illuminate\Support\Collection;
 
 class PerfilController extends Controller
 {
+
     public function index()
     {
-        $usuario = auth()->user(); // Obtener al usuario autenticado
+        $usuario = auth()->user();
 
-        // Obtener el perfil del usuario
-        $perfil = $usuario->perfilUsuario; // Asumiendo que ya tienes la relación configurada
+        // Perfil y demás datos...
+        $perfil = $usuario->perfilUsuario;
 
-        // Verificar si el perfil está completo
         $datosCompletos = $perfil && $perfil->fecha_nacimiento && $perfil->peso && $perfil->altura && $perfil->objetivo && $perfil->id_nivel;
-
-        // Pasar a la vista el flag que indica si el perfil está incompleto
         $incompleteProfile = !$datosCompletos && !session('profile_modal_shown');
-        session(['profile_modal_shown' => true]); // Se marca que ya se mostró
+        session(['profile_modal_shown' => true]);
 
-        // Obtener clases inscritas por el usuario a través de la relación muchos a muchos
-        $clases = $usuario->clasesAceptadas; // Relación ya definida en el modelo User
-
-        // Obtener entrenamientos del usuario (relación uno a muchos)
+        $clasesGrupales = $usuario->clasesAceptadas ?? collect();
+        $clasesIndividuales = ClaseIndividual::where('usuario_id', $usuario->id)->get();
         $entrenamientos = Entrenamiento::where('creado_por', $usuario->id)->get();
-
-        // Obtener suscripciones del usuario (relación uno a muchos)
         $suscripciones = Suscripcion::where('id_usuario', $usuario->id)->get();
-
-        // Obtener notificaciones recientes del usuario (por ejemplo las últimas 10)
         $notificaciones = $usuario->notifications()->latest()->take(10)->get();
-        
         $dietasRecomendadas = $usuario->dietas()->inRandomOrder()->limit(5)->get();
 
+        $hoy = Carbon::today();
 
+        // Filtrar clases grupales para hoy
+        $clasesGrupalesHoy = $clasesGrupales->filter(function ($clase) use ($hoy) {
+            $fechaClase = $clase->fecha_hora ?? $clase->fecha_inicio;
+            return Carbon::parse($fechaClase)->isSameDay($hoy);
+        });
 
-        // Pasar los datos a la vista
-        return view('dashboard', compact('clases', 'entrenamientos', 'suscripciones', 'incompleteProfile', 'datosCompletos', 'perfil', 'notificaciones', 'dietasRecomendadas'));
+        // Filtrar clases individuales para hoy
+        $clasesIndividualesHoy = $clasesIndividuales->filter(function ($clase) use ($hoy) {
+            $fechaClase = $clase->fecha_hora ?? $clase->fecha_inicio;
+            return Carbon::parse($fechaClase)->isSameDay($hoy);
+        });
+
+        $clasesHoy = $clasesGrupalesHoy->merge($clasesIndividualesHoy)->values();
+
+        // Entrenamientos planificados para hoy
+        $entrenamientosHoy = FaseEntrenamientoDia::where('user_id', $usuario->id)
+            ->where('fecha', $hoy)
+            ->where('estado', 'pendiente') // solo los pendientes para evitar mostrar ya completados
+            ->with(['entrenamiento', 'faseEntrenamiento'])
+            ->get();
+
+        $eventosFases = FaseEntrenamientoDia::where('user_id', $usuario->id)
+            ->with(['entrenamiento', 'faseEntrenamiento'])
+            ->get()
+            ->map(function ($faseDia) {
+                return [
+                    'id' => $faseDia->id,
+                    'title' => $faseDia->entrenamiento->nombre . ' - ' . $faseDia->faseEntrenamiento->nombre,  // Entrenamiento - Actividad
+                    'start' => Carbon::parse($faseDia->fecha)->toDateString(),
+                    'end' => Carbon::parse($faseDia->fecha)->toDateString(),
+                    'tipo' => 'Fase Entrenamiento',
+                    'estado' => $faseDia->estado,
+                    'description' => 'Haz clic para marcar como completado',
+                ];
+            });
+
+        $eventosClasesGrupales = $clasesGrupales->map(function ($clase) {
+            return [
+                'id'    => 'G' . $clase->id_clase,
+                'title' => $clase->nombre . ' (Grupal)',  // Indico tipo en título
+                'start' => Carbon::parse($clase->fecha_hora ?? $clase->fecha_inicio)->toDateTimeString(),
+                'end'   => Carbon::parse($clase->fecha_hora ?? $clase->fecha_fin)->toDateTimeString(),
+                'tipo'  => 'Clase Grupal',
+                'estado' => 'aceptada',
+                'description' => $clase->descripcion,
+            ];
+        });
+
+        $eventosClasesIndividuales = $clasesIndividuales->map(function ($clase) {
+            if ($clase->fecha_hora) {
+                $start = $clase->fecha_hora->toDateTimeString();
+                $end = $clase->fecha_hora->copy()->addMinutes($clase->duracion ?? 60)->toDateTimeString();
+            } else {
+                $fecha = Carbon::parse($clase->fecha_inicio)->format('Y-m-d');
+                $hora = $clase->hora_inicio instanceof Carbon
+                    ? $clase->hora_inicio->format('H:i:s')
+                    : $clase->hora_inicio;
+
+                $start = Carbon::parse("{$fecha} {$hora}")->toDateTimeString();
+                $end = Carbon::parse("{$fecha} {$hora}")->addMinutes($clase->duracion ?? 60)->toDateTimeString();
+            }
+
+            return [
+                'id'    => 'I' . $clase->id,
+                'title' => $clase->titulo . ' (Individual)', // Indico tipo en título
+                'start' => $start,
+                'end'   => $end,
+                'tipo'  => 'Clase Individual',
+                'estado' => 'programada',
+                'description' => $clase->descripcion,
+            ];
+        });
+
+        $eventosClases = (new Collection($eventosClasesGrupales))
+            ->merge(new Collection($eventosClasesIndividuales))
+            ->values();
+
+        // PASAMOS SOLO LAS CLASES DE HOY para mostrar en la lista
+        $clases = $clasesHoy;
+
+        return view('dashboard', compact(
+            'clases',
+            'eventosClases',
+            'eventosFases',
+            'entrenamientos',
+            'suscripciones',
+            'incompleteProfile',
+            'datosCompletos',
+            'perfil',
+            'notificaciones',
+            'dietasRecomendadas',
+            'entrenamientosHoy'
+        ));
     }
+
 
     public function completar()
     {
