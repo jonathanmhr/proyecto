@@ -38,16 +38,9 @@ class PerfilController extends Controller
 
         // Obtener notificaciones recientes del usuario (por ejemplo las últimas 10)
         $notificaciones = $usuario->notifications()->latest()->take(10)->get();
+        
+        $dietasRecomendadas = $usuario->dietas()->inRandomOrder()->limit(5)->get();
 
-        $dietasRecomendadas = Cache::remember('dietas_recomendadas_' . auth()->id(), now()->addMinutes(30), function () use ($usuario) {
-            return DietaYPlanNutricional::where(function ($query) use ($usuario) {
-                $query->whereNull('id_usuario')
-                    ->orWhere('id_usuario', $usuario->id);
-            })
-                ->inRandomOrder()
-                ->limit(5)
-                ->get();
-        });
 
 
         // Pasar los datos a la vista

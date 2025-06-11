@@ -70,6 +70,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+
     // RELACIONES
     //public function clases()
     //{
@@ -77,6 +78,7 @@ class User extends Authenticatable implements MustVerifyEmail
     //        ->wherePivot('estado', Suscripcion::ESTADO_ACTIVO)  // Filtrar solo suscripciones activas
     //        ->wherePivot('fecha_fin', '>', now());  // Filtrar suscripciones con fecha de fin futura
     //}
+
     public function clasesAceptadas()
     {
         return $this->belongsToMany(ClaseGrupal::class, 'solicitud_clases', 'user_id', 'id_clase')
@@ -158,8 +160,15 @@ class User extends Authenticatable implements MustVerifyEmail
         // Quitar registro con fecha_inicio NULL (guardado)
         $this->entrenamientosGuardados()->detach($entrenamientoId);
     }
-     public function dietas()
+    
+    public function dietas()
     {
         return $this->belongsToMany(DietaYPlanNutricional::class, 'dieta_user', 'user_id', 'id_dieta');
     }
+
+        public function clearDietasRecomendadasCache()
+    {
+        Cache::forget('dietas_recomendadas_' . $this->id);
+    }
+
 }

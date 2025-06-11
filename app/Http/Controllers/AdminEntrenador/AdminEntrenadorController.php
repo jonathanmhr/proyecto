@@ -137,7 +137,7 @@ class AdminEntrenadorController extends Controller
     public function editarAlumno(User $user)
     {
         // Obtiene todas las clases (para la asignación de clases)
-        $clases = ClaseGrupal::all(); 
+        $clases = ClaseGrupal::all();
 
         // Obtiene todas las dietas disponibles en el sistema.
         $dietas = DietaYPlanNutricional::all();
@@ -414,7 +414,8 @@ class AdminEntrenadorController extends Controller
     // Gestión de Entrenamientos
     // ========================================
 
-     // ========================================
+
+    // ========================================
     // Gestión de Dietas
     // ========================================
 
@@ -424,10 +425,15 @@ class AdminEntrenadorController extends Controller
         return view('admin-entrenador.dietas.index', compact('dietas'));
     }
 
-    public function createDieta()
-    {
-        return view('admin-entrenador.dietas.create');
-    }
+public function createDieta()
+{
+    $usuarios = User::whereHas('roles', function ($query) {
+        $query->where('name', 'cliente'); // O el rol que estés usando
+    })->get();
+
+    return view('admin-entrenador.dietas.create', compact('usuarios'));
+}
+
 
     public function storeDieta(Request $request)
     {
@@ -438,23 +444,41 @@ class AdminEntrenadorController extends Controller
             'proteinas_g' => 'required|numeric|min:0',
             'carbohidratos_g' => 'required|numeric|min:0',
             'grasas_g' => 'required|numeric|min:0',
-            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // Validación de imagen
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'usuarios' => 'nullable|array',
+            'usuarios.*' => 'exists:users,id',
         ]);
 
         if ($request->hasFile('imagen')) {
-            // Guarda la imagen en 'storage/app/public/dietas' y obtiene la ruta
             $path = $request->file('imagen')->store('dietas', 'public');
             $validatedData['image_url'] = $path;
         }
 
-        DietaYPlanNutricional::create($validatedData);
-        return redirect()->route('admin-entrenador.dietas.index')->with('success', 'Dieta creada exitosamente.');
+        
+    $dieta = DietaYPlanNutricional::create($validatedData);
+
+    if ($request->filled('usuarios')) {
+        $dieta->users()->attach($request->input('usuarios'));
+
+        // Limpiar caché para cada usuario asignado
+        foreach ($request->input('usuarios') as $userId) {
+            Cache::forget('dietas_recomendadas_' . $userId);
+        }
     }
+
+    return redirect()->route('admin-entrenador.dietas.index')->with('success', 'Dieta creada y asignada exitosamente.');
+    }
+
 
     public function editDieta(DietaYPlanNutricional $dieta)
     {
-        return view('admin-entrenador.dietas.edit', compact('dieta'));
+        $usuarios = User::whereHas('roles', function ($q) {
+            $q->where('name', 'cliente');
+        })->get();
+
+        return view('admin-entrenador.dietas.edit', compact('dieta', 'usuarios'));
     }
+
 
     public function updateDieta(Request $request, DietaYPlanNutricional $dieta)
     {
@@ -466,20 +490,35 @@ class AdminEntrenadorController extends Controller
             'carbohidratos_g' => 'required|numeric|min:0',
             'grasas_g' => 'required|numeric|min:0',
             'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'users' => 'nullable|array',
+            'users.*' => 'exists:users,id',
         ]);
 
         if ($request->hasFile('imagen')) {
-            // Si hay una imagen nueva, borramos la antigua si existe
             if ($dieta->image_url) {
                 Storage::disk('public')->delete($dieta->image_url);
             }
-            // Guardamos la nueva imagen y actualizamos la ruta
             $path = $request->file('imagen')->store('dietas', 'public');
             $validatedData['image_url'] = $path;
         }
 
-        $dieta->update($validatedData);
-        return redirect()->route('admin-entrenador.dietas.index')->with('success', 'Dieta actualizada exitosamente.');
+        
+    $dieta->update($validatedData);
+
+    // Obtener IDs de usuarios antes de sincronizar para limpiar su caché
+    $oldUserIds = $dieta->users()->pluck('id')->toArray();
+
+    // Sincronizar usuarios
+    $newUserIds = $request->input('users', []);
+    $dieta->users()->sync($newUserIds);
+
+    // Limpiar caché para todos los usuarios afectados (antes y después)
+    $userIdsToClear = array_unique(array_merge($oldUserIds, $newUserIds));
+    foreach ($userIdsToClear as $userId) {
+        Cache::forget('dietas_recomendadas_' . $userId);
+    }
+
+    return redirect()->route('admin-entrenador.dietas.index')->with('success', 'Dieta actualizada y asignada correctamente.');
     }
 
     public function destroyDieta(DietaYPlanNutricional $dieta)
