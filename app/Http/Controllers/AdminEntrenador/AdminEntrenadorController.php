@@ -14,6 +14,7 @@ use App\Models\Suscripcion;
 use App\Models\ReservaDeClase;
 use App\Models\Entrenamiento;
 use App\Models\DietaYPlanNutricional;
+use App\Models\SolicitudCambioEntrenamiento;
 
 // Otras dependencias  
 use Illuminate\Http\Request;
@@ -410,9 +411,58 @@ class AdminEntrenadorController extends Controller
         }
     }
 
-    // ========================================
-    // Gestión de Entrenamientos
-    // ========================================
+public function verSolicitudesEntrenamientos()
+{
+    $solicitudesPendientes = SolicitudCambioEntrenamiento::where('estado', 'pendiente')
+        ->with('entrenamiento', 'entrenador')
+        ->get();
+
+    return view('admin-entrenador.solicitudes.index', compact('solicitudesPendientes'));
+}
+
+
+    public function aceptarSolicitudEntrenamiento($id)
+    {
+        $this->autorizarAdmin();
+
+        $solicitud = SolicitudCambioEntrenamiento::find($id);
+
+        if (!$solicitud || $solicitud->estado !== 'pendiente') {
+            return redirect()->back()->with('error', 'No se encontró ninguna solicitud pendiente.');
+        }
+
+        $entrenamiento = $solicitud->entrenamiento;
+
+        if (!$entrenamiento) {
+            return redirect()->back()->with('error', 'El entrenamiento relacionado no existe.');
+        }
+
+        $datos = $solicitud->datos_modificados;
+
+        $entrenamiento->fill($datos);
+        $entrenamiento->save();
+
+        $solicitud->estado = 'aprobada';
+        $solicitud->save();
+
+        return redirect()->back()->with('success', 'Solicitud aceptada y cambios aplicados.');
+    }
+
+    public function rechazarSolicitudEntrenamiento($id)
+    {
+        $this->autorizarAdmin();
+
+        $solicitud = SolicitudCambioEntrenamiento::find($id);
+
+        if (!$solicitud || $solicitud->estado !== 'pendiente') {
+            return redirect()->back()->with('error', 'No se encontró ninguna solicitud pendiente.');
+        }
+
+        $solicitud->estado = 'rechazada';
+        $solicitud->save();
+
+        return redirect()->back()->with('success', 'Solicitud rechazada y descartada.');
+    }
 
 
     // ========================================
@@ -425,14 +475,14 @@ class AdminEntrenadorController extends Controller
         return view('admin-entrenador.dietas.index', compact('dietas'));
     }
 
-public function createDieta()
-{
-    $usuarios = User::whereHas('roles', function ($query) {
-        $query->where('name', 'cliente'); // O el rol que estés usando
-    })->get();
+    public function createDieta()
+    {
+        $usuarios = User::whereHas('roles', function ($query) {
+            $query->where('name', 'cliente'); // O el rol que estés usando
+        })->get();
 
-    return view('admin-entrenador.dietas.create', compact('usuarios'));
-}
+        return view('admin-entrenador.dietas.create', compact('usuarios'));
+    }
 
 
     public function storeDieta(Request $request)
@@ -454,19 +504,19 @@ public function createDieta()
             $validatedData['image_url'] = $path;
         }
 
-        
-    $dieta = DietaYPlanNutricional::create($validatedData);
 
-    if ($request->filled('usuarios')) {
-        $dieta->users()->attach($request->input('usuarios'));
+        $dieta = DietaYPlanNutricional::create($validatedData);
 
-        // Limpiar caché para cada usuario asignado
-        foreach ($request->input('usuarios') as $userId) {
-            Cache::forget('dietas_recomendadas_' . $userId);
+        if ($request->filled('usuarios')) {
+            $dieta->users()->attach($request->input('usuarios'));
+
+            // Limpiar caché para cada usuario asignado
+            foreach ($request->input('usuarios') as $userId) {
+                Cache::forget('dietas_recomendadas_' . $userId);
+            }
         }
-    }
 
-    return redirect()->route('admin-entrenador.dietas.index')->with('success', 'Dieta creada y asignada exitosamente.');
+        return redirect()->route('admin-entrenador.dietas.index')->with('success', 'Dieta creada y asignada exitosamente.');
     }
 
 
@@ -502,23 +552,23 @@ public function createDieta()
             $validatedData['image_url'] = $path;
         }
 
-        
-    $dieta->update($validatedData);
 
-    // Obtener IDs de usuarios antes de sincronizar para limpiar su caché
-    $oldUserIds = $dieta->users()->pluck('id')->toArray();
+        $dieta->update($validatedData);
 
-    // Sincronizar usuarios
-    $newUserIds = $request->input('users', []);
-    $dieta->users()->sync($newUserIds);
+        // Obtener IDs de usuarios antes de sincronizar para limpiar su caché
+        $oldUserIds = $dieta->users()->pluck('id')->toArray();
 
-    // Limpiar caché para todos los usuarios afectados (antes y después)
-    $userIdsToClear = array_unique(array_merge($oldUserIds, $newUserIds));
-    foreach ($userIdsToClear as $userId) {
-        Cache::forget('dietas_recomendadas_' . $userId);
-    }
+        // Sincronizar usuarios
+        $newUserIds = $request->input('users', []);
+        $dieta->users()->sync($newUserIds);
 
-    return redirect()->route('admin-entrenador.dietas.index')->with('success', 'Dieta actualizada y asignada correctamente.');
+        // Limpiar caché para todos los usuarios afectados (antes y después)
+        $userIdsToClear = array_unique(array_merge($oldUserIds, $newUserIds));
+        foreach ($userIdsToClear as $userId) {
+            Cache::forget('dietas_recomendadas_' . $userId);
+        }
+
+        return redirect()->route('admin-entrenador.dietas.index')->with('success', 'Dieta actualizada y asignada correctamente.');
     }
 
     public function destroyDieta(DietaYPlanNutricional $dieta)

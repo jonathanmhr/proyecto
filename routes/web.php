@@ -201,15 +201,14 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
         Route::get('solicitudes', [AdminEntrenadorController::class, 'verSolicitudesClases'])->name('solicitudes.index');
         Route::post('solicitudes/{id}/aceptar', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('solicitudes.aceptar');
         Route::post('solicitudes/{id}/rechazar', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
+        Route::get('solicitudes-entrenamientos', [AdminEntrenadorController::class, 'verSolicitudesEntrenamientos'])->name('solicitudes-entrenamientos.index');
+        Route::post('solicitudes-entrenamientos/{id}/aceptar', [AdminEntrenadorController::class, 'aceptarSolicitudEntrenamiento'])->name('solicitudes-entrenamientos.aceptar');
+        Route::post('solicitudes-entrenamientos/{id}/rechazar', [AdminEntrenadorController::class, 'rechazarSolicitudEntrenamiento'])->name('solicitudes-entrenamientos.rechazar');
+
 
         // Gestión de entrenamientos
-        Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
-        Route::get('entrenamientos/{id}/usuarios', [EntrenamientoController::class, 'usuariosGuardaron'])->name('entrenamientos.usuarios');
-        Route::delete('entrenamientos/{id}', [EntrenamientoController::class, 'destroy'])->name('entrenamientos.destroy');
-        Route::get('entrenamientos/create', [EntrenamientoController::class, 'create'])->name('entrenamientos.create');
-        Route::post('entrenamientos', [EntrenamientoController::class, 'store'])->name('entrenamientos.store');
-        Route::get('entrenamientos/{id}/edit', [EntrenamientoController::class, 'edit'])->name('entrenamientos.edit');
-        Route::put('entrenamientos/{id}', [EntrenamientoController::class, 'update'])->name('entrenamientos.update');
+        Route::resource('entrenamientos', \App\Http\Controllers\General\EntrenamientoController::class);
+        Route::get('entrenamientos/{id}/usuarios', [\App\Http\Controllers\General\EntrenamientoController::class, 'usuariosGuardaron'])->name('entrenamientos.usuarios');
 
 
         // Suscripciones de usuarios
@@ -243,6 +242,13 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access', VerificarUsuario
         Route::put('clases/{clase}', [EntrenadorController::class, 'updateClase'])->name('clases.update');
         Route::delete('clases/{clase}/eliminar-alumno/{alumnoId}', [EntrenadorController::class, 'eliminarAlumno'])->name('clases.eliminarAlumno');
 
+        // Entrenamientos
+        Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
+        Route::get('entrenamientos/create', [EntrenamientoController::class, 'create'])->name('entrenamientos.create');
+        Route::post('entrenamientos', [EntrenamientoController::class, 'store'])->name('entrenamientos.store');
+        Route::get('entrenamientos/{entrenamiento}/edit', [EntrenamientoController::class, 'edit'])->name('entrenamientos.edit');
+        Route::put('entrenamientos/{entrenamiento}', [EntrenamientoController::class, 'update'])->name('entrenamientos.update');
+
         // Solicitudes
         Route::get('solicitudes', [EntrenadorController::class, 'verSolicitudesPendientes'])->name('solicitudes.index');
         Route::post('solicitudes/aceptar/{id}', [EntrenadorController::class, 'aceptarSolicitud'])->name('solicitudes.aceptar');
@@ -269,7 +275,7 @@ Route::middleware(['auth', VerificarUsuarioActivo::class])
         Route::post('entrenamientos/{id}/guardar', [DashboardController::class, 'guardarEntrenamiento'])->name('entrenamientos.guardar');
         Route::post('entrenamientos/{id}/quitar', [DashboardController::class, 'quitarEntrenamiento'])->name('entrenamientos.quitar');
         Route::get('entrenamientos/{entrenamiento}/planificar', [FaseEntrenamientoController::class, 'planificar'])->name('entrenamientos.planificar');
-        
+
         // Fases de entrenamiento
         Route::prefix('entrenamientos/{entrenamiento}/fases-dias')->group(function () {
             Route::get('/', [FaseEntrenamientoController::class, 'index'])->name('entrenamientos.fases-dias');

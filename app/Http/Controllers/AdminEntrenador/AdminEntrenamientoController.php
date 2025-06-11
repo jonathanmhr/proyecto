@@ -1,24 +1,30 @@
 <?php
 
+
 namespace App\Http\Controllers\AdminEntrenador;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Entrenamiento;
-use App\Models\User;
+use App\Models\FaseEntrenamiento;
+use App\Models\ActividadEntrenamiento;
+use App\Models\UsuarioEntrenamiento;
+//use App\Models\SolicitudCambioEntrenamiento;
+use Illuminate\Support\Facades\Auth;
 
 class AdminEntrenamientoController extends Controller
 {
-public function index()
-{
-    $usuario = auth()->user();
+    public function index()
+    {
+        $user = Auth::user();
 
-    $entrenamientos = Entrenamiento::where('creado_por', $usuario->id)
-        ->latest()
-        ->paginate(10); // o cualquier cantidad que quieras por página
+        $entrenamientos = Entrenamiento::with(['fases', 'usuariosGuardaron'])
+            ->where('creado_por', $user->id)
+            ->get();
 
-    return view('admin-entrenador.entrenamientos.index', compact('entrenamientos'));
-}
+        return view('admin-entrenador.entrenamientos.index', compact('entrenamientos'));
+    }
+
 
     public function create()
     {
@@ -28,88 +34,250 @@ public function index()
     public function store(Request $request)
     {
         $request->validate([
-            'nombre' => 'required',
-            'tipo' => 'required',
-            'duracion' => 'required|integer',
-            'fecha' => 'required|date',
+            'titulo' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'zona_muscular_imagen' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'equipamiento_imagen' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'nivel' => 'required|in:bajo,medio,alto',
+            'fases' => 'required|array',
         ]);
 
-        Entrenamiento::create([
-            'nombre' => $request->nombre,
-            'tipo' => $request->tipo,
-            'duracion' => $request->duracion,
-            'fecha' => $request->fecha,
-            'id_usuario' => auth()->id(),
+        // Guardar imágenes generales
+        $zonaMuscularImg = $request->hasFile('zona_muscular_imagen')
+            ? $request->file('zona_muscular_imagen')->store('zona_muscular', 'public')
+            : null;
+
+        $equipamientoImg = $request->hasFile('equipamiento_imagen')
+            ? $request->file('equipamiento_imagen')->store('equipamiento', 'public')
+            : null;
+
+        // Calcular kcal total
+        $totalKcal = 0;
+        foreach ($request->fases as $fase) {
+            $totalKcal += (int) ($fase['kcal_estimadas'] ?? 0);
+        }
+
+        $entrenamiento = Entrenamiento::create([
+            'titulo' => $request->titulo,
+            'descripcion' => $request->descripcion,
+            'zona_muscular' => $zonaMuscularImg,
+            'nivel' => $request->nivel,
+            'equipamiento' => $equipamientoImg,
+            'kcal_estimadas' => $totalKcal,
+            'creado_por' => Auth::id(),
         ]);
 
-        return redirect()->route('admin-entrenador.entrenamientos.index')->with('success', 'Entrenamiento creado correctamente.');
+        // Manejar cada fase
+        foreach ($request->fases as $orden => $faseData) {
+            // Procesar imagen si existe
+            $faseImagenPath = null;
+            if ($request->hasFile("fases.$orden.imagen")) {
+                $faseImagenPath = $request->file("fases.$orden.imagen")->store("fases", 'public');
+            }
+
+            $fase = FaseEntrenamiento::create([
+                'entrenamiento_id' => $entrenamiento->id,
+                'nombre' => $faseData['nombre'],
+                'duracion_min' => $faseData['duracion_min'],
+                'kcal_estimadas' => $faseData['kcal_estimadas'],
+                'orden' => $orden + 1,
+                'imagen' => $faseImagenPath, // <= aquí se guarda si existe
+            ]);
+
+            foreach ($faseData['actividades'] ?? [] as $actividadData) {
+                ActividadEntrenamiento::create([
+                    'fase_entrenamiento_id' => $fase->id,
+                    'nombre' => $actividadData['nombre'],
+                    'tipo' => $actividadData['tipo'],
+                    'series' => $actividadData['series'],
+                    'repeticiones' => $actividadData['repeticiones'] ?? null,
+                    'imagen' => $actividadData['imagen'] ?? null,
+                ]);
+            }
+        }
+
+        return redirect()->route('admin-entrenador.entrenamientos.index')
+            ->with('success', 'Entrenamiento creado correctamente.');
     }
 
-    public function edit(Entrenamiento $entrenamiento)
+
+    public function edit($id)
     {
-        return view('admin-entrenador.entrenamientos.edit', compact('entrenamiento'));
+        $entrenamiento = Entrenamiento::with('fases.actividades')->findOrFail($id);
+        $fases = $entrenamiento->fases;
+
+        return view('admin-entrenador.entrenamientos.edit', compact('entrenamiento', 'fases'));
     }
 
-    public function update(Request $request, Entrenamiento $entrenamiento)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'nombre' => 'required',
-            'tipo' => 'required',
-            'duracion' => 'required|integer',
-            'fecha' => 'required|date',
+            'titulo' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'zona_muscular_imagen' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'equipamiento_imagen' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'nivel' => 'required|in:bajo,medio,alto',
+            'fases' => 'required|array',
         ]);
 
-        $entrenamiento->update($request->only(['nombre', 'tipo', 'duracion', 'fecha']));
+        $entrenamiento = Entrenamiento::with('fases.actividades')->findOrFail($id);
 
-        return redirect()->route('admin-entrenador.entrenamientos.index')->with('success', 'Entrenamiento actualizado correctamente.');
+        // Si el usuario es entrenador y no es el creador del entrenamiento, prohibir acceso
+        if (auth()->user()->hasRole('entrenador') && $entrenamiento->creado_por !== auth()->id()) {
+            abort(403, 'No tienes permiso para modificar este entrenamiento.');
+        }
+
+        if (auth()->user()->hasRole('entrenador')) {
+            // Creamos una solicitud en vez de modificar el entrenamiento directamente
+
+            $datosPropuestos = $request->all();
+
+            SolicitudCambioEntrenamiento::create([
+                'entrenamiento_id' => $entrenamiento->id,
+                'entrenador_id' => auth()->id(),
+                'datos_modificados' => json_encode($datosPropuestos),
+                'estado' => 'pendiente',
+            ]);
+
+            return redirect()->route('entrenador.entrenamientos.index')
+                ->with('success', 'Solicitud de cambio enviada y pendiente de aprobación.');
+        }
+
+
+        // Manejar imágenes generales: zona muscular y equipamiento
+        if ($request->hasFile('zona_muscular_imagen')) {
+            // Opcional: borrar imagen vieja si quieres
+            $zonaMuscularImg = $request->file('zona_muscular_imagen')->store('zona_muscular', 'public');
+            $entrenamiento->zona_muscular = $zonaMuscularImg;
+        }
+
+        if ($request->hasFile('equipamiento_imagen')) {
+            $equipamientoImg = $request->file('equipamiento_imagen')->store('equipamiento', 'public');
+            $entrenamiento->equipamiento = $equipamientoImg;
+        }
+
+        // Calcular kcal total
+        $totalKcal = 0;
+        foreach ($request->fases as $fase) {
+            $totalKcal += (int) ($fase['kcal_estimadas'] ?? 0);
+        }
+
+        // Actualizar campos básicos del entrenamiento
+        $entrenamiento->update([
+            'titulo' => $request->titulo,
+            'descripcion' => $request->descripcion,
+            'nivel' => $request->nivel,
+            'kcal_estimadas' => $totalKcal,
+        ]);
+
+        // Obtener IDs actuales de fases para comparación y eliminación
+        $idsFasesEnRequest = collect($request->fases)->pluck('id')->filter()->all(); // solo las que tienen id
+        $idsFasesExistentes = $entrenamiento->fases()->pluck('id')->all();
+
+        // Fases a eliminar (que no están en el request)
+        $fasesAEliminar = array_diff($idsFasesExistentes, $idsFasesEnRequest);
+        FaseEntrenamiento::destroy($fasesAEliminar);
+
+        // Procesar fases
+        foreach ($request->fases as $orden => $faseData) {
+            $faseImagenPath = null;
+            if ($request->hasFile("fases.$orden.imagen")) {
+                $faseImagenPath = $request->file("fases.$orden.imagen")->store("fases", 'public');
+            }
+
+            if (!empty($faseData['id'])) {
+                // Actualizar fase existente
+                $fase = FaseEntrenamiento::find($faseData['id']);
+                if ($fase) {
+                    $fase->nombre = $faseData['nombre'];
+                    $fase->duracion_min = $faseData['duracion_min'];
+                    $fase->kcal_estimadas = $faseData['kcal_estimadas'];
+                    $fase->orden = $orden + 1;
+                    if ($faseImagenPath) {
+                        $fase->imagen = $faseImagenPath;
+                    }
+                    $fase->save();
+                }
+            } else {
+                // Crear nueva fase
+                $fase = FaseEntrenamiento::create([
+                    'entrenamiento_id' => $entrenamiento->id,
+                    'nombre' => $faseData['nombre'],
+                    'duracion_min' => $faseData['duracion_min'],
+                    'kcal_estimadas' => $faseData['kcal_estimadas'],
+                    'orden' => $orden + 1,
+                    'imagen' => $faseImagenPath,
+                ]);
+            }
+
+            // Actualizar actividades de la fase
+            if (isset($faseData['actividades'])) {
+                // Obtener IDs actuales actividades
+                $idsActividadesEnRequest = collect($faseData['actividades'])->pluck('id')->filter()->all();
+                $idsActividadesExistentes = $fase->actividades()->pluck('id')->all();
+
+                // Actividades a eliminar
+                $actividadesAEliminar = array_diff($idsActividadesExistentes, $idsActividadesEnRequest);
+                ActividadEntrenamiento::destroy($actividadesAEliminar);
+
+                foreach ($faseData['actividades'] as $actividadData) {
+                    if (!empty($actividadData['id'])) {
+                        // Actualizar actividad existente
+                        $actividad = ActividadEntrenamiento::find($actividadData['id']);
+                        if ($actividad) {
+                            $actividad->nombre = $actividadData['nombre'];
+                            $actividad->tipo = $actividadData['tipo'];
+                            $actividad->series = $actividadData['series'];
+                            $actividad->repeticiones = $actividadData['repeticiones'] ?? null;
+                            // Nota: no manejo imagen para actividades aquí, si tienes lógica, la agregamos
+                            $actividad->save();
+                        }
+                    } else {
+                        // Crear actividad nueva
+                        ActividadEntrenamiento::create([
+                            'fase_entrenamiento_id' => $fase->id,
+                            'nombre' => $actividadData['nombre'],
+                            'tipo' => $actividadData['tipo'],
+                            'series' => $actividadData['series'],
+                            'repeticiones' => $actividadData['repeticiones'] ?? null,
+                            'imagen' => $actividadData['imagen'] ?? null,
+                        ]);
+                    }
+                }
+            }
+        }
+
+        return redirect()->route('admin-entrenador.entrenamientos.index')
+            ->with('success', 'Entrenamiento actualizado correctamente.');
     }
 
-    public function destroy(Entrenamiento $entrenamiento)
+
+    public function destroy($id)
     {
+        $entrenamiento = Entrenamiento::findOrFail($id);
+
+        if (Auth::user()->rol !== 'admin-entrenador') {
+            abort(403, 'No autorizado para eliminar este entrenamiento.');
+        }
+
+        // Desvincula todos los usuarios que lo tenían guardado
+        $entrenamiento->usuariosGuardaron()->detach();
+
+        // Elimina el entrenamiento
         $entrenamiento->delete();
-        return redirect()->route('admin-entrenador.entrenamientos.index')->with('success', 'Entrenamiento eliminado.');
+
+        return redirect()->route('admin-entrenador.entrenamientos.index')
+            ->with('success', 'Entrenamiento eliminado correctamente.');
     }
 
-    public function usuarios(Entrenamiento $entrenamiento)
+    public function usuariosGuardaron($id)
     {
-        // Obtenemos todos los usuarios que tienen el rol "cliente"
-        $usuarios = User::whereHas('roles', function ($query) {
-            $query->where('name', 'cliente');  // Reemplaza 'name' con el nombre real del campo de rol en la tabla de roles
-        })->get();
+        $entrenamiento = Entrenamiento::with('usuarios')->findOrFail($id);
 
-        $usuariosAsignados = $entrenamiento->usuarios ?? [];
-        return view('admin-entrenador.entrenamientos.usuarios', compact('entrenamiento', 'usuarios', 'usuariosAsignados'));
-    }
+        $usuarios = UsuarioEntrenamiento::where('entrenamiento_id', $id)
+            ->with('user')
+            ->get();
 
-
-    public function agregarUsuario(Request $request, Entrenamiento $entrenamiento)
-    {
-        $request->validate([
-            'usuario_id' => 'required|exists:users,id',
-        ]);
-
-        $entrenamiento->usuarios()->attach($request->usuario_id);
-        return back()->with('success', 'Usuario agregado al entrenamiento.');
-    }
-
-    public function quitarUsuario(Entrenamiento $entrenamiento, User $usuario)
-    {
-        $entrenamiento->usuarios()->detach($usuario->id);
-        return back()->with('success', 'Usuario quitado del entrenamiento.');
-    }
-
-    public function agregarUsuariosMasivos(Request $request, Entrenamiento $entrenamiento)
-    {
-        // Validar que los IDs de usuario sean correctos
-        $request->validate([
-            'usuario_ids' => 'required|array',
-            'usuario_ids.*' => 'exists:users,id', // Validar que cada ID de usuario exista en la base de datos
-        ]);
-
-        // Agregar los usuarios seleccionados al entrenamiento
-        $entrenamiento->usuarios()->attach($request->usuario_ids);
-
-        // Redirigir de nuevo con un mensaje de éxito
-        return back()->with('success', 'Usuarios agregados correctamente al entrenamiento.');
+        return view('admin-entrenador.entrenamientos.usuarios', compact('entrenamiento', 'usuarios'));
     }
 }

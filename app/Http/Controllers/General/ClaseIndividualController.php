@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Log;
 
 class ClaseIndividualController extends Controller
 {
-public function index()
-{
-    $clasesIndividuales = ClaseIndividual::with('usuario')->latest()->get();
-    return view('admin-entrenador.clases.index', compact('clasesIndividuales'));
-}
+    public function index()
+    {
+        $clasesIndividuales = ClaseIndividual::with('usuario')->latest()->get();
+        return view('admin-entrenador.clases.index', compact('clasesIndividuales'));
+    }
 
     public function create()
     {
@@ -97,7 +97,6 @@ public function index()
             $rules['dias_semana'] = 'required|array|min:1';
             $rules['dias_semana.*'] = 'in:lunes,martes,miercoles,jueves,viernes,sabado,domingo';
 
-            // En mensual no es necesario validar días_mes
             $rules['dias_mes'] = 'nullable';
         } elseif ($request->frecuencia === 'mensual') {
             $rules['fecha_inicio'] = [
@@ -125,7 +124,6 @@ public function index()
 
             $rules['dias_mes'] = 'required|integer|between:1,31';
 
-            // En semanal no es necesario validar dias_semana
             $rules['dias_semana'] = 'nullable';
             $rules['dias_semana.*'] = 'nullable';
         }
@@ -167,9 +165,9 @@ public function index()
 
     public function edit(ClaseIndividual $claseIndividual)
     {
-        //$this->Autorizar();
 
-                // Entrenadores
+
+        // Entrenadores
         $entrenadores = User::whereHas('roles', function ($query) {
             $query->where('name', 'entrenador');
         })->get();
@@ -187,71 +185,59 @@ public function index()
         return view('admin-entrenador.clases.individuales.edit', compact('claseIndividual', 'clientes', 'entrenadores'));
     }
 
-  public function update(Request $request, ClaseIndividual $claseIndividual)
-{
-    //$this->Autorizar();
+    public function update(Request $request, ClaseIndividual $claseIndividual)
+    {
 
-    $validated = $request->validate([
-        'titulo' => 'required|string|max:255',
-        'descripcion' => 'nullable|string',
-        'usuario_id' => 'required|exists:users,id',
-        'frecuencia' => 'required|in:dia,semana,mes',
-        'dias_semana' => 'nullable|array',
-        // Validar días de la semana solo si frecuencia es 'semana'
-        // Dado que en tu formulario usas nombres como "Lunes" y no números, valida como string:
-        'dias_semana.*' => 'string|in:Lunes,Martes,Miércoles,Jueves,Viernes,Sábado,Domingo',
-        'hora_inicio' => 'nullable|date_format:H:i',
-        // fecha_hora es requerida si frecuencia es dia
-        'fecha_hora' => ['required_if:frecuencia,dia', 'date', 'after_or_equal:today'],
-        // fecha_inicio y fecha_fin requeridas si frecuencia es semana o mes
-        'fecha_inicio' => ['required_if:frecuencia,semana,mes', 'date', 'after_or_equal:today'],
-        'fecha_fin' => ['required_if:frecuencia,semana,mes', 'date', 'after_or_equal:fecha_inicio'],
-        'duracion' => 'nullable|integer|min:1',
-        'lugar' => 'nullable|string|max:255',
-        'nivel' => 'nullable|string|max:255',
-        'entrenador_id' => 'nullable|exists:users,id',
-    ]);
 
-    // Convertir dias_semana a JSON para almacenar en DB
-    $diasSemanaJson = null;
-    if (!empty($validated['dias_semana'])) {
-        $diasSemanaJson = json_encode($validated['dias_semana']);
+        $validated = $request->validate([
+            'titulo' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'usuario_id' => 'required|exists:users,id',
+            'frecuencia' => 'required|in:dia,semana,mes',
+            'dias_semana' => 'nullable|array',
+            'dias_semana.*' => 'string|in:Lunes,Martes,Miércoles,Jueves,Viernes,Sábado,Domingo',
+            'hora_inicio' => 'nullable|date_format:H:i',
+            'fecha_hora' => ['required_if:frecuencia,dia', 'date', 'after_or_equal:today'],
+            'fecha_inicio' => ['required_if:frecuencia,semana,mes', 'date', 'after_or_equal:today'],
+            'fecha_fin' => ['required_if:frecuencia,semana,mes', 'date', 'after_or_equal:fecha_inicio'],
+            'duracion' => 'nullable|integer|min:1',
+            'lugar' => 'nullable|string|max:255',
+            'nivel' => 'nullable|string|max:255',
+            'entrenador_id' => 'nullable|exists:users,id',
+        ]);
+
+        // Convertir dias_semana a JSON para almacenar en DB
+        $diasSemanaJson = null;
+        if (!empty($validated['dias_semana'])) {
+            $diasSemanaJson = json_encode($validated['dias_semana']);
+        }
+
+        $claseIndividual->update([
+            'titulo' => $validated['titulo'],
+            'descripcion' => $validated['descripcion'] ?? null,
+            'usuario_id' => $validated['usuario_id'],
+            'frecuencia' => $validated['frecuencia'],
+            'dias_semana' => $diasSemanaJson,
+            'fecha_hora' => $validated['fecha_hora'] ?? null,
+            'fecha_inicio' => $validated['fecha_inicio'] ?? null,
+            'fecha_fin' => $validated['fecha_fin'] ?? null,
+            'hora_inicio' => $validated['hora_inicio'] ?? null,
+            'duracion' => $validated['duracion'] ?? null,
+            'lugar' => $validated['lugar'] ?? null,
+            'nivel' => $validated['nivel'] ?? null,
+            'entrenador_id' => $validated['entrenador_id'] ?? null,
+        ]);
+
+        return redirect()->route('admin-entrenador.clases-individuales.index')
+            ->with('success', 'Clase individual actualizada correctamente.');
     }
-
-    $claseIndividual->update([
-        'titulo' => $validated['titulo'],
-        'descripcion' => $validated['descripcion'] ?? null,
-        'usuario_id' => $validated['usuario_id'],
-        'frecuencia' => $validated['frecuencia'],
-        'dias_semana' => $diasSemanaJson,
-        'fecha_hora' => $validated['fecha_hora'] ?? null,
-        'fecha_inicio' => $validated['fecha_inicio'] ?? null,
-        'fecha_fin' => $validated['fecha_fin'] ?? null,
-        'hora_inicio' => $validated['hora_inicio'] ?? null,
-        'duracion' => $validated['duracion'] ?? null,
-        'lugar' => $validated['lugar'] ?? null,
-        'nivel' => $validated['nivel'] ?? null,
-        'entrenador_id' => $validated['entrenador_id'] ?? null,
-    ]);
-
-    return redirect()->route('admin-entrenador.clases-individuales.index')
-                     ->with('success', 'Clase individual actualizada correctamente.');
-}
 
 
     public function destroy(ClaseIndividual $claseIndividual)
     {
-        //$this->Autorizar();
+
 
         $claseIndividual->delete();
         return redirect()->route('admin-entrenador.clases.index')->with('success', 'Clase individual eliminada.');
-    }
-
-    private function Autorizar()
-    {
-        $user = Auth::user();
-        if (! $user->is('admin') && ! $user->is('admin-entrenador')) {
-            abort(403, 'No tienes permiso para gestionar clases individuales.');
-        }
     }
 }

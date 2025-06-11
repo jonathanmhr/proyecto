@@ -179,13 +179,13 @@
                         </p>
                     @endif
 
-                    <a href="{{ route('entrenador.clases.create') }}" class="mt-6 inline-flex items-center bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 transition-all duration-300 shadow-md text-base">
+                    <a href="{{ route('entrenador.entrenamientos.create') }}" class="mt-6 inline-flex items-center bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 transition-all duration-300 shadow-md text-base">
                         <i data-feather="plus" class="w-5 h-5 mr-2"></i>
                         Crear Nuevo Entrenamiento
                     </a>
                 </div>
                 <div class="mt-6">
-                    <a href="{{ route('entrenador.clases.create') }}"
+                    <a href="{{ route('entrenador.entrenamientos.index') }}"
                         class="inline-flex items-center text-blue-300 hover:text-blue-200 font-medium transition-colors duration-200 group">
                         Ver todos mis entrenamientos
                         <i data-feather="arrow-right" class="inline-block ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
