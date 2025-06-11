@@ -215,6 +215,15 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
         // Suscripciones de usuarios
         Route::get('users/{id}/suscripciones', [SuscripcionController::class, 'index'])->name('users.suscripciones');
         Route::get('/charts', [ChartController::class, 'index'])->name('charts');
+
+        //Gestion de dietas
+        Route::get('dietas', [AdminEntrenadorController::class, 'indexDietas'])->name('dietas.index');
+        Route::get('dietas/crear', [AdminEntrenadorController::class, 'createDieta'])->name('dietas.create');
+        Route::post('dietas', [AdminEntrenadorController::class, 'storeDieta'])->name('dietas.store');
+        Route::get('dietas/{dieta}/editar', [AdminEntrenadorController::class, 'editDieta'])->name('dietas.edit');
+        Route::put('dietas/{dieta}', [AdminEntrenadorController::class, 'updateDieta'])->name('dietas.update');
+        Route::delete('dietas/{dieta}', [AdminEntrenadorController::class, 'destroyDieta'])->name('dietas.destroy');
+
     });
 
 // ----------------------

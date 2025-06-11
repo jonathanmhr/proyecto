@@ -158,4 +158,8 @@ class User extends Authenticatable implements MustVerifyEmail
         // Quitar registro con fecha_inicio NULL (guardado)
         $this->entrenamientosGuardados()->detach($entrenamientoId);
     }
+     public function dietas()
+    {
+        return $this->belongsToMany(DietaYPlanNutricional::class, 'dieta_user', 'user_id', 'id_dieta');
+    }
 }

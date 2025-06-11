@@ -9,27 +9,30 @@ class DietaYPlanNutricional extends Model
 {
     use HasFactory;
 
-    // Define el nombre de la tabla si no sigue la convención de nombres de Laravel (plural del modelo)
+    // Define el nombre de la tabla
     protected $table = 'dietas_y_planes_nutricionales';
 
-    // Define la clave primaria si no es 'id'
+    // Define la clave primaria
     protected $primaryKey = 'id_dieta';
 
-    // Indica si la clave primaria es auto-incremental (Laravel lo asume por defecto si es INT)
+    // Indica si la clave primaria es auto-incremental
     public $incrementing = true;
 
-    // Define los atributos que se pueden asignar masivamente
+    // Tu tabla no tiene created_at/updated_at, así que lo desactivamos.
+    public $timestamps = false;
+
+    // Atributos que se pueden asignar masivamente (sin id_usuario)
     protected $fillable = [
-        'id_usuario',
         'nombre',
         'descripcion',
+        'image_url', // Añadido según tu DUMP
         'calorias_diarias',
         'proteinas_g',
         'carbohidratos_g',
         'grasas_g',
     ];
 
-    // Define los tipos de datos para las columnas (opcional, pero buena práctica para claridad)
+    // Define los tipos de datos para las columnas
     protected $casts = [
         'calorias_diarias' => 'integer',
         'proteinas_g' => 'float',
@@ -38,11 +41,11 @@ class DietaYPlanNutricional extends Model
     ];
 
     /**
-     * Define la relación con el modelo User si id_usuario se refiere a la tabla users.
-     * Una dieta puede pertenecer a un usuario.
+     * Define la relación de muchos a muchos con el modelo User.
+     * Una dieta puede ser asignada a muchos usuarios.
      */
-    public function user()
+    public function users()
     {
-        return $this->belongsTo(User::class, 'id_usuario');
+        return $this->belongsToMany(User::class, 'dieta_user', 'id_dieta', 'user_id');
     }
 }

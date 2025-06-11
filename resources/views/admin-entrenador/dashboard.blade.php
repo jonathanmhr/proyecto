@@ -83,6 +83,10 @@
                     class="bg-purple-700 hover:bg-purple-600 text-white font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow-md">
                     <span class="text-2xl"><i data-feather="credit-card" class="w-6 h-6"></i></span> Gestionar pagos
                 </a>
+                <a href="{{ route('admin-entrenador.dietas.index') }}"
+                    class="bg-cyan-700 hover:bg-cyan-600 text-white font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow-md">
+                    <span class="text-2xl"><i data-feather="credit-card" class="w-6 h-6"></i></span> Gestionar Dietas
+                </a>
 
                 <a href="{{ route('admin-entrenador.solicitudes.index') }}"
                     class="bg-pink-700 hover:bg-pink-600 text-white font-semibold py-4 px-5 rounded-lg flex justify-center items-center gap-3 transition shadow-md">
