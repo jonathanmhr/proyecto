@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AdminEntrenador\AdminEntrenadorController;
 use App\Http\Controllers\AdminEntrenador\AdminEntrenamientoController;
 use App\Http\Controllers\Entrenador\EntrenadorController;
+use App\Http\Controllers\Entrenador\EntrenadorIndividual;
 use App\Http\Controllers\Perfil\PerfilController;
 use App\Http\Controllers\Cliente\DashboardController;
 use App\Http\Controllers\General\ClaseGrupalController;
@@ -234,14 +235,14 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access', VerificarUsuario
         Route::get('/dashboard', [EntrenadorController::class, 'index'])->name('dashboard');
 
         // Gestión de clases
-        Route::get('clases', [EntrenadorController::class, 'misClases'])->name('clases.index');
-        Route::post('clases', [EntrenadorController::class, 'store'])->name('clases.store');
-        Route::get('clases/create', [EntrenadorController::class, 'create'])->name('clases.create');
-        Route::get('clases/{clase}/alumnos', [EntrenadorController::class, 'verAlumnos'])->name('clases.alumnos');
-        Route::get('clases/{clase}/edit', [EntrenadorController::class, 'edit'])->name('clases.edit');
-        Route::put('clases/{clase}', [EntrenadorController::class, 'updateClase'])->name('clases.update');
-        Route::delete('clases/{clase}/eliminar-alumno/{alumnoId}', [EntrenadorController::class, 'eliminarAlumno'])->name('clases.eliminarAlumno');
-
+        Route::get('clases', [EntrenadorIndividual::class, 'index'])->name('clases.index');
+        Route::get('clases-individuales/create', [EntrenadorIndividual::class, 'create'])->name('clases-individuales.create');
+        Route::post('clases-individuales', [EntrenadorIndividual::class, 'store'])->name('clases-individuales.store');
+        Route::get('clases-individuales/{claseIndividual}/edit', [EntrenadorIndividual::class, 'edit'])->name('clases-individuales.edit');
+        Route::put('clases-individuales/{claseIndividual}', [EntrenadorIndividual::class, 'update'])->name('clases-individuales.update');
+        Route::get('clases/{tipo}/{id}/alumnos', [EntrenadorIndividual::class, 'verAlumnos'])->name('clases.alumnos');
+        Route::get('clases/grupales/{id}', [EntrenadorIndividual::class, 'showGrupal'])->name('clases.grupales.show');
+        Route::get('clases/individuales/{id}', [EntrenadorIndividual::class, 'showIndividual'])->name('clases.individuales.show');
         // Entrenamientos
         Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
         Route::get('entrenamientos/create', [EntrenamientoController::class, 'create'])->name('entrenamientos.create');

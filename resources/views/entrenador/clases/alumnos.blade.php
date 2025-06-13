@@ -1,11 +1,11 @@
 <x-app-layout>
-    {{-- Contenedor principal con fondo oscuro --}}
     <div class="container mx-auto px-4 py-8 bg-gray-900 text-gray-100 min-h-screen">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-white">
-                ¡Alumnos Inscritos en <span class="text-red-500">{{ $clase->nombre }}</span>!
+                ¡Alumnos Inscritos en 
+                <span class="text-red-500">{{ $clase->nombre ?? $clase->titulo }}</span>!
             </h1>
-            <a href="{{ route('entrenador.clases.index') }}" {{-- Ruta corregida para volver a la lista de clases --}}
+            <a href="{{ route('entrenador.clases.index') }}"
                 class="inline-flex items-center px-4 py-2 bg-blue-700 text-white hover:bg-blue-800 font-semibold rounded-lg transition duration-200 shadow-md">
                 <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver
             </a>
@@ -16,18 +16,22 @@
 
             @forelse ($alumnos as $alumno)
                 <div class="border-b border-gray-700 pb-3 mb-3 last:border-b-0">
-                    <div class="text-white font-medium text-lg">{{ $alumno->usuario->name }}</div>
-                    <div class="text-sm text-gray-300">{{ $alumno->usuario->email }}</div>
-                    <div class="flex space-x-2 mt-3">
-                        <form action="{{ route('entrenador.clases.eliminarAlumno', ['clase' => $clase->id_clase, 'alumnoId' => $alumno->usuario->id]) }}" method="POST"
-                            onsubmit="return confirm('¿Estás seguro de quitar a {{ $alumno->usuario->name }} de esta clase? Esta acción no se puede deshacer.')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:text-red-600 font-medium transition duration-200">
-                                Quitar Alumno
-                            </button>
-                        </form>
-                    </div>
+                    <div class="text-white font-medium text-lg">{{ $alumno->name }}</div>
+                    <div class="text-sm text-gray-300">{{ $alumno->email }}</div>
+
+                    @if ($tipo === 'grupal')
+                        <div class="flex space-x-2 mt-3">
+                            <form action="{{ route('entrenador.clases.eliminarAlumno', ['clase' => $clase->id_clase, 'alumnoId' => $alumno->id]) }}"
+                                method="POST"
+                                onsubmit="return confirm('¿Estás seguro de quitar a {{ $alumno->name }} de esta clase? Esta acción no se puede deshacer.')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:text-red-600 font-medium transition duration-200">
+                                    Quitar Alumno
+                                </button>
+                            </form>
+                        </div>
+                    @endif
                 </div>
             @empty
                 <p class="text-gray-400 text-center py-4">No hay alumnos inscritos en esta clase.</p>

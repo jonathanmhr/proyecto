@@ -9,7 +9,7 @@ use App\Models\Entrenamiento;
 use App\Models\FaseEntrenamiento;
 use App\Models\ActividadEntrenamiento;
 use App\Models\UsuarioEntrenamiento;
-//use App\Models\SolicitudCambioEntrenamiento;
+use App\Models\SolicitudCambioEntrenamiento;
 use Illuminate\Support\Facades\Auth;
 
 class AdminEntrenamientoController extends Controller
@@ -275,7 +275,7 @@ class AdminEntrenamientoController extends Controller
         $entrenamiento = Entrenamiento::with('usuarios')->findOrFail($id);
 
         $usuarios = UsuarioEntrenamiento::where('entrenamiento_id', $id)
-            ->with('user')
+            ->with('usuario')
             ->get();
 
         return view('admin-entrenador.entrenamientos.usuarios', compact('entrenamiento', 'usuarios'));

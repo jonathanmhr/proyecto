@@ -464,7 +464,6 @@ public function verSolicitudesEntrenamientos()
         return redirect()->back()->with('success', 'Solicitud rechazada y descartada.');
     }
 
-
     // ========================================
     // Gestión de Dietas
     // ========================================
