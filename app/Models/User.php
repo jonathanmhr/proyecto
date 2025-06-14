@@ -119,6 +119,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(PerfilUsuario::class, 'id_usuario', 'id');
     }
+    
+public function instructor()
+{
+    return $this->hasOne(Instructor::class, 'user_id');
+}
 
     // Relación: Suscripciones asociadas a la clase grupal
     public function suscripciones()
@@ -160,15 +165,14 @@ class User extends Authenticatable implements MustVerifyEmail
         // Quitar registro con fecha_inicio NULL (guardado)
         $this->entrenamientosGuardados()->detach($entrenamientoId);
     }
-    
+
     public function dietas()
     {
         return $this->belongsToMany(DietaYPlanNutricional::class, 'dieta_user', 'user_id', 'id_dieta');
     }
 
-        public function clearDietasRecomendadasCache()
+    public function clearDietasRecomendadasCache()
     {
         Cache::forget('dietas_recomendadas_' . $this->id);
     }
-
 }

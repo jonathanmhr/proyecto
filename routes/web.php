@@ -16,6 +16,7 @@ use App\Http\Controllers\AdminEntrenador\AdminEntrenamientoController;
 use App\Http\Controllers\Entrenador\EntrenadorController;
 use App\Http\Controllers\Entrenador\EntrenadorIndividual;
 use App\Http\Controllers\Perfil\PerfilController;
+use App\Http\Controllers\Perfil\InstructorController;
 use App\Http\Controllers\Cliente\DashboardController;
 use App\Http\Controllers\General\ClaseGrupalController;
 use App\Http\Controllers\General\ClaseIndividualController;
@@ -233,6 +234,7 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access', VerificarUsuario
     ->name('entrenador.')
     ->group(function () {
         Route::get('/dashboard', [EntrenadorController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/estados-clases', [EntrenadorController::class, 'obtenerEstadosClases'])->name('dashboard.clases_estados');
 
         // Gestión de clases
         Route::get('clases', [EntrenadorIndividual::class, 'index'])->name('clases.index');
@@ -254,6 +256,13 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access', VerificarUsuario
         Route::get('solicitudes', [EntrenadorController::class, 'verSolicitudesPendientes'])->name('solicitudes.index');
         Route::post('solicitudes/aceptar/{id}', [EntrenadorController::class, 'aceptarSolicitud'])->name('solicitudes.aceptar');
         Route::post('solicitudes/rechazar/{id}', [EntrenadorController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
+
+        // Perfil del entrenador
+        Route::get('/perfil', [InstructorController::class, 'show'])->name('profile.show');
+        Route::get('/perfil/crear', [InstructorController::class, 'create'])->name('profile.create');
+        Route::post('/perfil/crear', [InstructorController::class, 'store'])->name('profile.store');
+        Route::get('/perfil/editar', [InstructorController::class, 'edit'])->name('profile.edit');
+        Route::post('/perfil/editar', [InstructorController::class, 'update'])->name('profile.update');
     });
 
 
@@ -326,6 +335,7 @@ Route::prefix('admin/compras')
         //Detalles de compra para admin
         Route::get('/{compra}', [CompraController::class, 'adminShow'])->name('show');
     });
+
 // ----------------------
 // RUTAS DE TIENDA
 // ----------------------

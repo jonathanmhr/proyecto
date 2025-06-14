@@ -215,7 +215,7 @@
                                 Editar
                             </a>
                         @else
-                            <a href="{{ route('entrenador.clases.grupales.show', ['id' => $clase->id ?? 0]) }}"
+                            <a href="{{ route('entrenador.clases.grupales.show', ['id' => $clase->id_clase]) }}"
                                 class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg font-semibold text-white transition-colors duration-150"
                                 aria-label="Ver detalles de la clase grupal">
                                 Ver detalles

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SolicitudClaseIndividual extends Model
 {
     use HasFactory;
+    protected $table = 'modificaciones_clases_individuales';
 
     protected $fillable = [
         'clase_individual_id',

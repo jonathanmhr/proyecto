@@ -6,44 +6,50 @@ use App\Http\Controllers\Controller;
 use App\Models\ClaseGrupal;
 use App\Models\Suscripcion;
 use App\Models\SolicitudClase;
+use App\Models\ClaseIndividual;
 use App\Models\User;
 use App\Models\Entrenamiento;
 use Illuminate\Http\Request;
 use App\Models\ReservaDeClase;
+use Illuminate\Support\Facades\Auth;
+use App\Models\SolicitudClaseIndividual;
+use Illuminate\Support\Facades\Notification;
 
 class EntrenadorController extends Controller
 {
+
     public function index()
     {
         $user = auth()->user();
-        // Obtener las clases del entrenador con su estado de cambio pendiente
-        $clases = ClaseGrupal::where('entrenador_id', auth()->id())
+
+        // Clases Grupales del entrenador
+        $clases = ClaseGrupal::where('entrenador_id', $user->id)
             ->select('id_clase', 'nombre', 'fecha_inicio', 'fecha_fin', 'cambio_pendiente')
             ->get();
 
-        // Obtener las reservas de clases relacionadas con el entrenador
-        $reservas = ReservaDeClase::whereIn('id_clase', $clases->pluck('id_clase'))->get();
-
-        // Obtener los entrenamientos del entrenador
-        $entrenamientos = Entrenamiento::where('creado_por', $user->id)->latest()->paginate(6);
-
-        // Obtener las suscripciones activas
-        $suscripciones = Suscripcion::where('id_usuario', auth()->id())->where('estado', 'activo')->get();
-
-        // Obtener las suscripciones pendientes
-        $suscripcionesPendientes = Suscripcion::where('estado', 'pendiente')
-            ->whereHas('clase', function ($query) {
-                $query->where('entrenador_id', auth()->user()->id);
-            })
+        // Clases Individuales del entrenador
+        $clasesIndividuales = ClaseIndividual::where('entrenador_id', $user->id)
+            ->select('id', 'titulo', 'fecha_inicio', 'fecha_fin')
             ->get();
 
-        // Solicitudes pendientes
+        // Reservas de clases grupales
+        $reservas = ReservaDeClase::whereIn('id_clase', $clases->pluck('id_clase'))->get();
+
+        // Entrenamientos creados por el entrenador
+        $entrenamientos = Entrenamiento::where('creado_por', $user->id)->latest()->paginate(6);
+
+        // Solicitudes pendientes (grupales)
         $solicitudesPendientes = SolicitudClase::where('estado', 'pendiente')
             ->whereIn('id_clase', $clases->pluck('id_clase'))
             ->get();
 
-        // Pasar las clases, reservas, entrenamientos, suscripciones y solicitudes a la vista
-        return view('entrenador.dashboard', compact('clases', 'reservas', 'entrenamientos', 'suscripciones', 'suscripcionesPendientes', 'solicitudesPendientes'));
+        return view('entrenador.dashboard', compact(
+            'clases',
+            'clasesIndividuales',
+            'reservas',
+            'entrenamientos',
+            'solicitudesPendientes'
+        ));
     }
 
     public function misClases()
@@ -75,14 +81,8 @@ class EntrenadorController extends Controller
 
         return view('entrenador.clases.alumnos', compact('clase', 'alumnos'));
     }
-
-    // Método para editar los detalles de una clase
-    public function edit(ClaseGrupal $clase)
-    {
-        return view('entrenador.clases.edit', compact('clase'));
-    }
-
     // Método para aceptar una solicitud de un alumno
+
     public function aceptarSolicitud($id)
     {
         $solicitud = SolicitudClase::findOrFail($id);
@@ -121,8 +121,6 @@ class EntrenadorController extends Controller
             ->with('success', 'La solicitud ha sido aceptada.');
     }
 
-
-
     public function rechazarSolicitud($id)
     {
         // Buscar la solicitud pendiente por su id
@@ -148,59 +146,41 @@ class EntrenadorController extends Controller
         return redirect()->route('entrenador.solicitudes.index')->with('success', 'La solicitud ha sido rechazada.');
     }
 
-    public function eliminarAlumno($claseId, $alumnoId)
+    public function obtenerEstadosClases()
     {
-        // Encontrar la clase y el alumno
-        $clase = ClaseGrupal::findOrFail($claseId);
-        $alumno = User::findOrFail($alumnoId);
+        try {
+            $entrenadorId = Auth::id();
 
-        // Eliminar la suscripción
-        $solicitud = SolicitudClase::where('id_clase', $clase->id_clase)
-            ->where('user_id', $alumno->id)
-            ->where('estado', 'aceptada')
-            ->first();
+            // Contar solicitudes grupales por estado
+            $solicitudesGrupales = SolicitudClase::whereHas('clase', function ($query) use ($entrenadorId) {
+                $query->where('entrenador_id', $entrenadorId);
+            })->selectRaw("
+            SUM(CASE WHEN estado = 'aceptado' THEN 1 ELSE 0 END) as aceptadas,
+            SUM(CASE WHEN estado = 'pendiente' THEN 1 ELSE 0 END) as pendientes,
+            SUM(CASE WHEN estado = 'rechazado' THEN 1 ELSE 0 END) as rechazadas
+        ")->first();
 
-        if ($solicitud) {
-            $solicitud->estado = 'rechazado'; // O simplemente elimínala si prefieres
-            $solicitud->save();
+            // Contar solicitudes individuales por estado
+            $solicitudesIndividuales = SolicitudClaseIndividual::where('entrenador_id', $entrenadorId)
+                ->selectRaw("
+                SUM(CASE WHEN estado = 'aceptado' THEN 1 ELSE 0 END) as aceptadas,
+                SUM(CASE WHEN estado = 'pendiente' THEN 1 ELSE 0 END) as pendientes,
+                SUM(CASE WHEN estado = 'rechazado' THEN 1 ELSE 0 END) as rechazadas
+            ")->first();
+
+            // Sumar totales
+            $aceptadas = $solicitudesGrupales->aceptadas + $solicitudesIndividuales->aceptadas;
+            $pendientes = $solicitudesGrupales->pendientes + $solicitudesIndividuales->pendientes;
+            $rechazadas = $solicitudesGrupales->rechazadas + $solicitudesIndividuales->rechazadas;
+
+            return response()->json([
+                'aceptadas' => $aceptadas,
+                'pendientes' => $pendientes,
+                'rechazadas' => $rechazadas,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error en obtenerEstadosClases: ' . $e->getMessage());
+            return response()->json(['error' => 'Error al obtener estados'], 500);
         }
-
-        // Notificar al admin_entrenador
-        // Notification::send($adminEntrenador, new AlumnoEliminadoNotificacion($alumno, $clase));
-
-        return redirect()->route('entrenador.clases.alumnos', $clase->id_clase)
-            ->with('success', 'El alumno ha sido eliminado de la clase.');
-    }
-
-    // Método para actualizar los detalles de la clase, pero debe marcarse como pendiente para aprobación
-    public function updateClase(Request $request, $id)
-    {
-        // Validar los datos recibidos
-        $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string|max:1000',
-            'ubicacion' => 'required|string|max:255',
-            'cupos_maximos' => 'required|integer|min:1',
-            'nivel' => 'required|string|in:principiante,intermedio,avanzado',
-        ]);
-
-        // Encontrar la clase
-        $clase = ClaseGrupal::findOrFail($id);
-
-        // Actualizar los datos
-        $clase->nombre = $request->input('nombre');
-        $clase->descripcion = $request->input('descripcion');
-        $clase->ubicacion = $request->input('ubicacion');
-        $clase->cupos_maximos = $request->input('cupos_maximos');
-        $clase->nivel = $request->input('nivel');
-
-        // Marcar como pendiente
-        $clase->cambio_pendiente = true;
-        $clase->save();
-
-        // Notificar al admin_entrenador sobre los cambios pendientes (puedes implementar una notificación)
-        // Notification::send($adminEntrenador, new CambioPendienteNotificacion($clase));
-
-        return redirect()->route('entrenador.clases.index')->with('success', 'Tu clase ha sido actualizada y está pendiente de aprobación.');
     }
 }
