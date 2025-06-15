@@ -47,18 +47,30 @@ class AdminEntrenadorController extends Controller
             return ClaseGrupal::where('cambio_pendiente', 1)->count();
         });
 
+        $totalSolicitudesEntrenamientosPendientes = Cache::remember('total_solicitudes_entrenamientos_pendientes', 60, function () {
+            return \DB::table('solicitud_cambio_entrenamiento')
+                ->where('estado', 'pendiente')
+                ->count();
+        });
+
         $totalEntrenamientos = Cache::remember('total_entrenamientos', 60, function () {
             return Entrenamiento::count();
         });
+
+        // Suma total solicitudes pendientes
+        $totalSolicitudesPendientes = $totalSolicitudesClasesPendientes + $totalSolicitudesEntrenamientosPendientes;
 
         return view('admin-entrenador.dashboard', compact(
             'totalClases',
             'totalEntrenadores',
             'totalAlumnos',
             'totalSolicitudesClasesPendientes',
+            'totalSolicitudesEntrenamientosPendientes',
+            'totalSolicitudesPendientes',
             'totalEntrenamientos'
         ));
     }
+
 
     public function verClases()
 
@@ -351,15 +363,18 @@ class AdminEntrenadorController extends Controller
     // Gestión de Solicitudes
     // ========================================
 
-    public function verSolicitudesClases()
-    {
-        // Traemos las clases con cambios pendientes
-        $solicitudesPendientes = ClaseGrupal::where('cambio_pendiente', 1)
-            ->whereNotNull('id_clase')
-            ->get();
+public function verTodasSolicitudes()
+{
+    $solicitudesClasesPendientes = ClaseGrupal::where('cambio_pendiente', 1)
+        ->whereNotNull('id_clase')
+        ->get();
 
-        return view('admin-entrenador.solicitudes.index', compact('solicitudesPendientes'));
-    }
+    $solicitudesEntrenamientosPendientes = SolicitudCambioEntrenamiento::where('estado', 'pendiente')
+        ->with('entrenamiento', 'entrenador')
+        ->get();
+
+    return view('admin-entrenador.solicitudes.index', compact('solicitudesClasesPendientes', 'solicitudesEntrenamientosPendientes'));
+}
 
     public function aceptarSolicitud($id)
     {
@@ -411,58 +426,55 @@ class AdminEntrenadorController extends Controller
         }
     }
 
-public function verSolicitudesEntrenamientos()
+public function aceptarSolicitudEntrenamiento($id)
 {
-    $solicitudesPendientes = SolicitudCambioEntrenamiento::where('estado', 'pendiente')
-        ->with('entrenamiento', 'entrenador')
-        ->get();
+    $this->autorizarAdmin();
 
-    return view('admin-entrenador.solicitudes.index', compact('solicitudesPendientes'));
+    $solicitud = SolicitudCambioEntrenamiento::findOrFail($id);
+
+    if ($solicitud->estado !== 'pendiente') {
+        return redirect()->back()->with('error', 'La solicitud no está pendiente.');
+    }
+
+    $entrenamiento = $solicitud->entrenamiento;
+
+    if (!$entrenamiento) {
+        return redirect()->back()->with('error', 'El entrenamiento relacionado no existe.');
+    }
+
+    // Decodificamos los datos modificados (JSON) a array
+    $datos = json_decode($solicitud->datos_modificados, true);
+
+    if (is_array($datos)) {
+        $entrenamiento->fill($datos);
+        $entrenamiento->save();
+    } else {
+        return redirect()->back()->with('error', 'Los datos modificados no son válidos.');
+    }
+
+    $solicitud->estado = 'aprobada';
+    $solicitud->save();
+
+    return redirect()->back()->with('success', 'Solicitud aceptada y cambios aplicados.');
+}
+
+public function rechazarSolicitudEntrenamiento($id)
+{
+    $this->autorizarAdmin();
+
+    $solicitud = SolicitudCambioEntrenamiento::findOrFail($id);
+
+    if ($solicitud->estado !== 'pendiente') {
+        return redirect()->back()->with('error', 'La solicitud no está pendiente.');
+    }
+
+    $solicitud->estado = 'rechazada';
+    $solicitud->save();
+
+    return redirect()->back()->with('success', 'Solicitud rechazada y descartada.');
 }
 
 
-    public function aceptarSolicitudEntrenamiento($id)
-    {
-        $this->autorizarAdmin();
-
-        $solicitud = SolicitudCambioEntrenamiento::find($id);
-
-        if (!$solicitud || $solicitud->estado !== 'pendiente') {
-            return redirect()->back()->with('error', 'No se encontró ninguna solicitud pendiente.');
-        }
-
-        $entrenamiento = $solicitud->entrenamiento;
-
-        if (!$entrenamiento) {
-            return redirect()->back()->with('error', 'El entrenamiento relacionado no existe.');
-        }
-
-        $datos = $solicitud->datos_modificados;
-
-        $entrenamiento->fill($datos);
-        $entrenamiento->save();
-
-        $solicitud->estado = 'aprobada';
-        $solicitud->save();
-
-        return redirect()->back()->with('success', 'Solicitud aceptada y cambios aplicados.');
-    }
-
-    public function rechazarSolicitudEntrenamiento($id)
-    {
-        $this->autorizarAdmin();
-
-        $solicitud = SolicitudCambioEntrenamiento::find($id);
-
-        if (!$solicitud || $solicitud->estado !== 'pendiente') {
-            return redirect()->back()->with('error', 'No se encontró ninguna solicitud pendiente.');
-        }
-
-        $solicitud->estado = 'rechazada';
-        $solicitud->save();
-
-        return redirect()->back()->with('success', 'Solicitud rechazada y descartada.');
-    }
 
     // ========================================
     // Gestión de Dietas
