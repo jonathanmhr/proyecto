@@ -1,10 +1,14 @@
 <x-form-section submit="save">
-    <x-slot  class="text-red-600" name="title">
-        {{ __('Perfil extendido') }}
+    <x-slot name="title">
+        <h2 class="text-red-600">
+            {{ __('Perfil extendido') }}
+        </h2>
     </x-slot>
 
-    <x-slot class="text-red-600" name="description">
-        {{ __('Actualiza tus datos adicionales del perfil.') }}
+    <x-slot name="description">
+        <h4 class="text-red-600">
+            {{ __('Actualiza tus datos adicionales del perfil.') }}
+        </h4>
     </x-slot>
 
     <x-slot name="form">
