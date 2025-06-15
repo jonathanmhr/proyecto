@@ -211,8 +211,9 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
 
 
         // Gestión de entrenamientos
-        Route::resource('entrenamientos', AdminEntrenamientoController::class);
-        Route::get('entrenamientos/{id}/usuarios', [AdminEntrenamientoController::class, 'usuariosGuardaron'])->name('entrenamientos.usuarios');
+ Route::resource('entrenamientos', \App\Http\Controllers\AdminEntrenador\AdminEntrenamientoController::class);
+        Route::get('entrenamientos/{id}/usuarios', [\App\Http\Controllers\AdminEntrenador\AdminEntrenamientoController::class, 'usuariosGuardaron'])
+            ->name('entrenamientos.usuarios');
 
 
         // Suscripciones de usuarios
