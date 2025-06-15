@@ -32,12 +32,11 @@ class EntrenamientoController extends Controller
         return view('entrenador.entrenamientos.create');
     }
 
-    public function edit($id)
-    {
-        $entrenamiento = Entrenamiento::with('fases.actividades')->findOrFail($id);
-
-        return view('entrenador.entrenamientos.edit', compact('entrenamiento'));
-    }
+public function edit($id)
+{
+    $entrenamiento = Entrenamiento::with('fases.actividades')->findOrFail($id); // Trae un solo modelo
+    return view('entrenador.entrenamientos.edit', compact('entrenamiento'));
+}
 
     public function store(Request $request)
     {
