@@ -10,7 +10,7 @@
         <div class="max-w-xl md:max-w-4xl lg:max-w-6xl mx-auto sm:px-4 lg:px-6">
             {{-- Botón Volver --}}
             <div class="mb-6">
-                <a href="{{ route('admin-entrenador.entrenamientos.index') }}"
+                <a href="{{ route('entrenador.entrenamientos.index') }}"
                     class="inline-flex items-center px-4 py-2 bg-blue-700 text-white hover:bg-blue-800 font-semibold rounded-lg transition duration-200 shadow-md">
                     <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i> Volver a Entrenamientos
                 </a>
