@@ -50,7 +50,7 @@ class Entrenamiento extends Model
     // Accessor para calcular la duración total del entrenamiento
     public function getDuracionAttribute()
     {
-        return $this->fases->sum('duracion_min');
+        return $this->fases()->sum('duracion_min');
     }
     // Accesor para duración en días
     public function getDuracionDiasAttribute()
