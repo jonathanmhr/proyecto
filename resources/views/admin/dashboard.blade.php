@@ -74,11 +74,6 @@
             <h2 class="text-2xl font-semibold mb-4 text-white">Acciones rápidas</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
 
-                <a href="{{ route('admin.charts.index') }}"
-                    class="bg-gradient-to-r from-indigo-600 to-indigo-400 hover:from-indigo-500 hover:to-indigo-300 text-white font-bold py-4 px-6 rounded-xl flex justify-center items-center gap-4 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
-                    <span class="text-3xl">🧾</span> Generar reporte
-                </a>
-
                 <a href="{{ route('admin.notificaciones.create') }}"
                     class="bg-gradient-to-r from-pink-600 to-pink-400 hover:from-pink-500 hover:to-pink-300 text-white font-bold py-4 px-6 rounded-xl flex justify-center items-center gap-4 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                     <span class="text-3xl">📤</span> Enviar anuncio
