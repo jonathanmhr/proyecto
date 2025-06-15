@@ -103,11 +103,6 @@ class EntrenamientoController extends Controller
     {
         $entrenamiento = Entrenamiento::with('fases.actividades')->findOrFail($id);
 
-        // Verificar que el entrenador es creador
-        if ($entrenamiento->creado_por !== auth()->id()) {
-            abort(403, 'No tienes permiso para editar este entrenamiento.');
-        }
-
         return view('entrenador.entrenamientos.edit', compact('entrenamiento'));
     }
 
@@ -115,10 +110,6 @@ class EntrenamientoController extends Controller
     {
         $entrenamiento = Entrenamiento::with('fases.actividades')->findOrFail($id);
 
-        // Verificar creador
-        if ($entrenamiento->creado_por !== auth()->id()) {
-            abort(403, 'No tienes permiso para modificar este entrenamiento.');
-        }
 
         $request->validate([
             'titulo' => 'required|string|max:255',
@@ -166,11 +157,6 @@ class EntrenamientoController extends Controller
 
         $entrenamiento = Entrenamiento::findOrFail($entrenamientoId);
 
-        // Solo puede asignar si es creador del entrenamiento
-        if ($entrenamiento->creado_por !== auth()->id()) {
-            abort(403, 'No tienes permiso para asignar este entrenamiento.');
-        }
-
         $entrenamiento->usuarios()->sync($request->usuarios); // Sync para reemplazar asignaciones
 
         return redirect()->route('entrenador.entrenamientos.show', $entrenamientoId)
@@ -182,10 +168,6 @@ class EntrenamientoController extends Controller
     {
         $entrenamiento = Entrenamiento::with('usuarios')->findOrFail($id);
 
-        // Solo permitir ver entrenamientos creados por el entrenador autenticado
-        if ($entrenamiento->creado_por !== auth()->id()) {
-            abort(403, 'No tienes permiso para ver los usuarios de este entrenamiento.');
-        }
 
         $usuarios = UsuarioEntrenamiento::where('entrenamiento_id', $id)
             ->with('usuario')
