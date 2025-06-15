@@ -8,7 +8,7 @@
     <div x-show="open" x-cloak @click="open = false" class="fixed inset-0 bg-black opacity-50 z-40 md:hidden"></div>
 
     {{-- LOGO --}}
-    <div class="mb-6" :class="open ? 'px-4' : 'px-0'">
+    <div class="mb-6 text-center" :class="open ? 'px-4' : 'px-0'">
         <a href="{{ route('home') }}">
             <img src="{{ asset('images/logo.png') }}" :width="open ? '150px' : '40px'" alt="logo" class="mx-auto">
         </a>
@@ -30,7 +30,7 @@
             @can('admin_entrenador')
                 <div x-data="{ openAdminEntrenador: false }" class="w-full">
                     <button @click="openAdminEntrenador = !openAdminEntrenador"
-                        class="flex items-center gap-3 w-full text-gray-300 hover:bg-blue-100 hover:text-white px-3 py-2 rounded-lg text-sm transition-all"
+                        class="flex items-center gap-3 w-full text-gray-300 hover:bg-cyan-800 hover:text-white px-3 py-2 rounded-lg text-sm transition-all"
                         :class="open ? 'justify-start' : 'justify-center'">
                         <i data-feather="briefcase" class="w-5 h-5"></i>
                         <span x-show="open" x-cloak class="ml-2">Admin Entrenador</span>
@@ -46,7 +46,7 @@
             @can('entrenador-access')
                 <div x-data="{ openEntrenador: false }" class="w-full">
                     <button @click="openEntrenador = !openEntrenador"
-                        class="flex items-center gap-3 w-full text-gray-300 hover:bg-orange-700 hover:text-red-500 px-3 py-2 rounded-lg text-sm transition-all"
+                        class="flex items-center gap-3 w-full text-gray-300 hover:bg-cyan-800 px-3 py-2 rounded-lg text-sm transition-all"
                         :class="open ? 'justify-start' : 'justify-center'">
                         <i data-feather="briefcase" class="w-5 h-5"></i>
                         <span x-show="open" x-cloak class="ml-2">Entrenador</span>
@@ -73,7 +73,7 @@
         <div class="w-full px-2 mb-4" x-data="{ notificaciones: {{ $notificacionesNoLeidas }} }">
             <template x-if="notificaciones > 0">
                 <a href="{{ route('entrenador.dashboard') }}"
-                    class="flex items-center gap-3 w-full text-gray-300 hover:bg-orange-700 hover:text-red-500 px-3 py-2 rounded-lg text-sm transition-all relative"
+                    class="flex items-center gap-3 w-full text-gray-300 hover:bg-cyan-800 hover:text-red-500 px-3 py-2 rounded-lg text-sm transition-all relative"
                     :class="open ? 'justify-start' : 'justify-center'" title="Notificaciones">
                     <div class="relative">
                         <i data-feather="bell" class="w-5 h-5"></i>
