@@ -12,7 +12,7 @@ use Illuminate\Validation\Rule;
 class AlmacenController extends Controller
 {
     // CORRECCIÓN: Constantes actualizadas con los nuevos tipos.
-    const TIPOS_FIJOS = ['EQUIPO_DEPORTIVO','NUTRICIONISMO','ENERGIZANTE','PESO/FUERZA','RESISTENCIA','ALIMENTACION','SUPLEMENTACION'];
+    const TIPOS_FIJOS = ['EQUIPO DEPORTIVO','NUTRICIONISMO','ENERGIZANTE','PESO/FUERZA','RESISTENCIA','ALIMENTACION','SUPLEMENTACION'];
     const VALORACIONES_FIJAS = ['1', '2', '3', '4', '5'];
 
     /**
@@ -71,8 +71,6 @@ class AlmacenController extends Controller
             'selectedRating'
         ));
     }
-
-    // --- El resto de los métodos del controlador permanecen sin cambios ---
 
     /**
      * Muestra la lista de productos para el administrador.
