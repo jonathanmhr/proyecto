@@ -103,7 +103,6 @@
                             type="text"
                             name="search"
                             id="search"
-                            placeholder="Buscar por nombre..."
                             value="{{ $searchTerm ?? '' }}"
                             class="w-full pl-11 pr-4 py-2.5 bg-gray-700 text-gray-200 border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition placeholder-gray-500"
                         >
