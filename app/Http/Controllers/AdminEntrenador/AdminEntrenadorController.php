@@ -555,8 +555,8 @@ public function verSolicitudesEntrenamientos()
         $dieta->update($validatedData);
 
         // Obtener IDs de usuarios antes de sincronizar para limpiar su caché
-        $oldUserIds = $dieta->users()->pluck('id')->toArray();
-
+       $oldUserIds = $dieta->users()->pluck('users.id')->toArray();
+       
         // Sincronizar usuarios
         $newUserIds = $request->input('users', []);
         $dieta->users()->sync($newUserIds);
