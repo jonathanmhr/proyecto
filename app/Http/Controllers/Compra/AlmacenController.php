@@ -23,7 +23,6 @@ class AlmacenController extends Controller
         // 1. Validar todos los posibles filtros de entrada
         $validated = $request->validate([
             'search' => 'nullable|string|max:255',
-            // Re-instauramos la validación con la nueva lista de tipos fijos.
             'tipo' => ['nullable', 'string', Rule::in(self::TIPOS_FIJOS)],
             'valoracion_minima' => 'nullable|integer|min:0|max:5',
         ]);
