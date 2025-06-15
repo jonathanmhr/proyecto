@@ -9,14 +9,13 @@
         </div>
     </div>
 
-    <div class="py-8 bg-[#1a202c] min-h-screen"> {{-- Fondo oscuro general y padding vertical --}}
-        <div class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700"> {{-- Contenedor del formulario --}}
+    <div class="py-8 bg-[#1a202c] min-h-screen">
+        <div class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700"> 
             <form action="{{ route('perfil.guardar') }}" method="POST" autocomplete="off">
                 @csrf
 
-                <div class="space-y-6"> {{-- Agrupados los campos con espaciado consistente --}}
+                <div class="space-y-6">
 
-                    <!-- Campo Fecha de nacimiento -->
                     <div>
                         <label for="fecha_nacimiento" class="block text-white font-semibold mb-2 text-lg">Fecha de nacimiento</label>
                         <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ old('fecha_nacimiento', $perfil->fecha_nacimiento ?? '') }}" required 
