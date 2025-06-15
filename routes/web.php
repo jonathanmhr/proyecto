@@ -304,6 +304,7 @@ Route::middleware(['auth', VerificarUsuarioActivo::class])
         Route::get('perfil-historial', function () {
             return view('perfil.historial');
         })->name('perfil.historial');
+        Route::get('perfil/editar', [PerfilController::class, 'editar'])->name('profile.edit');
     });
 
 
