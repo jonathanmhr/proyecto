@@ -78,13 +78,6 @@
                                             <a href="{{ route('entrenador.entrenamientos.usuarios', $entrenamiento->id) }}" class="text-purple-400 hover:text-purple-300 transition duration-150 ease-in-out" title="Ver Usuarios Asignados">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H2m2-5h12m-4 0a4 4 0 11-8 0 4 4 0 018 0zm0 0v1.5m3.5-1.5h2m-5.5 10A1.5 1.5 0 0115 16.5v-2.5a1.5 1.5 0 00-3 0v2.5a1.5 1.5 0 01-1.5 1.5H9a1.5 1.5 0 00-1.5 1.5v2.5A1.5 1.5 0 019 23h4.5a1.5 1.5 0 001.5-1.5v-2.5z"></path></svg>
                                             </a>
-                                            <form action="{{ route('entrenador.entrenamientos.destroy', $entrenamiento->id) }}" method="POST" class="inline-block" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este entrenamiento? Esta acción es irreversible.');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-500 hover:text-red-400 transition duration-150 ease-in-out" title="Eliminar Entrenamiento">
-                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                                </button>
-                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

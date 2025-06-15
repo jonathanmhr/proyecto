@@ -146,7 +146,7 @@
                                             </span>
                                         </td>
                                         <td class="px-5 py-4 text-center">
-                                            <a href="{{ route('admin-entrenador.entrenamientos.usuarios', $entrenamiento->id) }}"
+                                            <a href="{{ route('entrenador.entrenamientos.usuarios', $entrenamiento->id) }}"
                                                 class="text-blue-400 hover:text-blue-500 underline font-medium"
                                                 title="Ver usuarios que guardaron este entrenamiento"
                                                 aria-label="Ver usuarios de {{ $entrenamiento->titulo }}">

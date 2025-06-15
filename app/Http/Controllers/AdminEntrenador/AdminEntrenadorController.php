@@ -31,45 +31,46 @@ class AdminEntrenadorController extends Controller
     // Dashboard y vistas principales
     // ========================================
 
-    public function dashboard()
-    {
-        $totalClases = ClaseGrupal::count() + ClaseIndividual::count();
+public function dashboard()
+{
+    $totalClases = ClaseGrupal::count() + ClaseIndividual::count();
 
-        $totalEntrenadores = Cache::remember('total_entrenadores', 60, function () {
-            return Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
-        });
+    $totalEntrenadores = Cache::remember('total_entrenadores', 60, function () {
+        return Bouncer::role()->where('name', 'entrenador')->first()->users()->count();
+    });
 
-        $totalAlumnos = Cache::remember('total_alumnos', 60, function () {
-            return Bouncer::role()->where('name', 'cliente')->first()->users()->count();
-        });
+    $totalAlumnos = Cache::remember('total_alumnos', 60, function () {
+        return Bouncer::role()->where('name', 'cliente')->first()->users()->count();
+    });
 
-        $totalSolicitudesClasesPendientes = Cache::remember('total_solicitudes_clases_pendientes', 60, function () {
-            return ClaseGrupal::where('cambio_pendiente', 1)->count();
-        });
+    $totalSolicitudesClasesPendientes = Cache::remember('total_solicitudes_clases_pendientes', 60, function () {
+        return ClaseGrupal::where('cambio_pendiente', 1)->count();
+    });
 
-        $totalSolicitudesEntrenamientosPendientes = Cache::remember('total_solicitudes_entrenamientos_pendientes', 60, function () {
-            return \DB::table('solicitud_cambio_entrenamiento')
-                ->where('estado', 'pendiente')
-                ->count();
-        });
+    $totalSolicitudesEntrenamientosPendientes = Cache::remember('total_solicitudes_entrenamientos_pendientes', 60, function () {
+        return \DB::table('solicitud_cambio_entrenamiento')
+            ->where('estado', 'pendiente')
+            ->count();
+    });
 
-        $totalEntrenamientos = Cache::remember('total_entrenamientos', 60, function () {
-            return Entrenamiento::count();
-        });
+    $totalEntrenamientos = Cache::remember('total_entrenamientos', 60, function () {
+        return Entrenamiento::count();
+    });
 
-        // Suma total solicitudes pendientes
-        $totalSolicitudesPendientes = $totalSolicitudesClasesPendientes + $totalSolicitudesEntrenamientosPendientes;
+    // Suma total solicitudes pendientes
+    $totalSolicitudesPendientes = $totalSolicitudesClasesPendientes + $totalSolicitudesEntrenamientosPendientes;
 
-        return view('admin-entrenador.dashboard', compact(
-            'totalClases',
-            'totalEntrenadores',
-            'totalAlumnos',
-            'totalSolicitudesClasesPendientes',
-            'totalSolicitudesEntrenamientosPendientes',
-            'totalSolicitudesPendientes',
-            'totalEntrenamientos'
-        ));
-    }
+    return view('admin-entrenador.dashboard', compact(
+        'totalClases',
+        'totalEntrenadores',
+        'totalAlumnos',
+        'totalSolicitudesClasesPendientes',
+        'totalSolicitudesEntrenamientosPendientes',
+        'totalSolicitudesPendientes',
+        'totalEntrenamientos'
+    ));
+}
+
 
 
     public function verClases()
@@ -567,7 +568,7 @@ public function rechazarSolicitudEntrenamiento($id)
         $dieta->update($validatedData);
 
         // Obtener IDs de usuarios antes de sincronizar para limpiar su caché
-        $oldUserIds = $dieta->users()->pluck('id')->toArray();
+        $oldUserIds = $dieta->users()->pluck('users.id')->toArray();
 
         // Sincronizar usuarios
         $newUserIds = $request->input('users', []);

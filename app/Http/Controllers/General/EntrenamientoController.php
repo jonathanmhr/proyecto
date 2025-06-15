@@ -8,22 +8,23 @@ use Illuminate\Http\Request;
 
 class EntrenamientoController extends Controller
 {
-    public function __call($method, $parameters)
-    {
-        $user = Auth::user();
+public function __call($method, $parameters)
+{
+    $user = Auth::user();
 
-        if ($user->isAn('admin_entrenador') || $user->isAn('admin')) {
-            return app(\App\Http\Controllers\AdminEntrenador\AdminEntrenamientoController::class)->$method(...$parameters);
-        }
-
-        if ($user->isAn('entrenador')) {
-            return app(\App\Http\Controllers\Entrenador\EntrenamientoController::class)->$method(...$parameters);
-        }
-
-        if ($user->isAn('cliente')) {
-            return app(\App\Http\Controllers\Cliente\EntrenamientoController::class)->$method(...$parameters);
-        }
-
-        abort(403, 'Rol no autorizado');
+    if ($user->isAn('admin_entrenador') || $user->isAn('admin')) {
+        return app(\App\Http\Controllers\AdminEntrenador\AdminEntrenamientoController::class)->$method(request(), ...$parameters);
     }
+
+    if ($user->isAn('entrenador')) {
+        return app(\App\Http\Controllers\Entrenador\EntrenamientoController::class)->$method(request(), ...$parameters);
+    }
+
+    if ($user->isAn('cliente')) {
+        return app(\App\Http\Controllers\Cliente\EntrenamientoController::class)->$method(request(), ...$parameters);
+    }
+
+    abort(403, 'Rol no autorizado');
+}
+
 }

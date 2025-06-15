@@ -199,8 +199,9 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
         Route::put('alumnos/{user}', [AdminEntrenadorController::class, 'actualizarAlumno'])->name('alumnos.update');
         Route::post('alumnos/{user}/quitar-de-clase/{claseId}', [AdminEntrenadorController::class, 'quitarDeClase'])->name('alumnos.quitarDeClase');
 
+
         // Solicitudes de clases
-        Route::get('solicitudes', [AdminEntrenadorController::class, 'verSolicitudesClases'])->name('solicitudes.index');
+        Route::get('solicitudes', [AdminEntrenadorController::class, 'verTodasSolicitudes'])->name('solicitudes.index');
         Route::post('solicitudes/{id}/aceptar', [AdminEntrenadorController::class, 'aceptarSolicitud'])->name('solicitudes.aceptar');
         Route::post('solicitudes/{id}/rechazar', [AdminEntrenadorController::class, 'rechazarSolicitud'])->name('solicitudes.rechazar');
         Route::get('solicitudes-entrenamientos', [AdminEntrenadorController::class, 'verSolicitudesEntrenamientos'])->name('solicitudes-entrenamientos.index');
@@ -251,6 +252,9 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access', VerificarUsuario
         Route::post('entrenamientos', [EntrenamientoController::class, 'store'])->name('entrenamientos.store');
         Route::get('entrenamientos/{entrenamiento}/edit', [EntrenamientoController::class, 'edit'])->name('entrenamientos.edit');
         Route::put('entrenamientos/{entrenamiento}', [EntrenamientoController::class, 'update'])->name('entrenamientos.update');
+        Route::get('entrenamientos/{id}/usuarios', [EntrenamientoController::class, 'usuariosGuardaron'])->name('entrenamientos.usuarios');
+        Route::post('entrenamientos/{entrenamiento}/asignar-usuarios', [EntrenamientoController::class, 'asignarUsuarios'])
+        ->name('entrenamientos.asignarUsuarios');
 
         // Solicitudes
         Route::get('solicitudes', [EntrenadorController::class, 'verSolicitudesPendientes'])->name('solicitudes.index');

@@ -46,12 +46,18 @@
                 </div>
             </div>
 
-            <div class="bg-gray-800 shadow rounded-xl p-5 flex flex-col justify-between">
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-300 mb-2">Solicitudes Pendientes</h2>
-                    <p class="text-4xl font-bold text-yellow-400">{{ $totalSolicitudesClasesPendientes }}</p>
-                </div>
-            </div>
+<div class="bg-gray-800 shadow rounded-xl p-5 flex flex-col justify-between">
+    <div>
+        <h2 class="text-lg font-semibold text-gray-300 mb-2">Solicitudes Pendientes</h2>
+
+        @if($totalSolicitudesPendientes > 0)
+            <p class="text-4xl font-bold text-yellow-400">{{ $totalSolicitudesPendientes }}</p>
+            <p class="text-yellow-300 mt-1 text-sm">Solicitudes pendientes por revisar</p>
+        @else
+            <p class="text-green-400 text-xl font-semibold">No hay solicitudes pendientes</p>
+        @endif
+    </div>
+</div>
         </div>
 
         <div class="mt-10">
