@@ -13,7 +13,7 @@
                 </h1>
                 
                 {{-- Botón para Volver a Entrenamientos --}}
-                <a href="{{ route('entrenador.entrenamientos.index') }}"
+                <a href="{{ route('admin-entrenador.entrenamientos.index') }}"
                    class="inline-flex items-center justify-center bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">
                     {{-- Icono de flecha izquierda de Feather Icons --}}
                     <i data-feather="arrow-left" class="w-5 h-5 mr-2"></i> Volver a Entrenamientos
