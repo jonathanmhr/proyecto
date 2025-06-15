@@ -412,4 +412,32 @@ class UserController extends Controller
     {
         return view('admin.anuncios.enviar');
     }
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Evitar que un usuario se elimine a sí mismo
+        if ($user->id === auth()->id()) {
+            return redirect()->route('admin.users.index')->with('error', 'No puedes eliminar tu propio usuario.');
+        }
+
+        // Evitar eliminar usuarios con permiso admin-access
+        if ($user->can('admin-access')) {
+            return redirect()->route('admin.users.index')->with('error', 'No puedes eliminar usuarios con acceso de administrador.');
+        }
+
+        // Opcional: validar que el usuario autenticado tenga permiso para eliminar usuarios
+        if (!auth()->user()->can('admin-access')) {
+            abort(403, 'No tienes permiso para eliminar usuarios.');
+        }
+
+        // Limpiar roles y permisos antes de eliminar
+        $user->roles()->detach();
+        Bouncer::disallow($user)->everything();
+
+        $user->delete();
+
+        return redirect()->route('admin.users.index')->with('success', 'Usuario eliminado correctamente.');
+    }
 }

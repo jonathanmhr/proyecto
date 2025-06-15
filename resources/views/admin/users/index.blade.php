@@ -170,7 +170,7 @@
                                                     <i data-feather="{{ $user->is_active ? 'toggle-right' : 'toggle-left' }}" class="w-5 h-5"></i>
                                                 </button>
                                             </form>
-                                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
+                                            <form action="{{ route('admin.usuarios.destroy', $user->id) }}" method="POST"
                                                 class="inline"
                                                 onsubmit="event.preventDefault(); confirmAction('¿Estás seguro de eliminar a {{ $user->name }} de forma permanente?', this);">
                                                 @csrf
