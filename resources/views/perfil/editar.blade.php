@@ -15,7 +15,7 @@
 
             <div>
                 <label class="block text-sm font-medium text-cyan-200 mb-1">Peso (kg)</label>
-                <input type="number" name="peso" value="{{ old('peso', $perfil->peso) }}" min="1"
+                <input type="number" name="peso" value="{{ old('peso', $perfil?->peso ?? '') }}" min="1"
                        class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 @error('peso') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             </div>
