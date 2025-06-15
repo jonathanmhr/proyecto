@@ -124,7 +124,7 @@
                     @if ($dieta->image_url)
                         <div class="mt-4 p-4 bg-gray-700 rounded-md shadow-sm flex items-center space-x-4">
                             <span class="block text-sm font-medium text-gray-300">Imagen actual:</span>
-                            <img src="{{ Storage::url($dieta->image_url) }}"
+                            <img src="{{ url($dieta->image_url) }}"
                                 alt="Imagen actual de {{ $dieta->nombre }}"
                                 class="rounded-md h-24 w-auto object-cover border border-gray-600">
                         </div>
