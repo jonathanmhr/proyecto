@@ -15,30 +15,29 @@
 
             <div>
                 <label class="block text-sm font-medium text-cyan-200 mb-1">Peso (kg)</label>
-                <input type="number" name="peso" value="{{ old('peso', $perfil?->peso ?? '') }}" min="1"
+                <input type="number" name="peso" value="{{ old('peso', $perfil->peso) }}" min="1"
                        class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 @error('peso') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-cyan-200 mb-1">Objetivo</label>
-                <input type="text" name="objetivo" value="{{ old('objetivo', $perfil?->objetivo ?? '') }}"
+                <input type="text" name="objetivo" value="{{ old('objetivo', $perfil->objetivo) }}"
                        class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 @error('objetivo') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             </div>
 
-<div>
-    <label class="block text-sm font-medium text-cyan-200 mb-1">Nivel</label>
-    <select name="id_nivel"
-            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
-        <option value="">Seleccione un nivel</option>
-        <option value="1" {{ old('id_nivel', $perfil?->id_nivel ?? '') == 1 ? 'selected' : '' }}>Principiante</option>
-        <option value="2" {{ old('id_nivel', $perfil?->id_nivel ?? '') == 2 ? 'selected' : '' }}>Intermedio</option>
-        <option value="3" {{ old('id_nivel', $perfil?->id_nivel ?? '') == 3 ? 'selected' : '' }}>Avanzado</option>
-    </select>
-    @error('id_nivel') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-</div>
-
+            <div>
+                <label class="block text-sm font-medium text-cyan-200 mb-1">Nivel</label>
+                <select name="id_nivel"
+                        class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Seleccione un nivel</option>
+                    <option value="1" {{ old('id_nivel', $perfil->id_nivel) == 1 ? 'selected' : '' }}>Principiante</option>
+                    <option value="2" {{ old('id_nivel', $perfil->id_nivel) == 2 ? 'selected' : '' }}>Intermedio</option>
+                    <option value="3" {{ old('id_nivel', $perfil->id_nivel) == 3 ? 'selected' : '' }}>Avanzado</option>
+                </select>
+                @error('id_nivel') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+            </div>
 
             <div class="flex justify-end gap-3 pt-4 border-t mt-6">
                 <a href="{{ route('dashboard') }}"
