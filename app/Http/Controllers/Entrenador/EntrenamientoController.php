@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Notifications\NotificacionPersonalizada;
 use App\Models\FaseEntrenamiento;
 use App\Models\ActividadEntrenamiento;
+use App\Models\UsuarioEntrenamiento;
+use Silber\Bouncer\Database\Role;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -138,7 +140,9 @@ class EntrenamientoController extends Controller
         ]);
 
         // Enviar notificación a todos los admin-entrenador
-        $admins = User::role('admin-entrenador')->get();
+        $admins = Role::where('name', 'admin_entrenador')
+            ->first()
+            ->users;
 
         Notification::send($admins, new NotificacionPersonalizada(
             'Solicitud de cambio de entrenamiento',
@@ -171,5 +175,22 @@ class EntrenamientoController extends Controller
 
         return redirect()->route('entrenador.entrenamientos.show', $entrenamientoId)
             ->with('success', 'Entrenamiento asignado a los usuarios seleccionados.');
+    }
+    
+    // Mostrar usuarios que han guardado un entrenamiento
+    public function usuariosGuardaron($id)
+    {
+        $entrenamiento = Entrenamiento::with('usuarios')->findOrFail($id);
+
+        // Solo permitir ver entrenamientos creados por el entrenador autenticado
+        if ($entrenamiento->creado_por !== auth()->id()) {
+            abort(403, 'No tienes permiso para ver los usuarios de este entrenamiento.');
+        }
+
+        $usuarios = UsuarioEntrenamiento::where('entrenamiento_id', $id)
+            ->with('usuario')
+            ->get();
+
+        return view('entrenador.entrenamientos.usuarios', compact('entrenamiento', 'usuarios'));
     }
 }

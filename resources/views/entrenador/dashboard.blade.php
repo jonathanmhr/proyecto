@@ -160,7 +160,7 @@
                                     class="font-medium">{{ $entrenamiento->duracion }}</span> minutos</p>
                             <p class="text-xs text-green-200 mt-2">Fecha:
                                 {{ \Carbon\Carbon::parse($entrenamiento->fecha)->format('d/m/Y') }}</p>
-                            <a href="{{ route('entrenador.entrenamientos.edit', $entrenamiento->id_entrenamiento) }}"
+                            <a href="{{ route('entrenador.entrenamientos.edit', $entrenamiento->id) }}"
                                 class="inline-flex items-center text-blue-300 hover:text-blue-200 font-medium mt-4 transition-colors duration-200 text-sm group">
                                 Editar entrenamiento
                                 <i data-feather="arrow-right"
