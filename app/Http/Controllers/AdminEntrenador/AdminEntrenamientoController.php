@@ -18,9 +18,7 @@ class AdminEntrenamientoController extends Controller
     {
         $user = Auth::user();
 
-        $entrenamientos = Entrenamiento::with(['fases', 'usuariosGuardaron'])
-            ->where('creado_por', $user->id)
-            ->get();
+        $entrenamientos = Entrenamiento::with(['fases', 'usuariosGuardaron'])->get();
 
         return view('admin-entrenador.entrenamientos.index', compact('entrenamientos'));
     }
