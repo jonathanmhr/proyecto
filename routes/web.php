@@ -110,6 +110,7 @@ Route::middleware(['auth', 'verified', 'can:admin-access', VerificarUsuarioActiv
         Route::get('usuarios/inactivos', [UserController::class, 'inactivos'])->name('usuarios.inactivos');
         Route::get('usuarios/crear', [UserController::class, 'create'])->name('usuarios.create');
         Route::get('usuarios/conectados', [UserController::class, 'conectados'])->name('usuarios.conectados');
+        Route::delete('usuarios/{id}', [UserController::class, 'destroy'])->name('usuarios.destroy');
 
         // 
         Route::get('entrenadores', [UserController::class, 'entrenadores'])->name('entrenadores');
