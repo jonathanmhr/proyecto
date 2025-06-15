@@ -45,9 +45,9 @@
 
                 @if($compras->isEmpty())
                     @if(isset($searchTerm) && $searchTerm)
-                        <p class="text-gray-600">No se encontraron compras que coincidan con "<strong>{{ $searchTerm }}</strong>".</p>
+                        <p class="text-red-600">No se encontraron compras que coincidan con "<strong>{{ $searchTerm }}</strong>".</p>
                     @else
-                        <p class="text-gray-600">No hay compras registradas.</p>
+                        <p class="text-red-600">No hay compras registradas.</p>
                     @endif
                 @else
                     <div class="overflow-x-auto rounded">
