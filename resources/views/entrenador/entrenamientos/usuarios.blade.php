@@ -17,7 +17,6 @@
                         </option>
                     @endforeach
                 </select>
-                <x-input-error :messages="$errors->get('usuarios')" class="mt-2" />
             </div>
 
             <button type="submit" class="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition">
