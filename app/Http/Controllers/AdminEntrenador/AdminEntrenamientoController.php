@@ -101,7 +101,7 @@ class AdminEntrenamientoController extends Controller
 
     public function edit($id)
     {
-        $entrenamiento = Entrenamiento::with('fases.actividades')->findOrFail($id);
+        $entrenamiento = Entrenamiento::with('fases.actividades')->findOrFail($id); // trae 1 solo modelo
         $fases = $entrenamiento->fases;
 
         return view('admin-entrenador.entrenamientos.edit', compact('entrenamiento', 'fases'));
