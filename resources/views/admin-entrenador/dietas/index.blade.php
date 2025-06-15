@@ -102,6 +102,13 @@
                     <p class="px-5 py-6 text-center text-gray-400 text-lg">No hay dietas registradas en este momento.</p>
                 @endif
             </div>
+
+            <!-- ===== ÚNICO CAMBIO REALIZADO ===== -->
+            <div class="mt-8">
+                {{ $dietas->links() }}
+            </div>
+            <!-- ==================================== -->
+
         </div>
     </div>
 
