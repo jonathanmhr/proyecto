@@ -165,14 +165,11 @@ public function edit($id)
 
     // Mostrar usuarios que han guardado un entrenamiento
     public function usuariosGuardaron($id)
-    {
-        $entrenamiento = Entrenamiento::with('usuarios')->findOrFail($id);
+{
+    $entrenamiento = Entrenamiento::findOrFail($id);
+    $usuarios = $entrenamiento->usuariosGuardaron; // Usuarios que solo guardaron (fecha_inicio NULL)
 
+    return view('entrenador.entrenamientos.usuarios', compact('entrenamiento', 'usuarios'));
+}
 
-        $usuarios = UsuarioEntrenamiento::where('entrenamiento_id', $id)
-            ->with('usuario')
-            ->get();
-
-        return view('entrenador.entrenamientos.usuarios', compact('entrenamiento', 'usuarios'));
-    }
 }
