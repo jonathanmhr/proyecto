@@ -32,11 +32,11 @@ class EntrenamientoController extends Controller
         return view('entrenador.entrenamientos.create');
     }
 
-public function edit($id)
-{
-    $entrenamiento = Entrenamiento::with('fases.actividades')->findOrFail($id); // Trae un solo modelo
-    return view('entrenador.entrenamientos.edit', compact('entrenamiento'));
-}
+    public function edit($id)
+    {
+        $entrenamiento = Entrenamiento::with('fases.actividades')->findOrFail($id); // Trae un solo modelo
+        return view('entrenador.entrenamientos.edit', compact('entrenamiento'));
+    }
 
     public function store(Request $request)
     {
@@ -165,11 +165,12 @@ public function edit($id)
 
     // Mostrar usuarios que han guardado un entrenamiento
     public function usuariosGuardaron($id)
-{
-    $entrenamiento = Entrenamiento::findOrFail($id);
-    $usuarios = $entrenamiento->usuariosGuardaron; // Usuarios que solo guardaron (fecha_inicio NULL)
+    {
+        $entrenamiento = Entrenamiento::with('usuarios', 'usuariosGuardaron')->findOrFail($id);
 
-    return view('entrenador.entrenamientos.usuarios', compact('entrenamiento', 'usuarios'));
-}
+        // Unir usuarios que están haciendo el entrenamiento y los que solo lo guardaron
+        $usuarios = $entrenamiento->usuarios->merge($entrenamiento->usuariosGuardaron);
 
+        return view('entrenador.entrenamientos.usuarios', compact('entrenamiento', 'usuarios'));
+    }
 }

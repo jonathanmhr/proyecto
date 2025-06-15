@@ -281,11 +281,11 @@ class AdminEntrenamientoController extends Controller
 
     public function usuariosGuardaron($id)
     {
-        $entrenamiento = Entrenamiento::with('usuarios')->findOrFail($id);
+        // Traemos el entrenamiento con ambas relaciones cargadas
+        $entrenamiento = Entrenamiento::with('usuarios', 'usuariosGuardaron')->findOrFail($id);
 
-        $usuarios = UsuarioEntrenamiento::where('entrenamiento_id', $id)
-            ->with('usuario')
-            ->get();
+        // Unimos ambas colecciones de usuarios
+        $usuarios = $entrenamiento->usuarios->merge($entrenamiento->usuariosGuardaron);
 
         return view('admin-entrenador.entrenamientos.usuarios', compact('entrenamiento', 'usuarios'));
     }
