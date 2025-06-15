@@ -206,7 +206,7 @@
 
                             @if($producto->tipo)
                                 <p class="text-xs text-gray-400 mb-1">Tipo:
-                                    {{ ucwords(strtolower(str_replace(['_', '/'], [' ', ' / '], $tipoValue))) }}
+                                    {{ ucwords(strtolower(str_replace(['_', '/'], [' ', ' / '], $producto->tipo))) }}
                                 </p>
                             @endif
                             <p class="text-gray-300 text-sm mb-2 flex-grow min-h-[4.5rem]">
