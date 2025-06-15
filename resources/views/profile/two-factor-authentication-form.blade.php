@@ -1,9 +1,9 @@
 <x-action-section>
-    <x-slot name="title">
+    <x-slot class="text-red-600" name="title">
         {{ __('Two Factor Authentication') }}
     </x-slot>
 
-    <x-slot name="description">
+    <x-slot class="text-red-600" name="description">
         {{ __('Add additional security to your account using two factor authentication.') }}
     </x-slot>
 
