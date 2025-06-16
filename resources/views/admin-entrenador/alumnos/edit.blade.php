@@ -1,5 +1,4 @@
 <x-app-layout>
-    {{-- Contenedor principal con fondo oscuro --}}
     <div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8 bg-gray-900 text-gray-100 min-h-screen">
         <div class="mb-6">
             <h2 class="text-2xl font-bold text-white">Gestionar a <span class="text-red-500">{{ $user->name }}</span></h2>
@@ -17,8 +16,6 @@
             @method('PUT')
 
             <div class="bg-gray-800 shadow-lg rounded-xl p-6 space-y-8 border border-gray-700">
-
-                {{-- SECCIÓN DE CLASES --}}
                 <div>
                     <label class="block text-white font-semibold mb-3 text-lg">Clases Asignadas</label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -26,7 +23,7 @@
                             <label class="flex items-center space-x-3 bg-gray-700 p-4 rounded-lg border border-gray-600 cursor-pointer hover:bg-gray-600 transition duration-200 shadow-sm">
                                 <input type="checkbox" name="clases[]" value="{{ $clase->id_clase }}"
                                     class="form-checkbox h-6 w-6 text-red-500 bg-gray-900 border-gray-600 rounded focus:ring-red-500 focus:ring-offset-gray-800 transition duration-150 ease-in-out"
-                                    {{ $user->clases->contains($clase->id_clase) ? 'checked' : '' }}>
+                                    {{ ($user->clases && $user->clases->contains($clase->id_clase)) ? 'checked' : '' }}>
                                 <span class="text-white font-medium text-base">{{ $clase->nombre }}</span>
                             </label>
                         @empty
@@ -36,8 +33,6 @@
                 </div>
 
                 <hr class="border-gray-700">
-
-                {{-- NUEVA SECCIÓN DE DIETAS --}}
                 <div>
                     <label class="block text-white font-semibold mb-3 text-lg">Planes Nutricionales Asignados</label>
                     <p class="text-sm text-gray-400 mb-4">Selecciona las dietas que seguirá este alumno.</p>

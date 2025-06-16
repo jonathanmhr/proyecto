@@ -22,9 +22,6 @@ class InstructorController extends Controller
             return redirect()->route('entrenador.profile.create')->with('warning', 'Por favor, crea tu perfil de instructor.');
         }
 
-        // No hace falta hacer json_decode porque Laravel ya lo convierte gracias al cast
-        // $instructor->horario = json_decode($instructor->horario);
-
         return view('entrenador.profile.show', compact('instructor'));
     }
     public function create()
