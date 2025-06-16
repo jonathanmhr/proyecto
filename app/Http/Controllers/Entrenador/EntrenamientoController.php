@@ -26,9 +26,16 @@ class EntrenamientoController extends Controller
 
         return view('entrenador.entrenamientos.index', compact('entrenamientos'));
     }
+
     public function create()
     {
         return view('entrenador.entrenamientos.create');
+    }
+
+    public function edit($id)
+    {
+        $entrenamiento = Entrenamiento::with('fases.actividades')->findOrFail($id); // Trae un solo modelo
+        return view('entrenador.entrenamientos.edit', compact('entrenamiento'));
     }
 
     public function store(Request $request)
@@ -99,13 +106,6 @@ class EntrenamientoController extends Controller
             ->with('success', 'Entrenamiento creado correctamente.');
     }
 
-    public function edit($id)
-    {
-        $entrenamiento = Entrenamiento::with('fases.actividades')->findOrFail($id);
-
-        return view('entrenador.entrenamientos.edit', compact('entrenamiento'));
-    }
-
     public function update(Request $request, $id)
     {
         $entrenamiento = Entrenamiento::with('fases.actividades')->findOrFail($id);
@@ -162,16 +162,14 @@ class EntrenamientoController extends Controller
         return redirect()->route('entrenador.entrenamientos.show', $entrenamientoId)
             ->with('success', 'Entrenamiento asignado a los usuarios seleccionados.');
     }
-    
+
     // Mostrar usuarios que han guardado un entrenamiento
     public function usuariosGuardaron($id)
     {
-        $entrenamiento = Entrenamiento::with('usuarios')->findOrFail($id);
+        $entrenamiento = Entrenamiento::with('usuarios', 'usuariosGuardaron')->findOrFail($id);
 
-
-        $usuarios = UsuarioEntrenamiento::where('entrenamiento_id', $id)
-            ->with('usuario')
-            ->get();
+        // Unir usuarios que están haciendo el entrenamiento y los que solo lo guardaron
+        $usuarios = $entrenamiento->usuarios->merge($entrenamiento->usuariosGuardaron);
 
         return view('entrenador.entrenamientos.usuarios', compact('entrenamiento', 'usuarios'));
     }

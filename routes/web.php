@@ -15,6 +15,7 @@ use App\Http\Controllers\AdminEntrenador\AdminEntrenadorController;
 use App\Http\Controllers\AdminEntrenador\AdminEntrenamientoController;
 use App\Http\Controllers\Entrenador\EntrenadorController;
 use App\Http\Controllers\Entrenador\EntrenadorIndividual;
+use App\Http\Controllers\Entrenador\EntrenamientoController as EntrenamientoEntrenador;
 use App\Http\Controllers\Perfil\PerfilController;
 use App\Http\Controllers\Perfil\InstructorController;
 use App\Http\Controllers\Cliente\DashboardController;
@@ -211,8 +212,9 @@ Route::middleware(['auth', 'verified', 'can:admin_entrenador', VerificarUsuarioA
 
 
         // Gestión de entrenamientos
-        Route::resource('entrenamientos', \App\Http\Controllers\General\EntrenamientoController::class);
-        Route::get('entrenamientos/{id}/usuarios', [\App\Http\Controllers\General\EntrenamientoController::class, 'usuariosGuardaron'])->name('entrenamientos.usuarios');
+        Route::resource('entrenamientos', \App\Http\Controllers\AdminEntrenador\AdminEntrenamientoController::class);
+        Route::get('entrenamientos/{id}/usuarios', [\App\Http\Controllers\AdminEntrenador\AdminEntrenamientoController::class, 'usuariosGuardaron'])
+            ->name('entrenamientos.usuarios');
 
 
         // Suscripciones de usuarios
@@ -247,15 +249,15 @@ Route::middleware(['auth', 'verified', 'can:entrenador-access', VerificarUsuario
         Route::get('clases/{tipo}/{id}/alumnos', [EntrenadorIndividual::class, 'verAlumnos'])->name('clases.alumnos');
         Route::get('clases/grupales/{id}', [EntrenadorIndividual::class, 'showGrupal'])->name('clases.grupales.show');
         Route::get('clases/individuales/{id}', [EntrenadorIndividual::class, 'showIndividual'])->name('clases.individuales.show');
+        
         // Entrenamientos
-        Route::get('entrenamientos', [EntrenamientoController::class, 'index'])->name('entrenamientos.index');
-        Route::get('entrenamientos/create', [EntrenamientoController::class, 'create'])->name('entrenamientos.create');
-        Route::post('entrenamientos', [EntrenamientoController::class, 'store'])->name('entrenamientos.store');
-        Route::get('entrenamientos/{entrenamiento}/edit', [EntrenamientoController::class, 'edit'])->name('entrenamientos.edit');
-        Route::put('entrenamientos/{entrenamiento}', [EntrenamientoController::class, 'update'])->name('entrenamientos.update');
-        Route::get('entrenamientos/{id}/usuarios', [EntrenamientoController::class, 'usuariosGuardaron'])->name('entrenamientos.usuarios');
-        Route::post('entrenamientos/{entrenamiento}/asignar-usuarios', [EntrenamientoController::class, 'asignarUsuarios'])
-        ->name('entrenamientos.asignarUsuarios');
+        Route::get('entrenamientos', [EntrenamientoEntrenador::class, 'index'])->name('entrenamientos.index');
+        Route::get('entrenamientos/create', [EntrenamientoEntrenador::class, 'create'])->name('entrenamientos.create');
+        Route::post('entrenamientos', [EntrenamientoEntrenador::class, 'store'])->name('entrenamientos.store');
+        Route::get('entrenamientos/{entrenamiento}/edit', [EntrenamientoEntrenador::class, 'edit'])->name('entrenamientos.edit');
+        Route::put('entrenamientos/{entrenamiento}', [EntrenamientoEntrenador::class, 'update'])->name('entrenamientos.update');
+        Route::get('entrenamientos/{id}/usuarios', [EntrenamientoEntrenador::class, 'usuariosGuardaron'])->name('entrenamientos.usuarios');
+        Route::post('entrenamientos/{entrenamiento}/asignar-usuarios', [EntrenamientoEntrenador::class, 'asignarUsuarios'])->name('entrenamientos.asignarUsuarios');
 
         // Solicitudes
         Route::get('solicitudes', [EntrenadorController::class, 'verSolicitudesPendientes'])->name('solicitudes.index');
