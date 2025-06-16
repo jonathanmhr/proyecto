@@ -1,5 +1,6 @@
 <x-app-layout>
 
+    {{-- Estilos personalizados para que la paginación se vea bien en tema oscuro --}}
     @push('styles')
     <style>
         .pagination a,
